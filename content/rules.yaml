@@ -1,0 +1,121 @@
+# Rulebook rb-2026.11-v1 (docs/03 §1). Rule metadata only.
+# Phrase lists and coach lines live in rules_phrases.yaml and are merged in by backend/app/rules/loader.py.
+# Based on RBI/2026-27/223 (effective 1 Jan 2027). Demo with synthetic calls; not legal advice.
+version: rb-2026.11-v1
+rules:
+  - id: R1
+    title: Calling hours
+    kind_default: violation
+    rbi_ref: 454Y(4)
+    weight: 20
+    summary: Recovery calls are allowed only between 08:00 and 19:00.
+    why: |
+      Calls outside 08:00-19:00 intrude on the borrower's private time.
+      The check is deterministic, based on the call's simulated start time.
+    examples_bad:
+      - "Sir, abhi raat ke 9 baje hain, par EMI ke baare mein baat karni thi."
+      - "Subah 6 baje call kiya hai kyunki aap tab phone uthate hain."
+      - "Late ho gaya, par payment ke liye abhi baat kar lete hain."
+    examples_good:
+      - "Namaste, subah 10 baje call kar raha hoon, kya abhi baat kar sakte hain?"
+      - "Shaam 5 baje ka samay theek rahega, kya aap free hain?"
+      - "Aapko dopahar mein call kiya hai, agar samay theek na ho to bata dijiye."
+  - id: R2
+    title: Identify and recording notice
+    kind_default: advisory
+    rbi_ref: 454P
+    weight: 8
+    summary: State your name, the lender and that the call is recorded within the first two agent turns.
+    why: |
+      The borrower should know who is calling and that the call is recorded.
+      Missing this in the first two agent turns raises an advisory, never more.
+    examples_bad:
+      - "Hello, aapki EMI pending hai, kab tak bhar rahe hain?"
+      - "Main aapke loan ke baare mein call kar raha hoon, payment kab hoga?"
+      - "Sir, dues clear karne hain, aaj kya kar sakte hain?"
+    examples_good:
+      - "Namaste, main Rohan bol raha hoon Tarang Finserv se, yeh call record ho rahi hai."
+      - "Main Sunita bol rahi hoon Tarang Finserv se. Call recorded hai."
+      - "Namaste sir, Tarang Finserv se Amit bol raha hoon, call record ho rahi hai."
+  - id: R3
+    title: Abuse, threats, humiliation
+    kind_default: violation
+    rbi_ref: 454Z(1),(5),(7)
+    weight: 30
+    summary: No abusive words, insults, threats of harm or public shaming.
+    why: |
+      Agents must stay respectful. Insults, threats and shaming the borrower
+      before family or neighbours are a breach, as is repeated intimidation.
+    examples_bad:
+      - "Sharam nahi aati aapko, paisa lekar bhaag gaye?"
+      - "Agar nahi diya to ghar aake tamasha karunga."
+      - "Padosiyon ko pata chalega to samajh aayega."
+    examples_good:
+      - "Main samajh sakta hoon, kya hum EMI ka koi option dekh sakte hain?"
+      - "Kripya batayiye, kab tak payment possible hoga?"
+      - "Koi dikkat ho to bataiye, hum restructure ke baare mein dekh sakte hain."
+  - id: R4
+    title: Third-party disclosure
+    kind_default: violation
+    rbi_ref: 454Y(1), 454Z(6)
+    weight: 35
+    summary: Do not reveal the loan, amount or default to anyone other than the borrower.
+    why: |
+      When someone else answers, the agent may only ask for the borrower or leave a callback message.
+      Telling them about the loan or recovery is a privacy breach.
+    examples_bad:
+      - "Aap unki wife hain? Unki EMI pending hai, 18,000 rupaye baaki hain."
+      - "Unhone loan liya tha aur ab default ho gaya hai, unko bata dijiye."
+      - "Recovery ke liye call kiya hai, unse kahiye paisa wapas karein."
+    examples_good:
+      - "Kya unse baat ho sakti hai? Mera naam Rohan hai, Tarang Finserv se."
+      - "Kya aap unko bata sakte hain ki zaroori call tha, wapas call kar lein?"
+      - "Theek hai, main baad mein call karta hoon. Dhanyavaad."
+  - id: R5
+    title: False or misleading statements
+    kind_default: violation
+    rbi_ref: 454Z(8)
+    weight: 35
+    summary: No false legal threats, fake authority or invented charges.
+    why: |
+      Claims such as police arrest, instant court action or acting on behalf of the RBI
+      are untrue unless a real process exists. They mislead and frighten the borrower.
+    examples_bad:
+      - "Kal police aapko pakad legi, arrest warrant nikal gaya hai."
+      - "Main RBI ki taraf se bol raha hoon, aapka account block ho jayega."
+      - "Har din paanch hazaar rupaye penalty lagegi, abhi bhar dijiye."
+    examples_good:
+      - "Agreement ke hisaab se late fee lagti hai, main uski details bata deta hoon."
+      - "Payment na hone par credit score par asar pad sakta hai."
+      - "Hum agreement ke anusaar notice bhej sakte hain, par pehle koi option dekhte hain."
+  - id: R6
+    title: Sensitive occasions
+    kind_default: needs_review
+    rbi_ref: 454Y(6)
+    weight: 10
+    summary: Do not keep pressing for payment when the borrower mentions death, illness or a hospital stay.
+    why: |
+      A bereavement or medical emergency calls for empathy and a later follow-up.
+      Continued pressure in that moment is flagged for human review.
+    examples_bad:
+      - "Hospital mein hain, par aaj hi kuch bhej dijiye, due date nikal chuki hai."
+      - "Nidhan ka afsos hai, lekin kal tak payment zaroori hai."
+      - "Operation ho raha hai to kya hua, kuch toh bhejna padega."
+    examples_good:
+      - "Mujhe afsos hai, aap pehle apna dhyan rakhiye. Main baad mein call karunga."
+      - "Samajh sakta hoon, abhi payment ki baat nahi karte. Kya hum kuch din baad baat kar sakte hain?"
+      - "Aapke parivar ke liye dua. Jab sahi lage tab hamse baat kar lijiye."
+  - id: G1
+    title: Good practice
+    kind_default: good_practice
+    rbi_ref: ""
+    weight: 0
+    summary: Polite identification, payment options and empathy are highlighted in green, with no risk change.
+    why: |
+      Positive behaviour is shown so agents see what good looks like.
+      It never changes the risk meter.
+    examples_bad: []
+    examples_good:
+      - "Main samajh sakta hoon, kya hum EMI ka koi option dekh sakte hain?"
+      - "Dhanyavaad sir, aapka samay dene ke liye."
+      - "Kripya apni suvidha ke anusaar bataiye, hum restructure bhi dekh sakte hain."
