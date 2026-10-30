@@ -1,6 +1,6 @@
 # The FIRST listening test (notebook 01). ~14 short clips, ~1 minute of audio, < 2,000 characters (about Rs 5).
 # Goal: the user picks (a) voices, (b) Roman vs Devanagari text, (c) hi-IN vs mr-IN for borrowers, (d) whether audio tags work.
-# Variants: V1 = Roman text, language hi-IN | V2 = Devanagari text, language hi-IN | V3 = Roman text, language mr-IN (borrower clips only)
+# Variants: V1 = Roman text, language hi-IN | V2 = Devanagari text, language hi-IN | V3 = Roman text, language mr-IN (borrower clips only) | V4 = Devanagari text, language mr-IN (borrower and neighbour clips only)
 clips:
   - id: A1_agent_open
     note: "Hero call turn 1 (agent identifies + recording notice). Compare Avinash vs Prakash."
@@ -17,6 +17,7 @@ clips:
       V1: "Saheb, mala maaf kara. Majhi naukri geli aahe, do mahine ho gaye. Agle hafte tak thoda paisa jama ho jayega, par poora ek saath nahi de sakti."
       V2: "साहेब, मला माफ करा. माझी नोकरी गेली आहे, दो महिने हो गये. अगले हफ्ते तक थोड़ा पैसा जमा हो जाएगा, पर पूरा एक साथ नहीं दे सकती."
       V3: "Saheb, mala maaf kara. Majhi naukri geli aahe, do mahine ho gaye. Agle hafte tak thoda paisa jama ho jayega, par poora ek saath nahi de sakti."
+      V4: "साहेब, मला माफ करा. माझी नोकरी गेली आहे, दो महिने हो गये. अगले हफ्ते तक थोड़ा पैसा जमा हो जाएगा, पर पूरा एक साथ नहीं दे सकती."
   - id: A3_agent_threat
     note: "Hero turn 5 (the violation). Needs an irritated, impatient tone but NOT shouting. Also test one tagged variant."
     role: agent_m2
@@ -47,6 +48,7 @@ clips:
       V1: "Saheb, aaj nahi hoga. Dukaan band padli aahe, Friday tak thoda paisa dunga."
       V2: "साहेब, आज नहीं होगा. दुकान बंद पडली आहे, शुक्रवार तक थोड़ा पैसा दूँगा."
       V3: "Saheb, aaj nahi hoga. Dukaan band padli aahe, Friday tak thoda paisa dunga."
+      V4: "साहेब, आज नहीं होगा. दुकान बंद पडली आहे, शुक्रवार तक थोड़ा पैसा दूँगा."
   - id: A7_neighbour
     note: "Third party (neighbour), mostly Marathi. Shubham vs Yashraj."
     role: neighbour_m
@@ -55,6 +57,7 @@ clips:
       V1: "Nahi, mi padosi aahe. Anand bahar gele aahet. Kay zhala?"
       V2: "नाही, मी पडोसी आहे. आनंद बाहेर गेले आहेत. काय झालं?"
       V3: "Nahi, mi padosi aahe. Anand bahar gele aahet. Kay zhala?"
+      V4: "नाही, मी पडोसी आहे. आनंद बाहेर गेले आहेत. काय झालं?"
   - id: A8_voiceover
     note: "Video voice-over, English with an Indian accent. Kalpana vs Lakshmi vs Avinash."
     role: vo

@@ -72,7 +72,7 @@ for clip in audition["clips"]:
             if voice not in clip["voices"] and var != "V1":
                 continue
             group = group_of(clip["role"])
-            lang = "mr-IN" if var == "V3" else voices_cfg["params"][PARAM_KEY[group]]["language"]
+            lang = "mr-IN" if var in ("V3", "V4") else voices_cfg["params"][PARAM_KEY[group]]["language"]
             jobs.append({"clip": clip["id"], "role": clip["role"], "group": group, "voice": voice, "var": var,
                          "text": text, "lang": lang, "speed": voices_cfg["params"][PARAM_KEY[group]]["speed"]})
 chars, inr = al.credit_estimate([j["text"] for j in jobs])
@@ -198,7 +198,7 @@ if RUN and STT:
     print(df.drop(columns=["group"]).to_string(index=False))
     summary = df.groupby(["group", "combo"])["recovery"].mean().round(3).unstack()
     print("\nMean keyword recovery per role group and setting:\n", summary)
-    print("\nBy text variant (V1 Roman, V2 Devanagari, V3 Roman + mr-IN, TAG tagged):\n",
+    print("\nBy text variant (V1 Roman, V2 Devanagari, V3 Roman + mr-IN, V4 Devanagari + mr-IN, TAG tagged):\n",
           df.groupby(["group", "var", "combo"])["recovery"].mean().round(2).unstack())
     df.to_csv(OUT / "stt_roundtrip.csv", index=False)
 
