@@ -39,6 +39,7 @@ Euri `gpt-5.4-mini` chat completions with `response_format: json_object`: 20 of 
 - An unsupported model returns 400 and lists the supported ones (`timbre-v2.5`, `timbre-v3.0`).
 - Only **one active request per key at a time**; a second concurrent request returns 429 `RATE_LIMITED`. Generation must be sequential.
 - A request of 1000 characters was accepted, so the 600-character split stays a conservative choice rather than a hard limit.
+- Every sample rate tried (8, 16, 22.05, 24, 44.1 and 48 kHz) is honoured in the returned WAV. Audio is requested at 48 kHz and reduced to 8 kHz only by the phone-chain step.
 - A line starting with an `<angry>` tag returned 200. Whether it changes the voice is decided by listening in the audition.
 
 **Prisma STT, REST** (`POST /stt/v3`, header `X-API-Key-ID`, multipart)
@@ -54,6 +55,18 @@ Euri `gpt-5.4-mini` chat completions with `response_format: json_object`: 20 of 
 - Hindi and English words are returned mostly in Devanagari with `indic-auto`, and in a Roman/Devanagari mix with `hi-IN` ("EMI pending"). Matching must handle both scripts.
 
 **Euri** (`POST /chat/completions`, bearer token): JSON mode works with `gpt-5.4-mini`; the fallback model was not exercised in this spike.
+
+## Audition round trip (final voices)
+
+34 audition clips (about 3,250 characters, under Rs 9) were spoken, passed through the phone chain and sent back through Prisma. Mean keyword recovery:
+
+| Role | Roman text | Devanagari text | Best setting |
+|---|---|---|---|
+| agent | 0.87 | 0.76 | all settings equal; `hi-IN` kept |
+| borrower | 0.73-0.87 | 0.60-0.67 | `mr-IN` 1.00 (Roman), `hi-IN` 0.87 |
+| third party | 1.00 | 1.00 | all equal; `hi-IN` kept |
+
+Roman text scored higher than Devanagari for the agent and the borrower. The clip that starts with an `<angry>` tag scored 0.20, but its text is shorter than the full line, so that figure is not comparable; judge tags by listening. Realtime segment latency on the phone clip was 0.41-0.46 s median. The scores come from about 3-6 clips per group, so they are indicative only.
 
 ## Limits of this spike
 Single run, 20 lines, one voice per role, approximate scoring. It decides go/no-go and the starting profile, not final accuracy; the evaluation step measures that on the full call set.

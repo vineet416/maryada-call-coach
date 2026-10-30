@@ -1,0 +1,12 @@
+model: prisma-v3.0
+adapter_default: realtime
+selected_by: mean keyword recovery on the audition clips (tools/audio_lib.py scoring)
+agent:
+  language_code: hi-IN
+  setting: C hi-IN
+borrower:
+  language_code: mr-IN
+  setting: D mr-IN
+third_party:
+  language_code: hi-IN
+  setting: C hi-IN
