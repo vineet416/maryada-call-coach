@@ -72,7 +72,7 @@ for clip in audition["clips"]:
             if voice not in clip["voices"] and var != "V1":
                 continue
             group = group_of(clip["role"])
-            lang = "mr-IN" if var in ("V3", "V4") else voices_cfg["params"][PARAM_KEY[group]]["language"]
+            lang = voices_cfg["params"][PARAM_KEY[group]]["language"]
             jobs.append({"clip": clip["id"], "role": clip["role"], "group": group, "voice": voice, "var": var,
                          "text": text, "lang": lang, "speed": voices_cfg["params"][PARAM_KEY[group]]["speed"]})
 chars, inr = al.credit_estimate([j["text"] for j in jobs])
@@ -97,7 +97,7 @@ if RUN:
             phone_audio[key] = p
             al.write_wav(OUT / f"{stem}__phone.wav", p, 8000)
             files.append({**j, "file": f"{stem}__phone.wav", "kind": "phone"})
-    print("generated", len(files), "files in", OUT)
+    print("generated", len(files), "files in", OUT, "| new TTS requests (not from cache):", al.requests_made)
 
 # %% 4. Trio test: borrower -> agent -> earcon -> coach, 2 agents x 2 coaches
 trio_files = []
@@ -176,19 +176,19 @@ if RUN:
     (OUT / "INDEX.html").write_text("\n".join(html), encoding="utf-8")
     print("wrote INDEX.md and INDEX.html")
 
-# %% 7. STT round trip (REST for all phone clips, realtime for one clip)
-COMBOS = {"A indic-auto": {"language_code": "indic-auto", "multi_lang_codes": "hi-IN,mr-IN,en-IN"},
-          "B indic-auto hi,en": {"language_code": "indic-auto", "multi_lang_codes": "hi-IN,en-IN"},
-          "C hi-IN": {"language_code": "hi-IN"}, "D mr-IN": {"language_code": "mr-IN"}}
+# %% 7. STT round trip (REST, hi-IN) for the changed clips
+COMBOS = {"B indic-auto hi,en": {"language_code": "indic-auto", "multi_lang_codes": "hi-IN,en-IN"},
+          "C hi-IN": {"language_code": "hi-IN"}}
+STT_CLIPS = ("A2_borrower_job", "A6_male_borrower", "A7_neighbour")  # the clips whose text changed
 hints = audition["stt_roundtrip"]["key_terms_hint"]
 v1_text = {c["id"]: c["variants"]["V1"] for c in audition["clips"]}
 rows = []
+summary = None
 if RUN and STT:
     al.spike.HINTS[:] = hints
-    for f in [f for f in files if f["kind"] == "phone"]:
+    for f in [f for f in files if f["kind"] == "phone" and f["clip"] in STT_CLIPS]:
         terms = al.key_terms(v1_text[f["clip"]])
-        combos = {k: v for k, v in COMBOS.items() if not (k.startswith("D") and f["group"] == "agent")}
-        res = al.stt_roundtrip(OUT / f["file"], combos)
+        res = al.stt_roundtrip(OUT / f["file"], COMBOS)
         for name, (text, latency, lang) in res.items():
             ok = not text.startswith("ERROR")
             rows.append({"clip": f["clip"], "voice": f["voice"], "var": f["var"], "group": f["group"], "combo": name,
@@ -198,27 +198,33 @@ if RUN and STT:
     print(df.drop(columns=["group"]).to_string(index=False))
     summary = df.groupby(["group", "combo"])["recovery"].mean().round(3).unstack()
     print("\nMean keyword recovery per role group and setting:\n", summary)
-    print("\nBy text variant (V1 Roman, V2 Devanagari, V3 Roman + mr-IN, V4 Devanagari + mr-IN, TAG tagged):\n",
-          df.groupby(["group", "var", "combo"])["recovery"].mean().round(2).unstack())
-    df.to_csv(OUT / "stt_roundtrip.csv", index=False)
+    print("\nBy text variant (V1 Roman, V2 Devanagari):\n", df.groupby(["group", "var", "combo"])["recovery"].mean().round(2).unstack())
+    csv = OUT / "stt_roundtrip.csv"
+    kept = pd.read_csv(csv) if csv.exists() else pd.DataFrame()
+    if len(kept):
+        kept = kept[~kept["clip"].isin(STT_CLIPS)]
+    pd.concat([kept, df]).to_csv(csv, index=False)
 
-# %% 8. Realtime check on one clip and write content/stt_profile.yaml
+# %% 8. Realtime check on one clip and update content/stt_profile.yaml (agent entry is kept)
 if RUN and STT:
     sample = OUT / "A3_agent_threat__Avinash__V1__phone.wav"
     rt = {}
-    for name, (lang, cand) in {"A indic-auto": ("indic-auto", None), "B indic-auto+candidates": ("indic-auto", "hi,mr,en"),
+    for name, (lang, cand) in {"A indic-auto": ("indic-auto", None), "B indic-auto+candidates": ("indic-auto", "hi,en"),
                                "C hi-IN": ("hi-IN", None)}.items():
         text, lats, _ = al.stt_realtime(sample, lang, cand)
         rt[name] = {"ok": not text.startswith("ERROR"), "segment_latency_s": round(float(np.median(lats)), 3) if lats else None}
     print("realtime:", rt)
-    order = ["C hi-IN", "B indic-auto hi,en", "A indic-auto", "D mr-IN"]  # simplest first on ties
-    profile = {"model": "prisma-v3.0", "adapter_default": "realtime" if all(v["ok"] for v in rt.values()) else "rest",
-               "selected_by": "mean keyword recovery on the audition clips (tools/audio_lib.py scoring)"}
-    for group, key in (("agent", "agent"), ("borrower", "borrower"), ("third_party", "third_party")):
-        best = max(order, key=lambda c: (summary.loc[group].get(c, -1) if group in summary.index else -1, -order.index(c)))
-        profile[key] = dict(COMBOS[best])
-        profile[key]["setting"] = best
-    (al.ROOT / "content" / "stt_profile.yaml").write_text(yaml.safe_dump(profile, sort_keys=False), encoding="utf-8")
+    order = ["C hi-IN", "B indic-auto hi,en"]  # simplest first on ties
+    profile_path = al.ROOT / "content" / "stt_profile.yaml"
+    profile = yaml.safe_load(profile_path.read_text(encoding="utf-8"))
+    profile["adapter_default"] = "realtime" if all(v["ok"] for v in rt.values()) else "rest"
+    profile["selected_by"] = "mean keyword recovery on the audition clips (tools/audio_lib.py scoring)"
+    profile["evidence"] = {}
+    for group in ("borrower", "third_party"):
+        best = max(order, key=lambda c: (summary.loc[group].get(c, -1), -order.index(c)))
+        profile[group] = {**COMBOS[best], "setting": best}
+        profile["evidence"][group] = {c: float(summary.loc[group].get(c)) for c in order}
+    profile_path.write_text(yaml.safe_dump(profile, sort_keys=False), encoding="utf-8")
     print("wrote content/stt_profile.yaml:", json.dumps(profile))
 
 # %% 9. CHOICES (edit after listening; set CONFIRMED = True to write content/tts_profile.yaml)

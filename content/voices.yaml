@@ -18,7 +18,7 @@ roles:
 
 params:            # per role group; names must match the real API fields (verify in notebook 01 cell 1)
   agent:    {language: "hi-IN", speed: 1.0}
-  borrower: {language: "hi-IN", speed: 0.95}    # audition also tries mr-IN
+  borrower: {language: "hi-IN", speed: 0.95}
   third:    {language: "hi-IN", speed: 0.95}
   coach:    {language: "hi-IN", speed: 1.0}
   vo:       {language: "en-IN", speed: 1.0}

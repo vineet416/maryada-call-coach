@@ -34,6 +34,7 @@ MAX_CHARS = 600
 SENTENCE_GAP_MS = 120
 MIN_REQUEST_INTERVAL_S = 1.0  # stays under 60 requests/min; the API also allows one active request only
 _last_request = 0.0
+requests_made = 0  # uncached TTS requests sent in this process
 
 
 def mask(secret: str) -> str:
@@ -72,7 +73,7 @@ def _request_body(text: str, voice: str, language: str, speed: float, sample_rat
 
 def tts_chunk(body: dict, client: httpx.Client) -> bytes:
     """One TTS request through the cache. Retries 429/5xx with backoff, never 400/401/403."""
-    global _last_request
+    global _last_request, requests_made
     CACHE.mkdir(parents=True, exist_ok=True)
     key = CACHE / (hashlib.sha256(json.dumps(body, sort_keys=True, ensure_ascii=False).encode()).hexdigest() + ".wav")
     if key.exists():
@@ -84,6 +85,7 @@ def tts_chunk(body: dict, client: httpx.Client) -> bytes:
         r = client.post(settings.gnani_tts_url, headers={"x-api-key-id": settings.gnani_api_key_id}, json=body)
         _last_request = time.monotonic()
         if r.status_code == 200:
+            requests_made += 1
             key.write_bytes(r.content)
             return r.content
         if r.status_code not in (429, 500, 502, 503, 504):

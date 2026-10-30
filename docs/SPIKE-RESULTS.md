@@ -14,7 +14,7 @@ Date: 2026-10-30. Script: `tools/spike.py`. All lines are synthetic turns taken 
 | borrower | `hi-IN` | realtime, REST fallback |
 | third party | `hi-IN` | realtime, REST fallback |
 
-Model id: `prisma-v3.0`. `hi-IN` was equal or better than auto-detection for every role in this run, and `mr-IN` was not better for the Marathi-flavoured borrower lines (75.5% vs 79.5%). The audition in the audio step re-checks this on the final voices before the profile file is written.
+Model id: `prisma-v3.0`. `hi-IN` was equal or better than auto-detection for every role in this run. The spike lines contained some Marathi words; the calls now use natural Mumbai-style Hinglish only, and the audition below re-checks `hi-IN` on that language.
 
 ## Keyword recovery
 
@@ -56,17 +56,17 @@ Euri `gpt-5.4-mini` chat completions with `response_format: json_object`: 20 of 
 
 **Euri** (`POST /chat/completions`, bearer token): JSON mode works with `gpt-5.4-mini`; the fallback model was not exercised in this spike.
 
-## Audition round trip (final voices)
+## Audition round trip (final voices, Hinglish)
 
-34 audition clips (about 3,250 characters, under Rs 9) were spoken, passed through the phone chain and sent back through Prisma. Mean keyword recovery:
+The audition clips were spoken with the final voices, passed through the phone chain and sent back through Prisma. The agent clips (A1, A3, A5) were measured first and kept. The borrower and neighbour clips (A2, A6, A7) were regenerated in natural Mumbai-style Hinglish and measured again with `hi-IN` and with `indic-auto` (`multi_lang_codes=hi-IN,en-IN`). Mean keyword recovery:
 
-| Role | Roman text | Devanagari text | Best setting |
+| Role | Roman text | Devanagari text | Setting |
 |---|---|---|---|
-| agent | 0.87 | 0.76 | all settings equal; `hi-IN` kept |
-| borrower | 0.73-0.87 | 0.60-0.67 | `mr-IN` 1.00 (Roman), `hi-IN` 0.87 |
-| third party | 1.00 | 1.00 | all equal; `hi-IN` kept |
+| agent (first run) | 0.87 | 0.76 | all settings equal; `hi-IN` kept |
+| borrower (A2, A6) | 0.80 | 0.80 | `hi-IN` and `indic-auto` equal; `hi-IN` kept |
+| third party (A7) | 1.00 | 1.00 | `hi-IN` and `indic-auto` equal; `hi-IN` kept |
 
-Roman text scored higher than Devanagari for the agent and the borrower. The clip that starts with an `<angry>` tag scored 0.20, but its text is shorter than the full line, so that figure is not comparable; judge tags by listening. Realtime segment latency on the phone clip was 0.41-0.46 s median. The scores come from about 3-6 clips per group, so they are indicative only.
+The borrower clips lose most on the short male line (0.8 with 5 key terms per line, so one missed word is 0.2). Realtime segment latency on the phone clip was 0.41-0.45 s median. The clip that starts with an `<angry>` tag scored 0.20, but its text is shorter than the full line, so that figure is not comparable; judge tags by listening. The scores come from 2-6 clips per group, so they are indicative only.
 
 ## Limits of this spike
 Single run, 20 lines, one voice per role, approximate scoring. It decides go/no-go and the starting profile, not final accuracy; the evaluation step measures that on the full call set.
