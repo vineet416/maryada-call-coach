@@ -28,6 +28,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 import audio_lib as al
 
 RUN = os.environ.get("MARYADA_RUN") == "1"  # nothing is sent to the TTS API unless this is set
+STT = os.environ.get("MARYADA_STT") == "1"  # the STT round trip and stt_profile.yaml only run when this is set
+PROBE = os.environ.get("MARYADA_PROBE") == "1"  # re-probe the TTS sample rates (spike result: 48 kHz is honoured)
 MAX_SPEND_INR = 15
 OUT = al.ROOT / "data" / "audio" / "_audition"
 voices_cfg = al.load_yaml("content/voices.yaml")
@@ -37,8 +39,8 @@ pd.set_option("display.width", 220, "display.max_colwidth", 70)
 # %% 1. Environment, smoke request, sample rates
 print("Gnani key:", al.mask(al.settings.gnani_api_key_id), "| Euri key:", al.mask(al.settings.euri_api_key))
 client = httpx.Client(timeout=90)
-SR = 16000
-if RUN:
+SR = 48000
+if RUN and PROBE:
     rates = al.probe_sample_rates(client)
     print("sample rates (requested -> returned):", rates)
     honoured = [r for r, got in rates.items() if got == r and r >= 16000]
@@ -54,6 +56,10 @@ trio = audition["trio"]
 
 def group_of(role: str) -> str:
     return ROLE_GROUP[role.split("_")[0]]
+
+
+def target_lufs(group: str) -> float:
+    return float(str(voices_cfg["loudness"][group]).split()[0])
 
 
 jobs = []
@@ -80,13 +86,14 @@ if RUN:
     for j in jobs:
         key = (j["clip"], j["voice"], j["var"])
         x, sr = al.synthesize(j["text"], j["voice"], j["lang"], j["speed"], SR, client)
-        x = al.loudnorm(al.trim_silence(x, sr), sr, float(str(voices_cfg["loudness"][j["group"]]).split()[0]))
+        target = target_lufs(j["group"])
+        x = al.loudnorm(al.trim_silence(x, sr), sr, target)
         raw_audio[key] = (x, sr)
         stem = f"{j['clip']}__{j['voice']}__{j['var']}"
         al.write_wav(OUT / f"{stem}__raw.wav", x, sr)
         files.append({**j, "file": f"{stem}__raw.wav", "kind": "raw"})
         if j["group"] in ("agent", "borrower", "third_party"):
-            p = al.phone_chain(x, sr, voices_cfg["phone_chain"])
+            p = al.phone_voice(x, sr, target, voices_cfg["phone_chain"])  # final loudness AFTER the phone chain
             phone_audio[key] = p
             al.write_wav(OUT / f"{stem}__phone.wav", p, 8000)
             files.append({**j, "file": f"{stem}__phone.wav", "kind": "phone"})
@@ -94,6 +101,7 @@ if RUN:
 
 # %% 4. Trio test: borrower -> agent -> earcon -> coach, 2 agents x 2 coaches
 trio_files = []
+trio_segments = {}
 
 
 def upsample(p: np.ndarray, sr: int) -> np.ndarray:
@@ -105,21 +113,52 @@ if RUN:
     for agent in trio["agents"]:
         for coach in trio["coaches"]:
             c, c_sr = raw_audio[("A4_coach_R5", coach, "V1")]
-            chime = al.earcon(c_sr)
-            chime *= np.sqrt(np.mean(c**2)) / np.sqrt(np.mean(chime**2))  # chime as loud as the coach voice
+            chime = al.chime_at(target_lufs("coach"), c_sr)
             gap = np.zeros(int(c_sr * 0.4), dtype=np.float32)
             threat = phone_audio[("A3_agent_threat", agent, "V1")]
-            scene = np.concatenate([upsample(b_phone, c_sr), gap, upsample(threat, c_sr), gap, chime, c])
+            parts = [("borrower", upsample(b_phone, c_sr), "borrower"), ("agent", upsample(threat, c_sr), "agent"),
+                     ("chime", chime, "coach"), ("coach", c, "coach")]
+            scene = np.concatenate([parts[0][1], gap, parts[1][1], gap, chime, c])
+            trio_segments[f"trio__{agent}__{coach}.wav"] = [(n, a, g) for n, a, g in parts]
             name = f"trio__{agent}__{coach}.wav"
             al.write_wav(OUT / name, scene, c_sr)
             trio_files.append(name)
     print("trio scenes:", trio_files)
 
-# %% 5. Index for listening
+# %% 5. Loudness table (ebur128 on the finished files)
+loud_rows = []
+if RUN:
+    import soundfile as sf
+
+    for f in files:
+        x, sr = sf.read(OUT / f["file"], dtype="float32")
+        loud_rows.append((f["file"], target_lufs(f["group"]), al.measure_loudness(x, sr)))
+    for name, segs in trio_segments.items():
+        for seg, x, group in segs:
+            probe = np.tile(x, 8) if seg == "chime" else x  # a chime is too short to measure alone
+            loud_rows.append((f"{name} / {seg}", target_lufs(group), al.measure_loudness(probe, c_sr)))
+    lines = ["# Loudness of the finished files (ffmpeg ebur128)", "",
+             "| file | target LUFS | measured LUFS | LRA | true peak dBTP | check |", "|---|---|---|---|---|---|"]
+    for name, tgt, m in loud_rows:
+        ok = abs(m["lufs"] - tgt) <= 0.5 and m["true_peak"] <= -1.5
+        lines.append(f"| {name} | {tgt:g} | {m['lufs']:.1f} | {m['lra']:.1f} | {m['true_peak']:.1f} | {'ok' if ok else 'CHECK'} |")
+    (OUT / "LOUDNESS.md").write_text("\n".join(lines), encoding="utf-8")
+    print("\n".join(l for l in lines if "CHECK" in l or l.startswith(("| file", "|---"))))
+    for tgt in sorted({t for _, t, _ in loud_rows}):
+        ms = [m for _, t, m in loud_rows if t == tgt]
+        print(f"target {tgt:g} LUFS: {len(ms)} files, measured {min(m['lufs'] for m in ms):.1f} to "
+              f"{max(m['lufs'] for m in ms):.1f}, highest true peak {max(m['true_peak'] for m in ms):.1f} dBTP")
+    for name, tgt, m in loud_rows:
+        if name.startswith("trio__Avinash__Shubham"):
+            print(f"  {name}: {m['lufs']:.1f} LUFS (target {tgt:g}), true peak {m['true_peak']:.1f}")
+    print("files outside +-0.5 LU or above -1.5 dBTP:", sum("CHECK" in l for l in lines))
+
+# %% 6. Index for listening
 if RUN:
     notes = {c["id"]: c["note"] for c in audition["clips"]}
-    md = ["# Audition index", "", "Open the .wav files directly or open INDEX.html. `raw` = clean voice, `phone` = as heard on the call.", ""]
-    html = ["<meta charset=utf-8><title>Audition</title><body style='font-family:sans-serif;max-width:900px;margin:2em auto'><h1>Audition</h1>"]
+    md = ["# Audition index", "", "Open the .wav files directly or open INDEX.html. `raw` = clean voice, `phone` = as heard on the call.",
+          "Loudness of every file: LOUDNESS.md.", ""]
+    html = ["<meta charset=utf-8><title>Audition</title><body style='font-family:sans-serif;max-width:900px;margin:2em auto'><h1>Audition</h1><p><a href='LOUDNESS.md'>Loudness table</a></p>"]
     for cid, note in notes.items():
         md += [f"## {cid}", note, ""]
         html += [f"<h2>{cid}</h2><p>{note}</p>"]
@@ -137,14 +176,14 @@ if RUN:
     (OUT / "INDEX.html").write_text("\n".join(html), encoding="utf-8")
     print("wrote INDEX.md and INDEX.html")
 
-# %% 6. STT round trip (REST for all phone clips, realtime for one clip)
+# %% 7. STT round trip (REST for all phone clips, realtime for one clip)
 COMBOS = {"A indic-auto": {"language_code": "indic-auto", "multi_lang_codes": "hi-IN,mr-IN,en-IN"},
           "B indic-auto hi,en": {"language_code": "indic-auto", "multi_lang_codes": "hi-IN,en-IN"},
           "C hi-IN": {"language_code": "hi-IN"}, "D mr-IN": {"language_code": "mr-IN"}}
 hints = audition["stt_roundtrip"]["key_terms_hint"]
 v1_text = {c["id"]: c["variants"]["V1"] for c in audition["clips"]}
 rows = []
-if RUN:
+if RUN and STT:
     al.spike.HINTS[:] = hints
     for f in [f for f in files if f["kind"] == "phone"]:
         terms = al.key_terms(v1_text[f["clip"]])
@@ -163,8 +202,8 @@ if RUN:
           df.groupby(["group", "var", "combo"])["recovery"].mean().round(2).unstack())
     df.to_csv(OUT / "stt_roundtrip.csv", index=False)
 
-# %% 7. Realtime check on one clip and write content/stt_profile.yaml
-if RUN:
+# %% 8. Realtime check on one clip and write content/stt_profile.yaml
+if RUN and STT:
     sample = OUT / "A3_agent_threat__Avinash__V1__phone.wav"
     rt = {}
     for name, (lang, cand) in {"A indic-auto": ("indic-auto", None), "B indic-auto+candidates": ("indic-auto", "hi,mr,en"),
@@ -182,7 +221,7 @@ if RUN:
     (al.ROOT / "content" / "stt_profile.yaml").write_text(yaml.safe_dump(profile, sort_keys=False), encoding="utf-8")
     print("wrote content/stt_profile.yaml:", json.dumps(profile))
 
-# %% 8. CHOICES (edit after listening; set CONFIRMED = True to write content/tts_profile.yaml)
+# %% 9. CHOICES (edit after listening; set CONFIRMED = True to write content/tts_profile.yaml)
 # The values below are only the recommendation from content/voices.yaml. They are NOT applied until the user answers.
 CONFIRMED = False
 CHOICES = {

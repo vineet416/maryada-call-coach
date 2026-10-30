@@ -130,7 +130,8 @@ def _ffmpeg(args: list[str]) -> str:
 
 
 def loudnorm(x: np.ndarray, sr: int, target_lufs: float, true_peak: float = -1.5) -> np.ndarray:
-    """Two-pass EBU R128 loudness normalisation with ffmpeg (linear gain, so no pumping)."""
+    """Two-pass EBU R128 loudness normalisation with ffmpeg (linear gain, so no pumping), then a limiter
+    0.5 dB below the true-peak ceiling so the finished file stays at or below `true_peak` dBTP."""
     with tempfile.TemporaryDirectory() as d:
         src, dst = Path(d, "in.wav"), Path(d, "out.wav")
         sf.write(src, x, sr, subtype="PCM_16")
@@ -139,17 +140,55 @@ def loudnorm(x: np.ndarray, sr: int, target_lufs: float, true_peak: float = -1.5
         m = json.loads(log[log.rindex("{"):log.rindex("}") + 1])
         af = (f"{base}:measured_I={m['input_i']}:measured_TP={m['input_tp']}:measured_LRA={m['input_lra']}"
               f":measured_thresh={m['input_thresh']}:offset={m['target_offset']}:linear=true")
+        limit = 10 ** ((true_peak - 0.5) / 20)
+        af += f",alimiter=limit={limit:.4f}:level=disabled"
         _ffmpeg(["-i", str(src), "-af", af, "-ar", str(sr), "-ac", "1", str(dst)])
         y, _ = sf.read(dst, dtype="float32")
+    return _trim_to_target(y, sr, target_lufs, true_peak)
+
+
+def _trim_to_target(y: np.ndarray, sr: int, target_lufs: float, true_peak: float) -> np.ndarray:
+    """loudnorm and ebur128 can disagree by a few tenths of a LU on short clips; close the gap with one linear
+    gain step, never letting the true peak rise above the ceiling."""
+    m = measure_loudness(y, sr)
+    gain = target_lufs - m["lufs"]
+    if abs(gain) > 0.1 and np.isfinite(m["lufs"]):
+        gain = min(gain, true_peak - m["true_peak"])
+        y = (y * 10 ** (gain / 20)).astype(np.float32)
     return y
 
 
-def measure_lufs(x: np.ndarray, sr: int) -> float:
+def measure_loudness(x: np.ndarray, sr: int) -> dict[str, float]:
+    """Integrated loudness (LUFS), loudness range (LU) and true peak (dBTP) of a finished signal, via ffmpeg ebur128."""
     with tempfile.TemporaryDirectory() as d:
         src = Path(d, "in.wav")
         sf.write(src, x, sr, subtype="PCM_16")
-        log = _ffmpeg(["-i", str(src), "-af", "loudnorm=print_format=json", "-f", "null", "-"])
-    return float(json.loads(log[log.rindex("{"):log.rindex("}") + 1])["input_i"])
+        log = _ffmpeg(["-i", str(src), "-af", "ebur128=peak=true", "-f", "null", "-"])
+    summary = log[log.rindex("Summary:"):]
+
+    def grab(label: str) -> float:
+        m = re.search(rf"{label}:\s+(-?[\d.]+|-inf)", summary)
+        return float("-inf") if not m or m.group(1) == "-inf" else float(m.group(1))
+
+    return {"lufs": grab("I"), "lra": grab("LRA"), "true_peak": grab("Peak")}
+
+
+def measure_lufs(x: np.ndarray, sr: int) -> float:
+    return measure_loudness(x, sr)["lufs"]
+
+
+def phone_voice(x: np.ndarray, sr: int, target_lufs: float, cfg: dict | None = None) -> np.ndarray:
+    """Call voice as heard: phone chain first, then the final loudness normalisation (the chain lowers the level)."""
+    cfg = cfg or load_yaml("content/voices.yaml")["phone_chain"]
+    return loudnorm(phone_chain(x, sr, cfg), cfg["resample_hz"], target_lufs)
+
+
+def chime_at(lufs: float, sr: int) -> np.ndarray:
+    """The earcon scaled so that it measures `lufs`. A chime is too short for a loudness reading, so eight of
+    them back to back are measured and the same gain is applied to a single one."""
+    c = earcon(sr)
+    gain = 10 ** ((lufs - measure_lufs(np.tile(c, 8), sr)) / 20)
+    return (c * gain).astype(np.float32)
 
 
 def peak_dbfs(x: np.ndarray) -> float:

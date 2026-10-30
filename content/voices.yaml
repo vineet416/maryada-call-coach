@@ -30,11 +30,11 @@ text_rules:
   tags: "audio tags such as <excited> are optional; the audition tests ONE tagged line; if rejected, strip all tags"
   pitch_volume_emotion: "leave API defaults unless the audition shows a clear need"
 
-loudness:          # applied by ffmpeg loudnorm after TTS, before phone processing
-  agent: -22 LUFS
+loudness:          # integrated LUFS of the FINISHED files, measured with ebur128 (docs/11 section 10)
+  agent: -22 LUFS               # call voices: normalised AFTER the phone chain (the chain lowers the level), true peak <= -1.5 dBTP
   borrower: -24 LUFS            # slightly quieter, "further from handset"
   third_party: -25 LUFS
-  coach: -26 LUFS               # DECIDED: a little quieter than agent (-22) and borrower (-24). Browser playback gain for coach = 0.85. Clean full-band sound (not phone-filtered) keeps it audible and distinct
+  coach: -27 LUFS               # clean full-band, so it sounds distinct; chime at the same level. Browser playback gain for the coach = 1.0
   vo: -16 LUFS
 
 phone_chain:       # applied to call audio only (not coach, not VO)

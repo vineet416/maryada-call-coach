@@ -14,9 +14,9 @@ clips:
     role: borrower_f
     voices: [Chetana]
     variants:
-      V1: "Saheb, mala maaf karo. Meri naukri gayi aahe do mahine pehle. Agle hafte tak thoda paisa jama hoga, poora ek saath nahi de sakti."
-      V2: "साहेब, मला माफ करा. मेरी नौकरी गई आहे दो महीने पहले. अगले हफ्ते तक थोड़ा पैसा जमा होगा, पूरा एक साथ नहीं दे सकती."
-      V3: "Saheb, mala maaf karo. Meri naukri gayi aahe do mahine pehle. Agle hafte tak thoda paisa jama hoga, poora ek saath nahi de sakti."
+      V1: "Saheb, mala maaf kara. Majhi naukri geli aahe, do mahine ho gaye. Agle hafte tak thoda paisa jama ho jayega, par poora ek saath nahi de sakti."
+      V2: "साहेब, मला माफ करा. माझी नोकरी गेली आहे, दो महिने हो गये. अगले हफ्ते तक थोड़ा पैसा जमा हो जाएगा, पर पूरा एक साथ नहीं दे सकती."
+      V3: "Saheb, mala maaf kara. Majhi naukri geli aahe, do mahine ho gaye. Agle hafte tak thoda paisa jama ho jayega, par poora ek saath nahi de sakti."
   - id: A3_agent_threat
     note: "Hero turn 5 (the violation). Needs an irritated, impatient tone but NOT shouting. Also test one tagged variant."
     role: agent_m2

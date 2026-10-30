@@ -13,17 +13,34 @@ scenarios:
     hero: true
     hard_negative: false
     turns:
-      - {s: A, t: "Namaste madam, main Rohit bol raha hoon Tarang Finserv se. Yeh call quality ke liye record ho rahi hai. Kya main Smita Patil ji se baat kar raha hoon?"}
-      - {s: B, t: "Haan, Smita bolte aahe. Boliye na, kya kaam hai?"}
-      - {s: A, t: "Madam, aapki personal loan ki EMI aath hazaar chaar sau rupaye pichhle mahine se pending hai. Aap kab tak payment kar paayengi?"}
-      - {s: B, t: "Saheb, mala maaf karo. Meri naukri gayi aahe do mahine pehle. Agle hafte tak thoda paisa jama hoga, poora ek saath nahi de sakti."}
+      - s: A
+        t: "Namaste madam, main Rohit bol raha hoon Tarang Finserv se. Yeh call quality ke liye record ho rahi hai. Kya main Smita Patil ji se baat kar raha hoon?"
+        td: "नमस्ते मैडम, मैं रोहित बोल रहा हूँ तारंग फिनसर्व से। यह कॉल क्वालिटी के लिए रिकॉर्ड हो रही है। क्या मैं स्मिता पाटिल जी से बात कर रहा हूँ?"
+      - s: B
+        t: "Hoy, Smita bolteye. Sanga, kay kaam aahe?"
+        td: "हो, स्मिता बोलतेय. सांगा, काय काम आहे?"
+      - s: A
+        t: "Madam, aapki personal loan ki EMI aath hazaar chaar sau rupaye pichhle mahine se pending hai. Aap kab tak payment kar paayengi?"
+        td: "मैडम, आपकी पर्सनल लोन की ईएमआई आठ हज़ार चार सौ रुपये पिछले महीने से पेंडिंग है। आप कब तक पेमेंट कर पाएँगी?"
+      - s: B
+        t: "Saheb, mala maaf kara. Majhi naukri geli aahe, do mahine ho gaye. Agle hafte tak thoda paisa jama ho jayega, par poora ek saath nahi de sakti."
+        td: "साहेब, मला माफ करा. माझी नोकरी गेली आहे, दो महिने हो गये. अगले हफ्ते तक थोड़ा पैसा जमा हो जाएगा, पर पूरा एक साथ नहीं दे सकती."
       - s: A
         t: "Roz yahi bahana sunte hain. Agar kal tak paisa jama nahi hua na, toh main police ko bhejunga aapke ghar, aur aapke mohalle mein sabko bata dunga ki aap defaulter ho. Court ka notice bhi kal subah aa jayega."
+        td: "रोज़ यही बहाना सुनते हैं। अगर कल तक पैसा जमा नहीं हुआ ना, तो मैं पुलिस को भेजूँगा आपके घर, और आपके मोहल्ले में सबको बता दूँगा कि आप डिफॉल्टर हो। कोर्ट का नोटिस भी कल सुबह आ जाएगा।"
         L: [[R5, "police ko bhejunga aapke ghar"], [R3, "aapke mohalle mein sabko bata dunga ki aap defaulter ho"], [R5, "Court ka notice bhi kal subah aa jayega"]]
-      - {s: B, t: "Arre saheb, dhamki kashala dete ho? Main paisa nahi dungi aisa nahi bola, bas thoda time chahiye."}
-      - {s: A, t: "Sorry madam, mujhe aise nahi bolna chahiye tha. Main samajh sakta hoon. Aap bataiye, is Friday tak kitna arrange ho sakta hai? Hum EMI restructure ka option bhi dekh sakte hain."}
-      - {s: B, t: "Theek aahe. Friday tak teen hazaar rupaye de sakti hoon. Baaki ka next mahine se thoda thoda."}
-      - {s: A, t: "Dhanyavaad madam. Friday ko teen hazaar ka payment link bhej deta hoon, aur baaki ke liye restructure ki request main aaj hi daal deta hoon. Aapka din shubh ho."}
+      - s: B
+        t: "Arre saheb, dhamki kashala detaay? Main paisa nahi dungi aisa nahi bola, mala fakt thoda time pahije."
+        td: "अरे साहेब, धमकी कशाला देताय? मैं पैसा नहीं दूँगी ऐसा नहीं बोला, मला फक्त थोडा टाइम पाहिजे."
+      - s: A
+        t: "Sorry madam, mujhe aise nahi bolna chahiye tha. Main samajh sakta hoon. Aap bataiye, is Friday tak kitna arrange ho sakta hai? Hum EMI restructure ka option bhi dekh sakte hain."
+        td: "सॉरी मैडम, मुझे ऐसे नहीं बोलना चाहिए था। मैं समझ सकता हूँ। आप बताइए, इस फ्राइडे तक कितना अरेंज हो सकता है? हम ईएमआई रीस्ट्रक्चर का ऑप्शन भी देख सकते हैं।"
+      - s: B
+        t: "Thik aahe. Shukravar paryant teen hazaar rupaye deu shakte. Baaki pudhchya mahinyapasun thode thode."
+        td: "ठीक आहे. शुक्रवारपर्यंत तीन हजार रुपये देऊ शकते. बाकी पुढच्या महिन्यापासून थोडे थोडे."
+      - s: A
+        t: "Dhanyavaad madam. Friday ko teen hazaar ka payment link bhej deta hoon, aur baaki ke liye restructure ki request main aaj hi daal deta hoon. Aapka din shubh ho."
+        td: "धन्यवाद मैडम। फ्राइडे को तीन हज़ार का पेमेंट लिंक भेज देता हूँ, और बाकी के लिए रीस्ट्रक्चर की रिक्वेस्ट मैं आज ही डाल देता हूँ। आपका दिन शुभ हो।"
   - id: c07
     title: "Insult over a late payment"
     summary: "Agent shames the borrower and tells him not to run away."
