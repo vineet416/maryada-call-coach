@@ -8,6 +8,7 @@ fails, notes = [], []
 
 def run(cmd, cwd=".", timeout=600):
     try:
+        cmd = [shutil.which(cmd[0]) or cmd[0], *cmd[1:]]  # Windows: resolve npx.cmd / npm.cmd
         r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout)
         return r.returncode, (r.stdout + r.stderr).strip()
     except Exception as e:

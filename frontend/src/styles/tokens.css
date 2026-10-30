@@ -1,0 +1,51 @@
+/* Single source for colours and fonts (docs/05 §2). Dark theme only. */
+:root {
+  --mc-bg: #0b0f14;
+  --mc-surface: #121821;
+  --mc-line: #1f2a37;
+  --mc-text: #e6edf3;
+  --mc-muted: #8b98a5;
+  --mc-accent: #4f8cff;
+
+  --mc-violation: #ff5c5c;
+  --mc-advisory: #f5b544;
+  --mc-needs-review: #a78bfa;
+  --mc-good-practice: #3fcf8e;
+  --mc-context: #5ab0ff;
+
+  --mc-risk-low: var(--mc-good-practice);
+  --mc-risk-medium: var(--mc-advisory);
+  --mc-risk-high: var(--mc-violation);
+
+  --font-ui: 'Noto Sans', system-ui, sans-serif;
+  --font-transcript: 'Noto Sans', 'Noto Sans Devanagari', system-ui, sans-serif;
+}
+
+/* Map the tokens onto the shadcn/ui variables */
+.dark {
+  --background: var(--mc-bg);
+  --foreground: var(--mc-text);
+  --card: var(--mc-surface);
+  --card-foreground: var(--mc-text);
+  --popover: var(--mc-surface);
+  --popover-foreground: var(--mc-text);
+  --primary: var(--mc-accent);
+  --primary-foreground: #ffffff;
+  --secondary: var(--mc-line);
+  --secondary-foreground: var(--mc-text);
+  --muted: var(--mc-surface);
+  --muted-foreground: var(--mc-muted);
+  --accent: var(--mc-line);
+  --accent-foreground: var(--mc-text);
+  --destructive: var(--mc-violation);
+  --border: var(--mc-line);
+  --input: var(--mc-line);
+  --ring: var(--mc-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
