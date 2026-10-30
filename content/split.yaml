@@ -1,0 +1,5 @@
+# Evaluation split (replaces "c01-c15 vs c16-c30" in docs/06). Stratified so every rule appears in both sets.
+tune:     [c01, c03, c04, c06, c07, c09, c11, c13, c15, c17, c19, c20, c22, c23, c25, c27, c29]
+held_out: [c02, c05, c08, c10, c12, c14, c16, c18, c21, c24, c26, c28, c30]
+# held-out coverage: clean/hard-negative c02 c05 c18 c30 | R3 c08 c10 c28 | R5 c12 c14 | R4 c16 | R1 c21 | R2 c24 c28 | R6 c26
+# Tune prompts / phrase lists ONLY on the tune set. Report held-out numbers separately and honestly.

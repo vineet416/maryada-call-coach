@@ -1,0 +1,94 @@
+# c11-c14: R5 (false or misleading statements about legal consequences, authority or charges)
+scenarios:
+  - id: c11
+    title: "Fake arrest warrant"
+    summary: "Agent claims a warrant has been issued and the police will pick the borrower up."
+    agent: A3
+    date: "2026-10-19"
+    time: "12:00"
+    answered_by: borrower
+    borrower: {name: "Kiran Sawant", voice: m1}
+    facts: {product: "personal loan", emi_inr: 10000, dpd_days: 62}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Rohit bol raha hoon Tarang Finserv se, call record ho rahi hai. Kiran Sawant ji se baat ho rahi hai?"}
+      - {s: B, t: "Haan, boliye."}
+      - {s: A, t: "Aapki EMI das hazaar rupaye ki do mahine se due hai. Kab tak payment hoga?"}
+      - {s: B, t: "Saheb, abhi paisa nahi aahe. Ek mahina de do."}
+      - s: A
+        t: "Ek mahina nahi milega. Court se aapke naam par arrest warrant nikal chuka hai, kabhi bhi police pakad legi."
+        L: [[R5, "Court se aapke naam par arrest warrant nikal chuka hai"]]
+      - {s: B, t: "Kay? Warrant? Mala kuch notice nahi aaya."}
+      - s: A
+        t: "Aaya nahi toh ab aayega. Abhi paisa bhar do toh warrant ruk sakta hai."
+        L: [[R5, "paisa bhar do toh warrant ruk sakta hai"]]
+      - {s: B, t: "Main bank jaata hoon aaj, kuch deta hoon."}
+  - id: c12
+    title: "Pretending to speak for the RBI"
+    summary: "Agent claims RBI authority and says the loan account will be blocked for life."
+    agent: A6
+    date: "2026-10-21"
+    time: "10:45"
+    answered_by: borrower
+    borrower: {name: "Rekha Kadam", voice: f}
+    facts: {product: "personal loan", emi_inr: 6000, dpd_days: 25}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Namaste, main Kavita bol rahi hoon Tarang Finserv se, call recorded hai. Rekha Kadam ji se baat ho rahi hai?"}
+      - {s: B, t: "Ho, Rekha bolte aahe."}
+      - {s: A, t: "Madam, aapki chhah hazaar rupaye ki EMI pending hai."}
+      - {s: B, t: "Haan, mala maahit aahe. Agle mahine tak karungi."}
+      - s: A
+        t: "Madam, main RBI ki taraf se bhi bol rahi hoon, RBI aapka loan account block kar degi aur aapko kisi bank se loan nahi milega zindagi bhar."
+        L: [[R5, "main RBI ki taraf se bhi bol rahi hoon"], [R5, "RBI aapka loan account block kar degi"]]
+      - {s: B, t: "Kay? RBI? Aisa ho sakta hai kya?"}
+      - {s: A, t: "Haan, isliye aaj hi bhar dijiye."}
+      - {s: B, t: "Aaj nahi hoga madam, kal sham tak."}
+  - id: c13
+    title: "Invented daily penalty"
+    summary: "Agent invents a Rs 5,000 per day penalty and attributes it to RBI."
+    agent: A1
+    date: "2026-10-17"
+    time: "15:40"
+    answered_by: borrower
+    borrower: {name: "Rajesh Bhoir", voice: m2}
+    facts: {product: "two-wheeler loan", emi_inr: 4200, dpd_days: 10}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Namaste sir, Amit bol raha hoon Tarang Finserv se. Call record ho rahi hai. Rajesh Bhoir ji baat kar rahe hain?"}
+      - {s: B, t: "Haan, boliye."}
+      - {s: A, t: "Sir, aapki chaar hazaar do sau rupaye ki EMI pending hai."}
+      - {s: B, t: "Haan, Friday tak dunga."}
+      - s: A
+        t: "Sir, agar Friday tak nahi diya toh har din paanch hazaar rupaye penalty lagegi, aur yeh RBI ka rule hai."
+        L: [[R5, "har din paanch hazaar rupaye penalty lagegi"]]
+      - {s: B, t: "Paanch hazaar roz? Itna kaise?"}
+      - {s: A, t: "Isliye Friday se pehle kar dijiye sir."}
+      - {s: B, t: "Theek aahe, Friday ko pakka."}
+  - id: c14
+    title: "Threat to seize house and car tomorrow"
+    summary: "Agent says a team will seize property tomorrow and no notice is needed."
+    agent: A5
+    date: "2026-10-23"
+    time: "16:55"
+    answered_by: borrower
+    borrower: {name: "Nilesh Phadke", voice: m1}
+    facts: {product: "personal loan", emi_inr: 9000, dpd_days: 35}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Sir, Sandeep bol raha hoon Tarang Finserv se, call record ho rahi hai. Nilesh Phadke ji se baat ho rahi hai?"}
+      - {s: B, t: "Ho, boliye."}
+      - {s: A, t: "Sir, aapki nau hazaar rupaye ki EMI pichhle mahine se pending hai."}
+      - {s: B, t: "Saheb, thoda time chahiye. Agle hafte pakka."}
+      - s: A
+        t: "Agar kal tak payment nahi aaya toh kal hi hamari team aapka ghar aur gaadi seize kar legi."
+        L: [[R5, "kal hi hamari team aapka ghar aur gaadi seize kar legi"]]
+      - {s: B, t: "Kay? Itni jaldi? Mala notice bhi nahi mila."}
+      - s: A
+        t: "Notice ki zarurat nahi hai ab. Jaldi payment kijiye."
+        L: [[R5, "Notice ki zarurat nahi hai ab"]]
+      - {s: B, t: "Theek aahe, kal bank jaata hoon."}

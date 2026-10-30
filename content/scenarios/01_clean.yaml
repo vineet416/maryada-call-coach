@@ -1,0 +1,97 @@
+# c01-c05: clean calls (no violations). c02, c04, c05 are also HARD NEGATIVES (firm but true/polite statements).
+scenarios:
+  - id: c01
+    title: "Salary delay, polite follow-up"
+    summary: "Agent identifies properly, listens, agrees a payment date."
+    agent: A2
+    date: "2026-10-12"
+    time: "10:30"
+    answered_by: borrower
+    borrower: {name: "Suresh Bhosale", voice: m1}
+    facts: {product: "personal loan", emi_inr: 6200, dpd_days: 12}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Namaste sir, main Neha bol rahi hoon Tarang Finserv se. Yeh call quality ke liye record ho rahi hai. Kya main Suresh Bhosale ji se baat kar rahi hoon?"}
+      - {s: B, t: "Haan, Suresh bolto aahe. Boliye madam, kya kaam hai?"}
+      - {s: A, t: "Sir, aapki personal loan ki chhah hazaar do sau rupaye ki EMI abhi pending dikh rahi hai. Kya koi dikkat aayi hai?"}
+      - {s: B, t: "Madam, company ne salary thodi late kiye aahe. Paanch tarikh ko aati hai, is baar das tak aayegi."}
+      - {s: A, t: "Samajh gayi sir. Toh kya aap das tarikh ke baad payment kar paayenge? Main reminder bhi note kar leti hoon."}
+      - {s: B, t: "Ho, das ko salary aate hi pay kar dunga. Don-teen din ka time chahiye."}
+      - {s: A, t: "Theek hai sir, main das tarikh ke baad aapko payment link bhej dungi. Dhanyavaad, aapka din achha rahe."}
+  - id: c02
+    title: "Late fee explained, politely"
+    summary: "Hard negative: agent truthfully mentions late fee and credit score; must NOT be flagged."
+    agent: A7
+    date: "2026-10-13"
+    time: "11:05"
+    answered_by: borrower
+    borrower: {name: "Anil Gaikwad", voice: m2}
+    facts: {product: "personal loan", emi_inr: 12500, dpd_days: 14}
+    hero: false
+    hard_negative: true
+    turns:
+      - {s: A, t: "Namaste, main Vikram bol raha hoon Tarang Finserv se, yeh call recorded hai. Kya Anil Gaikwad ji se baat ho rahi hai?"}
+      - {s: B, t: "Haan boliye, Anil bol raha hoon."}
+      - {s: A, t: "Sir, aapki barah hazaar paanch sau rupaye ki EMI do hafte se due hai. Aap kab tak bhar paayenge?"}
+      - {s: B, t: "Arre saheb, thodi problem aahe. Agle mahine dekhta hoon. Itna late fee kyun lagta hai?"}
+      - {s: A, t: "Sir, agreement ke hisaab se late hone par late fee lagti hai aur credit score par bhi asar padta hai. Isliye main chahta hoon ki aap jaldi se jaldi bhar dein."}
+      - {s: B, t: "Samajh gaya. Is hafte ke end tak koshish karta hoon."}
+      - {s: A, t: "Theek hai sir. Agar aapko aasani chahiye toh hum EMI date change karne ka option bhi dekh sakte hain. Main aapko message bhej deta hoon."}
+  - id: c03
+    title: "Borrower already paid"
+    summary: "Agent verifies politely, apologises for the disturbance."
+    agent: A2
+    date: "2026-10-20"
+    time: "16:10"
+    answered_by: borrower
+    borrower: {name: "Meena Jagtap", voice: f}
+    facts: {product: "personal loan", emi_inr: 4800, dpd_days: 3}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Namaste madam, main Neha bol rahi hoon Tarang Finserv se. Yeh call record ho rahi hai. Kya main Meena Jagtap ji se baat kar rahi hoon?"}
+      - {s: B, t: "Ho, Meena bolte aahe. Boliye na."}
+      - {s: A, t: "Madam, humare system mein aapki EMI abhi pending dikh rahi hai. Kya aapne payment kiya hai?"}
+      - {s: B, t: "Arre, maine kal hi online bhar diya hai. Mala receipt bhi aali aahe."}
+      - {s: A, t: "Oh achha, shayad update hone mein time lag raha hai. Kya aap transaction ID bata sakti hain?"}
+      - {s: B, t: "Haan, ek minute... message mein hai. Main WhatsApp pe bhej deti hoon."}
+      - {s: A, t: "Bahut shukriya madam. Main check karke system update kara deti hoon. Takleef ke liye maaf kijiye."}
+  - id: c04
+    title: "Honest mention of a possible notice"
+    summary: "Hard negative: agent truthfully says a notice can be sent per agreement, then offers options."
+    agent: A7
+    date: "2026-10-22"
+    time: "12:40"
+    answered_by: borrower
+    borrower: {name: "Dinesh Mane", voice: m1}
+    facts: {product: "business loan", emi_inr: 8000, dpd_days: 60}
+    hero: false
+    hard_negative: true
+    turns:
+      - {s: A, t: "Namaste sir, main Vikram bol raha hoon Tarang Finserv se. Call recorded hai. Kya Dinesh Mane ji baat kar rahe hain?"}
+      - {s: B, t: "Haan ji, bolo."}
+      - {s: A, t: "Sir, aapki aath hazaar rupaye ki EMI pichhle do mahine se pending hai. Humne reminder bheje the."}
+      - {s: B, t: "Haan saheb, dhandha slow aahe. Kay karu? Koi action toh nahi hoga na?"}
+      - {s: A, t: "Sir, agreement ke mutabik zyada din tak payment na ho toh notice bheja ja sakta hai. Lekin abhi hum chahte hain ki aap ke saath milkar koi option nikaal lein."}
+      - {s: B, t: "Theek aahe. Aadha paisa pandrah tarikh tak de sakta hoon."}
+      - {s: A, t: "Achha sir. Pandrah tarikh tak aadhi rakam aur baaki next mahine, yeh main note kar leta hoon. Dhanyavaad."}
+  - id: c05
+    title: "Firm early-morning reminder"
+    summary: "Hard negative: firm and urgent but polite, inside calling hours (09:15)."
+    agent: A7
+    date: "2026-10-24"
+    time: "09:15"
+    answered_by: borrower
+    borrower: {name: "Santosh Wagh", voice: m2}
+    facts: {product: "two-wheeler loan", emi_inr: 4800, dpd_days: 5}
+    hero: false
+    hard_negative: true
+    turns:
+      - {s: A, t: "Good morning sir, main Vikram bol raha hoon Tarang Finserv se. Yeh call recorded hai. Kya Santosh Wagh ji se baat ho rahi hai?"}
+      - {s: B, t: "Haan, boliye. Subah subah kaay zhala?"}
+      - {s: A, t: "Sir, aapki chaar hazaar aath sau rupaye ki EMI due date se paanch din upar ho gayi hai. Please aaj payment kar dijiye."}
+      - {s: B, t: "Aaj nahi ho payega. Do din ka time dijiye na."}
+      - {s: A, t: "Theek hai sir, main do din ka time note kar leta hoon. Lekin kripya parso tak zaroor kar dijiye, nahi toh late fee badh jayegi."}
+      - {s: B, t: "Pakka. Parso kar dunga."}
+      - {s: A, t: "Dhanyavaad sir. Main parso subah ek reminder bhej dunga."}

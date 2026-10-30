@@ -1,0 +1,162 @@
+# Phrase lists for the deterministic prefilter + coach lines. Format: "roman | devanagari". Match after normalisation
+# (lowercase, strip punctuation, collapse spaces); STT output may be Devanagari for Hindi/Marathi words and Roman for English words (codemix), so BOTH forms matter.
+# strength: strong = confidence 0.9 on exact multi-word match; weak = 0.6 (needs LLM agreement to become a violation).
+# Phrases may be ADDED while tuning on the tune set (docs/03 §5, content/split.yaml) but must not remove these.
+version: rb-2026.11-v1
+rules:
+  R3:
+    strong:
+      - "sharam nahi aati | शर्म नहीं आती"
+      - "bewakoof | बेवकूफ"
+      - "nikamme | निकम्मे"
+      - "nalayak | नालायक"
+      - "badtameez | बदतमीज़"
+      - "gadha | गधा"
+      - "dekh lunga | देख लूंगा"
+      - "dekh lena warna | देख लेना वरना"
+      - "ghar aake tamasha | घर आके तमाशा"
+      - "tamasha karunga | तमाशा करूंगा"
+      - "badnaam kar dunga | बदनाम कर दूंगा"
+      - "sabko bata dunga | सबको बता दूंगा"
+      - "padosiyon ko pata chalega | पड़ोसियों को पता चलेगा"
+      - "izzat utaar | इज़्ज़त उतार"
+      - "chhodunga nahi | छोडूंगा नहीं"
+      - "haath pair tod | हाथ पैर तोड़"
+      - "zindagi barbaad | ज़िंदगी बर्बाद"
+      - "himmat nahi hai kya | हिम्मत नहीं है क्या"
+      - "kaisa insaan hai aap | कैसा इंसान है आप"
+      - "bhaagne ka sochna bhi mat | भागने का सोचना भी मत"
+      - "hoshiyari mat dikha | होशियारी मत दिखा"
+      - "tula sodnar nahi | तुला सोडणार नाही"
+      - "lajja nahi vatat | लाज वाटत नाही"
+      - "bagh mi kay karto | बघ मी काय करतो"
+      - "vedya | वेड्या"
+    weak:
+      - "bahane mat banao | बहाने मत बनाओ"
+      - "jhooth bol rahe ho | झूठ बोल रहे हो"
+      - "warna dekh lena | वरना देख लेना"
+      - "kal subah tak chahiye | कल सुबह तक चाहिए"
+      - "tu sunta hi nahi | तू सुनता ही नहीं"
+      - "ullu | उल्लू"
+      - "gadhva | गाढव"
+  R5:
+    strong:
+      - "police ko bhej | पुलिस को भेज"
+      - "arrest warrant | अरेस्ट वारंट"
+      - "warrant nikal | वारंट निकल"
+      - "pakad legi | पकड़ लेगी"
+      - "court ka notice | कोर्ट का नोटिस"
+      - "court mein case | कोर्ट में केस"
+      - "jail | जेल"
+      - "seize kar legi | सीज़ कर लेगी"
+      - "sealed hogi | सील होगी"
+      - "notice ki zarurat nahi | नोटिस की ज़रूरत नहीं"
+      - "RBI ki taraf se | आरबीआई की तरफ से"
+      - "RBI aapka loan account block | आरबीआई आपका लोन अकाउंट ब्लॉक"
+      - "har din paanch hazaar rupaye penalty | हर दिन पाँच हज़ार रुपये पेनल्टी"
+      - "FIR | एफआईआर"
+      - "ata police yetil | आता पोलीस येतील"
+      - "atak hoil | अटक होईल"
+      - "japti | जप्ती"
+    weak:
+      - "legal action kal | लीगल एक्शन कल"
+      - "blacklist | ब्लैकलिस्ट"
+      - "zindagi bhar loan nahi milega | ज़िंदगी भर लोन नहीं मिलेगा"
+  R4:        # only evaluated when the call was answered by someone other than the borrower
+    disclosure_triggers:
+      - "loan liya hai | लोन लिया है"
+      - "loan liya tha | लोन लिया था"
+      - "EMI pending | ईएमआई पेंडिंग"
+      - "EMI nahi | ईएमआई नहीं"
+      - "EMI nahi bhar | ईएमआई नहीं भर"
+      - "default ho gaya | डिफॉल्ट हो गया"
+      - "overdue | ओवरड्यू"
+      - "paisa baaki | पैसा बाकी"
+      - "recovery ke liye | रिकवरी के लिए"
+      - "dhokha de raha | धोखा दे रहा"
+      - "paisa wapas nahi | पैसा वापस नहीं"
+      - "karj | कर्ज"
+    shaming_triggers:
+      - "sab padosi jaan lein | सब पड़ोसी जान लें"
+      - "society mein sabko pata | सोसाइटी में सबको पता"
+    safe_patterns:      # agent only asks for the borrower / leaves a callback message -> NOT a violation
+      - "wapas call kar | वापस कॉल कर"
+      - "zaroori call | ज़रूरी कॉल"
+      - "kya unse baat ho sakti hai | क्या उनसे बात हो सकती है"
+  R6:
+    borrower_context_triggers:      # borrower mentions a sensitive occasion (context for the LLM / prefilter)
+      - "nidhan | निधन"
+      - "mrityu | मृत्यु"
+      - "guzar gaye | गुज़र गए"
+      - "antim sanskar | अंतिम संस्कार"
+      - "terahvi | तेरहवीं"
+      - "hospital | हॉस्पिटल"
+      - "operation | ऑपरेशन"
+      - "bimaar | बीमार"
+      - "beemar aahe | बीमार आहे"
+      - "accident | एक्सिडेंट"
+      - "ICU | आईसीयू"
+      - "shaadi | शादी"
+      - "lagna | लग्न"
+    agent_pressing_patterns:
+      - "aaj hi kuch bhej | आज ही कुछ भेज"
+      - "aaj hi online kar | आज ही ऑनलाइन कर"
+      - "kal tak payment zaroori | कल तक पेमेंट ज़रूरी"
+      - "kuch toh bhejna padega | कुछ तो भेजना पड़ेगा"
+      - "due date nikal chuki | ड्यू डेट निकल चुकी"
+      - "do hafte toh bahut hain | दो हफ्ते तो बहुत हैं"
+  R2:
+    identification_patterns:      # name + lender
+      - "bol raha hoon Tarang Finserv | बोल रहा हूँ तारंग फिनसर्व"
+      - "bol rahi hoon Tarang Finserv | बोल रही हूँ तारंग फिनसर्व"
+      - "Tarang Finserv se | तारंग फिनसर्व से"
+    recording_patterns:
+      - "record ho rahi | रिकॉर्ड हो रही"
+      - "recorded hai | रिकॉर्डेड है"
+      - "recording | रिकॉर्डिंग"
+  G1:
+    good_practice_patterns:
+      - "samajh sakta hoon | समझ सकता हूँ"
+      - "samajh sakti hoon | समझ सकती हूँ"
+      - "koi dikkat | कोई दिक्कत"
+      - "option | ऑप्शन"
+      - "restructure | रिस्ट्रक्चर"
+      - "dhanyavaad | धन्यवाद"
+      - "afsos | अफ़सोस"
+      - "dhyan rakhiye | ध्यान रखिए"
+      - "sorry sir | सॉरी सर"
+      - "kripya | कृपया"
+
+hard_negative_notes: |
+  These are NOT violations and must not be flagged: true statements about late fee, credit score impact, or that a notice
+  "can be sent" per the agreement; firm-but-polite requests for payment by a date; asking for the borrower or leaving a
+  callback message with a family member without mentioning the loan.
+
+coach_lines:       # pre-generated with Timbre (role: coach); <= 14 words each; natural Hinglish
+  R1:
+    - "Ruk jaiye — abhi call karne ka sahi samay nahi hai. Baad mein call kijiye."
+    - "Time dekhiye — call sirf subah aath se shaam saat ke beech hi karni hai."
+    - "Yeh sahi waqt nahi hai. Politely maafi maangiye aur baad mein call kijiye."
+  R2:
+    - "Pehle apna naam, company aur call recording ka bataiye."
+    - "Rukiye — borrower ko bataiye aap kaun hain aur call record ho rahi hai."
+    - "Introduction chhoot gaya. Naam, company aur recording notice abhi bol dijiye."
+  R3:
+    - "Rukiye — yahan dhamki mat dijiye. Shaanti se EMI ka option batayiye."
+    - "Awaaz neeche rakhiye. Izzat se baat kijiye aur payment ka plan poochiye."
+    - "Yeh bhasha theek nahi hai. Politely dobara bolein."
+  R4:
+    - "Dhyan dijiye — yeh borrower nahi hain. Loan ki baat bilkul mat kijiye."
+    - "Sirf callback ka message chhodiye. Loan ki details kisi aur ko nahi batani."
+    - "Rukiye. Dues sirf borrower se discuss karne hain, kisi aur se nahi."
+  R5:
+    - "Ruk jaiye — dhamki aur galat baatein mat kijiye. Sahi process samjhaiye."
+    - "Galat darr mat dikhaiye. Agreement ke hisaab se sach batayiye."
+    - "Court ya police ki jhooti baat mat kijiye. Sahi process samjhaiye."
+  R6:
+    - "Rukiye — unka ghar mushkil waqt mein hai. Payment ki baat baad mein kijiye."
+    - "Pehle hamdardi dikhaiye. Payment ke liye thodi der baad poochiye."
+    - "Abhi pressure mat daaliye. Unka haal poochiye aur baad mein call kijiye."
+  G1:             # praise, played rarely (max once per call), no risk change
+    - "Bahut badhiya — aapne tameez se baat ki."
+    - "Achha kiya! Aise hi option dekar baat kijiye."

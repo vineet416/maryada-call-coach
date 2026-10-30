@@ -1,0 +1,47 @@
+# Voice casting + TTS parameters (defaults). The user can change any voice after the audition (docs/11).
+# All voices belong to model timbre-v3.0 (13 voices, each speaks all supported languages). A wrong voice/model pairing returns HTTP 400.
+# Genders below are ASSUMED from the voice names/labels in the Gnani playground; the audition confirms them.
+model: timbre-v3.0
+roles:
+  agent_m1:    {voice: Prakash,  alt: [Avinash, Shubham], used_by: [A1, A5], note: "payment-recovery / BFSI tagged"}
+  agent_m2:    {voice: Avinash,  alt: [Prakash, Shubham], used_by: [A3, A7], note: "collections / BFSI tagged"}
+  agent_f1:    {voice: Shivani,  alt: [Lakshmi],          used_by: [A2, A6]}
+  agent_f2:    {voice: Lakshmi,  alt: [Shivani],          used_by: [A4, A8]}
+  borrower_m1: {voice: Devansh,  alt: [Yashraj],          note: "main male borrower"}
+  borrower_m2: {voice: Yashraj,  alt: [Devansh],          note: "second male borrower, for variety"}
+  borrower_f:  {voice: Chetana,  alt: [Lakshmi, Shivani],  note: "HERO borrower (c06) is ALWAYS Chetana, the only female voice auditioned for it. For the other calls borrower voices are free: code m1/m2/f picks Devansh/Yashraj/Chetana; if a voice clashes with the agent/coach/third party in a call, use the next alt and log it"}
+  spouse_f:    {voice: Chetana,  alt: [Lakshmi]}
+  neighbour_m: {voice: Shubham,  alt: [Yashraj]}
+  coach:       {voice: Kalpana,  alt: [Shubham],          note: "empathetic; also the video voice-over"}
+  vo:          {voice: Kalpana,  alt: [Lakshmi, Avinash], note: "video voice-over (English/Hinglish), same brand voice as coach"}
+# scenario borrower.voice codes m1/m2/f map to borrower_m1/borrower_m2/borrower_f.
+
+params:            # per role group; names must match the real API fields (verify in notebook 01 cell 1)
+  agent:    {language: "hi-IN", speed: 1.0}
+  borrower: {language: "hi-IN", speed: 0.95}    # audition also tries mr-IN
+  third:    {language: "hi-IN", speed: 0.95}
+  coach:    {language: "hi-IN", speed: 1.0}
+  vo:       {language: "en-IN", speed: 1.0}
+audio_request: {format: wav, channels: 1, bit_depth: 16, sample_rate: "highest allowed (>= 16000)"}
+text_rules:
+  max_chars_per_request: 600     # playground limit seen: 800
+  split_on: sentence_boundaries
+  numbers: "keep amounts written as words (see scripts)"
+  tags: "audio tags such as <excited> are optional; the audition tests ONE tagged line; if rejected, strip all tags"
+  pitch_volume_emotion: "leave API defaults unless the audition shows a clear need"
+
+loudness:          # applied by ffmpeg loudnorm after TTS, before phone processing
+  agent: -22 LUFS
+  borrower: -24 LUFS            # slightly quieter, "further from handset"
+  third_party: -25 LUFS
+  coach: -26 LUFS               # DECIDED: a little quieter than agent (-22) and borrower (-24). Browser playback gain for coach = 0.85. Clean full-band sound (not phone-filtered) keeps it audible and distinct
+  vo: -16 LUFS
+
+phone_chain:       # applied to call audio only (not coach, not VO)
+  resample_hz: 8000
+  bandpass_hz: [300, 3400]      # Butterworth order 4
+  compressor: {threshold_db: -18, ratio: 3, attack_ms: 5, release_ms: 80}
+  mulaw_codec: false            # optional extra realism, off by default
+  turn_gap_ms: [350, 700]       # random, seed 42
+  leading_silence_ms: 300
+mp3: {call_audio: "64 kbps mono", coach_vo: "128 kbps mono"}

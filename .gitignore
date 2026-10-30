@@ -1,0 +1,65 @@
+# ===== Secrets =====
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# ===== Python =====
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+*.db
+*.sqlite3
+
+# ===== Node / frontend =====
+node_modules/
+dist/
+build/
+coverage/
+.vite/
+.vercel/
+*.tsbuildinfo
+
+# ===== Editors / OS / logs / temp =====
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+*.log
+tmp/
+scratch/
+maryada-kit*.zip
+
+# ===== Generated audio that must NOT be committed (regenerate with notebooks; docs/10 s6) =====
+data/audio/_audition/
+data/audio/_cache/
+data/audio/raw/
+data/audio/noise/
+data/eval/audio/
+
+# ===== Video production outputs (voice-over, captions, screen recordings, final video): never committed =====
+video/
+*.mp4
+*.mov
+*.srt
+
+# ===== Private working files: kept locally, not part of the published project =====
+/PROGRESS.md
+CLAUDE.local.md
+.claude/.verified
+.claude/settings.local.json
+# planning specs 00-13
+docs/[0-9][0-9]-*.md
+docs/DECISIONS.md
+# video script, post draft, submission pack
+docs/LAUNCH.md
+# Public docs that stay committed: README.md, docs/architecture.md, docs/conventions.md,
+# docs/SPIKE-RESULTS.md, docs/EVAL-NOTES.md, content/ (the synthetic dataset)

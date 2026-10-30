@@ -1,0 +1,128 @@
+# c25-c27: R6 (sensitive occasions; c27 is the empathetic CONTROL). c28-c29: multi-violation mixtures. c30: firm-but-polite hard negative.
+scenarios:
+  - id: c25
+    title: "Pressing after a death in the family"
+    summary: "Borrower's father passed away yesterday; agent still demands payment today."
+    agent: A4
+    date: "2026-10-15"
+    time: "12:30"
+    answered_by: borrower
+    borrower: {name: "Vijay Ghadge", voice: m1}
+    facts: {product: "personal loan", emi_inr: 6000, dpd_days: 14}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Namaste sir, Priya bol rahi hoon Tarang Finserv se. Call record ho rahi hai. Vijay Ghadge ji baat kar rahe hain?"}
+      - {s: B, t: "Haan... boliye. Madam, meri vadilanche kal nidhan zhale. Ghar mein sab rone-dhone mein lage hain."}
+      - s: A
+        t: "Oh. Lekin sir, EMI chhah hazaar rupaye ki pending hai. Aaj hi kuch bhej dijiye."
+        L: [[R6, "Aaj hi kuch bhej dijiye"]]
+      - {s: B, t: "Madam, abhi terahvi bhi nahi hui. Kaise kar sakta hoon?"}
+      - s: A
+        t: "Samajh sakti hoon par due date nikal chuki hai, kal tak payment zaroori hai."
+        L: [[R6, "kal tak payment zaroori hai"]]
+      - {s: B, t: "Theek aahe, dekhta hoon."}
+  - id: c26
+    title: "Pressing while the wife is in hospital"
+    summary: "Borrower is at the hospital for his wife's operation; agent keeps pushing."
+    agent: A1
+    date: "2026-10-23"
+    time: "17:00"
+    answered_by: borrower
+    borrower: {name: "Prashant Gole", voice: m2}
+    facts: {product: "personal loan", emi_inr: 8000, dpd_days: 22}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Namaste sir, Amit bol raha hoon Tarang Finserv se. Call record ho rahi hai. Prashant Gole ji baat kar rahe hain?"}
+      - {s: B, t: "Haan. Saheb, abhi hospital mein hoon, bayko ka operation chalu aahe."}
+      - s: A
+        t: "Sir, main samajhta hoon, par aapki EMI aath hazaar rupaye ki pending hai. Ek baar aaj hi online kar dijiye."
+        L: [[R6, "Ek baar aaj hi online kar dijiye"]]
+      - {s: B, t: "Saheb, paise sab hospital mein lagle. Do hafte ruk jaiye."}
+      - s: A
+        t: "Do hafte toh bahut hain sir. Is hafte kuch toh bhejna padega."
+        L: [[R6, "Is hafte kuch toh bhejna padega"]]
+      - {s: B, t: "Theek aahe, dekhta hoon."}
+  - id: c27
+    title: "Empathy first"
+    summary: "CONTROL / hard negative: borrower's mother is in hospital; agent defers payment kindly."
+    agent: A5
+    date: "2026-10-25"
+    time: "11:15"
+    answered_by: borrower
+    borrower: {name: "Ravi Naik", voice: m1}
+    facts: {product: "personal loan", emi_inr: 5500, dpd_days: 19}
+    hero: false
+    hard_negative: true
+    turns:
+      - {s: A, t: "Namaste sir, Sandeep bol raha hoon Tarang Finserv se. Call record ho rahi hai. Ravi Naik ji baat kar rahe hain?"}
+      - {s: B, t: "Haan. Saheb, meri aai hospital mein aahe, isliye payment nahi kar paaya."}
+      - {s: A, t: "Sir, mujhe bahut afsos hai. Aap pehle unka khayal rakhiye. Payment ki chinta abhi mat kijiye."}
+      - {s: B, t: "Dhanyavaad saheb. Do hafte baad kuch karunga."}
+      - {s: A, t: "Bilkul sir. Main do hafte baad ek reminder bhej dunga, aur zaroorat ho toh hum EMI mein rahat ka option bhi dekhenge. Aap apna dhyan rakhiye."}
+  - id: c28
+    title: "Rude, no introduction, personal threat"
+    summary: "Mixture R2 + R3: no introduction and a threat to come to the borrower's house."
+    agent: A3
+    date: "2026-10-22"
+    time: "14:10"
+    answered_by: borrower
+    borrower: {name: "Ashok Tambe", voice: m1}
+    facts: {product: "personal loan", emi_inr: 9500, dpd_days: 70}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Haan, Ashok Tambe?"}
+      - {s: B, t: "Haan boliye."}
+      - s: A
+        t: "Paisa kab de raha hai? Teen mahine ho gaye, tu sunta hi nahi hai."
+        L: [[R2, "*"]]
+      - {s: B, t: "Aap kaun bol rahe ho? Aise tu-tu kyun karte ho?"}
+      - s: A
+        t: "Zyada hoshiyari mat dikha, nahi toh tere ghar aake tamasha karunga, samajh gaya?"
+        L: [[R3, "Zyada hoshiyari mat dikha"], [R3, "tere ghar aake tamasha karunga"]]
+      - {s: B, t: "Main police mein complaint karunga."}
+      - {s: A, t: "Jaa karle jo karna hai."}
+  - id: c29
+    title: "Telling the neighbour about a court case"
+    summary: "Mixture R4 + R5: neighbour answers; agent discloses default and invents a court case and sealing."
+    agent: A6
+    date: "2026-10-25"
+    time: "16:30"
+    answered_by: neighbour
+    borrower: {name: "Yogesh Salvi", voice: m1}
+    third_party: {voice: neighbour_m}
+    facts: {product: "personal loan", emi_inr: 8800, dpd_days: 55}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Hello, Kavita bol rahi hoon Tarang Finserv se. Call record ho rahi hai. Yogesh Salvi?"}
+      - {s: T, t: "Nahi, mi padosi bolat aahe. Yogesh nahi aahe."}
+      - s: A
+        t: "Unko bol dena ki unka loan default ho gaya hai aur court mein case dalne waale hain."
+        L: [[R4, "unka loan default ho gaya hai"], [R5, "court mein case dalne waale hain"]]
+      - {s: T, t: "Kay? Court? Ya baat sathi mala kyun bol rahi ho?"}
+      - s: A
+        t: "Kyunki unki property kal sealed hogi, aap bhi samjha dena."
+        L: [[R5, "unki property kal sealed hogi"]]
+      - {s: T, t: "Mi nahi bolna. Aap unka number lo."}
+  - id: c30
+    title: "Firm but respectful"
+    summary: "Hard negative: borrower is annoyed; agent stays calm, states true consequences, offers a plan."
+    agent: A2
+    date: "2026-10-24"
+    time: "14:50"
+    answered_by: borrower
+    borrower: {name: "Narendra Shirke", voice: m2}
+    facts: {product: "personal loan", emi_inr: 10000, dpd_days: 58}
+    hero: false
+    hard_negative: true
+    turns:
+      - {s: A, t: "Namaste sir, Neha bol rahi hoon Tarang Finserv se. Call record ho rahi hai. Narendra Shirke ji baat kar rahe hain?"}
+      - {s: B, t: "Haan. Dekhiye, paisa nahi aahe. Mujhe baar baar phone mat karo."}
+      - {s: A, t: "Sir, main samajhti hoon ki aapko pareshani hai. Lekin das hazaar rupaye ki EMI do mahine se pending hai, aur main aapko seedha bata deti hoon ki payment na hone par late fee aur credit score ka nuksaan hota hai."}
+      - {s: B, t: "Toh kya karu? Mere paas sach mein paisa nahi."}
+      - {s: A, t: "Aap bata dijiye ki kitna aur kab tak arrange ho sakta hai. Hum chhoti kisht ka plan bhi bana sakte hain."}
+      - {s: B, t: "Paanch hazaar agle hafte, baaki uske baad."}
+      - {s: A, t: "Theek hai sir, main yeh note karti hoon aur aapko message bhej deti hoon. Dhanyavaad."}

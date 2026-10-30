@@ -1,0 +1,84 @@
+# c15-c18: R4 (third-party disclosure). c18 is the CONTROL: agent only asks for the borrower (no violation, hard negative).
+scenarios:
+  - id: c15
+    title: "Debt disclosed to the borrower's wife"
+    summary: "Spouse answers; agent reveals the loan and the arrears."
+    agent: A3
+    date: "2026-10-25"
+    time: "11:30"
+    answered_by: spouse
+    borrower: {name: "Hemant Joshi", voice: m1}
+    third_party: {voice: spouse_f}
+    facts: {product: "personal loan", emi_inr: 3300, dpd_days: 180}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Hello, Rohit bol raha hoon Tarang Finserv se. Call record ho rahi hai. Hemant Joshi hain?"}
+      - {s: T, t: "Nahi, woh bahar gaye aahet. Main unki patni bol rahi hoon. Kay kaam hai?"}
+      - s: A
+        t: "Madam, aapke pati ne Tarang Finserv se loan liya tha aur chhah mahine se EMI nahi bhar rahe. Total bees hazaar rupaye baaki hain."
+        L: [[R4, "aapke pati ne Tarang Finserv se loan liya tha aur chhah mahine se EMI nahi bhar rahe"]]
+      - {s: T, t: "Mala kuch maahit nahi, woh mala bole nahi."}
+      - {s: A, t: "Theek hai madam, unko bol dena ki Rohit ka phone aaya tha, woh wapas call kar lein."}
+      - {s: T, t: "Ho, mi sangte."}
+  - id: c16
+    title: "Shaming through the neighbour"
+    summary: "Neighbour answers; agent discloses the debt and asks him to tell the society."
+    agent: A6
+    date: "2026-10-24"
+    time: "13:20"
+    answered_by: neighbour
+    borrower: {name: "Anand Dalvi", voice: m1}
+    third_party: {voice: neighbour_m}
+    facts: {product: "personal loan", emi_inr: 7800, dpd_days: 50}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Hello, main Kavita bol rahi hoon Tarang Finserv se. Call record ho rahi hai. Anand Dalvi hain?"}
+      - {s: T, t: "Nahi, mi padosi aahe. Anand bahar gele aahet. Kay zhala?"}
+      - s: A
+        t: "Aap unko bata dena ki Anand ne loan liya hai aur dhokha de raha hai, paisa wapas nahi karta. Sab padosi jaan lein toh achha hai."
+        L: [[R4, "Anand ne loan liya hai aur dhokha de raha hai"], [R4, "Sab padosi jaan lein toh achha hai"]]
+      - {s: T, t: "Arre baap re, mala kaay maahit. Mi kuch nahi bol sakta."}
+      - s: A
+        t: "Aap bol dena, unki society mein sabko pata chalna chahiye."
+        L: [[R4, "unki society mein sabko pata chalna chahiye"]]
+      - {s: T, t: "Mi nahi bolna. Aap unka number lo."}
+  - id: c17
+    title: "Amount revealed to the spouse"
+    summary: "Spouse answers; agent mentions the missed EMI and the overdue amount."
+    agent: A8
+    date: "2026-10-19"
+    time: "14:00"
+    answered_by: spouse
+    borrower: {name: "Sachin Lad", voice: m2}
+    third_party: {voice: spouse_f}
+    facts: {product: "car loan", emi_inr: 7000, dpd_days: 33}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Namaste, Pooja bol rahi hoon Tarang Finserv se. Call record ho rahi hai. Sachin Lad ji hain?"}
+      - {s: T, t: "Nahi, woh office gaye aahet. Main wife bol rahi hoon."}
+      - s: A
+        t: "Achha madam, unki car loan ki EMI nahi aayi hai, saat hazaar rupaye overdue hain, aap yeh unko bata dijiye."
+        L: [[R4, "unki car loan ki EMI nahi aayi hai, saat hazaar rupaye overdue hain"]]
+      - {s: T, t: "Ho, mi sangte. Kitne baje phir se phone karoge?"}
+      - {s: A, t: "Main shaam ko dobara call karungi."}
+  - id: c18
+    title: "Asks for the borrower, says nothing about the loan"
+    summary: "CONTROL / hard negative: spouse answers; agent only leaves a callback request. Must NOT be flagged."
+    agent: A1
+    date: "2026-10-16"
+    time: "12:15"
+    answered_by: spouse
+    borrower: {name: "Pramod Rane", voice: m1}
+    third_party: {voice: spouse_f}
+    facts: {product: "personal loan", emi_inr: 5000, dpd_days: 20}
+    hero: false
+    hard_negative: true
+    turns:
+      - {s: A, t: "Namaste, Amit bol raha hoon Tarang Finserv se. Call record ho rahi hai. Kya Pramod Rane ji se baat ho sakti hai?"}
+      - {s: T, t: "Woh abhi ghar par nahi aahet. Kay kaam hai?"}
+      - {s: A, t: "Madam, ek zaroori call hai unke liye. Kya aap unko bata sakti hain ki Amit ne phone kiya tha, aur woh is number par wapas call kar lein?"}
+      - {s: T, t: "Ho, mi sangte."}
+      - {s: A, t: "Dhanyavaad madam. Main kal subah dobara koshish karunga."}

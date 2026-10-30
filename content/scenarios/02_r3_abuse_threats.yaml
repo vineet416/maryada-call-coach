@@ -1,0 +1,122 @@
+# c06-c10: R3 (abuse / threats / humiliation). c06 is THE HERO CALL (also contains R5).
+# Hero expected coach nudge: after turn 5 (use the R5 coach line, which also covers threats).
+scenarios:
+  - id: c06
+    title: "The threat that broke two RBI rules"
+    summary: "HERO. Agent threatens police, public shaming and a court notice; coach steps in; agent recovers politely."
+    agent: A3
+    date: "2026-10-14"
+    time: "11:20"
+    answered_by: borrower
+    borrower: {name: "Smita Patil", voice: f}
+    facts: {product: "personal loan", emi_inr: 8400, dpd_days: 45}
+    hero: true
+    hard_negative: false
+    turns:
+      - {s: A, t: "Namaste madam, main Rohit bol raha hoon Tarang Finserv se. Yeh call quality ke liye record ho rahi hai. Kya main Smita Patil ji se baat kar raha hoon?"}
+      - {s: B, t: "Haan, Smita bolte aahe. Boliye na, kya kaam hai?"}
+      - {s: A, t: "Madam, aapki personal loan ki EMI aath hazaar chaar sau rupaye pichhle mahine se pending hai. Aap kab tak payment kar paayengi?"}
+      - {s: B, t: "Saheb, mala maaf karo. Meri naukri gayi aahe do mahine pehle. Agle hafte tak thoda paisa jama hoga, poora ek saath nahi de sakti."}
+      - s: A
+        t: "Roz yahi bahana sunte hain. Agar kal tak paisa jama nahi hua na, toh main police ko bhejunga aapke ghar, aur aapke mohalle mein sabko bata dunga ki aap defaulter ho. Court ka notice bhi kal subah aa jayega."
+        L: [[R5, "police ko bhejunga aapke ghar"], [R3, "aapke mohalle mein sabko bata dunga ki aap defaulter ho"], [R5, "Court ka notice bhi kal subah aa jayega"]]
+      - {s: B, t: "Arre saheb, dhamki kashala dete ho? Main paisa nahi dungi aisa nahi bola, bas thoda time chahiye."}
+      - {s: A, t: "Sorry madam, mujhe aise nahi bolna chahiye tha. Main samajh sakta hoon. Aap bataiye, is Friday tak kitna arrange ho sakta hai? Hum EMI restructure ka option bhi dekh sakte hain."}
+      - {s: B, t: "Theek aahe. Friday tak teen hazaar rupaye de sakti hoon. Baaki ka next mahine se thoda thoda."}
+      - {s: A, t: "Dhanyavaad madam. Friday ko teen hazaar ka payment link bhej deta hoon, aur baaki ke liye restructure ki request main aaj hi daal deta hoon. Aapka din shubh ho."}
+  - id: c07
+    title: "Insult over a late payment"
+    summary: "Agent shames the borrower and tells him not to run away."
+    agent: A6
+    date: "2026-10-15"
+    time: "15:00"
+    answered_by: borrower
+    borrower: {name: "Mahesh Thorat", voice: m1}
+    facts: {product: "shop loan", emi_inr: 9500, dpd_days: 21}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Hello, main Kavita bol rahi hoon Tarang Finserv se, call record ho rahi hai. Mahesh Thorat se baat ho rahi hai?"}
+      - {s: B, t: "Haan, Mahesh bolto aahe."}
+      - {s: A, t: "Aapki saade nau hazaar rupaye ki EMI teen hafte se pending hai. Kab bharenge?"}
+      - {s: B, t: "Madam, thoda time lagega. Dukaan band thi Diwali ke pehle."}
+      - s: A
+        t: "Har baar yahi kahani! Aapko sharam nahi aati, loan lekar bhool jaate ho? Aap jaise log hi system kharab karte hain."
+        L: [[R3, "Aapko sharam nahi aati"]]
+      - {s: B, t: "Madam, aise nahi bolo na. Main bhaagne wala nahi hoon."}
+      - s: A
+        t: "Bhaagne ka sochna bhi mat. Seedhe seedhe bolo kab doge, warna mujhse bura koi nahi hoga."
+        L: [[R3, "Bhaagne ka sochna bhi mat"]]
+      - {s: B, t: "Mala dar lagta hai aise baat se. Friday ko kuch dunga."}
+      - {s: A, t: "Friday pakka? Theek hai, main note kar leti hoon."}
+  - id: c08
+    title: "Name-calling and a family threat"
+    summary: "Agent calls the borrower names and says he will come to the house."
+    agent: A3
+    date: "2026-10-16"
+    time: "14:30"
+    answered_by: borrower
+    borrower: {name: "Vinod Kale", voice: m2}
+    facts: {product: "personal loan", emi_inr: 7200, dpd_days: 30}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Haan, Rohit bol raha hoon Tarang Finserv se, call record ho rahi hai. Vinod Kale se baat ho rahi hai?"}
+      - {s: B, t: "Ho, Vinod. Boliye."}
+      - {s: A, t: "Aapki EMI bees din se pending hai. Paisa kab aayega?"}
+      - {s: B, t: "Saheb, dhandha band padla aahe, thoda ruk jaiye."}
+      - s: A
+        t: "Bahane mat banao, aap bewakoof ho kya? Har baar ek naya drama."
+        L: [[R3, "aap bewakoof ho kya"]]
+      - {s: B, t: "Aise kaay bolta aahe? Izzat se baat karo."}
+      - s: A
+        t: "Izzat kamate toh milti hai. Paisa nahi de sakte toh nikamme ho aap, aur zyada hoshiyari mat dikha, nahi toh ghar aake tamasha karunga."
+        L: [[R3, "nikamme ho aap"], [R3, "ghar aake tamasha karunga"]]
+      - {s: B, t: "Main complaint karunga aapki."}
+      - {s: A, t: "Jo karna hai karo, mujhe paisa chahiye."}
+  - id: c09
+    title: "Shaming a borrower in front of neighbours"
+    summary: "Agent humiliates a woman borrower and implies neighbours will find out."
+    agent: A6
+    date: "2026-10-18"
+    time: "17:20"
+    answered_by: borrower
+    borrower: {name: "Sunita Pisal", voice: f}
+    facts: {product: "personal loan", emi_inr: 5500, dpd_days: 18}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Namaste, main Kavita bol rahi hoon Tarang Finserv se. Call recorded hai. Sunita Pisal ji se baat ho rahi hai?"}
+      - {s: B, t: "Ho, Sunita bolte aahe."}
+      - {s: A, t: "Madam, aapki EMI paanch hazaar paanch sau rupaye ki due hai. Aaj hi payment chahiye."}
+      - {s: B, t: "Aaj nahi hoga. Pati bahar gaye aahet, wapas aayenge toh karungi."}
+      - s: A
+        t: "Pati ke bharose rehti ho? Khud kamaane ki himmat nahi hai kya? Padosiyon ko pata chalega toh kya izzat rahegi?"
+        L: [[R3, "Khud kamaane ki himmat nahi hai kya"], [R3, "Padosiyon ko pata chalega toh kya izzat rahegi"]]
+      - {s: B, t: "Madam, please aise nahi bolo. Mala bahut vaait vatta."}
+      - s: A
+        t: "Toh paisa do na. Kal subah tak chahiye, warna dekh lena."
+        L: [[R3, "warna dekh lena"]]
+      - {s: B, t: "Theek aahe, kal subah tak koshish karte."}
+  - id: c10
+    title: "Mild sarcasm (early-career slip)"
+    summary: "A milder R3 slip by an agent who is still learning."
+    agent: A4
+    date: "2026-10-13"
+    time: "13:10"
+    answered_by: borrower
+    borrower: {name: "Ganesh Chavan", voice: m1}
+    facts: {product: "personal loan", emi_inr: 7000, dpd_days: 15}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Hello, main Priya bol rahi hoon Tarang Finserv se. Call recorded hai. Ganesh Chavan ji baat kar rahe hain?"}
+      - {s: B, t: "Haan, Ganesh bolto aahe."}
+      - {s: A, t: "Sir, aapki saat hazaar rupaye ki EMI pending hai. Kab tak bharenge?"}
+      - {s: B, t: "Madam, agle hafte try karta hoon."}
+      - s: A
+        t: "Aap log hamesha agle hafte bolte ho. Kaisa insaan hai aap, zubaan ka koi mol nahi?"
+        L: [[R3, "Kaisa insaan hai aap, zubaan ka koi mol nahi"]]
+      - {s: B, t: "Aise nahi bolo madam, main koshish karta hoon."}
+      - {s: A, t: "Achha theek hai, agle Mangalvaar tak pakka bataiye."}
+      - {s: B, t: "Mangalvaar ko deta hoon."}

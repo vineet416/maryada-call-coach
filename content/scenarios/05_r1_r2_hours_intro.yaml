@@ -1,0 +1,123 @@
+# c19-c21: R1 (call outside 08:00-19:00, otherwise polite). c22-c24: R2 (no name/company/recording notice in the first two agent turns).
+# R1 label sits on the FIRST agent turn ("*" = call-level). R2 label sits on the SECOND agent turn ("*" = whole turn).
+scenarios:
+  - id: c19
+    title: "Call at 07:40"
+    summary: "Polite agent, but the call starts before 08:00."
+    agent: A1
+    date: "2026-10-14"
+    time: "07:40"
+    answered_by: borrower
+    borrower: {name: "Ajay Mhatre", voice: m1}
+    facts: {product: "personal loan", emi_inr: 5000, dpd_days: 9}
+    hero: false
+    hard_negative: false
+    turns:
+      - s: A
+        t: "Good morning sir, Amit bol raha hoon Tarang Finserv se. Call record ho rahi hai. Kya Ajay Mhatre ji baat kar rahe hain?"
+        L: [[R1, "*"]]
+      - {s: B, t: "Haan, bolto. Itni subah kaay zhala?"}
+      - {s: A, t: "Sorry sir, subah subah phone kiya. Aapki paanch hazaar rupaye ki EMI pending hai, bas yaad dilana tha."}
+      - {s: B, t: "Theek aahe, Friday ko bhar dunga."}
+      - {s: A, t: "Dhanyavaad sir. Main Friday ko reminder bhej dunga. Phir se sorry subah ke liye."}
+  - id: c20
+    title: "Call at 19:25"
+    summary: "Polite agent, but the call starts after 19:00."
+    agent: A8
+    date: "2026-10-22"
+    time: "19:25"
+    answered_by: borrower
+    borrower: {name: "Sunil Pawar", voice: m2}
+    facts: {product: "personal loan", emi_inr: 6000, dpd_days: 12}
+    hero: false
+    hard_negative: false
+    turns:
+      - s: A
+        t: "Namaste sir, Pooja bol rahi hoon Tarang Finserv se. Call record ho rahi hai. Sunil Pawar ji baat kar rahe hain?"
+        L: [[R1, "*"]]
+      - {s: B, t: "Haan boliye, kaam par hoon, jaldi boliye."}
+      - {s: A, t: "Sir, aapki chhah hazaar rupaye ki EMI due hai. Kya aap kal tak bhar sakte hain?"}
+      - {s: B, t: "Kal nahi, parso. Abhi thoda tight aahe."}
+      - {s: A, t: "Theek hai sir, parso note kar leti hoon. Dhanyavaad."}
+  - id: c21
+    title: "Call at 21:10"
+    summary: "Late-night call; borrower is irritated, agent apologises."
+    agent: A5
+    date: "2026-10-25"
+    time: "21:10"
+    answered_by: borrower
+    borrower: {name: "Deepak Surve", voice: m1}
+    facts: {product: "personal loan", emi_inr: 9000, dpd_days: 27}
+    hero: false
+    hard_negative: false
+    turns:
+      - s: A
+        t: "Sir, Sandeep bol raha hoon Tarang Finserv se. Call record ho rahi hai. Deepak Surve ji baat kar rahe hain?"
+        L: [[R1, "*"]]
+      - {s: B, t: "Raat ko kaun phone karta hai? Boliye."}
+      - {s: A, t: "Maafi chahta hoon sir, aapki nau hazaar rupaye ki EMI pending hai. Kal subah aapko dobara call karoon?"}
+      - {s: B, t: "Haan kal dopahar ko karo."}
+      - {s: A, t: "Theek hai sir, kal dopahar mein karunga. Dhanyavaad."}
+  - id: c22
+    title: "No introduction, no recording notice"
+    summary: "Agent jumps to the EMI without saying who they are; borrower has to ask."
+    agent: A4
+    date: "2026-10-12"
+    time: "11:50"
+    answered_by: borrower
+    borrower: {name: "Rahul Kamble", voice: m1}
+    facts: {product: "personal loan", emi_inr: 6000, dpd_days: 11}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Hello, Rahul Kamble ji bol rahe hain?"}
+      - {s: B, t: "Haan, boliye. Aap kaun?"}
+      - s: A
+        t: "Sir, aapki chhah hazaar rupaye ki EMI pending hai. Kab tak bharenge?"
+        L: [[R2, "*"]]
+      - {s: B, t: "Pehle bataiye aap kaun bol rahe ho."}
+      - {s: A, t: "Sorry sir, main Priya, Tarang Finserv se. Aapki EMI pending hai."}
+      - {s: B, t: "Theek aahe, agle hafte tak."}
+      - {s: A, t: "Dhanyavaad sir."}
+  - id: c23
+    title: "Casual opening, no company name"
+    summary: "Agent asks for payment before introducing themselves."
+    agent: A5
+    date: "2026-10-21"
+    time: "10:10"
+    answered_by: borrower
+    borrower: {name: "Mangesh Dhuri", voice: m2}
+    facts: {product: "personal loan", emi_inr: 7000, dpd_days: 16}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Haan, Mangesh Dhuri?"}
+      - {s: B, t: "Haan, kaun?"}
+      - s: A
+        t: "EMI pending hai sir, saat hazaar rupaye. Kab doge?"
+        L: [[R2, "*"]]
+      - {s: B, t: "Aap kaun bol rahe ho pehle? Kaunsi company se?"}
+      - {s: A, t: "Tarang Finserv se, Sandeep. Kab tak payment kar doge?"}
+      - {s: B, t: "Agle hafte dekhta hoon."}
+      - {s: A, t: "Theek hai sir, dhanyavaad."}
+  - id: c24
+    title: "Introduction missing with a woman borrower"
+    summary: "Agent skips name, lender and recording notice."
+    agent: A8
+    date: "2026-10-24"
+    time: "15:25"
+    answered_by: borrower
+    borrower: {name: "Anita Gawade", voice: f}
+    facts: {product: "personal loan", emi_inr: 5400, dpd_days: 8}
+    hero: false
+    hard_negative: false
+    turns:
+      - {s: A, t: "Hello madam, Anita Gawade bol rahi hain?"}
+      - {s: B, t: "Ho, Anita bolte aahe. Kon bolat aahe?"}
+      - s: A
+        t: "Madam, aapki paanch hazaar chaar sau rupaye ki EMI pending hai. Kab tak bharengi?"
+        L: [[R2, "*"]]
+      - {s: B, t: "Aap kaun? Mala samajh nahi aaya."}
+      - {s: A, t: "Main Pooja, Tarang Finserv se. Aapki EMI baaki hai."}
+      - {s: B, t: "Achha. Agle hafte ke shuru mein karungi."}
+      - {s: A, t: "Theek hai madam. Dhanyavaad."}

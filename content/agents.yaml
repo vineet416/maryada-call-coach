@@ -1,0 +1,13 @@
+# 8 fictional agents. Gender is used for correct Hindi verb forms in scripts and for voice choice.
+# profile = intended behaviour (drives dashboard story; calls in scenarios/ are already consistent with it)
+agents:
+  - {id: A1, name: "Amit Kulkarni",   gender: M, voice_role: agent_m1, team: "Pune Collections",   profile: occasional}
+  - {id: A2, name: "Neha Deshmukh",   gender: F, voice_role: agent_f1, team: "Pune Collections",   profile: excellent}
+  - {id: A3, name: "Rohit Jadhav",    gender: M, voice_role: agent_m2, team: "Mumbai Collections", profile: repeat_offender}
+  - {id: A4, name: "Priya Shinde",    gender: F, voice_role: agent_f2, team: "Mumbai Collections", profile: improving}
+  - {id: A5, name: "Sandeep More",    gender: M, voice_role: agent_m1, team: "Nashik Collections", profile: occasional}
+  - {id: A6, name: "Kavita Pawar",    gender: F, voice_role: agent_f1, team: "Nashik Collections", profile: repeat_offender}
+  - {id: A7, name: "Vikram Salunke",  gender: M, voice_role: agent_m2, team: "Pune Collections",   profile: excellent}
+  - {id: A8, name: "Pooja Gaikwad",   gender: F, voice_role: agent_f2, team: "Mumbai Collections", profile: occasional}
+# Note: in call scripts the agent says only the FIRST name (Amit, Neha, Rohit, Priya, Sandeep, Kavita, Vikram, Pooja).
+# Dashboard status rule (docs/09): Excellent = 0 violations in >= 3 calls; Needs training = >= 2 violations of R3/R4/R5 or avg risk >= 40; otherwise Watch (any violation) .

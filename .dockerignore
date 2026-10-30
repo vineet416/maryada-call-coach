@@ -1,0 +1,32 @@
+# Build context = repo root (Dockerfile copies backend/, content/, data/). WHITELIST: nothing else enters the image.
+*
+!backend/
+!content/
+!data/
+
+# Not needed at runtime
+backend/tests/
+backend/requirements-dev.txt
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+**/.ruff_cache/
+**/.venv/
+**/.env
+**/.env.*
+content/audition.yaml
+content/voices.yaml
+content/tts_profile.yaml
+content/vo_script.yaml
+content/split.yaml
+
+# Generated / offline-only data
+data/audio/_audition/
+data/audio/_cache/
+data/audio/raw/
+data/audio/noise/
+data/eval/audio/
+data/eval/transcripts_cache/
+
+# Note: also exclude 8 kHz *.wav of scenarios that are replay-only
+# (only the hero + up to 6 LIVE scenarios keep WAVs; docs/10 s6). Target image data < 60 MB.
