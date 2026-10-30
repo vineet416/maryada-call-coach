@@ -71,11 +71,20 @@ def _request_body(text: str, voice: str, language: str, speed: float, sample_rat
             "audio_config": {"encoding": "linear_pcm", "sample_rate": sample_rate, "container": "wav"}}
 
 
+def cache_path(body: dict) -> Path:
+    return CACHE / (hashlib.sha256(json.dumps(body, sort_keys=True, ensure_ascii=False).encode()).hexdigest() + ".wav")
+
+
+def uncached_requests(text: str, voice: str, language: str, speed: float, sample_rate: int) -> list[int]:
+    """Character counts of the chunks of `text` that are not in the cache yet (one entry per TTS request needed)."""
+    return [len(c) for c in split_text(text) if not cache_path(_request_body(c, voice, language, speed, sample_rate)).exists()]
+
+
 def tts_chunk(body: dict, client: httpx.Client) -> bytes:
     """One TTS request through the cache. Retries 429/5xx with backoff, never 400/401/403."""
     global _last_request, requests_made
     CACHE.mkdir(parents=True, exist_ok=True)
-    key = CACHE / (hashlib.sha256(json.dumps(body, sort_keys=True, ensure_ascii=False).encode()).hexdigest() + ".wav")
+    key = cache_path(body)
     if key.exists():
         return key.read_bytes()
     for attempt in range(5):

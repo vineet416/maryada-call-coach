@@ -68,3 +68,9 @@ trio:             # DISTINCTNESS TEST: the three voices of the hero scene in eve
   borrowers: [Chetana]      # the single female hero borrower
   coaches: [Kalpana, Shubham]
   clips_used: [A2_borrower_job, A3_agent_threat, A4_coach_R5]
+
+round2:           # second listening round (notebooks/01b_audition_round2.py); V2 = Devanagari text
+  note: "Borrower texts come from the c06 turns (td). The voice-over has one line so far (A8); this is the same line written in Devanagari (transliteration, nothing added)."
+  vo_devanagari: "दिस रिकवरी कॉल जस्ट ब्रोक टू आरबीआई रूल्स इन ट्वेंटी सेकंड्स। मर्यादा कॉट बोथ, लाइव।"
+  vo_voices: [Shubham, Prakash, Avinash]
+  vo_slow_speed: 0.9          # the API documents speed 0.85-1.15; one slower variant for the first voice

@@ -40,7 +40,8 @@ Euri `gpt-5.4-mini` chat completions with `response_format: json_object`: 20 of 
 - Only **one active request per key at a time**; a second concurrent request returns 429 `RATE_LIMITED`. Generation must be sequential.
 - A request of 1000 characters was accepted, so the 600-character split stays a conservative choice rather than a hard limit.
 - Every sample rate tried (8, 16, 22.05, 24, 44.1 and 48 kHz) is honoured in the returned WAV. Audio is requested at 48 kHz and reduced to 8 kHz only by the phone-chain step.
-- A line starting with an `<angry>` tag returned 200. Whether it changes the voice is decided by listening in the audition.
+- Inline audio tags (timbre-v3.0 only) use angle brackets with no closing tag. The documented tags are `laugh`, `giggle`, `sigh`, `exhales`, `sniffles`, `yawns`, `coughs`, `clears throat`, `whispers`, `shouting`, `excited`, `slow` and `pauses`; unknown tags are stripped silently and tags count as billable characters. `<angry>` is not documented, so a request that starts with it returned 200 but the tag is most likely ignored. Repeating the same request gives a slightly different take every time, so a single comparison cannot prove an effect.
+- `speed` accepts 0.85-1.15 (or `slow`, `medium`, `fast`). No pace, style, emotion, pitch or volume field is documented.
 
 **Prisma STT, REST** (`POST /stt/v3`, header `X-API-Key-ID`, multipart)
 - The file field is `audio_file`. Form fields: `model=prisma-v3.0`, `language_code`, and `multi_lang_codes` (comma-separated). `language_code=indic-auto` without `multi_lang_codes` returns 400 `INVALID_LANGUAGE_CODE`.
