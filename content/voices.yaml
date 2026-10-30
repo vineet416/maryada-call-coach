@@ -1,4 +1,4 @@
-# Voice casting + TTS parameters (defaults). The user can change any voice after the audition (docs/11).
+# Voice casting + TTS parameters: Claude Code's RECOMMENDATION. Applied only after the user answers gate G1 (docs/11); never used on silence.
 # All voices belong to model timbre-v3.0 (13 voices, each speaks all supported languages). A wrong voice/model pairing returns HTTP 400.
 # Genders below are ASSUMED from the voice names/labels in the Gnani playground; the audition confirms them.
 model: timbre-v3.0
