@@ -347,3 +347,49 @@ def render_clip(j: dict, out: Path, voices_cfg: dict, client: httpx.Client, samp
         new = True
     files = [(raw_f.name, "raw")] + ([(phone_f.name, "phone")] if is_call else [])
     return {"x": x, "sr": sr, "phone": p, "new": new, "files": files}
+
+
+# ---------- library voice casting (docs/11 section 11) ----------
+def pick_voices(sc: dict, agents: dict[str, dict], pool: dict) -> dict[str, str]:
+    """Voices of one library call from `library_pool`: gender from the script, no shared voice in the call.
+    Candidates are tried in an order rotated by crc32(id), so the pool is spread over the calls; same input, same cast."""
+    gender = {"agent": agents[sc["agent"]]["gender"],
+              "borrower": "F" if sc["borrower"]["voice"] == "f" else "M"}
+    third = (sc.get("third_party") or {}).get("voice")
+    if third:
+        gender["third_party"] = "F" if third.endswith("_f") else "M"
+    shift = zlib.crc32(sc["id"].encode())
+    options = []
+    for role, g in gender.items():
+        names = pool[role][g]
+        k = shift % len(names)
+        options.append((role, names[k:] + names[:k]))
+
+    def solve(i: int, used: tuple[str, ...]) -> dict[str, str] | None:
+        if i == len(options):
+            return {}
+        role, names = options[i]
+        for name in names:
+            if name not in used and (rest := solve(i + 1, (*used, name))) is not None:
+                return {role: name, **rest}
+        return None
+
+    cast = solve(0, ())
+    if cast is None:
+        raise ValueError(f"{sc['id']}: no cast without a shared voice (needs a voice outside the approved pool: stop and report)")
+    return {**cast, "coach": pool["coach"]["M"][0]}
+
+
+def limit_true_peak(x: np.ndarray, ceiling_db: float, sr: int = 8000) -> tuple[np.ndarray, float]:
+    """Look-ahead peak limiter (5 ms). The ceiling is lowered in 0.1 dB steps until the measured true peak is at or below
+    `ceiling_db`. Returns the audio and the maximum gain reduction in dB."""
+    from scipy import ndimage
+
+    look = max(2, int(sr * 0.005))
+    for c in np.arange(ceiling_db, ceiling_db - 3, -0.1):
+        g = np.minimum(1.0, 10 ** (c / 20) / np.maximum(np.abs(x), 1e-9))
+        g = ndimage.uniform_filter1d(ndimage.minimum_filter1d(g, 2 * look - 1), look)
+        y = (x * g).astype(np.float32)
+        if measure_loudness(y, sr)["true_peak"] <= ceiling_db + 1e-6:
+            return y, float(-20 * np.log10(g.min()))
+    raise ValueError("the limiter cannot hold the ceiling")
