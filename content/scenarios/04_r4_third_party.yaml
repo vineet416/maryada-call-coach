@@ -14,17 +14,17 @@ scenarios:
     hard_negative: false
     turns:
       - s: A
-        t: "Hello, Hemant Joshi bol rahe hain?"
-        td: "हैलो, हेमंत जोशी बोल रहे हैं?"
+        t: "Hello, ye Hemant Joshi ji ka number hai?"
+        td: "हैलो, ये हेमंत जोशी जी का नंबर है?"
       - s: T
-        t: "Nahi ji, woh ghar pe nahi hain. Main unki wife bol rahi hoon. Aap kaun?"
-        td: "नहीं जी, वो घर पे नहीं हैं। मैं उनकी वाइफ बोल रही हूँ। आप कौन?"
+        t: "Haan, par woh ghar pe nahi hain. Main unki wife bol rahi hoon. Aap kaun?"
+        td: "हाँ, पर वो घर पे नहीं हैं। मैं उनकी वाइफ बोल रही हूँ। आप कौन?"
       - s: A
-        t: "Main Rohit bol raha hoon, Tarang Finserv se. Ye call quality aur training ke liye record ho rahi hai. Hemant ji se hi baat karni hai, woh kab tak milenge?"
-        td: "मैं रोहित बोल रहा हूँ, तारंग फिनसर्व से। ये कॉल क्वालिटी और ट्रेनिंग के लिए रिकॉर्ड हो रही है। हेमंत जी से ही बात करनी है, वो कब तक मिलेंगे?"
+        t: "Rohit bol raha hoon, Tarang Finserv se. Call record ho rahi hai, quality aur training ke liye. Hemant ji se hi baat karni hai, woh kab tak milenge?"
+        td: "रोहित बोल रहा हूँ, तारंग फिनसर्व से। कॉल रिकॉर्ड हो रही है, क्वालिटी और ट्रेनिंग के लिए। हेमंत जी से ही बात करनी है, वो कब तक मिलेंगे?"
       - s: T
-        t: "Woh bahar gaye hain, shaam ko aayenge. Kya kaam hai unse?"
-        td: "वो बाहर गए हैं, शाम को आएँगे। क्या काम है उनसे?"
+        t: "Bahar gaye hain, shaam ko aayenge. Kya kaam hai unse?"
+        td: "बाहर गए हैं, शाम को आएँगे। क्या काम है उनसे?"
       - s: A
         t: "Madam, kaam yeh hai ki aapke pati ne Tarang Finserv se loan liya tha aur chhah mahine se EMI nahi bhar rahe. Total bees hazaar rupaye baaki hain. Hum kitne din se call kar rahe hain, woh phone hi nahi uthate. Mujhe unse baat karni hi padegi."
         td: "मैडम, काम ये है कि आपके पति ने तारंग फिनसर्व से लोन लिया था और छह महीने से ईएमआई नहीं भर रहे। टोटल बीस हज़ार रुपये बाकी हैं। हम कितने दिन से कॉल कर रहे हैं, वो फोन ही नहीं उठाते। मुझे उनसे बात करनी ही पड़ेगी।"
@@ -39,8 +39,8 @@ scenarios:
         t: "Haan, main bol dungi. Par aap baar baar phone mat karna, ghar mein tension ho jaata hai."
         td: "हाँ, मैं बोल दूँगी। पर आप बार बार फोन मत करना, घर में टेंशन हो जाता है।"
       - s: A
-        t: "Theek hai madam, main shaam ko ek baar dobara call karunga. Thank you."
-        td: "ठीक है मैडम, मैं शाम को एक बार दोबारा कॉल करूँगा। थैंक यू।"
+        t: "Theek hai madam, main shaam ko ek baar dobara call karunga."
+        td: "ठीक है मैडम, मैं शाम को एक बार दोबारा कॉल करूँगा।"
   - id: c16
     title: "Shaming through the neighbour"
     summary: "Neighbour answers; agent discloses the debt and asks him to tell the society."
@@ -55,14 +55,14 @@ scenarios:
     hard_negative: false
     turns:
       - s: A
-        t: "Hello, Anand Dalvi bol rahe hain?"
-        td: "हैलो, आनंद दलवी बोल रहे हैं?"
+        t: "Hello, ye Anand Dalvi ji ka number hai?"
+        td: "हैलो, ये आनंद दलवी जी का नंबर है?"
       - s: T
-        t: "Nahi, main padosi hoon. Anand bahar gaye hain. Kya hua?"
-        td: "नहीं, मैं पड़ोसी हूँ। आनंद बाहर गए हैं। क्या हुआ?"
+        t: "Haan, par Anand bahar gaye hain. Main padosi hoon. Kya hua?"
+        td: "हाँ, पर आनंद बाहर गए हैं। मैं पड़ोसी हूँ। क्या हुआ?"
       - s: A
-        t: "Main Kavita bol rahi hoon, Tarang Finserv se. Ye call quality aur training ke liye record ho rahi hai. Ye Anand ji ka hi number hai na?"
-        td: "मैं कविता बोल रही हूँ, तारंग फिनसर्व से। ये कॉल क्वालिटी और ट्रेनिंग के लिए रिकॉर्ड हो रही है। ये आनंद जी का ही नंबर है ना?"
+        t: "Main Kavita, Tarang Finserv se. Call recorded hai, quality purpose ke liye, dhyan rahe. Anand ji se baat karni thi."
+        td: "मैं कविता, तारंग फिनसर्व से। कॉल रिकॉर्डेड है, क्वालिटी पर्पज़ के लिए, ध्यान रहे। आनंद जी से बात करनी थी।"
       - s: T
         t: "Haan, unka hi number hai. Par woh abhi nahi hain. Aap kya kaam bol rahi thi?"
         td: "हाँ, उनका ही नंबर है। पर वो अभी नहीं हैं। आप क्या काम बोल रही थीं?"
@@ -71,8 +71,8 @@ scenarios:
         td: "देखिए, वो फोन ही नहीं उठाते। आप उनको बता देना कि आनंद ने लोन लिया है और धोखा दे रहा है, पैसा वापस नहीं करता। सब पड़ोसी जान लें तो अच्छा है।"
         L: [[R4, "Anand ne loan liya hai aur dhokha de raha hai"], [R4, "Sab padosi jaan lein toh achha hai"]]
       - s: T
-        t: "Arre baap re, mereko kya pata. Main kuch nahi bol sakta."
-        td: "अरे बाप रे, मेरेको क्या पता। मैं कुछ नहीं बोल सकता।"
+        t: "Arre baap re, mereko kya pata. Main kuch nahi bol sakta, mera is sab se kya lena dena?"
+        td: "अरे बाप रे, मेरेको क्या पता। मैं कुछ नहीं बोल सकता, मेरा इस सब से क्या लेना देना?"
       - s: A
         t: "Itna toh kar hi sakte hain aap. Aap bol dena, unki society mein sabko pata chalna chahiye."
         td: "इतना तो कर ही सकते हैं आप। आप बोल देना, उनकी सोसाइटी में सबको पता चलना चाहिए।"
@@ -81,8 +81,8 @@ scenarios:
         t: "Main nahi bolunga ji. Ye aapka aur unka matter hai, aap unka number lo aur unse hi baat karo."
         td: "मैं नहीं बोलूँगा जी। ये आपका और उनका मैटर है, आप उनका नंबर लो और उनसे ही बात करो।"
       - s: A
-        t: "Theek hai, main unko dobara call karti hoon. Thank you."
-        td: "ठीक है, मैं उनको दोबारा कॉल करती हूँ। थैंक यू।"
+        t: "Okay, main unko kal dobara call karti hoon."
+        td: "ओके, मैं उनको कल दोबारा कॉल करती हूँ।"
   - id: c17
     title: "Amount revealed to the spouse"
     summary: "Spouse answers; agent mentions the missed EMI and the overdue amount."
@@ -97,8 +97,8 @@ scenarios:
     hard_negative: false
     turns:
       - s: A
-        t: "Hello, Sachin Lad bol rahe hain?"
-        td: "हैलो, सचिन लाड बोल रहे हैं?"
+        t: "Namaste, Sachin Lad ji hain?"
+        td: "नमस्ते, सचिन लाड जी हैं?"
       - s: T
         t: "Nahi, woh office gaye hain. Main unki wife bol rahi hoon. Aap kaun?"
         td: "नहीं, वो ऑफिस गए हैं। मैं उनकी वाइफ बोल रही हूँ। आप कौन?"
@@ -122,8 +122,8 @@ scenarios:
         t: "Haan, main bol dungi. Aap kitne baje phir se phone karoge?"
         td: "हाँ, मैं बोल दूँगी। आप कितने बजे फिर से फोन करोगे?"
       - s: A
-        t: "Main shaam ko saade saat baje dobara call karungi. Thank you madam."
-        td: "मैं शाम को साढ़े सात बजे दोबारा कॉल करूँगी। थैंक यू मैडम।"
+        t: "Main shaam ko saade saat baje dobara call karungi."
+        td: "मैं शाम को साढ़े सात बजे दोबारा कॉल करूँगी।"
   - id: c18
     title: "Asks for the borrower, says nothing about the loan"
     summary: "CONTROL / hard negative: spouse answers; agent only leaves a callback request. Must NOT be flagged."
@@ -138,14 +138,14 @@ scenarios:
     hard_negative: true
     turns:
       - s: A
-        t: "Hello, Pramod Rane bol rahe hain?"
-        td: "हैलो, प्रमोद राणे बोल रहे हैं?"
+        t: "Hello, Pramod ji hain?"
+        td: "हैलो, प्रमोद जी हैं?"
       - s: T
-        t: "Nahi ji, woh abhi ghar pe nahi hain. Main unki wife bol rahi hoon. Kya kaam hai?"
-        td: "नहीं जी, वो अभी घर पे नहीं हैं। मैं उनकी वाइफ बोल रही हूँ। क्या काम है?"
+        t: "Nahi ji, abhi ghar pe nahi hain. Main unki wife bol rahi hoon. Kya kaam hai?"
+        td: "नहीं जी, अभी घर पे नहीं हैं। मैं उनकी वाइफ बोल रही हूँ। क्या काम है?"
       - s: A
-        t: "Namaste madam. Main Amit bol raha hoon, Tarang Finserv se. Ye call quality aur training ke liye record ho rahi hai. Pramod ji ke liye ek zaroori call hai, woh kab tak milenge?"
-        td: "नमस्ते मैडम। मैं अमित बोल रहा हूँ, तारंग फिनसर्व से। ये कॉल क्वालिटी और ट्रेनिंग के लिए रिकॉर्ड हो रही है। प्रमोद जी के लिए एक ज़रूरी कॉल है, वो कब तक मिलेंगे?"
+        t: "Namaste madam. Amit bol raha hoon, Tarang Finserv se. Ek minute, ye line recorded hai, bas bata raha hoon. Pramod ji ke liye ek zaroori call hai, woh kab tak milenge?"
+        td: "नमस्ते मैडम। अमित बोल रहा हूँ, तारंग फिनसर्व से। एक मिनट, ये लाइन रिकॉर्डेड है, बस बता रहा हूँ। प्रमोद जी के लिए एक ज़रूरी कॉल है, वो कब तक मिलेंगे?"
       - s: T
         t: "Woh shaam ko aate hain. Aap mereko bata do kya baat hai, main bol dungi."
         td: "वो शाम को आते हैं। आप मेरेको बता दो क्या बात है, मैं बोल दूँगी।"
@@ -162,5 +162,5 @@ scenarios:
         t: "Achha theek hai, main bol dungi. Number yahi hai na jisse aapne phone kiya?"
         td: "अच्छा ठीक है, मैं बोल दूँगी। नंबर यही है ना जिससे आपने फोन किया?"
       - s: A
-        t: "Ji madam, yahi number hai. Thank you madam. Main kal subah dobara koshish karunga."
-        td: "जी मैडम, यही नंबर है। थैंक यू मैडम। मैं कल सुबह दोबारा कोशिश करूँगा।"
+        t: "Ji madam, yahi number hai. Main kal subah dobara koshish karunga."
+        td: "जी मैडम, यही नंबर है। मैं कल सुबह दोबारा कोशिश करूँगा।"
