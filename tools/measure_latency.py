@@ -1,7 +1,10 @@
 """Latency measurement (docs/13 §6).
 
   python tools/measure_latency.py llm --n 30        LLM stage alone, HTTP/2 on vs off (no audio, no STT)
-  python tools/measure_latency.py hero --n 20 URL   full hero runs against a running backend (see hero section)
+  python tools/measure_latency.py hero-report       latency and run-to-run variation from the recorded hero runs
+
+Hero runs: start the backend with RECORD_RUNS=true, run tools/console_client.py c06 --quiet N times (sequential, one
+Gnani request per key); every finished run is saved in data/replay/_runs/ and hero-report reads those files.
 
 Run with the backend environment: backend/.venv/Scripts/python tools/measure_latency.py ...
 Keys come from the environment only. Results are merged into data/eval/latency_runs.json.
@@ -89,13 +92,61 @@ async def llm_stage(n: int) -> None:
     print(json.dumps(result, indent=1))
 
 
+def load_runs(scenario: str = "c06") -> list[list[dict]]:
+    files = sorted((ROOT / "data" / "replay" / "_runs").glob(f"{scenario}_*.json"), key=lambda f: f.stat().st_mtime)
+    return [json.loads(f.read_text(encoding="utf-8"))["events"] for f in files]
+
+
+def hero_report(turn: int = 7) -> None:
+    runs = load_runs()
+    fast, deep, seg_stt, deep_llm = [], [], [], []
+    for evs in runs:
+        seen = set()
+        for e in evs:
+            d = e["data"]
+            if e["type"] == "transcript.final":
+                seg_stt.append(d["stt_latency_ms"])
+            elif e["type"] == "finding.detected" and d["kind"] == "violation":
+                key = (d["turn_idx"], d["rule_id"], d["phase"])
+                if key in seen:
+                    continue  # first appearance of a rule per turn and phase
+                seen.add(key)
+                (fast if d["phase"] == "fast" else deep).append(d["latency"]["total_ms"])
+                if d["phase"] == "deep":
+                    deep_llm.append(d["latency"]["llm_ms"])
+    result = {"runs": len(runs), "fast_path_ms": summary(fast), "deep_path_ms": summary(deep),
+              "llm_ms_in_deep": summary(deep_llm), "prisma_segment_latency_ms": summary(seg_stt),
+              "note": "total_ms = flag emitted minus segment end; segment end = first audio frame sent + summed vendor "
+                      "audio_duration_ms (pauses between segments are not counted, so values are slightly high)"}
+    hero_turn = {"fast_path_ms": summary([x["data"]["latency"]["total_ms"] for e in runs for x in [_first(e, turn, "fast")] if x]),
+                 "deep_path_ms": summary([x["data"]["latency"]["total_ms"] for e in runs for x in [_first(e, turn, "deep")] if x])}
+    result["hero_turn_first_violation"] = hero_turn
+    merge_out("hero_runs", {**result, "measured_at": datetime.now(UTC).isoformat(timespec="seconds")})
+    print(json.dumps(result, indent=1))
+    print(f"\nVariation, first 5 runs, agent turn {turn}")
+    for n, evs in enumerate(runs[:5], 1):
+        fs = [(e["data"]["rule_id"], e["data"]["kind"][:4], tuple(e["data"]["token_range"]), e["data"]["source"],
+               round(e["data"]["confidence"], 2)) for e in evs
+              if e["type"] == "finding.detected" and e["data"]["turn_idx"] == turn and e["data"]["kind"] != "good_practice"]
+        scores = [e["data"]["score"] for e in evs if e["type"] == "risk.update"]
+        print(f"run {n}: findings={sorted(set(fs), key=lambda x: x[2])}\n       risk={scores}")
+
+
+def _first(evs: list[dict], turn: int, phase: str) -> dict | None:
+    return next((e for e in evs if e["type"] == "finding.detected" and e["data"]["turn_idx"] == turn
+                 and e["data"]["phase"] == phase and e["data"]["kind"] == "violation"), None)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("llm").add_argument("--n", type=int, default=30)
+    sub.add_parser("hero-report")
     a = ap.parse_args()
     if a.cmd == "llm":
         asyncio.run(llm_stage(a.n))
+    else:
+        hero_report()
 
 
 if __name__ == "__main__":

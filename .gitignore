@@ -65,3 +65,4 @@ docs/SCRIPT-REVIEW.md
 docs/LAUNCH.md
 # Public docs that stay committed: README.md, docs/architecture.md, docs/conventions.md,
 # docs/SPIKE-RESULTS.md, docs/EVAL-NOTES.md, content/ (the synthetic dataset)
+data/replay/_runs/

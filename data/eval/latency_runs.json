@@ -16,5 +16,48 @@
   },
   "measured_at": "2026-10-31T10:33:58+00:00",
   "model": "gpt-5.4-mini"
+ },
+ "hero_runs": {
+  "runs": 20,
+  "fast_path_ms": {
+   "n": 40,
+   "p50_ms": 2890,
+   "p95_ms": 3435,
+   "max_ms": 5743
+  },
+  "deep_path_ms": {
+   "n": 25,
+   "p50_ms": 4830,
+   "p95_ms": 5763,
+   "max_ms": 7988
+  },
+  "llm_ms_in_deep": {
+   "n": 25,
+   "p50_ms": 2017,
+   "p95_ms": 2215,
+   "max_ms": 2858
+  },
+  "prisma_segment_latency_ms": {
+   "n": 437,
+   "p50_ms": 334,
+   "p95_ms": 532,
+   "max_ms": 1197
+  },
+  "note": "total_ms = flag emitted minus segment end; segment end = first audio frame sent + summed vendor audio_duration_ms (pauses between segments are not counted, so values are slightly high)",
+  "hero_turn_first_violation": {
+   "fast_path_ms": {
+    "n": 20,
+    "p50_ms": 2807,
+    "p95_ms": 5743,
+    "max_ms": 5743
+   },
+   "deep_path_ms": {
+    "n": 14,
+    "p50_ms": 3178,
+    "p95_ms": 7988,
+    "max_ms": 7988
+   }
+  },
+  "measured_at": "2026-10-31T11:35:47+00:00"
  }
 }

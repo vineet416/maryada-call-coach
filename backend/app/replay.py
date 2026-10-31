@@ -35,6 +35,17 @@ def as_replay(events: list[dict]) -> list[dict]:
     return out
 
 
+def remaining(events: list[dict], after_turn: int) -> list[dict]:
+    """Recorded events from the first turn after `after_turn` to the end, times rebased to zero."""
+    start = next((i for i, e in enumerate(events) if e["type"] == "turn.started" and e["data"]["turn_idx"] > after_turn),
+                 len(events))
+    rest = copy.deepcopy(events[start:])
+    base = rest[0]["t_ms"] if rest else 0
+    for e in rest:
+        e["t_ms"] -= base
+    return rest
+
+
 def schedule(events: list[dict]) -> list[tuple[float, dict]]:
     """(delay in seconds since the previous event, event), from the recorded t_ms."""
     prev, res = 0, []

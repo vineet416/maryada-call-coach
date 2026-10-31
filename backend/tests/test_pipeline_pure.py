@@ -39,3 +39,22 @@ def test_daily_cap(tmp_path, monkeypatch):
     monkeypatch.setattr(settings, "db_path", tmp_path / "t.db")
     db.init_db()
     assert [db.try_take_slot(2) for _ in range(3)] == [True, True, False]
+
+
+def test_remaining_rebases_time():
+    evs = [{"seq": 1, "type": "session.started", "t_ms": 0, "data": {}},
+           {"seq": 2, "type": "turn.started", "t_ms": 100, "data": {"turn_idx": 1}},
+           {"seq": 3, "type": "turn.ended", "t_ms": 900, "data": {"turn_idx": 1}},
+           {"seq": 4, "type": "turn.started", "t_ms": 1500, "data": {"turn_idx": 2}},
+           {"seq": 5, "type": "session.ended", "t_ms": 2500, "data": {}}]
+    rest = replay.remaining(evs, 1)
+    assert [e["seq"] for e in rest] == [4, 5] and [e["t_ms"] for e in rest] == [0, 1000]
+    assert replay.remaining(evs, 2) == []
+
+
+def test_tokens_continue_across_segments():
+    from app.session.runner import tokens_for
+    a = tokens_for(0, "Madam ye sab")
+    b = tokens_for(len(a), "मेरे को आज")
+    assert [t["i"] for t in a + b] == [0, 1, 2, 3, 4, 5]
+    assert a[0]["lang"] == "en" and b[0]["lang"] == "hi"

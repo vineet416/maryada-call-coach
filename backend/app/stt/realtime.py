@@ -1,6 +1,7 @@
 """Prisma realtime adapter: one WebSocket per turn, 1024-byte frames at real-time cadence, finals only."""
 import asyncio
 import json
+import time
 from collections.abc import AsyncIterator
 from pathlib import Path
 
@@ -37,6 +38,7 @@ async def stream_turn(wav_path: Path, profile: dict, api_key: str, pace: float |
                     await asyncio.sleep(len(chunk) / BYTES_PER_MS / 1000 * pace)
                 await ws.send(json.dumps({"type": "commit"}))
 
+            t0 = time.perf_counter()
             sender = asyncio.create_task(send())
             covered, idx = 0, 0
             try:
@@ -52,7 +54,7 @@ async def stream_turn(wav_path: Path, profile: dict, api_key: str, pace: float |
                     last = is_last_segment(covered, total_ms)
                     yield TranscriptSegment(text=m.get("text", "").strip(), lang=m.get("detected_language_code", ""),
                                             latency_ms=int(m.get("latency", 0)), segment_idx=idx,
-                                            audio_end_ms=covered, is_last=last)
+                                            audio_end_ms=covered, is_last=last, stream_t0=t0)
                     idx += 1
                     if last and sender.done():
                         return
