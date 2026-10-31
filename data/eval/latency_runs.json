@@ -1,0 +1,20 @@
+{
+ "llm_stage_http2": {
+  "http2_on": {
+   "n": 30,
+   "p50_ms": 1208,
+   "p95_ms": 1558,
+   "max_ms": 4038,
+   "failed": 0
+  },
+  "http2_off": {
+   "n": 30,
+   "p50_ms": 1314,
+   "p95_ms": 1745,
+   "max_ms": 4055,
+   "failed": 0
+  },
+  "measured_at": "2026-10-31T10:33:58+00:00",
+  "model": "gpt-5.4-mini"
+ }
+}
