@@ -131,8 +131,8 @@ scenarios:
         t: "Thoda better hain sir. Thank you. Do hafte baad kuch karta hoon."
         td: "थोड़ा बेटर हैं सर। थैंक यू। दो हफ्ते बाद कुछ करता हूँ।"
       - s: A
-        t: "Bilkul sir. Main do hafte baad ek reminder bhej dunga, aur zaroorat ho toh hum EMI mein rahat ka option bhi dekhenge. Aap apna dhyan rakhiye."
-        td: "बिल्कुल सर। मैं दो हफ्ते बाद एक रिमाइंडर भेज दूँगा, और ज़रूरत हो तो हम ईएमआई में राहत का ऑप्शन भी देखेंगे। आप अपना ध्यान रखिए।"
+        t: "Bilkul sir. Main do hafte baad ek reminder bhej dunga, aur zaroorat ho toh hum EMI mein relief ka option bhi dekhenge. Aap apna dhyan rakhiye."
+        td: "बिल्कुल सर। मैं दो हफ्ते बाद एक रिमाइंडर भेज दूँगा, और ज़रूरत हो तो हम ईएमआई में रिलीफ़ का ऑप्शन भी देखेंगे। आप अपना ध्यान रखिए।"
       - s: B
         t: "Thank you sir, bahut achha laga ki aapne samjha."
         td: "थैंक यू सर, बहुत अच्छा लगा कि आपने समझा।"
