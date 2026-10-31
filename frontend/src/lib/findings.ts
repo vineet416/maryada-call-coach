@@ -13,8 +13,8 @@ export function findingAt(findings: Finding[], turnIdx: number, i: number): Find
 }
 
 export function confidenceLabel(f: Finding): 'High' | 'Medium' | 'Needs review' {
-  if (f.kind === 'needs_review' || f.confidence < 0.5) return 'Needs review'
-  return f.confidence >= 0.8 ? 'High' : 'Medium'
+  if (f.kind === 'needs_review' || f.confidence < 0.45) return 'Needs review'
+  return f.confidence >= 0.75 ? 'High' : 'Medium'
 }
 
 export const SOURCE_LABEL: Record<Finding['source'], string> = {
