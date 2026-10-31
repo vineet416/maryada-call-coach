@@ -318,3 +318,32 @@ def stt_realtime(wav_path: Path, language_code: str, candidates: str | None = No
 
 recovery = spike.recovery
 key_terms = spike.key_terms
+
+
+# ---------- audition clip rendering (shared by the audition notebooks) ----------
+def target_lufs(voices_cfg: dict, group: str) -> float:
+    return float(str(voices_cfg["loudness"][group]).split()[0])
+
+
+def render_clip(j: dict, out: Path, voices_cfg: dict, client: httpx.Client, sample_rate: int = 48000) -> dict:
+    """Load a clip from `out` when its files exist, otherwise synthesise it (cache first), normalise it and write
+    `<clip>__<voice>__<var>__raw.wav` (and `__phone.wav` for call voices). Returns arrays and whether files were new."""
+    stem = f"{j['clip']}__{j['voice']}__{j['var']}"
+    raw_f, phone_f = out / f"{stem}__raw.wav", out / f"{stem}__phone.wav"
+    is_call = j["group"] in ("agent", "borrower", "third_party")
+    target = target_lufs(voices_cfg, j["group"])
+    if raw_f.exists() and (phone_f.exists() or not is_call):
+        x, sr = sf.read(raw_f, dtype="float32")
+        p = sf.read(phone_f, dtype="float32")[0] if is_call else None
+        new = False
+    else:
+        x, sr = synthesize(j["text"], j["voice"], j["lang"], j["speed"], sample_rate, client)
+        x = loudnorm(trim_silence(x, sr), sr, target)
+        write_wav(raw_f, x, sr)
+        p = None
+        if is_call:
+            p = phone_voice(x, sr, target, voices_cfg["phone_chain"])
+            write_wav(phone_f, p, 8000)
+        new = True
+    files = [(raw_f.name, "raw")] + ([(phone_f.name, "phone")] if is_call else [])
+    return {"x": x, "sr": sr, "phone": p, "new": new, "files": files}
