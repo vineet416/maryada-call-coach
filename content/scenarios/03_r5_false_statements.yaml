@@ -118,27 +118,27 @@ scenarios:
         t: "Haan, boliye."
         td: "हाँ, बोलिए।"
       - s: A
-        t: "Rajesh ji, aapke two-wheeler loan ki chaar hazaar do sau rupaye ki EMI bounce ho gayi hai, das din ho gaye. Payment kab kar rahe hain?"
-        td: "राजेश जी, आपके टू-व्हीलर लोन की चार हज़ार दो सौ रुपये की ईएमआई बाउंस हो गई है, दस दिन हो गए। पेमेंट कब कर रहे हैं?"
+        t: "Rajesh ji, aapke two-wheeler loan ki chaar hazaar do sau rupaye ki EMI bounce ho gayi hai, das din ho gaye. SMS bhi bheja tha. Payment kab kar rahe hain?"
+        td: "राजेश जी, आपके टू-व्हीलर लोन की चार हज़ार दो सौ रुपये की ईएमआई बाउंस हो गई है, दस दिन हो गए। एसएमएस भी भेजा था। पेमेंट कब कर रहे हैं?"
       - s: B
-        t: "Haan sir, Friday tak de dunga."
-        td: "हाँ सर, फ्राइडे तक दे दूँगा।"
+        t: "Haan sir, Friday tak de dunga. Salary aane wali hai."
+        td: "हाँ सर, फ्राइडे तक दे दूँगा। सैलरी आने वाली है।"
       - s: A
-        t: "Friday tak? Pakka na? Sir, agar Friday tak nahi diya toh har din paanch hazaar rupaye penalty lagegi, aur ye RBI ka rule hai."
-        td: "फ्राइडे तक? पक्का ना? सर, अगर फ्राइडे तक नहीं दिया तो हर दिन पाँच हज़ार रुपये पेनल्टी लगेगी, और ये आरबीआई का रूल है।"
+        t: "Sir, main clear bol raha hoon. Friday tak? Pakka na? Agar Friday tak nahi diya toh har din paanch hazaar rupaye penalty lagegi, aur ye RBI ka rule hai."
+        td: "सर, मैं क्लियर बोल रहा हूँ। फ्राइडे तक? पक्का ना? अगर फ्राइडे तक नहीं दिया तो हर दिन पाँच हज़ार रुपये पेनल्टी लगेगी, और ये आरबीआई का रूल है।"
         L: [[R5, "har din paanch hazaar rupaye penalty lagegi"]]
       - s: B
         t: "Paanch hazaar roz? Itna kaise lagega?"
         td: "पाँच हज़ार रोज़? इतना कैसे लगेगा?"
       - s: A
-        t: "Isliye Friday se pehle kar dijiye sir. Aaj-kal mein ho jaye toh best hai."
-        td: "इसलिए फ्राइडे से पहले कर दीजिए सर। आज-कल में हो जाए तो बेस्ट है।"
+        t: "Isliye Friday se pehle kar dijiye sir. Aaj-kal mein ho jaye toh best hai. Poora nahi ho toh thoda abhi kar do, baaki Friday ko."
+        td: "इसलिए फ्राइडे से पहले कर दीजिए सर। आज-कल में हो जाए तो बेस्ट है। पूरा नहीं हो तो थोड़ा अभी कर दो, बाकी फ्राइडे को।"
       - s: B
-        t: "Theek hai, Friday ko pakka. Subah hi kar dunga."
-        td: "ठीक है, फ्राइडे को पक्का। सुबह ही कर दूँगा।"
+        t: "Abhi toh do hazaar kar deta hoon, baaki Friday ko pakka. Subah hi kar dunga."
+        td: "अभी तो दो हज़ार कर देता हूँ, बाकी फ्राइडे को पक्का। सुबह ही कर दूँगा।"
       - s: A
-        t: "Okay sir, Friday pakka. Payment link abhi WhatsApp pe bhej raha hoon. Thank you."
-        td: "ओके सर, फ्राइडे पक्का। पेमेंट लिंक अभी व्हाट्सएप पर भेज रहा हूँ। थैंक यू।"
+        t: "Okay sir, do hazaar abhi aur baaki Friday ko. Payment link abhi WhatsApp pe bhej raha hoon. Thank you."
+        td: "ओके सर, दो हज़ार अभी और बाकी फ्राइडे को। पेमेंट लिंक अभी व्हाट्सएप पर भेज रहा हूँ। थैंक यू।"
   - id: c14
     title: "Threat to seize house and car tomorrow"
     summary: "Agent says a team will seize property tomorrow and no notice is needed."
@@ -164,25 +164,25 @@ scenarios:
         t: "Haan, boliye."
         td: "हाँ, बोलिए।"
       - s: A
-        t: "Nilesh ji, aapke personal loan ki nau hazaar rupaye ki EMI pichhle mahine se pending hai, bounce ho gayi thi. Payment kab kar rahe hain?"
-        td: "नीलेश जी, आपके पर्सनल लोन की नौ हज़ार रुपये की ईएमआई पिछले महीने से पेंडिंग है, बाउंस हो गई थी। पेमेंट कब कर रहे हैं?"
+        t: "Nilesh ji, aapke personal loan ki nau hazaar rupaye ki EMI pichhle mahine se pending hai, bounce ho gayi thi. Do reminder bhej chuka hoon. Payment kab kar rahe hain?"
+        td: "नीलेश जी, आपके पर्सनल लोन की नौ हज़ार रुपये की ईएमआई पिछले महीने से पेंडिंग है, बाउंस हो गई थी। दो रिमाइंडर भेज चुका हूँ। पेमेंट कब कर रहे हैं?"
       - s: B
-        t: "Sir, thoda time chahiye. Agle hafte pakka."
-        td: "सर, थोड़ा टाइम चाहिए। अगले हफ्ते पक्का।"
+        t: "Sir, thoda time chahiye. Dhandha slow hai, agle hafte pakka."
+        td: "सर, थोड़ा टाइम चाहिए। धंधा स्लो है, अगले हफ्ते पक्का।"
       - s: A
-        t: "Agle hafte nahi chalega, Nilesh ji. Agar kal tak payment nahi aaya toh kal hi hamari team aapka ghar aur gaadi seize kar legi."
-        td: "अगले हफ्ते नहीं चलेगा, नीलेश जी। अगर कल तक पेमेंट नहीं आया तो कल ही हमारी टीम आपका घर और गाड़ी सीज़ कर लेगी।"
+        t: "Nilesh ji, mereko roz yahi sunna padta hai. Agle hafte nahi chalega. Agar kal tak payment nahi aaya toh kal hi hamari team aapka ghar aur gaadi seize kar legi."
+        td: "नीलेश जी, मेरेको रोज़ यही सुनना पड़ता है। अगले हफ्ते नहीं चलेगा। अगर कल तक पेमेंट नहीं आया तो कल ही हमारी टीम आपका घर और गाड़ी सीज़ कर लेगी।"
         L: [[R5, "kal hi hamari team aapka ghar aur gaadi seize kar legi"]]
       - s: B
-        t: "Kya? Itni jaldi? Mereko toh notice bhi nahi mila."
-        td: "क्या? इतनी जल्दी? मेरेको तो नोटिस भी नहीं मिला।"
+        t: "Kya? Itni jaldi? Mereko toh notice bhi nahi mila. Aise kaise ho sakta hai?"
+        td: "क्या? इतनी जल्दी? मेरेको तो नोटिस भी नहीं मिला। ऐसे कैसे हो सकता है?"
       - s: A
-        t: "Notice ki zarurat nahi hai ab. Jaldi payment kijiye."
-        td: "नोटिस की ज़रूरत नहीं है अब। जल्दी पेमेंट कीजिए।"
+        t: "Notice ki zarurat nahi hai ab. Jaldi payment kijiye, aaj shaam tak jitna ho sake utna."
+        td: "नोटिस की ज़रूरत नहीं है अब। जल्दी पेमेंट कीजिए, आज शाम तक जितना हो सके उतना।"
         L: [[R5, "Notice ki zarurat nahi hai ab"]]
       - s: B
-        t: "Theek hai sir, kal subah bank jaata hoon."
-        td: "ठीक है सर, कल सुबह बैंक जाता हूँ।"
+        t: "Theek hai sir, kal subah bank jaata hoon. Pehle thoda bhar deta hoon."
+        td: "ठीक है सर, कल सुबह बैंक जाता हूँ। पहले थोड़ा भर देता हूँ।"
       - s: A
         t: "Okay sir, kal subah tak pakka. Payment link abhi WhatsApp pe bhej raha hoon. Thank you."
         td: "ओके सर, कल सुबह तक पक्का। पेमेंट लिंक अभी व्हाट्सएप पर भेज रहा हूँ। थैंक यू।"
