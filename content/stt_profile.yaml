@@ -17,4 +17,4 @@ evidence:
   third_party:
     C hi-IN: 1.0
     B indic-auto hi,en: 1.0
-note: The single-voice casting is final (agent Prakash, borrower Shivani, third party Avinash; see voices.yaml); hi-IN stays the setting for every role.
+note: The hero casting is final (see voices.yaml); hi-IN stays the setting for every role and every voice in the library pool.

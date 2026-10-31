@@ -1,6 +1,7 @@
-# Written after the G1 reply (2026-10-31). One voice per role for the whole MVP.
+# Written after the G1 reply (2026-10-31, corrected the same day).
 model: timbre-v3.0
-voices: {agent: Prakash, borrower: Shivani, third_party: Avinash, coach: Shubham, vo: Shubham}
-text_mode: {agent: devanagari, borrower: devanagari, third_party: devanagari, coach: devanagari, vo: devanagari}
-language: {agent: hi-IN, borrower: hi-IN, third_party: hi-IN, coach: hi-IN, vo: hi-IN}
-use_tags: only_shouting_on_agent_threat_line
+hero: {agent: Prakash, borrower: Shivani, third_party: Avinash, coach: Shubham, vo: Shubham}
+library_pool: see voices.yaml
+text_mode: devanagari
+language: hi-IN
+use_tags: only_shouting_on_agent_threat_lines

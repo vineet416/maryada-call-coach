@@ -36,11 +36,12 @@ phrases = al.load_yaml("content/rules_phrases.yaml")
 audition = al.load_yaml("content/audition.yaml")
 ROLE = {"A": "agent", "B": "borrower", "T": "third_party"}
 PARAM_KEY = {"agent": "agent", "borrower": "borrower", "third_party": "third", "coach": "coach", "vo": "vo"}
-VOICE = {r: v["voice"] for r, v in voices_cfg["roles"].items()}
+VOICE = {r: v["voice"] for r, v in voices_cfg["hero"].items()}  # hero call only; the library pool is picked per call later
 SHOUT_TURN = {"c06": 5}  # the only tagged line: the agent's threat (voices.yaml tags)
 SHOUT_LUFS = al.target_lufs(voices_cfg, "agent") + voices_cfg["tags"]["shout_gain_db"]
 scenarios = [s for f in sorted((al.ROOT / "content" / "scenarios").glob("*.yaml")) for s in al.load_yaml(f"content/scenarios/{f.name}")["scenarios"]]
 scenarios = [s for s in scenarios if (s["id"] in ONLY if ONLY else s.get("hero") if SCOPE == "hero" else True)]
+assert all(s.get("hero") for s in scenarios), "voice selection from library_pool is not built yet: hero scope only"
 print("scenarios:", [s["id"] for s in scenarios])
 
 

@@ -1,15 +1,24 @@
-# Voice casting + TTS parameters. FINAL (gate G1 answered): ONE voice per role for the whole MVP; the hero call and all
-# sample calls use these same voices with different scripts. Model timbre-v3.0 (a wrong voice/model pairing returns HTTP 400).
+# Voice casting + TTS parameters. FINAL for the hero call (gate G1 answered); the library pool below is limited to voices
+# that were heard in V2 (Devanagari text) during the audition. Model timbre-v3.0 (a wrong voice/model pairing returns HTTP 400).
 model: timbre-v3.0
-roles:
-  agent:       {voice: Prakash, gender: M, note: "all agent turns (every agent in agents.yaml speaks with this voice)"}
-  borrower:    {voice: Shivani, gender: F, note: "all borrower turns; no tags"}
-  third_party: {voice: Avinash, gender: M, note: "neighbour / relative; no tags"}
+
+hero:              # the hero call c06 uses ONLY these voices
+  agent:       {voice: Prakash, gender: M, note: "phone chain; the threat line (turn 5) carries the shouting tag"}
+  borrower:    {voice: Shivani, gender: F, note: "phone chain, no tags"}
+  third_party: {voice: Avinash, gender: M, note: "phone chain, no tags"}
   coach:       {voice: Shubham, gender: M, note: "clean full-band, plain"}
-  vo:          {voice: Shubham, gender: M, note: "video voice-over, same voice as the coach, wideband phone sound (vo_chain)"}
-# Script consequence: agent = male, borrower = female, third party = male (Hindi verb forms in every scenario must match).
-# scenario borrower.voice codes (m1/m2/f) and agents.yaml voice_role are legacy casting hints; the audio notebooks ignore
-# them and always use the roles above.
+  vo:          {voice: Shubham, gender: M, note: "video voice-over, wideband phone sound (vo_chain)"}
+
+library_pool:      # the other 29 sample calls may draw from this pool
+  agent:       {M: [Prakash, Avinash], F: [Chetana]}
+  borrower:    {F: [Shivani, Chetana], M: [Yashraj]}
+  third_party: {M: [Avinash], F: [Shivani, Chetana]}
+  coach:       {M: [Shubham]}
+  rules:
+    - "no two speakers in the same call share a voice"
+    - "the voice must match the gender written in the script; scenario genders are never changed"
+    - "Shubham is the coach in every call and is never used for any other role"
+    - "a call that needs a third female voice may propose Lakshmi, but ONE V2 sample of her is generated first and the work stops for the user's listening approval; she is never used without it"
 
 text_mode: devanagari   # all TTS input is the Devanagari line (`td`); `t` stays the Roman reference text
 borrower_language: hi-IN
@@ -27,8 +36,8 @@ text_rules:
   numbers: "keep amounts written as words (see scripts)"
   pitch_volume_emotion: "leave API defaults"
 tags:              # timbre-v3.0 audio tags; unknown tags are stripped silently and billed as characters
-  allowed: only_shouting_on_agent_threat_line
-  rule: "ONLY <shouting>, ONLY at the very start of the agent's threat line (c06 turn 5), so every word is covered. No tag anywhere else unless the user asks."
+  allowed: only_shouting_on_agent_threat_lines
+  rule: "ONLY <shouting>, ONLY at the very start of an agent's threat or violation line (hero: c06 turn 5), so every word is covered. No other tag anywhere."
   shout_gain_db: 2.5            # above the agent's normal level
   shout_target_lufs: -19.5      # integrated, +-0.5 LU; the only exemption from the agent's -22 LUFS (true peak <= -1.5 dBTP)
 
