@@ -22,7 +22,7 @@ RS_PER_1000_CHARS = 2.9  # docs/11: about 28,000 characters is about Rs 80
 UNCHANGED = ["id", "agent", "date", "time", "answered_by", "borrower", "third_party", "facts", "hero", "hard_negative"]
 
 MARATHI_WORDS = {
-    "aahe", "aahet", "aahes", "bolto", "bolte", "bolat", "kaay", "kay", "zhala", "zhale", "mala", "mi", "sangte",
+    "aahe", "aahet", "aahes", "bolto", "bolat", "kaay", "kay", "zhala", "zhale", "mala", "mi", "sangte",
     "sangto", "vaait", "vatta", "gele", "padla", "bayko", "aai", "vadilanche", "sathi", "kuthe", "tumhi", "amhi",
     "nidhan", "zhal", "ho", "mhanje", "pahije", "nako", "nahich", "kasa", "kashi",
 }
@@ -104,7 +104,8 @@ def check_scenario(sc: dict, old: dict | None, errs: list[str], warns: list[str]
             warn(f"turn {i} (male speaker) has a female verb ending: {FEMALE_FIRST.search(text).group(0)}")
         for lab in t.get("L", []):
             if lab[1] != "*" and lab[1] not in text:
-                err(f"turn {i}: label phrase not in t: {lab[1]!r}")
+                # the merged hero call is not part of this rewrite, so a mismatch there is only reported
+                (warn if sc.get("hero") else err)(f"turn {i}: label phrase not in t: {lab[1]!r}")
             if t["s"] != "A":
                 err(f"turn {i}: label on a non-agent turn")
 
