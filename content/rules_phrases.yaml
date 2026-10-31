@@ -25,6 +25,8 @@ rules:
       - "zindagi barbaad | ज़िंदगी बर्बाद"
       - "himmat nahi hai kya | हिम्मत नहीं है क्या"
       - "kaisa insaan hai aap | कैसा इंसान है आप"
+      - "kaise insaan hain aap | कैसे इंसान हैं आप"
+      - "izzat kamaai jaati hai | इज़्ज़त कमाई जाती है"
       - "bhaagne ka sochna bhi mat | भागने का सोचना भी मत"
       - "hoshiyari mat dikha | होशियारी मत दिखा"
       - "aapko sharam nahi aati | आपको शर्म नहीं आती"
@@ -140,6 +142,9 @@ rules:
       - "recorded hai | रिकॉर्डेड है"
       - "recording | रिकॉर्डिंग"
       - "quality aur training ke liye record | क्वालिटी और ट्रेनिंग के लिए रिकॉर्ड"
+      - "record ki ja rahi | रिकॉर्ड की जा रही"
+      - "line recorded | लाइन रिकॉर्डेड"
+      - "recording ho rahi | रिकॉर्डिंग हो रही"
   G1:
     good_practice_patterns:
       - "samajh sakta hoon | समझ सकता हूँ"
