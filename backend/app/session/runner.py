@@ -112,6 +112,7 @@ async def _run(s: Session) -> None:
                     await _run_live(s)
                 except SttError as e:
                     log.warning("session=%s stt failed: %s", s.id, e)
+                    _live_active = None  # the recorded tail does not use Gnani or the LLM: free the live slot
                     await _switch_to_replay(s)
             else:
                 await _run_replay(s)
@@ -133,7 +134,8 @@ async def _run(s: Session) -> None:
 
 def _finish(s: Session) -> None:
     db.log_session_end(s.id, _now(), s.risk_peak)
-    done = bool(s.log.events) and s.log.events[-1]["type"] == "session.ended"
+    last = s.log.events[-1] if s.log.events else {}
+    done = last.get("type") == "session.ended" and not last["data"]["summary"].get("stopped")
     if settings.record_runs and s.effective_mode == "live" and done:
         replay.save(f"_runs/{s.scenario_id}_{s.id}", s.log.events)
     s.log.close()
@@ -192,7 +194,10 @@ async def _segments(client: httpx.AsyncClient, wav, profile: dict, key: str):
                 try:
                     seg = await asyncio.wait_for(anext(gen), FIRST_SEGMENT_S if got == 0 else None)
                 except StopAsyncIteration:
-                    return
+                    if got:
+                        return
+                    log.warning("realtime stt ended without any segment, retrying over REST")
+                    break
                 got, covered = got + 1, seg.audio_end_ms
                 yield seg
         except (SttError, TimeoutError) as e:
@@ -243,6 +248,8 @@ async def _run_live(s: Session) -> None:
                 await asyncio.gather(*s.late_tasks, return_exceptions=True)
     finally:
         warm.cancel()
+        for task in s.late_tasks:  # stopped or timed out: no LLM answer may arrive after the client is closed
+            task.cancel()
         await llm_client.aclose()
     s.log.emit("session.ended", {"summary": summary(s)})
 
@@ -261,9 +268,20 @@ class LiveTurn:
         self.tasks: list[asyncio.Task] = []
         self.score_before = 0
         self.last_arrival = 0.0
+        self.n_segments, self.saw_last = 0, False
+
+    def close_segments(self) -> None:
+        """The STT stream can end without marking its last segment: close the turn's transcript explicitly."""
+        if self.n_segments and not self.saw_last:
+            self.s.log.emit("transcript.final", {
+                "turn_idx": self.idx, "segment_idx": self.n_segments, "speaker": self.role, "text": "",
+                "lang_detected": self.lang, "tokens": [], "is_last_segment_of_turn": True,
+                "stt_latency_ms": 0, "source": "live"})
+            self.saw_last = True
 
     def on_segment(self, seg: TranscriptSegment) -> None:
         now = time.perf_counter()
+        self.n_segments, self.saw_last = max(self.n_segments, seg.segment_idx + 1), self.saw_last or seg.is_last
         seg_end = seg.stream_t0 + seg.audio_end_ms / 1000 * settings.pace
         toks = tokens_for(self.ntok, seg.text)
         self.ntok += len(toks)
@@ -337,6 +355,7 @@ class LiveTurn:
     async def finish(self, score_before: int) -> int:
         """Wait for the first LLM answers (4 s), then close the turn with its risk update. Returns the new score."""
         self.score_before = score_before
+        self.close_segments()
         if self.speaker != "A":
             return score_before
         if self.tasks:

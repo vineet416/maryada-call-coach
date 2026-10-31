@@ -78,8 +78,14 @@ async def ws_session(ws: WebSocket, sid: str) -> None:
             "code": "unknown_session", "message_user": "That session does not exist.", "retryable": False}})
         await ws.close()
         return
-    first = await ws.receive_json()  # {"type":"start"} or {"type":"resume","last_seq":N}
-    last_seq = int(first.get("last_seq", 0)) if first.get("type") == "resume" else 0
+    try:
+        first = await ws.receive_json()  # {"type":"start"} or {"type":"resume","last_seq":N}
+        last_seq = int(first.get("last_seq", 0)) if first.get("type") == "resume" else 0
+    except WebSocketDisconnect:
+        return
+    except (ValueError, TypeError, AttributeError):  # not JSON, not an object, or a bad last_seq
+        await ws.close(code=1003)
+        return
     runner.start(s)
 
     async def listen() -> None:
@@ -87,7 +93,7 @@ async def ws_session(ws: WebSocket, sid: str) -> None:
             while True:
                 if (await ws.receive_json()).get("type") == "stop":
                     runner.stop(s)
-        except (WebSocketDisconnect, RuntimeError):
+        except (WebSocketDisconnect, RuntimeError, ValueError, TypeError, AttributeError):
             return
 
     listener = asyncio.create_task(listen())

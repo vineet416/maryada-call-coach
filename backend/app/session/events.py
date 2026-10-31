@@ -15,6 +15,8 @@ class EventLog:
 
     def emit(self, type_: str, data: dict) -> dict:
         env = {"seq": len(self.events) + 1, "type": type_, "t_ms": self.now_ms(), "data": data}
+        if self.done:  # a late task must not add events to a finished session
+            return env
         self.events.append(env)
         self._wake()
         return env
