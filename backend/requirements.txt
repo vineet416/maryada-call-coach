@@ -5,3 +5,4 @@ pydantic-settings>=2.4,<3
 httpx2>=2.15,<3
 websockets>=13,<16
 PyYAML>=6,<7
+h2==4.4.1

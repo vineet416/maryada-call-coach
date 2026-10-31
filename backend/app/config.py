@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     gnani_tts_url: str = "https://api.vachana.ai/api/v1/tts/inference"
     euri_api_key: str = ""
     euri_base_url: str = "https://api.euron.one/api/v1/euri"
+    llm_http2: bool = True  # HTTP/2 for Euri; falls back to HTTP/1.1 if negotiation fails
     llm_model: str = "gpt-5.4-mini"
     llm_fallback_model: str = "gpt-4.1-mini"
     stt_mode: str = "realtime"
