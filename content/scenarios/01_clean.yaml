@@ -142,17 +142,17 @@ scenarios:
     hard_negative: true
     turns:
       - s: A
-        t: "Haan Dinesh ji, Tarang Finserv se Vikram bol raha hoon."
-        td: "हाँ दिनेश जी, तारंग फिनसर्व से विक्रम बोल रहा हूँ।"
+        t: "Dinesh ji? Vikram bol raha hoon, Tarang Finserv se."
+        td: "दिनेश जी? विक्रम बोल रहा हूँ, तारंग फिनसर्व से।"
       - s: B
-        t: "Haan? Kaun Vikram?"
-        td: "हाँ? कौन विक्रम?"
+        t: "Kaun Vikram?"
+        td: "कौन विक्रम?"
       - s: A
         t: "Ek minute, ye line recorded hai. Dinesh Mane ji se hi baat ho rahi hai na?"
         td: "एक मिनट, ये लाइन रिकॉर्डेड है। दिनेश माने जी से ही बात हो रही है ना?"
       - s: B
-        t: "Haan ji, main hi hoon. Bolo."
-        td: "हाँ जी, मैं ही हूँ। बोलो।"
+        t: "Haan ji, main hi hoon. Bolo, kya baat hai?"
+        td: "हाँ जी, मैं ही हूँ। बोलो, क्या बात है?"
       - s: A
         t: "Sir, aapke business loan ki aath hazaar ki EMI do mahine se baaki hai. Reminder bhi bheje the, koi jawab nahi aaya. Ab kya plan hai?"
         td: "सर, आपके बिज़नेस लोन की आठ हज़ार की ईएमआई दो महीने से बाकी है। रिमाइंडर भी भेजे थे, कोई जवाब नहीं आया। अब क्या प्लान है?"
@@ -199,8 +199,8 @@ scenarios:
         t: "Haan dekha tha yaar, bhool gaya. Aaj nahi ho payega, salary parso aati hai. Do din ka time do na."
         td: "हाँ देखा था यार, भूल गया। आज नहीं हो पाएगा, सैलरी परसों आती है। दो दिन का टाइम दो ना।"
       - s: A
-        t: "Theek hai sir, do din ka time main note kar leta hoon. Lekin please parso tak zaroor kar dijiye, nahi toh late fee badh jayegi aur credit score pe bhi asar padega. Parso kitne baje tak ho jayega?"
-        td: "ठीक है सर, दो दिन का टाइम मैं नोट कर लेता हूँ। लेकिन प्लीज़ परसों तक ज़रूर कर दीजिए, नहीं तो लेट फीस बढ़ जाएगी और क्रेडिट स्कोर पे भी असर पड़ेगा। परसों कितने बजे तक हो जाएगा?"
+        t: "Theek hai sir, do din ka time de deta hoon. Lekin please parso tak zaroor kar dijiye, nahi toh late fee badh jayegi aur credit score pe bhi asar padega. Parso kitne baje tak ho jayega?"
+        td: "ठीक है सर, दो दिन का टाइम दे देता हूँ। लेकिन प्लीज़ परसों तक ज़रूर कर दीजिए, नहीं तो लेट फीस बढ़ जाएगी और क्रेडिट स्कोर पे भी असर पड़ेगा। परसों कितने बजे तक हो जाएगा?"
       - s: B
         t: "Pakka, parso subah salary aate hi kar dunga."
         td: "पक्का, परसों सुबह सैलरी आते ही कर दूँगा।"
