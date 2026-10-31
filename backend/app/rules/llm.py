@@ -69,7 +69,11 @@ async def _ask(client: httpx.AsyncClient, model: str, ctx: CallContext, history:
         async with httpx.AsyncClient(timeout=LATE_TIMEOUT_S, http2=False) as h1:
             r = await h1.post(url, json=body, headers=headers)
     r.raise_for_status()
-    return r.json()["choices"][0]["message"]["content"]
+    j = r.json()
+    u = j.get("usage") or {}
+    log.info("llm tokens model=%s prompt=%s completion=%s total=%s", model, u.get("prompt_tokens"),
+             u.get("completion_tokens"), u.get("total_tokens"))
+    return j["choices"][0]["message"]["content"]
 
 
 async def review(client: httpx.AsyncClient, ctx: CallContext, history: list[Turn], text: str,

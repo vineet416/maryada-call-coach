@@ -58,3 +58,28 @@ def test_tokens_continue_across_segments():
     b = tokens_for(len(a), "मेरे को आज")
     assert [t["i"] for t in a + b] == [0, 1, 2, 3, 4, 5]
     assert a[0]["lang"] == "en" and b[0]["lang"] == "hi"
+
+
+def test_rest_retry_decision():
+    from app.stt.base import retry_start_ms
+    assert retry_start_ms(0, 0, rest_tried=False) == 0  # failed before any segment: whole turn over REST
+    assert retry_start_ms(2, 6400, rest_tried=False) == 6400  # failed mid-turn: continue after what was delivered
+    assert retry_start_ms(2, 6400, rest_tried=True) is None  # REST already tried once: give up (replay)
+    assert retry_start_ms(0, 0, rest_tried=True) is None
+
+
+def test_slice_wav(tmp_path):
+    import wave
+
+    from app.stt.base import slice_wav
+    p = tmp_path / "t.wav"
+    with wave.open(str(p), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(8000)
+        w.writeframes(b"\x01\x00" * 8000)  # 1 s
+    import io
+    with wave.open(io.BytesIO(slice_wav(p, 250))) as w:
+        assert w.getnframes() == 6000 and w.getframerate() == 8000
+    with wave.open(io.BytesIO(slice_wav(p, 5000))) as w:
+        assert w.getnframes() == 0

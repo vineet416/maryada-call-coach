@@ -15,7 +15,13 @@ from ..rules.schemas import Finding, Turn
 from ..rules.text import tokenize
 from ..stt import realtime
 from ..stt import rest as stt_rest
-from ..stt.base import SttError, TranscriptSegment, gnani_lock, load_profile
+from ..stt.base import (
+    SttError,
+    TranscriptSegment,
+    gnani_lock,
+    load_profile,
+    retry_start_ms,
+)
 from . import assets
 from .events import EventLog
 
@@ -23,7 +29,6 @@ log = logging.getLogger("maryada.session")
 
 FIRST_ANSWER_S = 4.0  # docs/13 §4.5: wait this long for the LLM before closing a turn; later answers are "late" updates
 FIRST_SEGMENT_S = 15.0  # docs/01 §4: no transcript for this long -> fallback
-MAX_SESSION_S = 150.0  # docs/01 §8
 COACH_GAP_MS = 300
 MAX_SPOKEN_PER_CALL = 3
 _RANK = {"good_practice": 0, "advisory": 1, "needs_review": 2, "violation": 3}
@@ -100,7 +105,7 @@ def summary(s: Session, stopped: bool = False) -> dict:
 async def _run(s: Session) -> None:
     global _live_active
     try:
-        async with asyncio.timeout(MAX_SESSION_S):
+        async with asyncio.timeout(settings.session_max_s):
             if s.effective_mode == "live":
                 _live_active = s.id
                 try:
@@ -177,8 +182,9 @@ async def _switch_to_replay(s: Session) -> None:
 
 # ---------------------------------------------------------------- live
 async def _segments(client: httpx.AsyncClient, wav, profile: dict, key: str):
-    """Realtime first; on a failure before any segment, REST once; after a segment a failure is an SttError."""
-    got = 0
+    """Realtime first. If it fails (before or during the turn) the turn is retried ONCE over REST with the same profile,
+    continuing after the segments already delivered. If REST fails too, SttError (the caller falls back to replay)."""
+    got, covered = 0, 0
     if settings.stt_mode == "realtime":
         try:
             gen = realtime.stream_turn(wav, profile, key)
@@ -187,14 +193,15 @@ async def _segments(client: httpx.AsyncClient, wav, profile: dict, key: str):
                     seg = await asyncio.wait_for(anext(gen), FIRST_SEGMENT_S if got == 0 else None)
                 except StopAsyncIteration:
                     return
-                got += 1
+                got, covered = got + 1, seg.audio_end_ms
                 yield seg
         except (SttError, TimeoutError) as e:
-            log.warning("realtime stt failed (segments so far: %d): %s %s", got, type(e).__name__, e.__cause__ or e)
-            if got:
-                raise SttError(f"realtime failed mid-turn: {type(e).__name__}") from e
-    for seg in await stt_rest.transcribe_turn(client, wav, profile, key):
-        yield seg
+            log.warning("realtime stt failed after %d segments, retrying over REST: %s %s", got, type(e).__name__,
+                        e.__cause__ or e)
+    start = retry_start_ms(got, covered, rest_tried=False)
+    for seg in await stt_rest.transcribe_turn(client, wav, profile, key, start or 0, got):
+        if seg.text or got == 0:  # nothing left to transcribe after the delivered segments is not an error
+            yield seg
 
 
 async def _run_live(s: Session) -> None:
