@@ -16,7 +16,9 @@
 # %% Parameters
 import json
 import os
+import shutil
 import sys
+import time
 from pathlib import Path
 
 import httpx2 as httpx
@@ -37,8 +39,8 @@ audition = al.load_yaml("content/audition.yaml")
 ROLE = {"A": "agent", "B": "borrower", "T": "third_party"}
 PARAM_KEY = {"agent": "agent", "borrower": "borrower", "third_party": "third", "coach": "coach", "vo": "vo"}
 VOICE = {r: v["voice"] for r, v in voices_cfg["hero"].items()}  # hero call only; the library pool is picked per call later
-SHOUT_TURN = {"c06": 5}  # the only tagged line: the agent's threat (voices.yaml tags)
-SHOUT_LUFS = al.target_lufs(voices_cfg, "agent") + voices_cfg["tags"]["shout_gain_db"]
+RAISE = voices_cfg["violation_gain"]  # agent lines that carry a violation label: level only (+3.5 dB), nothing else
+COACH = os.environ.get("MARYADA_COACH") == "1"  # the coach lines and the earcon are final; only rebuilt on request
 scenarios = [s for f in sorted((al.ROOT / "content" / "scenarios").glob("*.yaml")) for s in al.load_yaml(f"content/scenarios/{f.name}")["scenarios"]]
 scenarios = [s for s in scenarios if (s["id"] in ONLY if ONLY else s.get("hero") if SCOPE == "hero" else True)]
 assert all(s.get("hero") for s in scenarios), "voice selection from library_pool is not built yet: hero scope only"
@@ -50,18 +52,17 @@ def turn_job(sc: dict, i: int) -> dict:
     t = sc["turns"][i - 1]
     role = ROLE[t["s"]]
     text = t["td"].strip()
-    shout = SHOUT_TURN.get(sc["id"]) == i
-    if shout:
-        text = f"<shouting> {text}"
+    raised = role == "agent" and any(rule != "G1" for rule, _ in t.get("L", []))
     p = voices_cfg["params"][PARAM_KEY[role]]
-    target = SHOUT_LUFS if shout else al.target_lufs(voices_cfg, role)
+    base = al.target_lufs(voices_cfg, role)
     return {"sc": sc["id"], "idx": i, "s": t["s"], "role": role, "voice": VOICE[role], "text": text, "lang": p["language"],
-            "speed": p["speed"], "target": target, "shout": shout, "ref": t["t"]}
+            "speed": p["speed"], "base": base, "target": base + RAISE["gain_db"] if raised else base, "raised": raised,
+            "ref": t["t"], "labels": [ph for _, ph in t.get("L", [])]}
 
 
 jobs = [turn_job(sc, i) for sc in scenarios for i in range(1, len(sc["turns"]) + 1)]
 coach_jobs = []
-if SCOPE == "hero" or not ONLY:
+if COACH:
     p = voices_cfg["params"]["coach"]
     for rule, lines in phrases["coach_lines_td"].items():
         coach_jobs += [{"rule": rule, "n": n, "voice": VOICE["coach"], "text": line, "lang": p["language"], "speed": p["speed"]}
@@ -72,7 +73,7 @@ print(f"turns: {len(jobs)}, coach lines: {len(coach_jobs)}; uncached characters:
 assert cost <= MAX_SPEND_INR, f"estimate Rs {cost} is above Rs {MAX_SPEND_INR}: stop and report"
 for j in jobs:
     assert j["voice"] == VOICE[j["role"]]
-    assert ("<" in j["text"]) == j["shout"], "tags only on the agent threat line"
+    assert "<" not in j["text"], "no audio tags anywhere"
 
 # %% 2. Turns: raw (clean, normalised), phone chain (8 kHz WAV + MP3)
 client = httpx.Client(timeout=90)
@@ -80,10 +81,20 @@ turns: dict[str, list[dict]] = {}
 if RUN:
     for sc in scenarios:
         arrays = []
+        for d in (DATA / sc["id"], DATA / "raw" / sc["id"]):  # keep the previous version as a local backup, leave no stale file behind
+            if d.exists():
+                shutil.move(str(d), str(DATA / "_backup" / f"{d.parent.name}_{d.name}_{time.strftime('%Y%m%d%H%M%S')}"))
         for j in [x for x in jobs if x["sc"] == sc["id"]]:
             x, sr = al.synthesize(j["text"], j["voice"], j["lang"], j["speed"], 48000, client)
-            raw = al.loudnorm(al.trim_silence(x, sr), sr, j["target"])
-            phone = al.phone_voice(raw, sr, j["target"], voices_cfg["phone_chain"])
+            raw = al.loudnorm(al.trim_silence(x, sr), sr, j["base"])
+            phone = al.phone_voice(raw, sr, j["base"], voices_cfg["phone_chain"])
+            if j["raised"]:  # straight gain over the normal level; the true-peak ceiling may only be allowed to cost 0.5 dB
+                room = RAISE["true_peak_dbtp"] - al.measure_loudness(phone, 8000)["true_peak"]
+                gain = min(RAISE["gain_db"], room)
+                print(f"turn {j['idx']}: gain {gain:+.2f} dB of {RAISE['gain_db']:+.1f} requested")
+                if gain < RAISE["gain_db"] - 0.5:
+                    raise SystemExit(f"turn {j['idx']}: the true-peak limit cuts the gain by {RAISE['gain_db'] - gain:.2f} dB: report")
+                phone = (phone * 10 ** (gain / 20)).astype(np.float32)
             al.write_wav(DATA / "raw" / sc["id"] / f"{j['idx']}.wav", raw, sr)
             al.write_wav(DATA / sc["id"] / f"{j['idx']}.wav", phone, 8000)
             al.write_mp3(DATA / sc["id"] / f"{j['idx']}.mp3", phone, 8000, 64)
@@ -106,7 +117,7 @@ if RUN:
 
 # %% 4. Coach nudges (clean full-band, not phone-processed), earcon, coach_manifest.json
 coach_files = []
-if RUN:
+if RUN and COACH:
     coach_target = al.target_lufs(voices_cfg, "coach")
     for j in coach_jobs:
         x, sr = al.synthesize(j["text"], j["voice"], j["lang"], j["speed"], 48000, client)
@@ -148,7 +159,12 @@ if RUN:
         ok = abs(m["lufs"] - al.target_lufs(voices_cfg, "coach")) <= 0.5 and m["true_peak"] <= -1.5 and al.peak_dbfs(c["y"]) < -1.0
         if not ok or not (DATA / "coach" / c["file"]).exists() or not 0.6 <= c["duration_ms"] / 1000 <= 25:
             problems.append(f"coach/{c['file']}: check")
-    print(f"coach files: {len(coach_files)} (6 rules x 3 + 2 praise = 20 expected), earcon exists: {(DATA / 'coach' / 'earcon.mp3').exists()}")
+    expected = {f"{x['idx']}.{e}" for x in turns["c06"] for e in ("wav", "mp3")} | {"call.mp3"}
+    stale = sorted(f.name for f in (DATA / "c06").iterdir() if f.name not in expected)
+    if stale:
+        problems.append(f"stale files in c06: {stale}")
+    print(f"coach files kept: {len(list((DATA / 'coach').glob('*.mp3')))} (20 lines + earcon = 21 expected), "
+          f"total call length {manifest['c06']['duration_ms'] / 1000:.1f} s, {len(turns['c06'])} turns")
     print("problems:", problems or "none")
 
 # %% 6. STT round trip on the hero turns (agent >= 80 %, borrower >= 60 % keyword recovery, docs/06)
@@ -160,6 +176,8 @@ if RUN and STT:
         r = al.recovery(al.key_terms(x["ref"]), text)
         scores[x["role"]].append(r)
         print(f"turn {x['idx']} {x['role']:8s} recovery {r:.2f} | {text[:70]}")
+        for ph in x["labels"]:
+            print(f"    label phrase recovery {al.recovery(al.key_terms(ph), text):.2f} | {ph}")
     for role, need in (("agent", 0.8), ("borrower", 0.6)):
         mean = sum(scores[role]) / len(scores[role])
         print(f"{role}: mean recovery {mean:.2f} (needs >= {need}) {'PASS' if mean >= need else 'FAIL'}")

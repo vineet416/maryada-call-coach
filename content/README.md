@@ -4,7 +4,7 @@ Authored in advance so no dialogue has to be invented during the build. It may b
 
 ## Files
 - `agents.yaml` — 8 fictional agents (profile, gender, voice role).
-- `voices.yaml` — hero voices (c06), the shared voice pool for the other calls and its rules, tag rule, TTS parameters, loudness targets (docs/11).
+- `voices.yaml` — hero voices (c06), the shared voice pool for the other calls and its rules, no-tag rule and the +3.5 dB level for agent violation lines, TTS parameters, loudness targets (docs/11).
 - `audition.yaml` — the short clips for the first listening test (notebook 01).
 - `rules_phrases.yaml` — phrase lists (Roman + Devanagari), coach lines, praise lines per rule.
 - `split.yaml` — which calls are the tune set vs the held-out set for evaluation.

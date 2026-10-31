@@ -3,7 +3,7 @@
 model: timbre-v3.0
 
 hero:              # the hero call c06 uses ONLY these voices
-  agent:       {voice: Prakash, gender: M, note: "phone chain; the threat line (turn 5) carries the shouting tag"}
+  agent:       {voice: Prakash, gender: M, note: "phone chain; a line that carries a violation label is raised +3.5 dB (hero: turn 7)"}
   borrower:    {voice: Shivani, gender: F, note: "phone chain, no tags"}
   third_party: {voice: Avinash, gender: M, note: "phone chain, no tags"}
   coach:       {voice: Shubham, gender: M, note: "clean full-band, plain"}
@@ -35,14 +35,15 @@ text_rules:
   split_on: sentence_boundaries
   numbers: "keep amounts written as words (see scripts)"
   pitch_volume_emotion: "leave API defaults"
-tags:              # timbre-v3.0 audio tags; unknown tags are stripped silently and billed as characters
-  allowed: only_shouting_on_agent_threat_lines
-  rule: "ONLY <shouting>, ONLY at the very start of an agent's threat or violation line (hero: c06 turn 5), so every word is covered. No other tag anywhere."
-  shout_gain_db: 2.5            # above the agent's normal level
-  shout_target_lufs: -19.5      # integrated, +-0.5 LU; the only exemption from the agent's -22 LUFS (true peak <= -1.5 dBTP)
+tags: {allowed: none, rule: "No audio tags anywhere. Text is plain Devanagari."}
+violation_gain:    # the only change to a violation line: level, nothing else (no pitch, EQ, speed or compression change)
+  applies_to: "agent lines that carry a violation label (hero: c06 turn 7)"
+  gain_db: 3.5                  # straight gain over the agent's normal level, after the phone chain and the -22 LUFS normalisation
+  target_lufs: -18.5            # integrated, +-0.5 LU; the only exemption from the agent's -22 LUFS
+  true_peak_dbtp: -1.5          # a gain reduction of more than 0.5 dB to stay under this is reported, never accepted silently
 
 loudness:          # integrated LUFS of the FINISHED files, measured with ebur128 (docs/11 section 10)
-  agent: -22 LUFS               # call voices: normalised AFTER the phone chain (the chain lowers the level), true peak <= -1.5 dBTP
+  agent: -22 LUFS               # (violation lines: -18.5, see violation_gain) call voices: normalised AFTER the phone chain (the chain lowers the level), true peak <= -1.5 dBTP
   borrower: -24 LUFS            # slightly quieter, "further from handset"
   third_party: -25 LUFS
   coach: -27 LUFS               # clean full-band, so it sounds distinct; chime at the same level. Browser playback gain for the coach = 1.0

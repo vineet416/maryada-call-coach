@@ -1,5 +1,5 @@
 # c06-c10: R3 (abuse / threats / humiliation). c06 is THE HERO CALL (also contains R5).
-# Hero expected coach nudge: after turn 5 (use the R5 coach line, which also covers threats).
+# Hero expected coach nudge: after turn 7 (use the R5 coach line, which also covers threats).
 scenarios:
   - id: c06
     title: "The threat that broke two RBI rules"
@@ -14,33 +14,39 @@ scenarios:
     hard_negative: false
     turns:
       - s: A
-        t: "Namaste madam, main Rohit bol raha hoon Tarang Finserv se. Yeh call quality ke liye record ho rahi hai. Kya main Smita Patil ji se baat kar raha hoon?"
-        td: "नमस्ते मैडम, मैं रोहित बोल रहा हूँ तारंग फिनसर्व से। यह कॉल क्वालिटी के लिए रिकॉर्ड हो रही है। क्या मैं स्मिता पाटिल जी से बात कर रहा हूँ?"
+        t: "Hello, Smita Patil bol rahi hain?"
+        td: "हैलो, स्मिता पाटिल बोल रही हैं?"
       - s: B
-        t: "Haan, bolo, Smita bol rahi hoon. Kya hua?"
-        td: "हाँ, बोलो, स्मिता बोल रही हूँ। क्या हुआ?"
+        t: "Haan, bol rahi hoon. Aap kaun?"
+        td: "हाँ, बोल रही हूँ। आप कौन?"
       - s: A
-        t: "Madam, aapki personal loan ki EMI aath hazaar chaar sau rupaye pichhle mahine se pending hai. Aap kab tak payment kar paayengi?"
-        td: "मैडम, आपकी पर्सनल लोन की ईएमआई आठ हज़ार चार सौ रुपये पिछले महीने से पेंडिंग है। आप कब तक पेमेंट कर पाएँगी?"
+        t: "Main Rohit bol raha hoon, Tarang Finserv se. Ye call quality aur training ke liye record ho rahi hai."
+        td: "मैं रोहित बोल रहा हूँ, तारंग फिनसर्व से। ये कॉल क्वालिटी और ट्रेनिंग के लिए रिकॉर्ड हो रही है।"
+      - s: B
+        t: "Haan, bolo. Kya hua?"
+        td: "हाँ, बोलो। क्या हुआ?"
+      - s: A
+        t: "Smita ji, aapke personal loan ki do EMI pending hain, dono baar bounce ho gayi. Upar se penalty bhi lag rahi hai. Aap payment kab kar rahi hain?"
+        td: "स्मिता जी, आपके पर्सनल लोन की दो ईएमआई पेंडिंग हैं, दोनों बार बाउंस हो गईं। ऊपर से पेनल्टी भी लग रही है। आप पेमेंट कब कर रही हैं?"
       - s: B
         t: "Sir, please thoda samjho na. Meri job chali gayi hai, do mahine ho gaye. Next week tak thoda paisa aa jayega, par ek saath poora nahi de paungi."
         td: "सर, प्लीज़ थोड़ा समझो ना। मेरी जॉब चली गई है, दो महीने हो गए। नेक्स्ट वीक तक थोड़ा पैसा आ जाएगा, पर एक साथ पूरा नहीं दे पाऊँगी।"
       - s: A
-        t: "Roz yahi bahana sunte hain. Agar kal tak paisa jama nahi hua na, toh main police ko bhejunga aapke ghar, aur aapke mohalle mein sabko bata dunga ki aap defaulter ho. Court ka notice bhi kal subah aa jayega."
-        td: "रोज़ यही बहाना सुनते हैं। अगर कल तक पैसा जमा नहीं हुआ ना, तो मैं पुलिस को भेजूँगा आपके घर, और आपके मोहल्ले में सबको बता दूँगा कि आप डिफॉल्टर हो। कोर्ट का नोटिस भी कल सुबह आ जाएगा।"
+        t: "Madam, ye sab toh har koi bolta hai. Next week, next week... Mereko aaj hi payment chahiye. Dekho, aaj shaam tak payment nahi aaya na, to police ko bhejunga aapke ghar. Aapke mohalle mein sabko bata dunga ki aap defaulter ho. Court ka notice bhi kal subah aa jayega. Samjhi?"
+        td: "मैडम, ये सब तो हर कोई बोलता है। नेक्स्ट वीक, नेक्स्ट वीक... मेरेको आज ही पेमेंट चाहिए। देखो, आज शाम तक पेमेंट नहीं आया ना, तो पुलिस को भेजूँगा आपके घर। आपके मोहल्ले में सबको बता दूँगा कि आप डिफॉल्टर हो। कोर्ट का नोटिस भी कल सुबह आ जाएगा। समझी?"
         L: [[R5, "police ko bhejunga aapke ghar"], [R3, "aapke mohalle mein sabko bata dunga ki aap defaulter ho"], [R5, "Court ka notice bhi kal subah aa jayega"]]
       - s: B
         t: "Arre sir, dhamki kyun de rahe ho? Maine kab bola ki paisa nahi dungi? Bas thoda time chahiye, samjho na."
         td: "अरे सर, धमकी क्यों दे रहे हो? मैंने कब बोला कि पैसा नहीं दूँगी? बस थोड़ा टाइम चाहिए, समझो ना।"
       - s: A
-        t: "Sorry madam, mujhe aise nahi bolna chahiye tha. Main samajh sakta hoon. Aap bataiye, is Friday tak kitna arrange ho sakta hai? Hum EMI restructure ka option bhi dekh sakte hain."
-        td: "सॉरी मैडम, मुझे ऐसे नहीं बोलना चाहिए था। मैं समझ सकता हूँ। आप बताइए, इस फ्राइडे तक कितना अरेंज हो सकता है? हम ईएमआई रीस्ट्रक्चर का ऑप्शन भी देख सकते हैं।"
+        t: "Sorry madam, aap galat mat samjhiye. Dekhiye, poora ek saath nahi ho raha to thoda abhi kar do, baaki ki installment bana dete hain. Friday tak kitna kar sakti hain?"
+        td: "सॉरी मैडम, आप ग़लत मत समझिए। देखिए, पूरा एक साथ नहीं हो रहा तो थोड़ा अभी कर दो, बाकी की इंस्टॉलमेंट बना देते हैं। फ्राइडे तक कितना कर सकती हैं?"
       - s: B
         t: "Okay, theek hai. Friday tak teen hazaar de sakti hoon. Baaki next month se thoda thoda karke dungi."
         td: "ओके, ठीक है। फ्राइडे तक तीन हज़ार दे सकती हूँ। बाकी नेक्स्ट मंथ से थोड़ा थोड़ा करके दूँगी।"
       - s: A
-        t: "Dhanyavaad madam. Friday ko teen hazaar ka payment link bhej deta hoon, aur baaki ke liye restructure ki request main aaj hi daal deta hoon. Aapka din shubh ho."
-        td: "धन्यवाद मैडम। फ्राइडे को तीन हज़ार का पेमेंट लिंक भेज देता हूँ, और बाकी के लिए रीस्ट्रक्चर की रिक्वेस्ट मैं आज ही डाल देता हूँ। आपका दिन शुभ हो।"
+        t: "Theek hai madam, Friday tak teen hazaar pakka. Baaki ka plan next month se, main system mein note kar deta hoon. Payment link abhi WhatsApp pe bhej raha hoon. Thank you, aapka din accha rahe."
+        td: "ठीक है मैडम, फ्राइडे तक तीन हज़ार पक्का। बाकी का प्लान नेक्स्ट मंथ से, मैं सिस्टम में नोट कर देता हूँ। पेमेंट लिंक अभी व्हाट्सएप पर भेज रहा हूँ। थैंक यू, आपका दिन अच्छा रहे।"
   - id: c07
     title: "Insult over a late payment"
     summary: "Agent shames the borrower and tells him not to run away."

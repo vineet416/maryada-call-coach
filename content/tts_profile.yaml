@@ -4,4 +4,5 @@ hero: {agent: Prakash, borrower: Shivani, third_party: Avinash, coach: Shubham, 
 library_pool: see voices.yaml
 text_mode: devanagari
 language: hi-IN
-use_tags: only_shouting_on_agent_threat_lines
+use_tags: false
+violation_gain_db: 3.5   # agent lines that carry a violation label; level only, see voices.yaml
