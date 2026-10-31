@@ -20,27 +20,27 @@ scenarios:
         t: "Nahi ji, woh ghar pe nahi hain. Main unki wife bol rahi hoon. Aap kaun?"
         td: "नहीं जी, वो घर पे नहीं हैं। मैं उनकी वाइफ बोल रही हूँ। आप कौन?"
       - s: A
-        t: "Main Rohit bol raha hoon, Tarang Finserv se. Ye call quality aur training ke liye record ho rahi hai. Hemant ji kab tak milenge?"
-        td: "मैं रोहित बोल रहा हूँ, तारंग फिनसर्व से। ये कॉल क्वालिटी और ट्रेनिंग के लिए रिकॉर्ड हो रही है। हेमंत जी कब तक मिलेंगे?"
+        t: "Main Rohit bol raha hoon, Tarang Finserv se. Ye call quality aur training ke liye record ho rahi hai. Hemant ji se hi baat karni hai, woh kab tak milenge?"
+        td: "मैं रोहित बोल रहा हूँ, तारंग फिनसर्व से। ये कॉल क्वालिटी और ट्रेनिंग के लिए रिकॉर्ड हो रही है। हेमंत जी से ही बात करनी है, वो कब तक मिलेंगे?"
       - s: T
         t: "Woh bahar gaye hain, shaam ko aayenge. Kya kaam hai unse?"
         td: "वो बाहर गए हैं, शाम को आएँगे। क्या काम है उनसे?"
       - s: A
-        t: "Madam, kaam yeh hai ki aapke pati ne Tarang Finserv se loan liya tha aur chhah mahine se EMI nahi bhar rahe. Total bees hazaar rupaye baaki hain. Mujhe unse baat karni hi padegi."
-        td: "मैडम, काम ये है कि आपके पति ने तारंग फिनसर्व से लोन लिया था और छह महीने से ईएमआई नहीं भर रहे। टोटल बीस हज़ार रुपये बाकी हैं। मुझे उनसे बात करनी ही पड़ेगी।"
+        t: "Madam, kaam yeh hai ki aapke pati ne Tarang Finserv se loan liya tha aur chhah mahine se EMI nahi bhar rahe. Total bees hazaar rupaye baaki hain. Hum kitne din se call kar rahe hain, woh phone hi nahi uthate. Mujhe unse baat karni hi padegi."
+        td: "मैडम, काम ये है कि आपके पति ने तारंग फिनसर्व से लोन लिया था और छह महीने से ईएमआई नहीं भर रहे। टोटल बीस हज़ार रुपये बाकी हैं। हम कितने दिन से कॉल कर रहे हैं, वो फोन ही नहीं उठाते। मुझे उनसे बात करनी ही पड़ेगी।"
         L: [[R4, "aapke pati ne Tarang Finserv se loan liya tha aur chhah mahine se EMI nahi bhar rahe"]]
       - s: T
-        t: "Mereko kuch pata nahi hai, unhone mereko kuch bataya nahi."
-        td: "मेरेको कुछ पता नहीं है, उन्होंने मेरेको कुछ बताया नहीं।"
+        t: "Mereko kuch pata nahi hai, unhone mereko kuch bataya nahi. Aap mereko kyun bol rahe ho ye sab?"
+        td: "मेरेको कुछ पता नहीं है, उन्होंने मेरेको कुछ बताया नहीं। आप मेरेको क्यों बोल रहे हो ये सब?"
       - s: A
-        t: "Achha achha. Theek hai madam, unko bol dena ki Rohit ka phone aaya tha, woh wapas call kar lein."
-        td: "अच्छा अच्छा। ठीक है मैडम, उनको बोल देना कि रोहित का फोन आया था, वो वापस कॉल कर लें।"
+        t: "Achha achha. Theek hai madam, unko bol dena ki Rohit ka phone aaya tha, woh wapas call kar lein. Aaj shaam tak kar lein toh achha hai."
+        td: "अच्छा अच्छा। ठीक है मैडम, उनको बोल देना कि रोहित का फोन आया था, वो वापस कॉल कर लें। आज शाम तक कर लें तो अच्छा है।"
       - s: T
-        t: "Haan, main bol dungi."
-        td: "हाँ, मैं बोल दूँगी।"
+        t: "Haan, main bol dungi. Par aap baar baar phone mat karna, ghar mein tension ho jaata hai."
+        td: "हाँ, मैं बोल दूँगी। पर आप बार बार फोन मत करना, घर में टेंशन हो जाता है।"
       - s: A
-        t: "Thank you madam. Main shaam ko dobara call karunga."
-        td: "थैंक यू मैडम। मैं शाम को दोबारा कॉल करूँगा।"
+        t: "Theek hai madam, main shaam ko ek baar dobara call karunga. Thank you."
+        td: "ठीक है मैडम, मैं शाम को एक बार दोबारा कॉल करूँगा। थैंक यू।"
   - id: c16
     title: "Shaming through the neighbour"
     summary: "Neighbour answers; agent discloses the debt and asks him to tell the society."
@@ -106,18 +106,24 @@ scenarios:
         t: "Main Pooja bol rahi hoon, Tarang Finserv se. Ye call quality aur training ke liye record ho rahi hai. Sachin ji kab tak aayenge?"
         td: "मैं पूजा बोल रही हूँ, तारंग फिनसर्व से। ये कॉल क्वालिटी और ट्रेनिंग के लिए रिकॉर्ड हो रही है। सचिन जी कब तक आएँगे?"
       - s: T
-        t: "Shaam ko aate hain woh. Kya baat hai madam?"
-        td: "शाम को आते हैं वो। क्या बात है मैडम?"
+        t: "Shaam ko aate hain woh, saat-aath baje tak. Kya baat hai madam?"
+        td: "शाम को आते हैं वो, सात-आठ बजे तक। क्या बात है मैडम?"
       - s: A
-        t: "Achha madam, unki car loan ki EMI nahi aayi hai, saat hazaar rupaye overdue hain, aap ye unko bata dijiye. Penalty bhi lag rahi hai."
-        td: "अच्छा मैडम, उनकी कार लोन की ईएमआई नहीं आई है, सात हज़ार रुपये ओवरड्यू हैं, आप ये उनको बता दीजिए। पेनल्टी भी लग रही है।"
+        t: "Achha madam, unki car loan ki EMI nahi aayi hai, saat hazaar rupaye overdue hain, aap ye unko bata dijiye. Penalty bhi lag rahi hai, aur hum kaafi din se call kar rahe hain."
+        td: "अच्छा मैडम, उनकी कार लोन की ईएमआई नहीं आई है, सात हज़ार रुपये ओवरड्यू हैं, आप ये उनको बता दीजिए। पेनल्टी भी लग रही है, और हम काफ़ी दिन से कॉल कर रहे हैं।"
         L: [[R4, "unki car loan ki EMI nahi aayi hai, saat hazaar rupaye overdue hain"]]
+      - s: T
+        t: "Achha, car loan ki EMI? Mereko toh pata hi nahi tha. Main unse pooch lungi."
+        td: "अच्छा, कार लोन की ईएमआई? मेरेको तो पता ही नहीं था। मैं उनसे पूछ लूँगी।"
+      - s: A
+        t: "Haan madam, aap unko bol dijiye ki is hafte tak kuch payment kar dein. Mujhe ek date mil jaye toh main system mein note kar lungi."
+        td: "हाँ मैडम, आप उनको बोल दीजिए कि इस हफ्ते तक कुछ पेमेंट कर दें। मुझे एक डेट मिल जाए तो मैं सिस्टम में नोट कर लूँगी।"
       - s: T
         t: "Haan, main bol dungi. Aap kitne baje phir se phone karoge?"
         td: "हाँ, मैं बोल दूँगी। आप कितने बजे फिर से फोन करोगे?"
       - s: A
-        t: "Main shaam ko chhah baje dobara call karungi. Thank you madam."
-        td: "मैं शाम को छह बजे दोबारा कॉल करूँगी। थैंक यू मैडम।"
+        t: "Main shaam ko saade saat baje dobara call karungi. Thank you madam."
+        td: "मैं शाम को साढ़े सात बजे दोबारा कॉल करूँगी। थैंक यू मैडम।"
   - id: c18
     title: "Asks for the borrower, says nothing about the loan"
     summary: "CONTROL / hard negative: spouse answers; agent only leaves a callback request. Must NOT be flagged."
@@ -147,8 +153,14 @@ scenarios:
         t: "Nahi madam, baat unse hi karni hai. Aap bas itna bata dijiye ki Amit ka phone aaya tha, aur woh is number par wapas call kar lein."
         td: "नहीं मैडम, बात उनसे ही करनी है। आप बस इतना बता दीजिए कि अमित का फोन आया था, और वो इस नंबर पर वापस कॉल कर लें।"
       - s: T
-        t: "Haan, main bol dungi."
-        td: "हाँ, मैं बोल दूँगी।"
+        t: "Lekin kis baare mein hai, ye toh bata do. Mereko tension ho raha hai."
+        td: "लेकिन किस बारे में है, ये तो बता दो। मेरेको टेंशन हो रहा है।"
       - s: A
-        t: "Thank you madam. Main kal subah dobara koshish karunga."
-        td: "थैंक यू मैडम। मैं कल सुबह दोबारा कोशिश करूँगा।"
+        t: "Madam, tension ki koi baat nahi hai. Bas ek zaroori call hai, aur woh unse hi discuss karni hai. Aap unko sirf call karne ke liye bol dijiye."
+        td: "मैडम, टेंशन की कोई बात नहीं है। बस एक ज़रूरी कॉल है, और वो उनसे ही डिस्कस करनी है। आप उनको सिर्फ़ कॉल करने के लिए बोल दीजिए।"
+      - s: T
+        t: "Achha theek hai, main bol dungi. Number yahi hai na jisse aapne phone kiya?"
+        td: "अच्छा ठीक है, मैं बोल दूँगी। नंबर यही है ना जिससे आपने फोन किया?"
+      - s: A
+        t: "Ji madam, yahi number hai. Thank you madam. Main kal subah dobara koshish karunga."
+        td: "जी मैडम, यही नंबर है। थैंक यू मैडम। मैं कल सुबह दोबारा कोशिश करूँगा।"
