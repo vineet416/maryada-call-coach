@@ -60,20 +60,20 @@ scenarios:
     hard_negative: false
     turns:
       - s: A
-        t: "Hello, Mahesh Thorat bol rahe hain?"
-        td: "हैलो, महेश थोरात बोल रहे हैं?"
+        t: "Namaste, Mahesh Thorat bol rahe hain?"
+        td: "नमस्ते, महेश थोरात बोल रहे हैं?"
       - s: B
-        t: "Haan, bol raha hoon."
-        td: "हाँ, बोल रहा हूँ।"
+        t: "Haan ji, Mahesh bol raha hoon."
+        td: "हाँ जी, महेश बोल रहा हूँ।"
       - s: A
-        t: "Main Kavita bol rahi hoon, Tarang Finserv se. Ye call quality aur training ke liye record ho rahi hai."
-        td: "मैं कविता बोल रही हूँ, तारंग फिनसर्व से। ये कॉल क्वालिटी और ट्रेनिंग के लिए रिकॉर्ड हो रही है।"
+        t: "Ek minute Mahesh ji, ye line recorded hai. Main Kavita, Tarang Finserv se."
+        td: "एक मिनट महेश जी, ये लाइन रिकॉर्डेड है। मैं कविता, तारंग फिनसर्व से।"
       - s: B
         t: "Haan madam, bolo."
         td: "हाँ मैडम, बोलो।"
       - s: A
-        t: "Mahesh ji, aapke shop loan ki saade nau hazaar rupaye ki EMI teen hafte se pending hai, do baar bounce ho chuki hai. Penalty bhi lag rahi hai. Payment kab kar rahe hain?"
-        td: "महेश जी, आपके शॉप लोन की साढ़े नौ हज़ार रुपये की ईएमआई तीन हफ्ते से पेंडिंग है, दो बार बाउंस हो चुकी है। पेनल्टी भी लग रही है। पेमेंट कब कर रहे हैं?"
+        t: "Mahesh ji, shop loan ki saade nau hazaar ki EMI teen hafte se pending hai, do baar bounce ho chuki hai. Upar se penalty lag rahi hai. Payment kab karenge?"
+        td: "महेश जी, शॉप लोन की साढ़े नौ हज़ार की ईएमआई तीन हफ्ते से पेंडिंग है, दो बार बाउंस हो चुकी है। ऊपर से पेनल्टी लग रही है। पेमेंट कब करेंगे?"
       - s: B
         t: "Madam, thoda time lagega. Diwali ke pehle dukaan band thi na, dhandha hi nahi hua."
         td: "मैडम, थोड़ा टाइम लगेगा। दिवाली के पहले दुकान बंद थी ना, धंधा ही नहीं हुआ।"
@@ -92,8 +92,8 @@ scenarios:
         t: "Madam, aise darr se baat mat karo. Friday ko paanch hazaar de dunga, baaki next month."
         td: "मैडम, ऐसे डर से बात मत करो। फ्राइडे को पाँच हज़ार दे दूँगा, बाकी नेक्स्ट मंथ।"
       - s: A
-        t: "Theek hai, Friday ko paanch hazaar pakka. Main note kar leti hoon. Payment link abhi WhatsApp pe bhej rahi hoon. Thank you."
-        td: "ठीक है, फ्राइडे को पाँच हज़ार पक्का। मैं नोट कर लेती हूँ। पेमेंट लिंक अभी व्हाट्सएप पर भेज रही हूँ। थैंक यू।"
+        t: "Theek hai, Friday ko paanch hazaar pakka. Main note kar leti hoon. UPI se kar dena."
+        td: "ठीक है, फ्राइडे को पाँच हज़ार पक्का। मैं नोट कर लेती हूँ। यूपीआई से कर देना।"
   - id: c08
     title: "Name-calling and a family threat"
     summary: "Agent calls the borrower names and says he will come to the house."
@@ -107,20 +107,20 @@ scenarios:
     hard_negative: false
     turns:
       - s: A
-        t: "Hello, Vinod Kale bol rahe hain?"
-        td: "हैलो, विनोद काले बोल रहे हैं?"
+        t: "Vinod ji? Haan, Rohit bol raha hoon, Tarang Finserv se."
+        td: "विनोद जी? हाँ, रोहित बोल रहा हूँ, तारंग फिनसर्व से।"
       - s: B
-        t: "Haan, bol raha hoon. Kaun?"
-        td: "हाँ, बोल रहा हूँ। कौन?"
+        t: "Haan, Vinod bol raha hoon. Kya hai?"
+        td: "हाँ, विनोद बोल रहा हूँ। क्या है?"
       - s: A
-        t: "Main Rohit bol raha hoon, Tarang Finserv se. Ye call quality aur training ke liye record ho rahi hai."
-        td: "मैं रोहित बोल रहा हूँ, तारंग फिनसर्व से। ये कॉल क्वालिटी और ट्रेनिंग के लिए रिकॉर्ड हो रही है।"
+        t: "Aur dhyan rahe, ye call record ki ja rahi hai. Seedhi baat par aata hoon."
+        td: "और ध्यान रहे, ये कॉल रिकॉर्ड की जा रही है। सीधी बात पर आता हूँ।"
       - s: B
-        t: "Haan, boliye."
-        td: "हाँ, बोलिए।"
+        t: "Haan, bolo."
+        td: "हाँ, बोलो।"
       - s: A
-        t: "Vinod ji, aapke personal loan ki saat hazaar do sau rupaye ki EMI bounce ho gayi hai, tees din ho gaye. Penalty bhi lag rahi hai. Paisa kab aayega?"
-        td: "विनोद जी, आपके पर्सनल लोन की सात हज़ार दो सौ रुपये की ईएमआई बाउंस हो गई है, तीस दिन हो गए। पेनल्टी भी लग रही है। पैसा कब आएगा?"
+        t: "Saat hazaar do sau ki EMI ek mahine se pending hai, bounce bhi ho chuki hai aur penalty chadh rahi hai. Paisa kab aayega?"
+        td: "सात हज़ार दो सौ की ईएमआई एक महीने से पेंडिंग है, बाउंस भी हो चुकी है और पेनल्टी चढ़ रही है। पैसा कब आएगा?"
       - s: B
         t: "Sir, dhandha band pada hai, thoda ruk jaiye. Agle hafte tak kuch karta hoon."
         td: "सर, धंधा बंद पड़ा है, थोड़ा रुक जाइए। अगले हफ्ते तक कुछ करता हूँ।"
@@ -132,15 +132,15 @@ scenarios:
         t: "Sir, aise kya bol rahe ho? Izzat se baat karo."
         td: "सर, ऐसे क्या बोल रहे हो? इज़्ज़त से बात करो।"
       - s: A
-        t: "Izzat kamate toh milti hai. Paisa nahi de sakte toh nikamme ho aap, aur zyada hoshiyari mat dikha, nahi toh ghar aake tamasha karunga."
-        td: "इज़्ज़त कमाते तो मिलती है। पैसा नहीं दे सकते तो निकम्मे हो आप, और ज़्यादा होशियारी मत दिखा, नहीं तो घर आके तमाशा करूँगा।"
+        t: "Izzat kamaai jaati hai. Paisa nahi de sakte toh nikamme ho aap, aur zyada hoshiyari mat dikha, nahi toh ghar aake tamasha karunga."
+        td: "इज़्ज़त कमाई जाती है। पैसा नहीं दे सकते तो निकम्मे हो आप, और ज़्यादा होशियारी मत दिखा, नहीं तो घर आके तमाशा करूँगा।"
         L: [[R3, "nikamme ho aap"], [R3, "ghar aake tamasha karunga"]]
       - s: B
         t: "Main complaint karunga aapki. Ye sab record ho raha hai na?"
         td: "मैं कंप्लेंट करूँगा आपकी। ये सब रिकॉर्ड हो रहा है ना?"
       - s: A
-        t: "Jo karna hai karo. Mereko Friday tak payment chahiye. Link WhatsApp pe bhej raha hoon."
-        td: "जो करना है करो। मेरेको फ्राइडे तक पेमेंट चाहिए। लिंक व्हाट्सएप पर भेज रहा हूँ।"
+        t: "Jo karna hai karo. Mereko Monday tak payment chahiye. SMS pe link aa jayega."
+        td: "जो करना है करो। मेरेको मंडे तक पेमेंट चाहिए। एसएमएस पे लिंक आ जाएगा।"
   - id: c09
     title: "Shaming a borrower in front of neighbours"
     summary: "Agent humiliates a woman borrower and implies neighbours will find out."
@@ -154,20 +154,20 @@ scenarios:
     hard_negative: false
     turns:
       - s: A
-        t: "Hello, Sunita Pisal bol rahi hain?"
-        td: "हैलो, सुनीता पिसाल बोल रही हैं?"
+        t: "Good evening, Sunita Pisal ji?"
+        td: "गुड ईवनिंग, सुनीता पिसाल जी?"
       - s: B
-        t: "Haan, bol rahi hoon. Aap kaun?"
-        td: "हाँ, बोल रही हूँ। आप कौन?"
+        t: "Haan ji, boliye."
+        td: "हाँ जी, बोलिए।"
       - s: A
-        t: "Main Kavita bol rahi hoon, Tarang Finserv se. Ye call quality aur training ke liye record ho rahi hai."
-        td: "मैं कविता बोल रही हूँ, तारंग फिनसर्व से। ये कॉल क्वालिटी और ट्रेनिंग के लिए रिकॉर्ड हो रही है।"
+        t: "Main Kavita bol rahi hoon, Tarang Finserv se. Aur ye call record ho rahi hai, quality aur training ke liye."
+        td: "मैं कविता बोल रही हूँ, तारंग फिनसर्व से। और ये कॉल रिकॉर्ड हो रही है, क्वालिटी और ट्रेनिंग के लिए।"
       - s: B
-        t: "Haan, boliye."
-        td: "हाँ, बोलिए।"
+        t: "Haan, kya hua?"
+        td: "हाँ, क्या हुआ?"
       - s: A
-        t: "Sunita ji, aapke personal loan ki paanch hazaar paanch sau rupaye ki EMI bounce ho gayi hai, atharah din ho gaye. Aaj payment kab tak ho jayega?"
-        td: "सुनीता जी, आपके पर्सनल लोन की पाँच हज़ार पाँच सौ रुपये की ईएमआई बाउंस हो गई है, अठारह दिन हो गए। आज पेमेंट कब तक हो जाएगा?"
+        t: "Sunita ji, aapki paanch hazaar paanch sau ki EMI bounce hui hai, atharah din ho gaye. Aaj payment kab tak ho jayega?"
+        td: "सुनीता जी, आपकी पाँच हज़ार पाँच सौ की ईएमआई बाउंस हुई है, अठारह दिन हो गए। आज पेमेंट कब तक हो जाएगा?"
       - s: B
         t: "Madam, aaj nahi hoga. Pati bahar gaye hain, wapas aayenge toh karungi."
         td: "मैडम, आज नहीं होगा। पति बाहर गए हैं, वापस आएँगे तो करूँगी।"
@@ -186,8 +186,8 @@ scenarios:
         t: "Theek hai madam, kal subah tak koshish karti hoon. Bas aap aise baat mat kijiye."
         td: "ठीक है मैडम, कल सुबह तक कोशिश करती हूँ। बस आप ऐसे बात मत कीजिए।"
       - s: A
-        t: "Theek hai. Kal subah tak pakka. Payment link abhi WhatsApp pe bhej rahi hoon."
-        td: "ठीक है। कल सुबह तक पक्का। पेमेंट लिंक अभी व्हाट्सएप पर भेज रही हूँ।"
+        t: "Theek hai. Kal subah tak pakka. Main SMS bhej rahi hoon."
+        td: "ठीक है। कल सुबह तक पक्का। मैं एसएमएस भेज रही हूँ।"
   - id: c10
     title: "Mild sarcasm (early-career slip)"
     summary: "A milder R3 slip by an agent who is still learning."
@@ -201,20 +201,20 @@ scenarios:
     hard_negative: false
     turns:
       - s: A
-        t: "Hello, Ganesh Chavan bol rahe hain?"
-        td: "हैलो, गणेश चव्हाण बोल रहे हैं?"
+        t: "Hello, Ganesh ji?"
+        td: "हैलो, गणेश जी?"
       - s: B
-        t: "Haan, bol raha hoon."
-        td: "हाँ, बोल रहा हूँ।"
+        t: "Ji haan, bolo."
+        td: "जी हाँ, बोलो।"
       - s: A
-        t: "Main Priya bol rahi hoon, Tarang Finserv se. Ye call quality aur training ke liye record ho rahi hai."
-        td: "मैं प्रिया बोल रही हूँ, तारंग फिनसर्व से। ये कॉल क्वालिटी और ट्रेनिंग के लिए रिकॉर्ड हो रही है।"
+        t: "Ganesh Chavan ji, main Priya, Tarang Finserv se. Is call ki recording ho rahi hai, training ke liye."
+        td: "गणेश चव्हाण जी, मैं प्रिया, तारंग फिनसर्व से। इस कॉल की रिकॉर्डिंग हो रही है, ट्रेनिंग के लिए।"
       - s: B
         t: "Haan madam, bolo."
         td: "हाँ मैडम, बोलो।"
       - s: A
-        t: "Ganesh ji, aapke personal loan ki saat hazaar rupaye ki EMI bounce ho gayi hai, pandrah din ho gaye. Reminder bhi bheja tha. Payment kab kar rahe hain?"
-        td: "गणेश जी, आपके पर्सनल लोन की सात हज़ार रुपये की ईएमआई बाउंस हो गई है, पंद्रह दिन हो गए। रिमाइंडर भी भेजा था। पेमेंट कब कर रहे हैं?"
+        t: "Aapki saat hazaar ki EMI pandrah din se pending hai, bounce ho gayi thi. Reminder bhi bheja tha. Payment kab kar rahe hain?"
+        td: "आपकी सात हज़ार की ईएमआई पंद्रह दिन से पेंडिंग है, बाउंस हो गई थी। रिमाइंडर भी भेजा था। पेमेंट कब कर रहे हैं?"
       - s: B
         t: "Madam, next week try karta hoon. Abhi ghar ka kharcha bahut hai, salary bhi late aati hai."
         td: "मैडम, नेक्स्ट वीक ट्राई करता हूँ। अभी घर का खर्चा बहुत है, सैलरी भी लेट आती है।"
@@ -225,12 +225,12 @@ scenarios:
         t: "Madam, salary pe depend karta hai. Pakka abhi nahi bol sakta, jaise hi aayegi kar dunga."
         td: "मैडम, सैलरी पे डिपेंड करता है। पक्का अभी नहीं बोल सकता, जैसे ही आएगी कर दूँगा।"
       - s: A
-        t: "Aap log hamesha agle hafte bolte ho. Kaisa insaan hai aap, zubaan ka koi mol nahi?"
-        td: "आप लोग हमेशा अगले हफ्ते बोलते हो। कैसा इंसान है आप, ज़ुबान का कोई मोल नहीं?"
-        L: [[R3, "Kaisa insaan hai aap, zubaan ka koi mol nahi"]]
+        t: "Aap log hamesha agle hafte bolte ho. Kaise insaan hain aap, zubaan ka koi mol nahi?"
+        td: "आप लोग हमेशा अगले हफ्ते बोलते हो। कैसे इंसान हैं आप, ज़ुबान का कोई मोल नहीं?"
+        L: [[R3, "Kaise insaan hain aap, zubaan ka koi mol nahi"]]
       - s: B
-        t: "Aise nahi bolo madam. Main Tuesday ko de dunga, pakka. Poora nahi toh aadha de dunga."
-        td: "ऐसे नहीं बोलो मैडम। मैं ट्यूज़डे को दे दूँगा, पक्का। पूरा नहीं तो आधा दे दूँगा।"
+        t: "Aise nahi bolo madam. Main agle Tuesday ko de dunga, pakka. Poora nahi toh aadha de dunga."
+        td: "ऐसे नहीं बोलो मैडम। मैं अगले ट्यूज़डे को दे दूँगा, पक्का। पूरा नहीं तो आधा दे दूँगा।"
       - s: A
-        t: "Achha theek hai, Tuesday ko aadha pakka. Payment link abhi WhatsApp pe bhej rahi hoon. Thank you."
-        td: "अच्छा ठीक है, ट्यूज़डे को आधा पक्का। पेमेंट लिंक अभी व्हाट्सएप पर भेज रही हूँ। थैंक यू।"
+        t: "Achha theek hai, agle Tuesday ko aadha pakka. Main reminder bhej dungi."
+        td: "अच्छा ठीक है, अगले ट्यूज़डे को आधा पक्का। मैं रिमाइंडर भेज दूँगी।"
