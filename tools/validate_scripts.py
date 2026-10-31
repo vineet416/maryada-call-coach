@@ -128,7 +128,8 @@ def check_scenario(sc: dict, old: dict | None, errs: list[str], warns: list[str]
     if old.get("hero") is not True:
         new_pos = [agent_idx.index(i) for i, _ in labelled(sc)]
         old_pos = [old_agent_idx.index(i) for i, _ in labelled(old)]
-        if any(a in (0, 1) or b in (0, 1) for a, b in zip(new_pos, old_pos)) and new_pos != old_pos:
+        time_rule = any({"R1", "R2"} & set(r) for _, r in labelled(old))
+        if time_rule and new_pos != old_pos:
             err(f"R1/R2 turn position changed: agent turns {old_pos} -> {new_pos}")
     if old["turns"] and {t["s"] for t in old["turns"]} != {t["s"] for t in turns}:
         err("set of speakers changed")
