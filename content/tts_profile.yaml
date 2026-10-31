@@ -1,0 +1,8 @@
+# Written after the G1 reply (2026-10-31, corrected the same day).
+model: timbre-v3.0
+hero: {agent: Prakash, borrower: Shivani, third_party: Avinash, coach: Shubham, vo: Shubham}
+library_pool: see voices.yaml
+text_mode: devanagari
+language: hi-IN
+use_tags: false
+violation_gain_db: 3.5   # agent lines that carry a violation label; level only, see voices.yaml

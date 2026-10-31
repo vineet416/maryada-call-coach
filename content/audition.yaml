@@ -1,6 +1,6 @@
 # The FIRST listening test (notebook 01). ~14 short clips, ~1 minute of audio, < 2,000 characters (about Rs 5).
-# Goal: the user picks (a) voices, (b) Roman vs Devanagari text, (c) hi-IN vs mr-IN for borrowers, (d) whether audio tags work.
-# Variants: V1 = Roman text, language hi-IN | V2 = Devanagari text, language hi-IN | V3 = Roman text, language mr-IN (borrower clips only)
+# Goal: the user picks (a) voices, (b) Roman vs Devanagari text, (c) whether audio tags work.
+# Variants: V1 = Roman text, language hi-IN | V2 = Devanagari text, language hi-IN | TAG = one tagged line (A3 only)
 clips:
   - id: A1_agent_open
     note: "Hero call turn 1 (agent identifies + recording notice). Compare Avinash vs Prakash."
@@ -10,13 +10,12 @@ clips:
       V1: "Namaste madam, main Rohit bol raha hoon Tarang Finserv se. Yeh call quality ke liye record ho rahi hai. Kya main Smita Patil ji se baat kar raha hoon?"
       V2: "नमस्ते मैडम, मैं रोहित बोल रहा हूँ तारंग फिनसर्व से। यह कॉल क्वालिटी के लिए रिकॉर्ड हो रही है। क्या मैं स्मिता पाटिल जी से बात कर रहा हूँ?"
   - id: A2_borrower_job
-    note: "Hero turn 4. The ONE female borrower voice, Chetana, fixed for the hero call (no voice comparison; the clip checks her quality). V3 tries the Marathi language setting."
+    note: "Hero turn 4. The ONE female borrower voice, Chetana, fixed for the hero call (no voice comparison; the clip checks her quality). Natural Mumbai-style Hinglish."
     role: borrower_f
     voices: [Chetana]
     variants:
-      V1: "Saheb, mala maaf karo. Meri naukri gayi aahe do mahine pehle. Agle hafte tak thoda paisa jama hoga, poora ek saath nahi de sakti."
-      V2: "साहेब, मला माफ करा. मेरी नौकरी गई आहे दो महीने पहले. अगले हफ्ते तक थोड़ा पैसा जमा होगा, पूरा एक साथ नहीं दे सकती."
-      V3: "Saheb, mala maaf karo. Meri naukri gayi aahe do mahine pehle. Agle hafte tak thoda paisa jama hoga, poora ek saath nahi de sakti."
+      V1: "Sir, please thoda samjho na. Meri job chali gayi hai, do mahine ho gaye. Next week tak thoda paisa aa jayega, par ek saath poora nahi de paungi."
+      V2: "सर, प्लीज़ थोड़ा समझो ना। मेरी जॉब चली गई है, दो महीने हो गए। नेक्स्ट वीक तक थोड़ा पैसा आ जाएगा, पर एक साथ पूरा नहीं दे पाऊँगी।"
   - id: A3_agent_threat
     note: "Hero turn 5 (the violation). Needs an irritated, impatient tone but NOT shouting. Also test one tagged variant."
     role: agent_m2
@@ -40,21 +39,19 @@ clips:
       V1: "Madam, aapki EMI paanch hazaar paanch sau rupaye ki due hai. Aaj hi payment chahiye."
       V2: "मैडम, आपकी ईएमआई पाँच हज़ार पाँच सौ रुपये की ड्यू है। आज ही पेमेंट चाहिए।"
   - id: A6_male_borrower
-    note: "Male borrower for the other calls, Marathi-flavoured. Compare Devansh vs Yashraj. (Other calls may use any male or female borrower voice.)"
+    note: "Male borrower for the other calls, natural Mumbai-style Hinglish. Compare Devansh vs Yashraj. (Other calls may use any male or female borrower voice.)"
     role: borrower_m1
     voices: [Devansh, Yashraj]
     variants:
-      V1: "Saheb, aaj nahi hoga. Dukaan band padli aahe, Friday tak thoda paisa dunga."
-      V2: "साहेब, आज नहीं होगा. दुकान बंद पडली आहे, शुक्रवार तक थोड़ा पैसा दूँगा."
-      V3: "Saheb, aaj nahi hoga. Dukaan band padli aahe, Friday tak thoda paisa dunga."
+      V1: "Sir, aaj nahi ho payega. Shop band thi, Friday tak thoda paisa de dunga."
+      V2: "सर, आज नहीं हो पाएगा। शॉप बंद थी, फ्राइडे तक थोड़ा पैसा दे दूँगा।"
   - id: A7_neighbour
-    note: "Third party (neighbour), mostly Marathi. Shubham vs Yashraj."
+    note: "Third party (neighbour), natural Mumbai-style Hinglish. Shubham vs Yashraj."
     role: neighbour_m
     voices: [Shubham, Yashraj]
     variants:
-      V1: "Nahi, mi padosi aahe. Anand bahar gele aahet. Kay zhala?"
-      V2: "नाही, मी पडोसी आहे. आनंद बाहेर गेले आहेत. काय झालं?"
-      V3: "Nahi, mi padosi aahe. Anand bahar gele aahet. Kay zhala?"
+      V1: "Nahi bhai, main padosi hoon. Anand bahar gaya hai. Kya hua, kuch problem hai kya?"
+      V2: "नहीं भाई, मैं पड़ोसी हूँ। आनंद बाहर गया है। क्या हुआ, कुछ प्रॉब्लम है क्या?"
   - id: A8_voiceover
     note: "Video voice-over, English with an Indian accent. Kalpana vs Lakshmi vs Avinash."
     role: vo
@@ -62,8 +59,8 @@ clips:
     variants:
       V1: "This recovery call just broke two RBI rules in twenty seconds. Maryada caught both, live."
 stt_roundtrip:      # notebook 01 last cell: send each clip back through Prisma and report keyword recovery
-  key_terms_hint: ["Tarang Finserv", "EMI", "police", "mohalle", "defaulter", "Court", "notice", "naukri", "payment"]
-listen_for: ["natural pace", "Marathi flavour on borrower lines (aahe, mala, kay)", "numbers and 'EMI' pronounced clearly", "angry-but-not-shouting threat", "coach calm and clear", "voice genders as assumed"]
+  key_terms_hint: ["Tarang Finserv", "EMI", "police", "mohalle", "defaulter", "Court", "notice", "job", "payment"]
+listen_for: ["natural pace", "natural Mumbai-style Hinglish on the borrower lines", "numbers and 'EMI' pronounced clearly", "angry-but-not-shouting threat", "coach calm and clear", "voice genders as assumed"]
 
 trio:             # DISTINCTNESS TEST: the three voices of the hero scene in every agent x coach combination (borrower fixed: Chetana) (coach fixed per option)
   note: "Hero = male agent + FEMALE borrower + coach (a male coach, Shubham, is tested too so the user can hear the most distinct trio). Generate each voice's line once and assemble the 4 combinations by concatenation (no extra TTS). Assemble each combo as a ~15 s mini-scene: borrower line (A2), agent threat line (A3), then the coach line (A4). Agent+borrower go through the phone chain; coach is clean, 4 dB quieter than the agent. Save as trio__<agent>_<borrower>_<coach>.mp3. The user picks the combo where all three are easiest to tell apart."
@@ -71,3 +68,9 @@ trio:             # DISTINCTNESS TEST: the three voices of the hero scene in eve
   borrowers: [Chetana]      # the single female hero borrower
   coaches: [Kalpana, Shubham]
   clips_used: [A2_borrower_job, A3_agent_threat, A4_coach_R5]
+
+round2:           # second listening round (notebooks/01b_audition_round2.py); V2 = Devanagari text
+  note: "Borrower texts come from the c06 turns (td). The voice-over has one line so far (A8); this is the same line written in Devanagari (transliteration, nothing added)."
+  vo_devanagari: "दिस रिकवरी कॉल जस्ट ब्रोक टू आरबीआई रूल्स इन ट्वेंटी सेकंड्स। मर्यादा कॉट बोथ, लाइव।"
+  vo_voices: [Shubham, Prakash, Avinash]
+  vo_slow_speed: 0.9          # the API documents speed 0.85-1.15; one slower variant for the first voice

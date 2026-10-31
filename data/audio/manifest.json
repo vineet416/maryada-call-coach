@@ -1,0 +1,96 @@
+{
+ "c06": {
+  "turns": [
+   {
+    "idx": 1,
+    "speaker": "A",
+    "wav8k": "c06/1.wav",
+    "mp3": "c06/1.mp3",
+    "duration_ms": 2080,
+    "offset_ms": 300
+   },
+   {
+    "idx": 2,
+    "speaker": "B",
+    "wav8k": "c06/2.wav",
+    "mp3": "c06/2.mp3",
+    "duration_ms": 2060,
+    "offset_ms": 3002
+   },
+   {
+    "idx": 3,
+    "speaker": "A",
+    "wav8k": "c06/3.wav",
+    "mp3": "c06/3.mp3",
+    "duration_ms": 5740,
+    "offset_ms": 5476
+   },
+   {
+    "idx": 4,
+    "speaker": "B",
+    "wav8k": "c06/4.wav",
+    "mp3": "c06/4.mp3",
+    "duration_ms": 1750,
+    "offset_ms": 11805
+   },
+   {
+    "idx": 5,
+    "speaker": "A",
+    "wav8k": "c06/5.wav",
+    "mp3": "c06/5.mp3",
+    "duration_ms": 8640,
+    "offset_ms": 14068
+   },
+   {
+    "idx": 6,
+    "speaker": "B",
+    "wav8k": "c06/6.wav",
+    "mp3": "c06/6.mp3",
+    "duration_ms": 9500,
+    "offset_ms": 23227
+   },
+   {
+    "idx": 7,
+    "speaker": "A",
+    "wav8k": "c06/7.wav",
+    "mp3": "c06/7.mp3",
+    "duration_ms": 17120,
+    "offset_ms": 33405
+   },
+   {
+    "idx": 8,
+    "speaker": "B",
+    "wav8k": "c06/8.wav",
+    "mp3": "c06/8.mp3",
+    "duration_ms": 7495,
+    "offset_ms": 51018
+   },
+   {
+    "idx": 9,
+    "speaker": "A",
+    "wav8k": "c06/9.wav",
+    "mp3": "c06/9.mp3",
+    "duration_ms": 9440,
+    "offset_ms": 59118
+   },
+   {
+    "idx": 10,
+    "speaker": "B",
+    "wav8k": "c06/10.wav",
+    "mp3": "c06/10.mp3",
+    "duration_ms": 6290,
+    "offset_ms": 69105
+   },
+   {
+    "idx": 11,
+    "speaker": "A",
+    "wav8k": "c06/11.wav",
+    "mp3": "c06/11.mp3",
+    "duration_ms": 10720,
+    "offset_ms": 75999
+   }
+  ],
+  "call_mp3": "c06/call.mp3",
+  "duration_ms": 86719
+ }
+}

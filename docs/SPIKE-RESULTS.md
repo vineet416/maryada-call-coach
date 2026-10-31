@@ -14,7 +14,7 @@ Date: 2026-10-30. Script: `tools/spike.py`. All lines are synthetic turns taken 
 | borrower | `hi-IN` | realtime, REST fallback |
 | third party | `hi-IN` | realtime, REST fallback |
 
-Model id: `prisma-v3.0`. `hi-IN` was equal or better than auto-detection for every role in this run, and `mr-IN` was not better for the Marathi-flavoured borrower lines (75.5% vs 79.5%). The audition in the audio step re-checks this on the final voices before the profile file is written.
+Model id: `prisma-v3.0`. `hi-IN` was equal or better than auto-detection for every role in this run. The spike lines contained some Marathi words; the calls now use natural Mumbai-style Hinglish only, and the audition below re-checks `hi-IN` on that language.
 
 ## Keyword recovery
 
@@ -39,7 +39,9 @@ Euri `gpt-5.4-mini` chat completions with `response_format: json_object`: 20 of 
 - An unsupported model returns 400 and lists the supported ones (`timbre-v2.5`, `timbre-v3.0`).
 - Only **one active request per key at a time**; a second concurrent request returns 429 `RATE_LIMITED`. Generation must be sequential.
 - A request of 1000 characters was accepted, so the 600-character split stays a conservative choice rather than a hard limit.
-- A line starting with an `<angry>` tag returned 200. Whether it changes the voice is decided by listening in the audition.
+- Every sample rate tried (8, 16, 22.05, 24, 44.1 and 48 kHz) is honoured in the returned WAV. Audio is requested at 48 kHz and reduced to 8 kHz only by the phone-chain step.
+- Inline audio tags (timbre-v3.0 only) use angle brackets with no closing tag. The documented tags are `laugh`, `giggle`, `sigh`, `exhales`, `sniffles`, `yawns`, `coughs`, `clears throat`, `whispers`, `shouting`, `excited`, `slow` and `pauses`; unknown tags are stripped silently and tags count as billable characters. `<angry>` is not documented, so a request that starts with it returned 200 but the tag is most likely ignored. Repeating the same request gives a slightly different take every time, so a single comparison cannot prove an effect.
+- `speed` accepts 0.85-1.15 (or `slow`, `medium`, `fast`). No pace, style, emotion, pitch or volume field is documented.
 
 **Prisma STT, REST** (`POST /stt/v3`, header `X-API-Key-ID`, multipart)
 - The file field is `audio_file`. Form fields: `model=prisma-v3.0`, `language_code`, and `multi_lang_codes` (comma-separated). `language_code=indic-auto` without `multi_lang_codes` returns 400 `INVALID_LANGUAGE_CODE`.
@@ -54,6 +56,18 @@ Euri `gpt-5.4-mini` chat completions with `response_format: json_object`: 20 of 
 - Hindi and English words are returned mostly in Devanagari with `indic-auto`, and in a Roman/Devanagari mix with `hi-IN` ("EMI pending"). Matching must handle both scripts.
 
 **Euri** (`POST /chat/completions`, bearer token): JSON mode works with `gpt-5.4-mini`; the fallback model was not exercised in this spike.
+
+## Audition round trip (final voices, Hinglish)
+
+The audition clips were spoken with the final voices, passed through the phone chain and sent back through Prisma. The agent clips (A1, A3, A5) were measured first and kept. The borrower and neighbour clips (A2, A6, A7) were regenerated in natural Mumbai-style Hinglish and measured again with `hi-IN` and with `indic-auto` (`multi_lang_codes=hi-IN,en-IN`). Mean keyword recovery:
+
+| Role | Roman text | Devanagari text | Setting |
+|---|---|---|---|
+| agent (first run) | 0.87 | 0.76 | all settings equal; `hi-IN` kept |
+| borrower (A2, A6) | 0.80 | 0.80 | `hi-IN` and `indic-auto` equal; `hi-IN` kept |
+| third party (A7) | 1.00 | 1.00 | `hi-IN` and `indic-auto` equal; `hi-IN` kept |
+
+The borrower clips lose most on the short male line (0.8 with 5 key terms per line, so one missed word is 0.2). Realtime segment latency on the phone clip was 0.41-0.45 s median. The clip that starts with an `<angry>` tag scored 0.20, but its text is shorter than the full line, so that figure is not comparable; judge tags by listening. The scores come from 2-6 clips per group, so they are indicative only.
 
 ## Limits of this spike
 Single run, 20 lines, one voice per role, approximate scoring. It decides go/no-go and the starting profile, not final accuracy; the evaluation step measures that on the full call set.

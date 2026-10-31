@@ -40,6 +40,7 @@ maryada-kit*.zip
 
 # ===== Generated audio that must NOT be committed (regenerate with notebooks; docs/10 s6) =====
 data/audio/_audition/
+data/audio/_backup/
 data/audio/_cache/
 data/audio/raw/
 data/audio/noise/
