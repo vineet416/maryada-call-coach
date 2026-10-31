@@ -106,8 +106,8 @@ scenarios:
     hard_negative: false
     turns:
       - s: A
-        t: "Haan Rajesh ji, Tarang Finserv se Amit bol raha hoon."
-        td: "हाँ राजेश जी, तारंग फिनसर्व से अमित बोल रहा हूँ।"
+        t: "Rajesh ji, Amit bol raha hoon, Tarang Finserv se."
+        td: "राजेश जी, अमित बोल रहा हूँ, तारंग फिनसर्व से।"
       - s: B
         t: "Haan, bolo."
         td: "हाँ, बोलो।"
