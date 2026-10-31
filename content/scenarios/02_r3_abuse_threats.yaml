@@ -75,8 +75,8 @@ scenarios:
         t: "Mahesh ji, shop loan ki saade nau hazaar ki EMI teen hafte se pending hai, do baar bounce ho chuki hai. Upar se penalty lag rahi hai. Payment kab karenge?"
         td: "महेश जी, शॉप लोन की साढ़े नौ हज़ार की ईएमआई तीन हफ्ते से पेंडिंग है, दो बार बाउंस हो चुकी है। ऊपर से पेनल्टी लग रही है। पेमेंट कब करेंगे?"
       - s: B
-        t: "Madam, thoda time lagega. Diwali ke pehle dukaan band thi na, dhandha hi nahi hua."
-        td: "मैडम, थोड़ा टाइम लगेगा। दिवाली के पहले दुकान बंद थी ना, धंधा ही नहीं हुआ।"
+        t: "Madam, thoda time lagega. Do hafte dukaan band thi na, dhandha hi nahi hua."
+        td: "मैडम, थोड़ा टाइम लगेगा। दो हफ्ते दुकान बंद थी ना, धंधा ही नहीं हुआ।"
       - s: A
         t: "Mahesh ji, har baar yahi kahani! Mujhe date chahiye, gol-gol jawab nahi chalega. Aapko sharam nahi aati, loan lekar bhool jaate ho? Aap jaise log hi system kharab karte hain."
         td: "महेश जी, हर बार यही कहानी! मुझे डेट चाहिए, गोल-गोल जवाब नहीं चलेगा। आपको शर्म नहीं आती, लोन लेकर भूल जाते हो? आप जैसे लोग ही सिस्टम ख़राब करते हैं।"
@@ -107,8 +107,8 @@ scenarios:
     hard_negative: false
     turns:
       - s: A
-        t: "Vinod ji? Haan, Rohit bol raha hoon, Tarang Finserv se."
-        td: "विनोद जी? हाँ, रोहित बोल रहा हूँ, तारंग फिनसर्व से।"
+        t: "Vinod ji? Rohit bol raha hoon, Tarang Finserv se."
+        td: "विनोद जी? रोहित बोल रहा हूँ, तारंग फिनसर्व से।"
       - s: B
         t: "Haan, Vinod bol raha hoon. Kya hai?"
         td: "हाँ, विनोद बोल रहा हूँ। क्या है?"
