@@ -11,6 +11,7 @@ import argparse
 import re
 import subprocess
 import sys
+from datetime import date
 from pathlib import Path
 
 import yaml
@@ -70,6 +71,74 @@ def sentences(text: str) -> int:
     return len([p for p in re.split(r"[.?!।]+", text) if p.strip(" .…—-")])
 
 
+NUM = {w: i for i, w in enumerate(
+    ["zero", "ek", "do", "teen", "chaar", "paanch", "chhah", "saat", "aath", "nau", "das", "gyarah", "barah", "terah", "chaudah", "pandrah", "solah", "satrah", "atharah", "unnees", "bees", "ikkis", "baais", "teis", "chaubis", "pachchis", "chhabbis", "sattaees", "atthaees", "untees", "tees"])}
+WEEKDAYS = {"monday": 0, "tuesday": 1, "wednesday": 2, "thursday": 3, "friday": 4, "saturday": 5, "sunday": 6}
+LATER = re.compile(r"\b(agle|agla|next)\b", re.IGNORECASE)
+TARIKH = re.compile(r"\b(" + "|".join(k for k in NUM if k != "zero") + r")\s+tarikh\b", re.IGNORECASE)
+
+
+def date_problems(sc: dict) -> list[str]:
+    """A weekday or 'N tarikh' must lie after the call date, unless 'agle'/'next' is used in the same sentence."""
+    y, m, d = (int(x) for x in sc["date"].split("-"))
+    wd = date(y, m, d).weekday()
+    out = []
+    for i, t in enumerate(sc["turns"], 1):
+        for sent in re.split(r"(?<=[.?!])\s+", t["t"]):
+            if LATER.search(sent):
+                continue
+            for w in re.findall(r"[A-Za-z]+", sent):
+                if WEEKDAYS.get(w.lower()) == wd:
+                    out.append(f"turn {i}: {w} is the call day itself ({sc['date']}); use 'agle {w}'")
+            for mt in TARIKH.finditer(sent):
+                if NUM[mt.group(1).lower()] <= d:
+                    out.append(f"turn {i}: '{mt.group(0)}' is not after the call date {sc['date']}")
+    return out
+
+
+RECORDING = [  # (family, regex) in the order they are tested
+    ("E dhyan rahe / record ki ja rahi", r"record ki ja rahi"),
+    ("D ek minute / line recorded", r"line recorded"),
+    ("C call recorded hai, quality purpose", r"recorded hai, quality purpose"),
+    ("F recording ho rahi hai, training", r"recording ho rahi"),
+    ("B record ho rahi hai, quality aur training", r"record ho rahi hai, quality"),
+    ("A quality aur training ke liye record ho rahi hai", r"quality aur training ke liye record ho rahi"),
+]
+MAX_SAME_RECORDING, MIN_RECORDING_KINDS, MAX_WHATSAPP_CALLS, MAX_SAME_SENTENCE = 6, 4, 6, 3
+
+
+def repetition(all_sc: list[dict], errs: list[str], warns: list[str]) -> dict:
+    fam: dict[str, set] = {}
+    wa: set = set()
+    sent_calls: dict[str, set] = {}
+    for sc in all_sc:
+        for t in sc["turns"]:
+            txt = t["t"]
+            if t["s"] == "A":
+                for name, rx in RECORDING:
+                    if re.search(rx, txt, re.IGNORECASE):
+                        fam.setdefault(name, set()).add(sc["id"])
+                        break
+                if re.search(r"whatsapp", txt, re.IGNORECASE) and re.search(r"bhej", txt, re.IGNORECASE):
+                    wa.add(sc["id"])
+            for sent in re.split(r"[.?!।]+", txt):
+                norm = " ".join(re.findall(r"[a-z0-9]+", sent.lower()))
+                if len(norm.split()) >= 3:
+                    sent_calls.setdefault(norm, set()).add(sc["id"])
+    for name, ids in fam.items():
+        if len(ids) > MAX_SAME_RECORDING:
+            errs.append(f"recording notice '{name}' is in {len(ids)} calls (max {MAX_SAME_RECORDING})")
+    if len(fam) < MIN_RECORDING_KINDS:
+        errs.append(f"only {len(fam)} recording-notice phrasings (min {MIN_RECORDING_KINDS})")
+    if len(wa) > MAX_WHATSAPP_CALLS:
+        errs.append(f"WhatsApp-link closing in {len(wa)} calls (max {MAX_WHATSAPP_CALLS}): {sorted(wa)}")
+    rep = {k: v for k, v in sent_calls.items() if len(v) > MAX_SAME_SENTENCE}
+    for k, v in sorted(rep.items(), key=lambda kv: -len(kv[1])):
+        warns.append(f"sentence in {len(v)} calls: '{k}'")
+    return {"recording": {k: len(v) for k, v in fam.items()}, "whatsapp_calls": len(wa), "repeated_sentences": len(rep),
+            "worst_sentence": max((len(v) for v in sent_calls.values()), default=0)}
+
+
 def check_scenario(sc: dict, old: dict | None, errs: list[str], warns: list[str]) -> None:
     cid = sc["id"]
     turns = sc["turns"]
@@ -110,12 +179,14 @@ def check_scenario(sc: dict, old: dict | None, errs: list[str], warns: list[str]
         if gender == "M" and FEMALE_FIRST.search(text):
             warn(f"turn {i} (male speaker) has a female verb ending: {FEMALE_FIRST.search(text).group(0)}")
         for lab in t.get("L", []):
-            if lab[1] != "*" and lab[1] not in text:
+            if lab[1] != "*" and lab[1].lower() not in text.lower():
                 # the merged hero call is not part of this rewrite, so a mismatch there is only reported
                 (warn if sc.get("hero") else err)(f"turn {i}: label phrase not in t: {lab[1]!r}")
             if t["s"] != "A":
                 err(f"turn {i}: label on a non-agent turn")
 
+    for msg in date_problems(sc):
+        err(msg)
     agent_idx = [i for i, t in enumerate(turns) if t["s"] == "A"]
     for i, rules in labelled(sc):
         if "R1" in rules and (len(agent_idx) < 1 or i != agent_idx[0]):
@@ -154,6 +225,7 @@ def main() -> int:
     errs: list[str] = []
     warns: list[str] = []
     total_td = n = 0
+    all_sc: list[dict] = []
     for f in files:
         rel = f.resolve().relative_to(ROOT).as_posix()
         try:
@@ -170,11 +242,15 @@ def main() -> int:
             old = {}
         for cid, sc in new.items():
             check_scenario(sc, old.get(cid), errs, warns)
+            all_sc.append(sc)
             if not sc.get("hero"):
                 total_td += sum(len(t.get("td", "")) for t in sc["turns"])
                 n += 1
         for cid in old.keys() - new.keys():
             errs.append(f"{rel}: scenario {cid} is missing")
+    if len(files) == 6:
+        stats = repetition(all_sc, errs, warns)
+        print("repetition:", stats)
     for w in warns:
         print("WARN ", w)
     for e in errs:
