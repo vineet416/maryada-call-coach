@@ -31,8 +31,8 @@ OUT = al.ROOT / "data" / "audio" / "_audition"
 voices_cfg = al.load_yaml("content/voices.yaml")
 c06 = next(s for s in al.load_yaml("content/scenarios/02_r3_abuse_threats.yaml")["scenarios"] if s["id"] == "c06")
 AGENT = al.target_lufs(voices_cfg, "agent")
-GAIN = 3.5  # dB above the plain agent level; the shout is exempt from the +-0.5 LU rule around -22 (see DECISIONS.md)
-VOICE, VAR = "Prakash", "V2T_plus3p5"
+GAINS = {"V2T_plus3p5": 3.5, "V2T_plus2p5": 2.5}  # dB above the plain agent level; the shout is exempt from the +-0.5 LU rule around -22 (see DECISIONS.md)
+VOICE = "Prakash"
 p = voices_cfg["params"]["agent"]
 
 
@@ -62,15 +62,17 @@ if RUN:
     if first < rest - 2.0:
         raise SystemExit("first second is more than 2 LU below the rest: stop and report")
 
-# %% 3. +3.5 dB variant (gain after the phone chain, with the true-peak limiter)
-    target = AGENT + GAIN
-    stem = f"A3_agent_threat__{VOICE}__{VAR}"
-    raw_f, phone_f = OUT / f"{stem}__raw.wav", OUT / f"{stem}__phone.wav"
-    if not phone_f.exists():
-        al.write_wav(raw_f, al.loudnorm(x, sr, target), sr)
-        al.write_wav(phone_f, al.phone_voice(x, sr, target, voices_cfg["phone_chain"]), 8000)
-    shout = sf.read(phone_f, dtype="float32")[0]
-    files += [(f.name, target, "shouted line +3.5 dB above the plain agent level") for f in (raw_f, phone_f)]
+# %% 3. Gain variants (gain after the phone chain, with the true-peak limiter)
+    shouts = {}
+    for var, gain in GAINS.items():
+        target = AGENT + gain
+        stem = f"A3_agent_threat__{VOICE}__{var}"
+        raw_f, phone_f = OUT / f"{stem}__raw.wav", OUT / f"{stem}__phone.wav"
+        if not phone_f.exists():
+            al.write_wav(raw_f, al.loudnorm(x, sr, target), sr)
+            al.write_wav(phone_f, al.phone_voice(x, sr, target, voices_cfg["phone_chain"]), 8000)
+        shouts[var] = sf.read(phone_f, dtype="float32")[0]
+        files += [(f.name, target, f"shouted line {gain:+g} dB above the plain agent level") for f in (raw_f, phone_f)]
     files += [(f, AGENT, "plain agent level") for f, _ in new["files"] + t7["files"]]
 
 # %% 4. Scenes: Prakash shouting x Shivani (plain, and with her tags) x Shubham plain
@@ -83,13 +85,14 @@ if RUN:
     coach_x, c_sr = sf.read(OUT / "A4_coach_R5__Shubham__V2__raw.wav", dtype="float32")
     chime = al.chime_at(al.target_lufs(voices_cfg, "coach"), c_sr)
     gap = np.zeros(int(c_sr * 0.4), dtype=np.float32)
-    SCENES = {"trio2f__Prakash_V2T_plus3p5__Shivani_V2__Shubham_V2.wav": "V2",
-              "trio2g__Prakash_V2T_plus3p5__Shivani_V2T__Shubham_V2.wav": "V2T"}
-    for name, b_var in SCENES.items():
+    SCENES = {"trio2f__Prakash_V2T_plus3p5__Shivani_V2__Shubham_V2.wav": ("V2", "V2T_plus3p5"),
+              "trio2g__Prakash_V2T_plus3p5__Shivani_V2T__Shubham_V2.wav": ("V2T", "V2T_plus3p5"),
+              "trio2h__Prakash_V2T_plus2p5__Shivani_V2__Shubham_V2.wav": ("V2", "V2T_plus2p5")}
+    for name, (b_var, s_var) in SCENES.items():
         def b(clip: str, var: str = b_var) -> np.ndarray:
             return upsample(load(clip, "Shivani", var), c_sr)
 
-        parts = [("T4 borrower", b("A2_borrower_job"), -24.0), ("T5 agent", upsample(shout, c_sr), AGENT + GAIN),
+        parts = [("T4 borrower", b("A2_borrower_job"), -24.0), ("T5 agent", upsample(shouts[s_var], c_sr), AGENT + GAINS[s_var]),
                  ("chime", chime, -27.0), ("coach", coach_x, -27.0), ("T6 borrower", b("H6_borrower_T6"), -24.0),
                  ("T7 agent", upsample(t7["phone"], c_sr), AGENT), ("T8 borrower", b("H8_borrower_T8"), -24.0)]
         seq = [parts[0][1], gap, parts[1][1], gap, chime, coach_x, gap, parts[4][1], gap, parts[5][1], gap, parts[6][1]]
@@ -109,17 +112,18 @@ if RUN:
         ok = abs(m["lufs"] - tgt) <= 0.5 and m["true_peak"] <= -1.5
         bad += not ok
         lines.append(f"| {name} | {tgt:g} | {m['lufs']:.1f} | {m['lra']:.1f} | {m['true_peak']:.1f} | {'ok' if ok else 'CHECK'} | {note} |")
-        if "T5" in name or name.endswith(f"{VAR}__phone.wav"):
+        if "T5" in name or "__V2T_plus" in name and name.endswith("phone.wav"):
             print(f"{name}: target {tgt:g}, measured {m['lufs']:.1f} LUFS, true peak {m['true_peak']:.1f} dBTP")
     path = OUT / "LOUDNESS.md"
     path.write_text(path.read_text(encoding="utf-8").split("\n## Round 2 shout Prakash")[0] + "\n".join(lines), encoding="utf-8")
     print("files outside their own +-0.5 LU target or above -1.5 dBTP:", bad)
 
     notes = {"trio2f": "Prakash (agent) with the +3.5 dB shout x Shivani plain x Shubham plain.",
-             "trio2g": "Prakash (agent) with the +3.5 dB shout x Shivani with her T4/T6/T8 tags x Shubham plain."}
-    md = ["", "## Round 2 shout Prakash", "Prakash as agent: shouting tag at the very start of turn 5, +3.5 dB above the plain agent level.", ""]
-    html = ["<!--round2prakash--><h2>Shouted threat line, Prakash as agent</h2><p>Shouting tag at the very start of turn 5, +3.5 dB above the plain agent level.</p>"]
-    for var, label in (("V2S", "new take, plain level"), (VAR, "+3.5 dB")):
+             "trio2g": "Prakash (agent) with the +3.5 dB shout x Shivani with her T4/T6/T8 tags x Shubham plain.",
+             "trio2h": "Prakash (agent) with the +2.5 dB shout x Shivani plain x Shubham plain."}
+    md = ["", "## Round 2 shout Prakash", "Prakash as agent: shouting tag at the very start of turn 5, +3.5 dB (and +2.5 dB) above the plain agent level.", ""]
+    html = ["<!--round2prakash--><h2>Shouted threat line, Prakash as agent</h2><p>Shouting tag at the very start of turn 5, +3.5 dB (and +2.5 dB) above the plain agent level.</p>"]
+    for var, label in (("V2S", "new take, plain level"), ("V2T_plus3p5", "+3.5 dB"), ("V2T_plus2p5", "+2.5 dB")):
         for kind in ("phone", "raw"):
             fn = f"A3_agent_threat__{VOICE}__{var}__{kind}.wav"
             md.append(f"- `{fn}`: {label} / {kind}")
