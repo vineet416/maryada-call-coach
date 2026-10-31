@@ -160,6 +160,7 @@ rules:
       - "mujhe afsos hai | मुझे अफ़सोस है"
       - "chinta mat kijiye | चिंता मत कीजिए"
       - "rahat ka option | राहत का ऑप्शन"
+      - "relief ka option | रिलीफ़ का ऑप्शन"
       - "khayal rakhiye | ख़याल रखिए"
 
 hard_negative_notes: |
