@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from .. import db
 from ..config import settings
 from ..models import Health
+from ..rules.loader import load_rules
 from ..session import assets, runner
 
 VERSION = "0.1.0"
@@ -31,6 +32,27 @@ def list_scenarios() -> list[dict]:
              "duration_s": round(man[sid]["duration_ms"] / 1000) if sid in man else None,
              "tags": sorted({lab[0] for t in sc["turns"] for lab in t.get("L", [])})}
             for sid, sc in assets.scenarios().items()]
+
+
+@router.get("/api/scenarios/{sid}")
+def get_scenario(sid: str) -> dict:
+    """Case meta and the call-audio timeline for the waveform; no labels and no script text."""
+    sc = assets.scenarios().get(sid)
+    if sc is None:
+        raise _err(404, "unknown_scenario", "That case does not exist.")
+    entry = assets.audio_manifest().get(sid)
+    turns = [{"idx": t["idx"], "speaker": assets.SPEAKER.get(t["speaker"], t["speaker"]),
+              "offset_ms": t["offset_ms"], "duration_ms": t["duration_ms"], "audio_url": f"/audio/{t['mp3']}"} for t in entry["turns"]] if entry else []
+    return {"id": sid, "title": sc["title"], "summary": sc["summary"], "hero": sc.get("hero", False),
+            "simulated_start_time": sc.get("time"), "turns": turns,
+            "call_audio_url": f"/audio/{entry['call_mp3']}" if entry else None,
+            "duration_ms": entry["duration_ms"] if entry else None}
+
+
+@router.get("/api/rules")
+def list_rules() -> list[dict]:
+    keys = ("id", "title", "kind_default", "rbi_ref", "summary", "why", "examples_bad", "examples_good")
+    return [{k: r.get(k) for k in keys} for r in load_rules()["rules"]]
 
 
 class StartBody(BaseModel):

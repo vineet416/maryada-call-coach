@@ -1,12 +1,8 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { PageStub } from '@/components/PageStub'
 
-export const Cases = () => <PageStub title="Cases" note="Synthetic recovery calls will be listed here." />
-
-export function LiveCall() {
-  const { id } = useParams()
-  return <PageStub title={`Call ${id ?? ''}`} note="The live call screen will appear here." />
-}
+export { Cases } from '@/pages/Cases'
+export { LiveCall } from '@/pages/LiveCall'
 
 export const Manager = () => (
   <PageStub title="Team compliance" note="The manager dashboard will appear here." />

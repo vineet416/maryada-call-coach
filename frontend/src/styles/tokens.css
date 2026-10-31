@@ -49,3 +49,155 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Coach accent: distinct from the speaker colours (docs/05 addendum) */
+:root {
+  --mc-coach: #2dd4bf;
+  --mc-agent: #4f8cff;
+  --mc-borrower: #8b98a5;
+  --mc-third: #c4a574;
+}
+
+html {
+  color-scheme: dark;
+}
+body {
+  background:
+    radial-gradient(1200px 520px at 78% -8%, rgb(79 140 255 / 0.07), transparent 60%),
+    var(--mc-bg);
+  background-attachment: fixed;
+}
+.mono {
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Transcript tokens: colour plus an underline style, so colour is never the only cue */
+.tok {
+  display: inline;
+  text-underline-offset: 0.3em;
+  text-decoration-thickness: 2px;
+  border-radius: 3px;
+  transition:
+    background-color 0.35s ease,
+    text-decoration-color 0.35s ease;
+}
+.tok-violation {
+  text-decoration: underline solid var(--mc-violation);
+  background: rgb(255 92 92 / 0.12);
+}
+.tok-advisory {
+  text-decoration: underline dotted var(--mc-advisory);
+  background: rgb(245 181 68 / 0.1);
+}
+.tok-needs_review {
+  text-decoration: underline dashed var(--mc-needs-review);
+  background: rgb(167 139 250 / 0.1);
+}
+.tok-good_practice {
+  background: rgb(63 207 142 / 0.14);
+}
+button.tok {
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  padding: 0;
+  text-align: inherit;
+}
+button.tok:hover {
+  filter: brightness(1.25);
+}
+:focus-visible {
+  outline: 2px solid var(--mc-accent);
+  outline-offset: 2px;
+}
+.tok-flash {
+  animation: flash 1.2s ease;
+}
+@keyframes flash {
+  0%,
+  60% {
+    box-shadow: 0 0 0 3px var(--mc-accent);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  animation: reveal 0.28s ease forwards;
+  animation-delay: calc(var(--d) * var(--step));
+}
+@keyframes reveal {
+  to {
+    opacity: 1;
+  }
+}
+
+.shimmer {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--mc-line) 25%, #2b3a4d 50%, var(--mc-line) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.3s linear infinite;
+}
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+.skeleton {
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--mc-surface) 25%, #1a2330 50%, var(--mc-surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+}
+.pulse-dot {
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.rise {
+  animation: rise 0.35s ease both;
+}
+@keyframes slide-in {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+}
+@keyframes sheet-in {
+  from {
+    transform: translateY(32px);
+    opacity: 0;
+  }
+}
+.wave {
+  animation: wave 0.9s ease-in-out infinite;
+  transform-origin: center;
+}
+@keyframes wave {
+  50% {
+    transform: scaleY(0.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    animation: none;
+  }
+  .shimmer,
+  .skeleton,
+  .pulse-dot,
+  .wave {
+    animation: none;
+  }
+}
