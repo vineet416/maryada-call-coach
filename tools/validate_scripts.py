@@ -105,6 +105,7 @@ RECORDING = [  # (family, regex) in the order they are tested
     ("A quality aur training ke liye record ho rahi hai", r"quality aur training ke liye record ho rahi"),
 ]
 MAX_SAME_RECORDING, MIN_RECORDING_KINDS, MAX_WHATSAPP_CALLS, MAX_SAME_SENTENCE = 6, 4, 6, 3
+MAX_NOTE_CALLS, MAX_PAKKA_CALLS = 6, 8
 
 
 def repetition(all_sc: list[dict], errs: list[str], warns: list[str]) -> dict:
@@ -132,10 +133,17 @@ def repetition(all_sc: list[dict], errs: list[str], warns: list[str]) -> dict:
         errs.append(f"only {len(fam)} recording-notice phrasings (min {MIN_RECORDING_KINDS})")
     if len(wa) > MAX_WHATSAPP_CALLS:
         errs.append(f"WhatsApp-link closing in {len(wa)} calls (max {MAX_WHATSAPP_CALLS}): {sorted(wa)}")
+    note = {sc["id"] for sc in all_sc for t in sc["turns"] if t["s"] == "A" and re.search(r"note kar le(ti|ta) hoon", t["t"], re.IGNORECASE)}
+    pakka = {sc["id"] for sc in all_sc for t in sc["turns"] if t["s"] == "A"
+             and re.search(r"theek hai[^.?!]*pakka", t["t"], re.IGNORECASE)}
+    if len(note) > MAX_NOTE_CALLS:
+        errs.append(f"'note kar leti/leta hoon' in {len(note)} calls (max {MAX_NOTE_CALLS}): {sorted(note)}")
+    if len(pakka) > MAX_PAKKA_CALLS:
+        errs.append(f"'Theek hai, <day> pakka' closing in {len(pakka)} calls (max {MAX_PAKKA_CALLS}): {sorted(pakka)}")
     rep = {k: v for k, v in sent_calls.items() if len(v) > MAX_SAME_SENTENCE}
     for k, v in sorted(rep.items(), key=lambda kv: -len(kv[1])):
         warns.append(f"sentence in {len(v)} calls: '{k}'")
-    return {"recording": {k: len(v) for k, v in fam.items()}, "whatsapp_calls": len(wa), "repeated_sentences": len(rep),
+    return {"recording": {k: len(v) for k, v in fam.items()}, "whatsapp_calls": len(wa), "note_kar_calls": len(note), "theek_hai_pakka_calls": len(pakka), "repeated_sentences": len(rep),
             "worst_sentence": max((len(v) for v in sent_calls.values()), default=0)}
 
 
