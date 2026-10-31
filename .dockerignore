@@ -24,6 +24,9 @@ content/split.yaml
 data/audio/_audition/
 data/audio/_cache/
 data/audio/raw/
+data/audio/_backup/
+data/audio/_c2/
+data/audio/_listen/
 data/audio/noise/
 data/eval/audio/
 data/eval/transcripts_cache/
