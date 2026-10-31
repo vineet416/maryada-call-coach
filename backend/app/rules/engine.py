@@ -9,6 +9,7 @@ from .prefilter import gate_findings, good_practice, prefilter
 from .schemas import CallContext, Finding, LlmOut, Turn
 
 VIOLATION_MIN, REVIEW_MIN = 0.75, 0.45
+WEAK_CAP = 0.74  # weak alignment (whole-sentence fallback) must stay needs_review
 _RANK = {"good_practice": 0, "advisory": 1, "needs_review": 2, "violation": 3}
 
 
@@ -37,9 +38,10 @@ def llm_to_findings(out: LlmOut, turn_idx: int, text: str) -> list[Finding]:
     res = []
     for lf in out.findings:
         rng, _ratio, sentence = align_quote(text, lf.quote)
-        conf = lf.confidence if not sentence else min(lf.confidence, 0.74)  # weak alignment -> needs_review
+        conf = lf.confidence if not sentence else min(lf.confidence, WEAK_CAP)  # weak alignment -> needs_review
         res.append(Finding(turn_idx=turn_idx, rule_id=lf.rule_id, confidence=conf, quote=lf.quote,
-                           token_range=rng, reason=lf.reason, rewrite=lf.rewrite, source="llm", phase="deep"))
+                           token_range=rng, reason=lf.reason, rewrite=lf.rewrite, source="llm", phase="deep",
+                           weak_alignment=sentence))
     return res
 
 
@@ -57,6 +59,9 @@ def merge(items: list[Finding]) -> list[Finding]:
             prev.confidence = min(1.0, max(prev.confidence, f.confidence) + 0.05)
         else:
             prev.confidence = max(prev.confidence, f.confidence)
+        prev.weak_alignment = prev.weak_alignment and f.weak_alignment  # an exact-phrase hit keeps its strength
+        if prev.weak_alignment:
+            prev.confidence = min(prev.confidence, WEAK_CAP)
         prev.token_range = (min(prev.token_range[0], f.token_range[0]), max(prev.token_range[1], f.token_range[1]))
         prev.reason = prev.reason or f.reason
         prev.rewrite = prev.rewrite or f.rewrite
@@ -89,11 +94,14 @@ def fast_findings(ctx: CallContext, history: list[Turn], turn_idx: int, text: st
     return finalize(items, turn_idx, text)
 
 
-def deep_findings(fast: list[Finding], llm: LlmOut | None, turn_idx: int, text: str) -> list[Finding]:
+def deep_findings(ctx: CallContext, fast: list[Finding], llm: LlmOut | None, turn_idx: int, text: str) -> list[Finding]:
     """Deep phase: merge the LLM result into the fast findings. llm=None -> fast findings unchanged."""
     if llm is None:
         return fast
-    items = [f for f in fast if f.kind != "good_practice"] + llm_to_findings(llm, turn_idx, text)
+    from_llm = llm_to_findings(llm, turn_idx, text)
+    if ctx.answered_by == "borrower":  # R4 gate applies to the LLM too
+        from_llm = [f for f in from_llm if f.rule_id != "R4"]
+    items = [f for f in fast if f.kind != "good_practice"] + from_llm
     merged = finalize(items, turn_idx, text)
     for g in llm.good_practice:
         rng, _, sentence = align_quote(text, g.quote)

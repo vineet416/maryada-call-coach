@@ -113,3 +113,20 @@ def test_hero_call_flags_r5_r3_r5_on_turn_7_and_nothing_else():
             peak = max(peak, score)
         hist.append(Turn(speaker=t["s"], text=t["t"]))
     assert peak == 65 and risk.band(peak) == "high"
+
+
+def test_llm_r4_dropped_when_borrower_answered():
+    from app.rules.engine import deep_findings
+    from app.rules.schemas import LlmOut
+    text = "Aapki EMI pending hai, kab tak denge?"
+    out = LlmOut.model_validate({"findings": [{"rule_id": "R4", "confidence": 0.95, "quote": "EMI pending hai"}]})
+    assert not deep_findings(CallContext(answered_by="borrower"), [], out, 1, text)
+    assert [f.rule_id for f in deep_findings(CallContext(answered_by="spouse"), [], out, 1, text)] == ["R4"]
+
+
+def test_weak_alignment_stays_needs_review_after_merge():
+    a = Finding(rule_id="R3", confidence=0.74, token_range=(0, 6), source="llm", weak_alignment=True)
+    b = Finding(rule_id="R3", confidence=0.74, token_range=(2, 4), source="llm", weak_alignment=True)
+    assert merge([a, b])[0].confidence <= 0.74
+    p = Finding(rule_id="R3", confidence=0.9, token_range=(2, 4), source="prefilter")
+    assert merge([a, p])[0].confidence == pytest.approx(0.95)  # exact-phrase hit keeps its strength

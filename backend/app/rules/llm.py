@@ -12,8 +12,7 @@ from .schemas import CallContext, LlmOut, Turn
 
 log = logging.getLogger("maryada.rules.llm")
 
-FIRST_TIMEOUT_S = 4.0
-LATE_TIMEOUT_S = 8.0
+LATE_TIMEOUT_S = 8.0  # total budget for one review, fallback attempt included; the pipeline decides when to show "late"
 MIN_WORDS = 4  # docs/13 §4.1: skip the LLM for segments under 4 words
 
 FEW_SHOT = """Examples (synthetic):
@@ -80,7 +79,10 @@ async def review(client: httpx.AsyncClient, ctx: CallContext, history: list[Turn
     t0 = time.perf_counter()
     for model in (settings.llm_model, settings.llm_fallback_model):
         try:
-            raw = await asyncio.wait_for(_ask(client, model, ctx, history, text, key, url), LATE_TIMEOUT_S)
+            left = LATE_TIMEOUT_S - (time.perf_counter() - t0)
+            if left <= 0:
+                break
+            raw = await asyncio.wait_for(_ask(client, model, ctx, history, text, key, url), left)
         except (TimeoutError, httpx.HTTPError, KeyError, IndexError, ValueError) as e:
             log.warning("llm call failed model=%s err=%s", model, type(e).__name__)
             continue

@@ -31,6 +31,7 @@ class Finding(BaseModel):
     rewrite: str = ""
     source: Source = "prefilter"
     phase: Literal["fast", "deep"] = "fast"
+    weak_alignment: bool = False  # quote matched below 0.6: capped at needs_review even after a merge
 
 
 class LlmFinding(BaseModel):
