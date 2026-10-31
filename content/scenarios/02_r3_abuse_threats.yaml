@@ -213,24 +213,24 @@ scenarios:
         t: "Haan madam, bolo."
         td: "हाँ मैडम, बोलो।"
       - s: A
-        t: "Ganesh ji, aapke personal loan ki saat hazaar rupaye ki EMI bounce ho gayi hai, pandrah din ho gaye. Payment kab kar rahe hain?"
-        td: "गणेश जी, आपके पर्सनल लोन की सात हज़ार रुपये की ईएमआई बाउंस हो गई है, पंद्रह दिन हो गए। पेमेंट कब कर रहे हैं?"
+        t: "Ganesh ji, aapke personal loan ki saat hazaar rupaye ki EMI bounce ho gayi hai, pandrah din ho gaye. Reminder bhi bheja tha. Payment kab kar rahe hain?"
+        td: "गणेश जी, आपके पर्सनल लोन की सात हज़ार रुपये की ईएमआई बाउंस हो गई है, पंद्रह दिन हो गए। रिमाइंडर भी भेजा था। पेमेंट कब कर रहे हैं?"
       - s: B
-        t: "Madam, next week try karta hoon."
-        td: "मैडम, नेक्स्ट वीक ट्राई करता हूँ।"
+        t: "Madam, next week try karta hoon. Abhi ghar ka kharcha bahut hai, salary bhi late aati hai."
+        td: "मैडम, नेक्स्ट वीक ट्राई करता हूँ। अभी घर का खर्चा बहुत है, सैलरी भी लेट आती है।"
       - s: A
-        t: "Next week, next week... Pichhli baar bhi yahi bola tha. Mujhe pakki date chahiye, sir."
-        td: "नेक्स्ट वीक, नेक्स्ट वीक... पिछली बार भी यही बोला था। मुझे पक्की डेट चाहिए, सर।"
+        t: "Next week, next week... Pichhli baar bhi yahi bola tha. Mujhe pakki date chahiye, sir. Gol-gol jawab se kuch nahi hota."
+        td: "नेक्स्ट वीक, नेक्स्ट वीक... पिछली बार भी यही बोला था। मुझे पक्की डेट चाहिए, सर। गोल-गोल जवाब से कुछ नहीं होता।"
       - s: B
-        t: "Madam, salary pe depend karta hai. Pakka abhi nahi bol sakta."
-        td: "मैडम, सैलरी पे डिपेंड करता है। पक्का अभी नहीं बोल सकता।"
+        t: "Madam, salary pe depend karta hai. Pakka abhi nahi bol sakta, jaise hi aayegi kar dunga."
+        td: "मैडम, सैलरी पे डिपेंड करता है। पक्का अभी नहीं बोल सकता, जैसे ही आएगी कर दूँगा।"
       - s: A
         t: "Aap log hamesha agle hafte bolte ho. Kaisa insaan hai aap, zubaan ka koi mol nahi?"
         td: "आप लोग हमेशा अगले हफ्ते बोलते हो। कैसा इंसान है आप, ज़ुबान का कोई मोल नहीं?"
         L: [[R3, "Kaisa insaan hai aap, zubaan ka koi mol nahi"]]
       - s: B
-        t: "Aise nahi bolo madam. Main Tuesday ko de dunga, pakka."
-        td: "ऐसे नहीं बोलो मैडम। मैं ट्यूज़डे को दे दूँगा, पक्का।"
+        t: "Aise nahi bolo madam. Main Tuesday ko de dunga, pakka. Poora nahi toh aadha de dunga."
+        td: "ऐसे नहीं बोलो मैडम। मैं ट्यूज़डे को दे दूँगा, पक्का। पूरा नहीं तो आधा दे दूँगा।"
       - s: A
-        t: "Achha theek hai, Tuesday pakka. Payment link abhi WhatsApp pe bhej rahi hoon. Thank you."
-        td: "अच्छा ठीक है, ट्यूज़डे पक्का। पेमेंट लिंक अभी व्हाट्सएप पर भेज रही हूँ। थैंक यू।"
+        t: "Achha theek hai, Tuesday ko aadha pakka. Payment link abhi WhatsApp pe bhej rahi hoon. Thank you."
+        td: "अच्छा ठीक है, ट्यूज़डे को आधा पक्का। पेमेंट लिंक अभी व्हाट्सएप पर भेज रही हूँ। थैंक यू।"
