@@ -36,13 +36,28 @@ async def main() -> None:
         r = (await c.post(f"{a.base}/api/sessions", json={"scenario_id": a.scenario, "mode": a.mode})).json()
     print("session", r)
     events = []
-    async with websockets.connect(a.base.replace("http", "ws") + r["ws_url"], max_size=None) as ws:
-        await ws.send(json.dumps({"type": "start"}))
-        async for raw in ws:
-            e = json.loads(raw)
-            events.append(e)
-            if not a.quiet:
-                print(f"{e['seq']:>3} {e['t_ms']:>6}ms {e['type']:<17} {line(e)}")
+    drops = 0
+    while True:  # reconnect by last_seq like the browser does (3 tries)
+        try:
+            async with websockets.connect(a.base.replace("http", "ws") + r["ws_url"], max_size=None) as ws:
+                first = {"type": "resume", "last_seq": events[-1]["seq"]} if events else {"type": "start"}
+                await ws.send(json.dumps(first))
+                async for raw in ws:
+                    e = json.loads(raw)
+                    events.append(e)
+                    if not a.quiet:
+                        print(f"{e['seq']:>3} {e['t_ms']:>6}ms {e['type']:<17} {line(e)}")
+            break
+        except (websockets.ConnectionClosedError, OSError) as err:
+            if events and events[-1]["type"] == "session.ended":
+                break  # the server ended the call; a missing close frame afterwards is harmless
+            drops += 1
+            print(f"connection dropped after seq {events[-1]['seq'] if events else 0}: {type(err).__name__}")
+            if drops > 3:
+                raise
+            await asyncio.sleep(1)
+    if drops:
+        print("reconnects:", drops)
     if a.save:
         Path(a.save).write_text(json.dumps({"scenario_id": a.scenario, "events": events}, ensure_ascii=False, indent=1),
                                 encoding="utf-8")
