@@ -19,6 +19,8 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "content"
 MAX_CHARS, MAX_TURNS, MIN_TURNS, MAX_FEMALE = 600, 11, 6, 2
 RS_PER_1000_CHARS = 2.9  # docs/11: about 28,000 characters is about Rs 80
+SEC_PER_CHAR = 0.0742  # c06: 86.7 s of finished audio (gaps included) for 1168 Devanagari characters
+MIN_SEC, MAX_SEC = 48, 90  # target about 50-85 s of speech
 UNCHANGED = ["id", "agent", "date", "time", "answered_by", "borrower", "third_party", "facts", "hero", "hard_negative"]
 
 MARATHI_WORDS = {
@@ -32,10 +34,10 @@ MARATHI_CHARS = "ळ"  # Devanagari LLA, used by Marathi only
 # first-person verb endings that give the speaker's gender away (heuristic)
 MALE_FIRST = re.compile(
     r"\b(raha hoon|sakta hoon|chahta hoon|leta hoon|deta hoon|karta hoon|karunga|dunga|bhejunga|jaunga|"
-    r"bataunga|dekhunga|lunga|paunga|samajh gaya|ruk gaya)\b", re.I)
+    r"bataunga|dekhunga|lunga|paunga|samajh gaya|ruk gaya)\b", re.IGNORECASE)
 FEMALE_FIRST = re.compile(
     r"\b(rahi hoon|sakti hoon|chahti hoon|leti hoon|deti hoon|karti hoon|karungi|dungi|bhejungi|jaungi|"
-    r"bataungi|dekhungi|lungi|paungi|samajh gayi|ruk gayi)\b", re.I)
+    r"bataungi|dekhungi|lungi|paungi|samajh gayi|ruk gayi)\b", re.IGNORECASE)
 
 AGENT_GENDER = {}
 for a in yaml.safe_load((CONTENT / "agents.yaml").read_text(encoding="utf-8"))["agents"]:
@@ -72,13 +74,18 @@ def check_scenario(sc: dict, old: dict | None, errs: list[str], warns: list[str]
     cid = sc["id"]
     turns = sc["turns"]
     g = genders(sc)
-    err = lambda m: errs.append(f"{cid}: {m}")  # noqa: E731
-    warn = lambda m: warns.append(f"{cid}: {m}")  # noqa: E731
+    err = lambda m: errs.append(f"{cid}: {m}")
+    warn = lambda m: warns.append(f"{cid}: {m}")
 
     if len(turns) > MAX_TURNS:
         err(f"{len(turns)} turns (max {MAX_TURNS})")
     if len(turns) < MIN_TURNS:
         warn(f"only {len(turns)} turns (target {MIN_TURNS}-{MAX_TURNS})")
+    est = sum(len(t.get("td", "")) for t in turns) * SEC_PER_CHAR
+    if est < MIN_SEC:
+        warn(f"estimated {est:.0f} s of audio (target about 50-85 s)")
+    if est > MAX_SEC:
+        err(f"estimated {est:.0f} s of audio (target about 50-85 s)")
     if sum(1 for s in g.values() if s == "F") > MAX_FEMALE:
         err("more than two female speakers (needs a third female voice)")
     if {t["s"] for t in turns} - set(g):
