@@ -1,5 +1,5 @@
 # Phrase lists for the deterministic prefilter + coach lines. Format: "roman | devanagari". Match after normalisation
-# (lowercase, strip punctuation, collapse spaces); STT output may be Devanagari for Hindi/Marathi words and Roman for English words (codemix), so BOTH forms matter.
+# (lowercase, strip punctuation, collapse spaces); STT output may be Devanagari for Hindi words and Roman for English words (codemix), so BOTH forms matter.
 # strength: strong = confidence 0.9 on exact multi-word match; weak = 0.6 (needs LLM agreement to become a violation).
 # Phrases may be ADDED while tuning on the tune set (docs/03 §5, content/split.yaml) but must not remove these.
 version: rb-2026.11-v1
@@ -27,10 +27,16 @@ rules:
       - "kaisa insaan hai aap | कैसा इंसान है आप"
       - "bhaagne ka sochna bhi mat | भागने का सोचना भी मत"
       - "hoshiyari mat dikha | होशियारी मत दिखा"
-      - "tula sodnar nahi | तुला सोडणार नाही"
-      - "lajja nahi vatat | लाज वाटत नाही"
-      - "bagh mi kay karto | बघ मी काय करतो"
-      - "vedya | वेड्या"
+      - "aapko sharam nahi aati | आपको शर्म नहीं आती"
+      - "aap bewakoof ho kya | आप बेवकूफ हो क्या"
+      - "nikamme ho aap | निकम्मे हो आप"
+      - "zyada hoshiyari mat | ज़्यादा होशियारी मत"
+      - "tere ghar aake | तेरे घर आके"
+      - "mohalle mein sabko bata | मोहल्ले में सबको बता"
+      - "khud kamaane ki himmat nahi | ख़ुद कमाने की हिम्मत नहीं"
+      - "zubaan ka koi mol nahi | ज़ुबान का कोई मोल नहीं"
+      - "mujhse bura koi nahi hoga | मुझसे बुरा कोई नहीं होगा"
+      - "sharam karo | शर्म करो"
     weak:
       - "bahane mat banao | बहाने मत बनाओ"
       - "jhooth bol rahe ho | झूठ बोल रहे हो"
@@ -38,7 +44,8 @@ rules:
       - "kal subah tak chahiye | कल सुबह तक चाहिए"
       - "tu sunta hi nahi | तू सुनता ही नहीं"
       - "ullu | उल्लू"
-      - "gadhva | गाढव"
+      - "pagal ho kya | पागल हो क्या"
+      - "har baar yahi kahani | हर बार यही कहानी"
   R5:
     strong:
       - "police ko bhej | पुलिस को भेज"
@@ -55,13 +62,20 @@ rules:
       - "RBI aapka loan account block | आरबीआई आपका लोन अकाउंट ब्लॉक"
       - "har din paanch hazaar rupaye penalty | हर दिन पाँच हज़ार रुपये पेनल्टी"
       - "FIR | एफआईआर"
-      - "ata police yetil | आता पोलीस येतील"
-      - "atak hoil | अटक होईल"
-      - "japti | जप्ती"
+      - "police aapke ghar aayegi | पुलिस आपके घर आएगी"
+      - "giraftaar ho jaoge | गिरफ्तार हो जाओगे"
+      - "court se aapke naam par | कोर्ट से आपके नाम पर"
+      - "warrant ruk sakta | वारंट रुक सकता"
+      - "ghar aur gaadi seize | घर और गाड़ी सीज़"
+      - "court mein case dal | कोर्ट में केस डाल"
+      - "property kal sealed | प्रॉपर्टी कल सील"
+      - "loan account block | लोन अकाउंट ब्लॉक"
     weak:
       - "legal action kal | लीगल एक्शन कल"
       - "blacklist | ब्लैकलिस्ट"
       - "zindagi bhar loan nahi milega | ज़िंदगी भर लोन नहीं मिलेगा"
+      - "RBI ka rule hai | आरबीआई का रूल है"
+      - "kisi bank se loan nahi milega | किसी बैंक से लोन नहीं मिलेगा"
   R4:        # only evaluated when the call was answered by someone other than the borrower
     disclosure_triggers:
       - "loan liya hai | लोन लिया है"
@@ -76,13 +90,19 @@ rules:
       - "dhokha de raha | धोखा दे रहा"
       - "paisa wapas nahi | पैसा वापस नहीं"
       - "karj | कर्ज"
+      - "unka loan default | उनका लोन डिफॉल्ट"
+      - "EMI nahi aayi | ईएमआई नहीं आई"
+      - "car loan ki EMI | कार लोन की ईएमआई"
     shaming_triggers:
       - "sab padosi jaan lein | सब पड़ोसी जान लें"
       - "society mein sabko pata | सोसाइटी में सबको पता"
+      - "sabko pata chalna chahiye | सबको पता चलना चाहिए"
     safe_patterns:      # agent only asks for the borrower / leaves a callback message -> NOT a violation
       - "wapas call kar | वापस कॉल कर"
       - "zaroori call | ज़रूरी कॉल"
       - "kya unse baat ho sakti hai | क्या उनसे बात हो सकती है"
+      - "phone aaya tha | फोन आया था"
+      - "baat unse hi karni | बात उनसे ही करनी"
   R6:
     borrower_context_triggers:      # borrower mentions a sensitive occasion (context for the LLM / prefilter)
       - "nidhan | निधन"
@@ -93,11 +113,13 @@ rules:
       - "hospital | हॉस्पिटल"
       - "operation | ऑपरेशन"
       - "bimaar | बीमार"
-      - "beemar aahe | बीमार आहे"
+      - "pitaji guzar gaye | पिताजी गुज़र गए"
+      - "hospital mein hoon | हॉस्पिटल में हूँ"
+      - "mummy hospital mein | मम्मी हॉस्पिटल में"
+      - "operation chalu | ऑपरेशन चालू"
       - "accident | एक्सिडेंट"
       - "ICU | आईसीयू"
       - "shaadi | शादी"
-      - "lagna | लग्न"
     agent_pressing_patterns:
       - "aaj hi kuch bhej | आज ही कुछ भेज"
       - "aaj hi online kar | आज ही ऑनलाइन कर"
@@ -105,15 +127,19 @@ rules:
       - "kuch toh bhejna padega | कुछ तो भेजना पड़ेगा"
       - "due date nikal chuki | ड्यू डेट निकल चुकी"
       - "do hafte toh bahut hain | दो हफ्ते तो बहुत हैं"
+      - "is hafte kuch toh bhejna | इस हफ्ते कुछ तो भेजना"
   R2:
     identification_patterns:      # name + lender
       - "bol raha hoon Tarang Finserv | बोल रहा हूँ तारंग फिनसर्व"
       - "bol rahi hoon Tarang Finserv | बोल रही हूँ तारंग फिनसर्व"
       - "Tarang Finserv se | तारंग फिनसर्व से"
+      - "bol raha hoon, Tarang Finserv | बोल रहा हूँ, तारंग फिनसर्व"
+      - "bol rahi hoon, Tarang Finserv | बोल रही हूँ, तारंग फिनसर्व"
     recording_patterns:
       - "record ho rahi | रिकॉर्ड हो रही"
       - "recorded hai | रिकॉर्डेड है"
       - "recording | रिकॉर्डिंग"
+      - "quality aur training ke liye record | क्वालिटी और ट्रेनिंग के लिए रिकॉर्ड"
   G1:
     good_practice_patterns:
       - "samajh sakta hoon | समझ सकता हूँ"
@@ -126,6 +152,10 @@ rules:
       - "dhyan rakhiye | ध्यान रखिए"
       - "sorry sir | सॉरी सर"
       - "kripya | कृपया"
+      - "mujhe afsos hai | मुझे अफ़सोस है"
+      - "chinta mat kijiye | चिंता मत कीजिए"
+      - "rahat ka option | राहत का ऑप्शन"
+      - "khayal rakhiye | ख़याल रखिए"
 
 hard_negative_notes: |
   These are NOT violations and must not be flagged: true statements about late fee, credit score impact, or that a notice
