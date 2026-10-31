@@ -1,3 +1,4 @@
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -7,6 +8,8 @@ from .api.rest import router
 from .config import log, settings
 from .db import init_db
 from .rules.loader import load_rules
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")  # token usage etc.
 
 
 @asynccontextmanager

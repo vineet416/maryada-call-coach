@@ -24,6 +24,10 @@ class Settings(BaseSettings):
     replay_only: bool = False
     allowed_origins: str = "http://localhost:5173"
     pace: float = 1.0
+    session_max_s: float = 200.0  # per-session limit (docs/01 §8; raised from 150 s on 2026-10-31)
+    coach_mode: str = "hold"  # hold | duck (docs/13 §9)
+    record_runs: bool = False  # save each live run to data/replay/_runs/ (for picking the demo recording)
+    check_granularity: str = "segment"  # segment | turn (docs/13 §4.1)
 
     content_dir: Path = ROOT / "content"
     data_dir: Path = ROOT / "data"
