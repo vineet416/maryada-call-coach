@@ -60,6 +60,7 @@ CLAUDE.local.md
 # planning specs 00-13
 docs/[0-9][0-9]-*.md
 docs/DECISIONS.md
+docs/SCRIPT-REVIEW.md
 # video script, post draft, submission pack
 docs/LAUNCH.md
 # Public docs that stay committed: README.md, docs/architecture.md, docs/conventions.md,

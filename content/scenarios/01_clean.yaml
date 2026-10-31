@@ -12,13 +12,33 @@ scenarios:
     hero: false
     hard_negative: false
     turns:
-      - {s: A, t: "Namaste sir, main Neha bol rahi hoon Tarang Finserv se. Yeh call quality ke liye record ho rahi hai. Kya main Suresh Bhosale ji se baat kar rahi hoon?"}
-      - {s: B, t: "Haan, Suresh bolto aahe. Boliye madam, kya kaam hai?"}
-      - {s: A, t: "Sir, aapki personal loan ki chhah hazaar do sau rupaye ki EMI abhi pending dikh rahi hai. Kya koi dikkat aayi hai?"}
-      - {s: B, t: "Madam, company ne salary thodi late kiye aahe. Paanch tarikh ko aati hai, is baar das tak aayegi."}
-      - {s: A, t: "Samajh gayi sir. Toh kya aap das tarikh ke baad payment kar paayenge? Main reminder bhi note kar leti hoon."}
-      - {s: B, t: "Ho, das ko salary aate hi pay kar dunga. Don-teen din ka time chahiye."}
-      - {s: A, t: "Theek hai sir, main das tarikh ke baad aapko payment link bhej dungi. Dhanyavaad, aapka din achha rahe."}
+      - s: A
+        t: "Namaste, Suresh Bhosale bol rahe hain?"
+        td: "नमस्ते, सुरेश भोसले बोल रहे हैं?"
+      - s: B
+        t: "Haan ji, boliye."
+        td: "हाँ जी, बोलिए।"
+      - s: A
+        t: "Main Neha, Tarang Finserv se. Ye call quality aur training ke liye record ho rahi hai."
+        td: "मैं नेहा, तारंग फिनसर्व से। ये कॉल क्वालिटी और ट्रेनिंग के लिए रिकॉर्ड हो रही है।"
+      - s: B
+        t: "Haan madam, bolo. Kya hua?"
+        td: "हाँ मैडम, बोलो। क्या हुआ?"
+      - s: A
+        t: "Suresh ji, aapki chhah hazaar do sau rupaye ki EMI bounce hui thi, barah din se pending hai. Penalty bhi lag rahi hai. Kab tak ho jayega?"
+        td: "सुरेश जी, आपकी छह हज़ार दो सौ रुपये की ईएमआई बाउंस हुई थी, बारह दिन से पेंडिंग है। पेनल्टी भी लग रही है। कब तक हो जाएगा?"
+      - s: B
+        t: "Madam, company ne is baar salary late kar di. Har mahine jaldi aati hai, abhi tak nahi aayi. Pandrah tak aa jayegi."
+        td: "मैडम, कंपनी ने इस बार सैलरी लेट कर दी। हर महीने जल्दी आती है, अभी तक नहीं आई। पंद्रह तक आ जाएगी।"
+      - s: A
+        t: "Achha achha. Toh salary aate hi payment ho jayega na? Mujhe ek pakki date chahiye, sir. Pandrah ke aas-paas se kaam nahi chalega."
+        td: "अच्छा अच्छा। तो सैलरी आते ही पेमेंट हो जाएगा ना? मुझे एक पक्की डेट चाहिए, सर। पंद्रह के आस-पास से काम नहीं चलेगा।"
+      - s: B
+        t: "Haan haan, pandrah ko salary aate hi kar dunga. Do-teen din ka time lagega."
+        td: "हाँ हाँ, पंद्रह को सैलरी आते ही कर दूँगा। दो-तीन दिन का टाइम लगेगा।"
+      - s: A
+        t: "Theek hai, toh atharah tarikh tak pakka. Main note kar leti hoon aur SMS bhej deti hoon. Aur agar salary pehle aa jaye toh pehle bhi kar sakte hain. Thank you sir."
+        td: "ठीक है, तो अठारह तारीख तक पक्का। मैं नोट कर लेती हूँ और एसएमएस भेज देती हूँ। और अगर सैलरी पहले आ जाए तो पहले भी कर सकते हैं। थैंक यू सर।"
   - id: c02
     title: "Late fee explained, politely"
     summary: "Hard negative: agent truthfully mentions late fee and credit score; must NOT be flagged."
@@ -31,13 +51,39 @@ scenarios:
     hero: false
     hard_negative: true
     turns:
-      - {s: A, t: "Namaste, main Vikram bol raha hoon Tarang Finserv se, yeh call recorded hai. Kya Anil Gaikwad ji se baat ho rahi hai?"}
-      - {s: B, t: "Haan boliye, Anil bol raha hoon."}
-      - {s: A, t: "Sir, aapki barah hazaar paanch sau rupaye ki EMI do hafte se due hai. Aap kab tak bhar paayenge?"}
-      - {s: B, t: "Arre saheb, thodi problem aahe. Agle mahine dekhta hoon. Itna late fee kyun lagta hai?"}
-      - {s: A, t: "Sir, agreement ke hisaab se late hone par late fee lagti hai aur credit score par bhi asar padta hai. Isliye main chahta hoon ki aap jaldi se jaldi bhar dein."}
-      - {s: B, t: "Samajh gaya. Is hafte ke end tak koshish karta hoon."}
-      - {s: A, t: "Theek hai sir. Agar aapko aasani chahiye toh hum EMI date change karne ka option bhi dekh sakte hain. Main aapko message bhej deta hoon."}
+      - s: A
+        t: "Hello, Anil ji?"
+        td: "हैलो, अनिल जी?"
+      - s: B
+        t: "Haan? Kaun?"
+        td: "हाँ? कौन?"
+      - s: A
+        t: "Anil ji, Vikram bol raha hoon, Tarang Finserv se. Ye call record ho rahi hai, quality aur training ke liye."
+        td: "अनिल जी, विक्रम बोल रहा हूँ, तारंग फिनसर्व से। ये कॉल रिकॉर्ड हो रही है, क्वालिटी और ट्रेनिंग के लिए।"
+      - s: B
+        t: "Haan bhai, bolo."
+        td: "हाँ भाई, बोलो।"
+      - s: A
+        t: "Aapki barah hazaar paanch sau rupaye ki EMI do hafte se atki hui hai, ek baar bounce bhi ho chuki hai. Aap bhar kab rahe hain?"
+        td: "आपकी बारह हज़ार पाँच सौ रुपये की ईएमआई दो हफ्ते से अटकी हुई है, एक बार बाउंस भी हो चुकी है। आप भर कब रहे हैं?"
+      - s: B
+        t: "Arre sir, thodi problem hai abhi. Agle mahine dekhta hoon. Waise ye late fee kyun laga rahe ho aap log?"
+        td: "अरे सर, थोड़ी प्रॉब्लम है अभी। अगले महीने देखता हूँ। वैसे ये लेट फीस क्यों लगा रहे हो आप लोग?"
+      - s: A
+        t: "Sir, agreement ke hisaab se late hone par late fee lagti hai aur credit score par bhi asar padta hai. Isliye main chahta hoon ki aap jaldi se jaldi bhar dein."
+        td: "सर, एग्रीमेंट के हिसाब से लेट होने पर लेट फीस लगती है और क्रेडिट स्कोर पर भी असर पड़ता है। इसलिए मैं चाहता हूँ कि आप जल्दी से जल्दी भर दें।"
+      - s: B
+        t: "Achha, samajh gaya. Is hafte ke end tak koshish karta hoon."
+        td: "अच्छा, समझ गया। इस हफ्ते के एंड तक कोशिश करता हूँ।"
+      - s: A
+        t: "Koshish nahi sir, mereko ek date chahiye. Friday ya Saturday, kaunsa theek rahega?"
+        td: "कोशिश नहीं सर, मेरेको एक डेट चाहिए। फ्राइडे या सैटरडे, कौनसा ठीक रहेगा?"
+      - s: B
+        t: "Saturday. Saturday tak kar dunga."
+        td: "सैटरडे। सैटरडे तक कर दूँगा।"
+      - s: A
+        t: "Theek hai, Saturday pakka. Agar aasani chahiye toh EMI date change karne ka option bhi dekh sakte hain, uske liye aap kabhi bhi call kar lena. Thank you."
+        td: "ठीक है, सैटरडे पक्का। अगर आसानी चाहिए तो ईएमआई डेट चेंज करने का ऑप्शन भी देख सकते हैं, उसके लिए आप कभी भी कॉल कर लेना। थैंक यू।"
   - id: c03
     title: "Borrower already paid"
     summary: "Agent verifies politely, apologises for the disturbance."
@@ -50,13 +96,39 @@ scenarios:
     hero: false
     hard_negative: false
     turns:
-      - {s: A, t: "Namaste madam, main Neha bol rahi hoon Tarang Finserv se. Yeh call record ho rahi hai. Kya main Meena Jagtap ji se baat kar rahi hoon?"}
-      - {s: B, t: "Ho, Meena bolte aahe. Boliye na."}
-      - {s: A, t: "Madam, humare system mein aapki EMI abhi pending dikh rahi hai. Kya aapne payment kiya hai?"}
-      - {s: B, t: "Arre, maine kal hi online bhar diya hai. Mala receipt bhi aali aahe."}
-      - {s: A, t: "Oh achha, shayad update hone mein time lag raha hai. Kya aap transaction ID bata sakti hain?"}
-      - {s: B, t: "Haan, ek minute... message mein hai. Main WhatsApp pe bhej deti hoon."}
-      - {s: A, t: "Bahut shukriya madam. Main check karke system update kara deti hoon. Takleef ke liye maaf kijiye."}
+      - s: A
+        t: "Good afternoon, Meena Jagtap ji?"
+        td: "गुड आफ्टरनून, मीना जगताप जी?"
+      - s: B
+        t: "Ji, boliye."
+        td: "जी, बोलिए।"
+      - s: A
+        t: "Main Neha bol rahi hoon, Tarang Finserv se. Call recorded hai, quality purpose ke liye."
+        td: "मैं नेहा बोल रही हूँ, तारंग फिनसर्व से। कॉल रिकॉर्डेड है, क्वालिटी पर्पज़ के लिए।"
+      - s: B
+        t: "Haan, kya hua?"
+        td: "हाँ, क्या हुआ?"
+      - s: A
+        t: "Madam, humare system mein aapki chaar hazaar aath sau ki EMI abhi bhi pending dikh rahi hai, teen din ho gaye. Payment kab tak aayega?"
+        td: "मैडम, हमारे सिस्टम में आपकी चार हज़ार आठ सौ की ईएमआई अभी भी पेंडिंग दिख रही है, तीन दिन हो गए। पेमेंट कब तक आएगा?"
+      - s: B
+        t: "Arre, maine toh kal hi online bhar diya hai. UPI se kiya tha, paisa mere account se kat bhi gaya. Receipt bhi aayi hai mereko."
+        td: "अरे, मैंने तो कल ही ऑनलाइन भर दिया है। यूपीआई से किया था, पैसा मेरे अकाउंट से कट भी गया। रसीद भी आई है मेरेको।"
+      - s: A
+        t: "Oh achha, shayad update hone mein time lag raha hai, kabhi kabhi do-teen din lag jaate hain. Aap transaction ID bata sakti hain? Main abhi check kar leti hoon."
+        td: "ओह अच्छा, शायद अपडेट होने में टाइम लग रहा है, कभी कभी दो-तीन दिन लग जाते हैं। आप ट्रांज़ैक्शन आईडी बता सकती हैं? मैं अभी चेक कर लेती हूँ।"
+      - s: B
+        t: "Haan, ek minute... message mein hai. Main abhi WhatsApp pe bhej deti hoon, screenshot ke saath."
+        td: "हाँ, एक मिनट... मैसेज में है। मैं अभी व्हाट्सएप पर भेज देती हूँ, स्क्रीनशॉट के साथ।"
+      - s: A
+        t: "Mil gaya madam, payment aa gaya hai, bas system mein update nahi hua tha. Main abhi update karwa deti hoon, aapko koi penalty nahi lagegi. Disturb karne ke liye sorry."
+        td: "मिल गया मैडम, पेमेंट आ गया है, बस सिस्टम में अपडेट नहीं हुआ था। मैं अभी अपडेट करवा देती हूँ, आपको कोई पेनल्टी नहीं लगेगी। डिस्टर्ब करने के लिए सॉरी।"
+      - s: B
+        t: "Koi baat nahi madam. Bas ye update jaldi kar do, baar baar message aa raha hai."
+        td: "कोई बात नहीं मैडम। बस ये अपडेट जल्दी कर दो, बार बार मैसेज आ रहा है।"
+      - s: A
+        t: "Ho jayega madam, aaj hi. Okay, bye."
+        td: "हो जाएगा मैडम, आज ही। ओके, बाय।"
   - id: c04
     title: "Honest mention of a possible notice"
     summary: "Hard negative: agent truthfully says a notice can be sent per agreement, then offers options."
@@ -69,13 +141,33 @@ scenarios:
     hero: false
     hard_negative: true
     turns:
-      - {s: A, t: "Namaste sir, main Vikram bol raha hoon Tarang Finserv se. Call recorded hai. Kya Dinesh Mane ji baat kar rahe hain?"}
-      - {s: B, t: "Haan ji, bolo."}
-      - {s: A, t: "Sir, aapki aath hazaar rupaye ki EMI pichhle do mahine se pending hai. Humne reminder bheje the."}
-      - {s: B, t: "Haan saheb, dhandha slow aahe. Kay karu? Koi action toh nahi hoga na?"}
-      - {s: A, t: "Sir, agreement ke mutabik zyada din tak payment na ho toh notice bheja ja sakta hai. Lekin abhi hum chahte hain ki aap ke saath milkar koi option nikaal lein."}
-      - {s: B, t: "Theek aahe. Aadha paisa pandrah tarikh tak de sakta hoon."}
-      - {s: A, t: "Achha sir. Pandrah tarikh tak aadhi rakam aur baaki next mahine, yeh main note kar leta hoon. Dhanyavaad."}
+      - s: A
+        t: "Dinesh ji? Vikram bol raha hoon, Tarang Finserv se."
+        td: "दिनेश जी? विक्रम बोल रहा हूँ, तारंग फिनसर्व से।"
+      - s: B
+        t: "Kaun Vikram?"
+        td: "कौन विक्रम?"
+      - s: A
+        t: "Ek minute, ye line recorded hai. Dinesh Mane ji se hi baat ho rahi hai na?"
+        td: "एक मिनट, ये लाइन रिकॉर्डेड है। दिनेश माने जी से ही बात हो रही है ना?"
+      - s: B
+        t: "Haan ji, main hi hoon. Bolo, kya baat hai?"
+        td: "हाँ जी, मैं ही हूँ। बोलो, क्या बात है?"
+      - s: A
+        t: "Sir, aapke business loan ki aath hazaar ki EMI do mahine se baaki hai. Reminder bhi bheje the, koi jawab nahi aaya. Ab kya plan hai?"
+        td: "सर, आपके बिज़नेस लोन की आठ हज़ार की ईएमआई दो महीने से बाकी है। रिमाइंडर भी भेजे थे, कोई जवाब नहीं आया। अब क्या प्लान है?"
+      - s: B
+        t: "Sir, dhandha bahut slow chal raha hai. Kya karu bolo? Koi action toh nahi hoga na?"
+        td: "सर, धंधा बहुत स्लो चल रहा है। क्या करूँ बोलो? कोई एक्शन तो नहीं होगा ना?"
+      - s: A
+        t: "Sir, agreement ke mutabik zyada din tak payment na ho toh notice bheja ja sakta hai. Lekin abhi hum chahte hain ki aap ke saath milkar koi option nikaal lein."
+        td: "सर, एग्रीमेंट के मुताबिक ज़्यादा दिन तक पेमेंट ना हो तो नोटिस भेजा जा सकता है। लेकिन अभी हम चाहते हैं कि आप के साथ मिलकर कोई ऑप्शन निकाल लें।"
+      - s: B
+        t: "Achha. Aadha paisa mahine ke end tak de sakta hoon."
+        td: "अच्छा। आधा पैसा महीने के एंड तक दे सकता हूँ।"
+      - s: A
+        t: "Theek hai sir, mahine ke end tak aadha amount aur baaki next month, ye main note kar leta hoon. Main reminder bhej dunga. Thank you."
+        td: "ठीक है सर, महीने के एंड तक आधा अमाउंट और बाकी नेक्स्ट मंथ, ये मैं नोट कर लेता हूँ। मैं रिमाइंडर भेज दूँगा। थैंक यू।"
   - id: c05
     title: "Firm early-morning reminder"
     summary: "Hard negative: firm and urgent but polite, inside calling hours (09:15)."
@@ -88,10 +180,30 @@ scenarios:
     hero: false
     hard_negative: true
     turns:
-      - {s: A, t: "Good morning sir, main Vikram bol raha hoon Tarang Finserv se. Yeh call recorded hai. Kya Santosh Wagh ji se baat ho rahi hai?"}
-      - {s: B, t: "Haan, boliye. Subah subah kaay zhala?"}
-      - {s: A, t: "Sir, aapki chaar hazaar aath sau rupaye ki EMI due date se paanch din upar ho gayi hai. Please aaj payment kar dijiye."}
-      - {s: B, t: "Aaj nahi ho payega. Do din ka time dijiye na."}
-      - {s: A, t: "Theek hai sir, main do din ka time note kar leta hoon. Lekin kripya parso tak zaroor kar dijiye, nahi toh late fee badh jayegi."}
-      - {s: B, t: "Pakka. Parso kar dunga."}
-      - {s: A, t: "Dhanyavaad sir. Main parso subah ek reminder bhej dunga."}
+      - s: A
+        t: "Good morning, Santosh ji?"
+        td: "गुड मॉर्निंग, संतोष जी?"
+      - s: B
+        t: "Haan bhai, bolo. Subah subah kya hua?"
+        td: "हाँ भाई, बोलो। सुबह सुबह क्या हुआ?"
+      - s: A
+        t: "Santosh Wagh ji, Vikram bol raha hoon, Tarang Finserv se. Dhyan rahe, ye call record ki ja rahi hai."
+        td: "संतोष वाघ जी, विक्रम बोल रहा हूँ, तारंग फिनसर्व से। ध्यान रहे, ये कॉल रिकॉर्ड की जा रही है।"
+      - s: B
+        t: "Haan bolo."
+        td: "हाँ बोलो।"
+      - s: A
+        t: "Aapki two-wheeler loan ki chaar hazaar aath sau ki EMI due date se paanch din upar chal rahi hai. SMS bhi bheja tha, dekha aapne? Please aaj payment kar dijiye."
+        td: "आपकी टू-व्हीलर लोन की चार हज़ार आठ सौ की ईएमआई ड्यू डेट से पाँच दिन ऊपर चल रही है। एसएमएस भी भेजा था, देखा आपने? प्लीज़ आज पेमेंट कर दीजिए।"
+      - s: B
+        t: "Haan dekha tha yaar, bhool gaya. Aaj nahi ho payega, salary parso aati hai. Do din ka time do na."
+        td: "हाँ देखा था यार, भूल गया। आज नहीं हो पाएगा, सैलरी परसों आती है। दो दिन का टाइम दो ना।"
+      - s: A
+        t: "Theek hai sir, do din ka time de deta hoon. Lekin please parso tak zaroor kar dijiye, nahi toh late fee badh jayegi aur credit score pe bhi asar padega. Parso kitne baje tak ho jayega?"
+        td: "ठीक है सर, दो दिन का टाइम दे देता हूँ। लेकिन प्लीज़ परसों तक ज़रूर कर दीजिए, नहीं तो लेट फीस बढ़ जाएगी और क्रेडिट स्कोर पे भी असर पड़ेगा। परसों कितने बजे तक हो जाएगा?"
+      - s: B
+        t: "Pakka, parso subah salary aate hi kar dunga."
+        td: "पक्का, परसों सुबह सैलरी आते ही कर दूँगा।"
+      - s: A
+        t: "Achha achha, parso subah. Main parso ek reminder bhej dunga. Okay sir."
+        td: "अच्छा अच्छा, परसों सुबह। मैं परसों एक रिमाइंडर भेज दूँगा। ओके सर।"
