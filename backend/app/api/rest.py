@@ -81,7 +81,7 @@ async def ws_session(ws: WebSocket, sid: str) -> None:
     try:
         first = await ws.receive_json()  # {"type":"start"} or {"type":"resume","last_seq":N}
         last_seq = int(first.get("last_seq", 0)) if first.get("type") == "resume" else 0
-    except WebSocketDisconnect:
+    except (WebSocketDisconnect, RuntimeError):
         return
     except (ValueError, TypeError, AttributeError):  # not JSON, not an object, or a bad last_seq
         await ws.close(code=1003)
