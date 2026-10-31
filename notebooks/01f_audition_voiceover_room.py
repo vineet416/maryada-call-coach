@@ -25,9 +25,9 @@ import audio_lib as al
 
 OUT = al.ROOT / "data" / "audio" / "_audition"
 voices_cfg = al.load_yaml("content/voices.yaml")
-CLEAN = al.target_lufs(voices_cfg, "vo")  # level of the clean voice-over (-16 LUFS)
-DROP_LU = 2.0  # "a little lower" than the clean clip
-WIDE = {**voices_cfg["phone_chain"], "resample_hz": 16000, "bandpass_hz": [200, 6500]}  # same compressor as the call chain
+CLEAN = -16.0  # level of the clean audition clip
+DROP_LU = 2.0  # final voice-over level: voices.yaml loudness vo (-18 LUFS)
+WIDE = voices_cfg["vo_chain"]  # same compressor as the call chain
 SRC = OUT / "A8_voiceover__Shubham__V2__raw.wav"
 DST = OUT / "A8_voiceover__Shubham__V2_wideband.wav"
 
