@@ -130,3 +130,29 @@ def test_weak_alignment_stays_needs_review_after_merge():
     assert merge([a, b])[0].confidence <= 0.74
     p = Finding(rule_id="R3", confidence=0.9, token_range=(2, 4), source="prefilter")
     assert merge([a, p])[0].confidence == pytest.approx(0.95)  # exact-phrase hit keeps its strength
+
+
+def test_merge_keeps_narrower_span_when_llm_span_contains_prefilter_span():
+    llm = Finding(rule_id="R3", confidence=0.99, token_range=(12, 50), source="llm", quote="a very wide quote " * 3,
+                  reason="Threatens public shaming.")
+    pre = Finding(rule_id="R3", confidence=0.9, token_range=(20, 26), source="prefilter", quote="mohalle mein sabko bata")
+    for items in ([llm, pre], [pre, llm]):
+        out = merge(items)
+        assert len(out) == 1
+        f = out[0]
+        assert f.token_range == (20, 26) and f.quote == "mohalle mein sabko bata"
+        assert f.source == "both" and f.confidence == pytest.approx(1.0)  # min(1, 0.99 + 0.05)
+        assert "Threatens public shaming." in f.reason and "LLM quote" in f.reason
+
+
+def test_merge_narrower_span_when_prefilter_span_is_wider():
+    pre = Finding(rule_id="R5", confidence=0.9, token_range=(2, 10), source="prefilter", quote="wide")
+    llm = Finding(rule_id="R5", confidence=0.8, token_range=(4, 6), source="llm", quote="narrow", reason="r")
+    f = merge([pre, llm])[0]
+    assert f.token_range == (4, 6) and f.quote == "narrow" and f.confidence == pytest.approx(0.95)
+
+
+def test_merge_partial_overlap_takes_union():
+    a = Finding(rule_id="R5", confidence=0.9, token_range=(2, 6), source="prefilter", quote="a")
+    b = Finding(rule_id="R5", confidence=0.8, token_range=(4, 9), source="llm", quote="b")
+    assert merge([a, b])[0].token_range == (2, 9)

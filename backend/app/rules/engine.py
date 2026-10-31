@@ -45,6 +45,23 @@ def llm_to_findings(out: LlmOut, turn_idx: int, text: str) -> list[Finding]:
     return res
 
 
+def _merge_span(prev: Finding, f: Finding) -> None:
+    """Overlapping spans: if one contains the other keep the narrower (range and quote), else the union.
+    A wider LLM quote that is dropped stays visible in the reason text."""
+    (a0, a1), (b0, b1) = prev.token_range, f.token_range
+    if a0 <= b0 and b1 <= a1:
+        narrow, wide = f, prev
+    elif b0 <= a0 and a1 <= b1:
+        narrow, wide = prev, f
+    else:
+        prev.token_range = (min(a0, b0), max(a1, b1))
+        prev.quote = prev.quote or f.quote
+        return
+    if wide.source == "llm" and wide.quote and wide.quote != narrow.quote:
+        prev.reason = f"{prev.reason or wide.reason} (LLM quote: {wide.quote[:80]})".strip()
+    prev.token_range, prev.quote = narrow.token_range, narrow.quote
+
+
 def merge(items: list[Finding]) -> list[Finding]:
     """Same rule + overlapping range -> one finding, source 'both', confidence = max + 0.05 (cap 1)."""
     out: list[Finding] = []
@@ -54,6 +71,7 @@ def merge(items: list[Finding]) -> list[Finding]:
         if prev is None:
             out.append(f.model_copy())
             continue
+        _merge_span(prev, f)  # before the source changes: it needs to know which side was the LLM
         if {prev.source, f.source} == {"prefilter", "llm"}:
             prev.source = "both"
             prev.confidence = min(1.0, max(prev.confidence, f.confidence) + 0.05)
@@ -62,11 +80,8 @@ def merge(items: list[Finding]) -> list[Finding]:
         prev.weak_alignment = prev.weak_alignment and f.weak_alignment  # an exact-phrase hit keeps its strength
         if prev.weak_alignment:
             prev.confidence = min(prev.confidence, WEAK_CAP)
-        prev.token_range = (min(prev.token_range[0], f.token_range[0]), max(prev.token_range[1], f.token_range[1]))
         prev.reason = prev.reason or f.reason
         prev.rewrite = prev.rewrite or f.rewrite
-        if f.source == "llm":
-            prev.quote = prev.quote or f.quote
     return out
 
 

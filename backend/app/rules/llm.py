@@ -51,12 +51,7 @@ def user_prompt(ctx: CallContext, history: list[Turn], text: str) -> str:
 
 def make_client() -> httpx.AsyncClient:
     """The one shared client (keep-alive; HTTP/2 when the optional h2 package is installed). Reuse it for every call."""
-    try:
-        import h2  # noqa: F401
-        http2 = True
-    except ImportError:
-        http2 = False
-    return httpx.AsyncClient(timeout=LATE_TIMEOUT_S, http2=http2)
+    return httpx.AsyncClient(timeout=LATE_TIMEOUT_S, http2=settings.llm_http2)
 
 
 async def _ask(client: httpx.AsyncClient, model: str, ctx: CallContext, history: list[Turn], text: str,
@@ -64,8 +59,15 @@ async def _ask(client: httpx.AsyncClient, model: str, ctx: CallContext, history:
     body = {"model": model, "temperature": 0, "max_tokens": 250, "response_format": {"type": "json_object"},
             "messages": [{"role": "system", "content": system_prompt()},
                          {"role": "user", "content": user_prompt(ctx, history, text)}]}
-    r = await client.post(base_url.rstrip("/") + "/chat/completions", json=body,
-                          headers={"Authorization": f"Bearer {api_key}"})
+    url, headers = base_url.rstrip("/") + "/chat/completions", {"Authorization": f"Bearer {api_key}"}
+    try:
+        r = await client.post(url, json=body, headers=headers)
+    except (httpx.RemoteProtocolError, httpx.LocalProtocolError):
+        if not settings.llm_http2:
+            raise
+        log.warning("llm http2 negotiation failed, retrying over HTTP/1.1")
+        async with httpx.AsyncClient(timeout=LATE_TIMEOUT_S, http2=False) as h1:
+            r = await h1.post(url, json=body, headers=headers)
     r.raise_for_status()
     return r.json()["choices"][0]["message"]["content"]
 
