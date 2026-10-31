@@ -1,6 +1,6 @@
 import type { Mode } from '@/store/sessionStore'
 
-/** "Replay mode" must be visible whenever recorded results are used (CLAUDE.md rule 4). */
+/** "Replay mode" must be visible whenever recorded results are used. */
 export function ModeBadge({ mode }: { mode: Mode }) {
   const replay = mode === 'replay'
   return (
