@@ -128,7 +128,8 @@ if RUN:
     chime = al.chime_at(al.target_lufs(voices_cfg, "coach"), c_sr)
     gap = np.zeros(int(c_sr * 0.4), dtype=np.float32)
     SCENES = {"trio2c__Avinash_V2T_plus3p5__Shivani_V2T__Shubham_V2.wav": ("Shivani", "V2T"),
-              "trio2d__Avinash_V2T_plus3p5__Chetana_V2__Shubham_V2.wav": ("Chetana", "V2")}
+              "trio2d__Avinash_V2T_plus3p5__Chetana_V2__Shubham_V2.wav": ("Chetana", "V2"),
+              "trio2e__Avinash_V2T_plus3p5__Shivani_V2__Shubham_V2.wav": ("Shivani", "V2")}
     for name, (b_voice, b_var) in SCENES.items():
         def b_line(clip: str, voice: str = b_voice, var: str = b_var) -> np.ndarray:
             return upsample(load(clip, voice, var), c_sr)
@@ -182,7 +183,8 @@ if RUN:
             md.append(f"- `{fn}`: {label} / {kind}")
             html.append(f"<p>{label} / {kind}<br><audio controls preload=none src='{fn}'></audio></p>")
     scene_note = {"trio2c": "Scene (c) with the +3.5 dB shout: Avinash x Shivani (T4/T6/T8 tags) x Shubham plain.",
-                  "trio2d": "Scene (d) with the +3.5 dB shout: Avinash x Chetana plain x Shubham plain."}
+                  "trio2d": "Scene (d) with the +3.5 dB shout: Avinash x Chetana plain x Shubham plain.",
+                  "trio2e": "Scene (e) with the +3.5 dB shout: Avinash x Shivani plain (no tags) x Shubham plain."}
     md.append("")
     for name in scene_files:
         txt = scene_note[name.split("__")[0]]
