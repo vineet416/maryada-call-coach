@@ -25,14 +25,14 @@ scenarios:
         t: "Haan madam, bolo."
         td: "हाँ मैडम, बोलो।"
       - s: A
-        t: "Suresh ji, aapke personal loan ki chhah hazaar do sau rupaye ki EMI bounce ho gayi hai. Barah din ho gaye. Payment kab tak ho jayega?"
-        td: "सुरेश जी, आपके पर्सनल लोन की छह हज़ार दो सौ रुपये की ईएमआई बाउंस हो गई है। बारह दिन हो गए। पेमेंट कब तक हो जाएगा?"
+        t: "Suresh ji, aapke personal loan ki chhah hazaar do sau rupaye ki EMI bounce ho gayi hai. Barah din ho gaye, penalty bhi lag rahi hai. Payment kab tak ho jayega?"
+        td: "सुरेश जी, आपके पर्सनल लोन की छह हज़ार दो सौ रुपये की ईएमआई बाउंस हो गई है। बारह दिन हो गए, पेनल्टी भी लग रही है। पेमेंट कब तक हो जाएगा?"
       - s: B
         t: "Madam, company ne is baar salary late kar di. Paanch tarikh ko aati hai, abhi tak nahi aayi. Das tak aa jayegi."
         td: "मैडम, कंपनी ने इस बार सैलरी लेट कर दी। पाँच तारीख को आती है, अभी तक नहीं आई। दस तक आ जाएगी।"
       - s: A
-        t: "Achha achha. Toh salary aate hi payment ho jayega na? Mujhe ek pakki date chahiye, sir."
-        td: "अच्छा अच्छा। तो सैलरी आते ही पेमेंट हो जाएगा ना? मुझे एक पक्की डेट चाहिए, सर।"
+        t: "Achha achha. Toh salary aate hi payment ho jayega na? Mujhe ek pakki date chahiye, sir. Das ke aas-paas se kaam nahi chalega."
+        td: "अच्छा अच्छा। तो सैलरी आते ही पेमेंट हो जाएगा ना? मुझे एक पक्की डेट चाहिए, सर। दस के आस-पास से काम नहीं चलेगा।"
       - s: B
         t: "Haan haan, das ko salary aate hi kar dunga. Do-teen din ka time lagega."
         td: "हाँ हाँ, दस को सैलरी आते ही कर दूँगा। दो-तीन दिन का टाइम लगेगा।"
@@ -109,20 +109,26 @@ scenarios:
         t: "Haan, boliye."
         td: "हाँ, बोलिए।"
       - s: A
-        t: "Meena ji, humare system mein aapki chaar hazaar aath sau rupaye ki EMI pending dikh rahi hai. Teen din ho gaye. Payment kab tak ho jayega?"
-        td: "मीना जी, हमारे सिस्टम में आपकी चार हज़ार आठ सौ रुपये की ईएमआई पेंडिंग दिख रही है। तीन दिन हो गए। पेमेंट कब तक हो जाएगा?"
+        t: "Meena ji, humare system mein aapke personal loan ki chaar hazaar aath sau rupaye ki EMI pending dikh rahi hai. Teen din ho gaye, bounce ho gayi thi. Payment kab tak ho jayega?"
+        td: "मीना जी, हमारे सिस्टम में आपके पर्सनल लोन की चार हज़ार आठ सौ रुपये की ईएमआई पेंडिंग दिख रही है। तीन दिन हो गए, बाउंस हो गई थी। पेमेंट कब तक हो जाएगा?"
       - s: B
-        t: "Arre, maine toh kal hi online bhar diya hai. Receipt bhi aayi hai mereko."
-        td: "अरे, मैंने तो कल ही ऑनलाइन भर दिया है। रसीद भी आई है मेरेको।"
+        t: "Arre, maine toh kal hi online bhar diya hai. UPI se kiya tha, paisa mere account se kat bhi gaya. Receipt bhi aayi hai mereko."
+        td: "अरे, मैंने तो कल ही ऑनलाइन भर दिया है। यूपीआई से किया था, पैसा मेरे अकाउंट से कट भी गया। रसीद भी आई है मेरेको।"
       - s: A
-        t: "Oh achha, shayad update hone mein time lag raha hai. Aap transaction ID bata sakti hain? Main abhi check kar leti hoon."
-        td: "ओह अच्छा, शायद अपडेट होने में टाइम लग रहा है। आप ट्रांज़ैक्शन आईडी बता सकती हैं? मैं अभी चेक कर लेती हूँ।"
+        t: "Oh achha, shayad update hone mein time lag raha hai, kabhi kabhi do-teen din lag jaate hain. Aap transaction ID bata sakti hain? Main abhi check kar leti hoon."
+        td: "ओह अच्छा, शायद अपडेट होने में टाइम लग रहा है, कभी कभी दो-तीन दिन लग जाते हैं। आप ट्रांज़ैक्शन आईडी बता सकती हैं? मैं अभी चेक कर लेती हूँ।"
       - s: B
-        t: "Haan, ek minute... message mein hai. Main abhi WhatsApp pe bhej deti hoon."
-        td: "हाँ, एक मिनट... मैसेज में है। मैं अभी व्हाट्सएप पर भेज देती हूँ।"
+        t: "Haan, ek minute... message mein hai. Main abhi WhatsApp pe bhej deti hoon, screenshot ke saath."
+        td: "हाँ, एक मिनट... मैसेज में है। मैं अभी व्हाट्सएप पर भेज देती हूँ, स्क्रीनशॉट के साथ।"
       - s: A
-        t: "Mil gaya madam, thank you. Main system update karwa deti hoon. Disturb karne ke liye sorry."
-        td: "मिल गया मैडम, थैंक यू। मैं सिस्टम अपडेट करवा देती हूँ। डिस्टर्ब करने के लिए सॉरी।"
+        t: "Mil gaya madam, payment aa gaya hai, bas system mein update nahi hua tha. Main abhi update karwa deti hoon, aapko koi penalty nahi lagegi. Disturb karne ke liye sorry, thank you."
+        td: "मिल गया मैडम, पेमेंट आ गया है, बस सिस्टम में अपडेट नहीं हुआ था। मैं अभी अपडेट करवा देती हूँ, आपको कोई पेनल्टी नहीं लगेगी। डिस्टर्ब करने के लिए सॉरी, थैंक यू।"
+      - s: B
+        t: "Koi baat nahi madam. Bas ye update jaldi kar do, baar baar message aa raha hai."
+        td: "कोई बात नहीं मैडम। बस ये अपडेट जल्दी कर दो, बार बार मैसेज आ रहा है।"
+      - s: A
+        t: "Ho jayega madam, aaj hi. Aapka din achha rahe."
+        td: "हो जाएगा मैडम, आज ही। आपका दिन अच्छा रहे।"
   - id: c04
     title: "Honest mention of a possible notice"
     summary: "Hard negative: agent truthfully says a notice can be sent per agreement, then offers options."
@@ -187,17 +193,17 @@ scenarios:
         t: "Haan bolo."
         td: "हाँ बोलो।"
       - s: A
-        t: "Santosh ji, aapke two-wheeler loan ki chaar hazaar aath sau rupaye ki EMI due date se paanch din upar ho gayi hai. Please aaj payment kar dijiye."
-        td: "संतोष जी, आपके टू-व्हीलर लोन की चार हज़ार आठ सौ रुपये की ईएमआई ड्यू डेट से पाँच दिन ऊपर हो गई है। प्लीज़ आज पेमेंट कर दीजिए।"
+        t: "Santosh ji, aapke two-wheeler loan ki chaar hazaar aath sau rupaye ki EMI bounce ho gayi hai. Due date se paanch din upar ho gaye. SMS bhi bheja tha, dekha aapne? Please aaj payment kar dijiye."
+        td: "संतोष जी, आपके टू-व्हीलर लोन की चार हज़ार आठ सौ रुपये की ईएमआई बाउंस हो गई है। ड्यू डेट से पाँच दिन ऊपर हो गए। एसएमएस भी भेजा था, देखा आपने? प्लीज़ आज पेमेंट कर दीजिए।"
       - s: B
-        t: "Aaj nahi ho payega yaar. Do din ka time do na."
-        td: "आज नहीं हो पाएगा यार। दो दिन का टाइम दो ना।"
+        t: "Haan dekha tha yaar, bhool gaya. Aaj nahi ho payega, salary parso aati hai. Do din ka time do na."
+        td: "हाँ देखा था यार, भूल गया। आज नहीं हो पाएगा, सैलरी परसों आती है। दो दिन का टाइम दो ना।"
       - s: A
-        t: "Theek hai sir, do din ka time main note kar leta hoon. Lekin kripya parso tak zaroor kar dijiye, nahi toh late fee badh jayegi."
-        td: "ठीक है सर, दो दिन का टाइम मैं नोट कर लेता हूँ। लेकिन कृपया परसों तक ज़रूर कर दीजिए, नहीं तो लेट फीस बढ़ जाएगी।"
+        t: "Theek hai sir, do din ka time main note kar leta hoon. Lekin kripya parso tak zaroor kar dijiye, nahi toh late fee badh jayegi aur credit score pe bhi asar padega. Parso kitne baje tak ho jayega?"
+        td: "ठीक है सर, दो दिन का टाइम मैं नोट कर लेता हूँ। लेकिन कृपया परसों तक ज़रूर कर दीजिए, नहीं तो लेट फीस बढ़ जाएगी और क्रेडिट स्कोर पे भी असर पड़ेगा। परसों कितने बजे तक हो जाएगा?"
       - s: B
-        t: "Pakka. Parso kar dunga."
-        td: "पक्का। परसों कर दूँगा।"
+        t: "Pakka, parso subah salary aate hi kar dunga."
+        td: "पक्का, परसों सुबह सैलरी आते ही कर दूँगा।"
       - s: A
-        t: "Parso subah tak pakka, sir? Payment link abhi WhatsApp pe bhej deta hoon. Thank you."
-        td: "परसों सुबह तक पक्का, सर? पेमेंट लिंक अभी व्हाट्सएप पर भेज देता हूँ। थैंक यू।"
+        t: "Achha achha, parso subah. Payment link abhi WhatsApp pe bhej deta hoon, parso ek reminder bhi bhejunga. Thank you sir."
+        td: "अच्छा अच्छा, परसों सुबह। पेमेंट लिंक अभी व्हाट्सएप पर भेज देता हूँ, परसों एक रिमाइंडर भी भेजूँगा। थैंक यू सर।"
