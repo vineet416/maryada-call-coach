@@ -50,15 +50,19 @@ export function WaveformBar({ scenario, findings, onTime, running }: Props) {
   useEffect(() => {
     if (!running) return
     let raf = 0
-    const offsets = new Map(scenario.turns.map((t) => [t.idx, t]))
+    const turns = scenario.turns
     const loop = () => {
       const cur = audio.currentTurnIdx
-      const t = cur !== null ? offsets.get(cur) : undefined
-      const pos = audio.turnTimeMs()
-      if (t && pos !== null) {
-        head.current = Math.min(t.offset_ms + pos, total)
+      const i = cur !== null ? turns.findIndex((t) => t.idx === cur) : -1
+      const into = audio.turnIntoMs()
+      const call = audio.callTimeMs()
+      if (i >= 0 && into !== null && call !== null) {
+        // The file's cursor moves with real time but never past where the next turn starts in the file, so it holds
+        // during the agent's extra wait and stays on the sound that is playing.
+        const limit = i + 1 < turns.length ? turns[i + 1].offset_ms : total
+        head.current = Math.min(turns[i].offset_ms + into, limit, total)
         ws.current?.setTime(head.current / 1000)
-        onTime(head.current)
+        onTime(call)
       }
       raf = requestAnimationFrame(loop)
     }

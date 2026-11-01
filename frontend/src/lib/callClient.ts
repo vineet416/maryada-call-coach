@@ -75,7 +75,10 @@ export class CallClient {
       this.attempt = 0 // data is flowing again: a later drop gets a fresh set of tries
       this.handle(env)
     }
-    ws.onclose = () => this.onDrop()
+    ws.onclose = (ev) => {
+      console.info('[ws] close', ev.code, ev.reason || '-', ev.wasClean ? 'clean' : 'unclean')
+      this.onDrop()
+    }
     ws.onerror = () => undefined // onclose follows and handles it
     if (store.conn === 'idle') store.setConn('open')
   }
@@ -119,7 +122,7 @@ export class CallClient {
         // a turn re-sent by the recorded fallback must not restart audio that already played
         if (this.played.has(env.data.turn_idx)) break
         this.played.add(env.data.turn_idx)
-        audio.playTurn(env.data.audio_url, env.data.turn_idx, env.data.speaker)
+        audio.playTurn(env.data.audio_url, env.data.turn_idx, env.data.speaker, env.t_ms)
         break
       case 'coach.speak': {
         // The clip plays on top of the call at its event time (the call is lowered a little while it plays; it is never

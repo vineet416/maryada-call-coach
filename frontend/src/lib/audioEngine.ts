@@ -53,6 +53,9 @@ class AudioEngine {
   private duckTarget = 1
   private duckTimer: number | undefined
   currentTurnIdx: number | null = null
+  private turnStartT = 0 // call time (server clock, ms) at which the current turn's audio starts
+  private turnPlayedAt = 0 // performance.now() when it was started here
+  private frozenInto = 0 // ms into the turn while the call is held
   coachVoice = readFlag(COACH_KEY, true)
   muted = readFlag(MUTE_KEY, false)
   /** Option: the call pauses only while the coach clip plays. Default off (the coach plays over the call). */
@@ -79,7 +82,7 @@ class AudioEngine {
     void a.play().catch(() => undefined)
   }
 
-  playTurn(url: string, idx: number, speaker: keyof typeof CALL_GAIN = 'agent') {
+  playTurn(url: string, idx: number, speaker: keyof typeof CALL_GAIN = 'agent', startT = 0) {
     this.stopTurn()
     const a = this.get(url)
     a.currentTime = 0
@@ -88,6 +91,9 @@ class AudioEngine {
     a.volume = this.turnGain * this.duckLevel
     this.turn = a
     this.currentTurnIdx = idx
+    this.turnStartT = startT
+    this.turnPlayedAt = performance.now()
+    this.frozenInto = 0
     void a.play().catch(() => undefined)
   }
 
@@ -119,9 +125,23 @@ class AudioEngine {
     if (this.turn && !this.turn.ended) void this.turn.play().catch(() => undefined)
   }
 
-  /** Position inside the current turn audio in ms (null when nothing plays). */
-  turnTimeMs(): number | null {
-    return this.turn && !this.turn.paused ? this.turn.currentTime * 1000 : null
+  /**
+   * Real time since this turn's audio started, in ms (null when no turn was started). It follows the audio while it plays
+   * and the clock after it ended (the silence before the next turn, including the agent's wait for a nudge); it holds
+   * only while the call is paused for the coach.
+   */
+  turnIntoMs(): number | null {
+    if (!this.turn) return null
+    if (this.turn.paused) return this.frozenInto
+    const audioMs = this.turn.currentTime * 1000
+    this.frozenInto = this.turn.ended ? Math.max(audioMs, performance.now() - this.turnPlayedAt) : audioMs
+    return this.frozenInto
+  }
+
+  /** Call time in ms on the server clock: the start of the current turn plus the real time into it. */
+  callTimeMs(): number | null {
+    const into = this.turnIntoMs()
+    return into === null ? null : this.turnStartT + into
   }
 
   playCoach(url: string, onEnd: () => void, duck = true) {

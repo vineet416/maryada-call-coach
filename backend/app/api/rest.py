@@ -10,7 +10,7 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field, SecretStr
 
 from .. import db
-from ..config import settings
+from ..config import log, settings
 from ..models import Health
 from ..rules import llm
 from ..rules.loader import load_rules
@@ -207,37 +207,73 @@ async def ws_session(ws: WebSocket, sid: str) -> None:
     s = runner.SESSIONS.get(sid)
     await ws.accept()
     if s is None:
+        log.info("ws unknown session=%s", sid)
         await ws.send_json({"seq": 0, "type": "error", "t_ms": 0, "data": {
             "code": "unknown_session", "message_user": "That session does not exist.", "retryable": False}})
         await ws.close()
         return
+    opened = time.monotonic()
+    sent = 0  # events sent on this connection
+    last_sent = 0  # seq of the last event sent
+    first_kind = "start"
+    # close code as seen by the server (1006 = no close frame, 1011 = uvicorn ping timeout, 1001/1000 = browser left)
+    close_code, close_by = None, "server"
+    log.info("ws connect session=%s", sid)
     try:
         first = await ws.receive_json()  # {"type":"start"} or {"type":"resume","last_seq":N}
         last_seq = int(first.get("last_seq", 0)) if first.get("type") == "resume" else 0
-    except (WebSocketDisconnect, RuntimeError):
+        first_kind = "resume" if first.get("type") == "resume" else "start"
+    except WebSocketDisconnect as e:
+        log.info("ws disconnect session=%s code=%s by=transport before=start duration_s=%.1f", sid, e.code, time.monotonic() - opened)
+        return
+    except RuntimeError:
         return
     except (ValueError, TypeError, AttributeError):  # not JSON, not an object, or a bad last_seq
         await ws.close(code=1003)
+        log.info("ws disconnect session=%s code=1003 by=server reason=bad_first_message duration_s=%.1f", sid, time.monotonic() - opened)
         return
+    if first_kind == "resume":
+        total = len(s.log.events)
+        log.info("ws resume session=%s from_last_seq=%d events_to_replay=%d", sid, last_seq, max(0, total - last_seq))
     runner.start(s)
 
     async def listen() -> None:
+        nonlocal close_code, close_by
         try:
             while True:
                 if (await ws.receive_json()).get("type") == "stop":
                     runner.stop(s)
-        except (WebSocketDisconnect, RuntimeError, ValueError, TypeError, AttributeError):
+        except WebSocketDisconnect as e:
+            close_code, close_by = e.code, "transport"
+        except (RuntimeError, ValueError, TypeError, AttributeError):
             return
 
+    async def send() -> None:
+        nonlocal sent, last_sent, close_code, close_by
+        try:
+            async for env in s.log.follow(last_seq):
+                await ws.send_json(env)
+                sent += 1
+                last_sent = env.get("seq", last_sent)
+        except WebSocketDisconnect as e:
+            close_code, close_by = e.code, "transport"
+        except (RuntimeError, OSError) as e:  # a failed send: report the cause, then end quietly
+            close_by = "send_error:" + type(e).__name__
+
     listener = asyncio.create_task(listen())
+    sender = asyncio.create_task(send())
     try:
-        async for env in s.log.follow(last_seq):
-            await ws.send_json(env)
-    except WebSocketDisconnect:
-        pass
+        await asyncio.wait({listener, sender}, return_when=asyncio.FIRST_COMPLETED)
+        if not sender.done() and close_code is None:  # the listener ended on a bad message only: keep streaming
+            await sender
     finally:
         listener.cancel()
+        sender.cancel()
+        finished = s.log.done and close_by == "server"
         try:
             await ws.close()
         except RuntimeError:
             pass
+        log.info("ws disconnect session=%s code=%s by=%s ended=%s duration_s=%.1f last_seq_sent=%d events_sent=%d",
+                 sid, close_code if close_code is not None else (1000 if finished else "none"), close_by, finished,
+                 time.monotonic() - opened, last_sent, sent)
