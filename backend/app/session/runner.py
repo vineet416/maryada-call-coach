@@ -48,6 +48,7 @@ class Session:
         self.scenario_id, self.effective_mode, self.reason = scenario_id, mode, reason
         self.log = EventLog()
         self.task: asyncio.Task | None = None
+        self.resume_ms = 0  # where the call clock stood when live transcription failed (natural time)
         self.pause_for_coach = pause_for_coach  # the user's option: the call waits while a coach clip plays
         self.creds = creds  # the visitor's keys (memory only; wiped when the session ends)
         self.visitor = creds is not None  # a visitor session never falls back to the server's keys
@@ -218,11 +219,10 @@ async def _switch_to_replay(s: Session) -> None:
     s.log.emit("banner", {"kind": "replay", "message": "Live transcription is unavailable, showing the recorded run."})
     after = max((e["data"].get("turn_idx", 0) for e in s.log.events if e["type"] == "turn.ended"), default=0)
     rest = replay.remaining(events, after)
-    first = next((e["data"]["turn_idx"] for e in rest if e["type"] == "turn.started"), None)
-    starts = _turn_starts(s.scenario_id)
-    base = starts.get(first, 0) if first is not None else 0
+    # Time zero is now: turns the live clock has not reached yet start at their schedule minus where the call stands;
+    # turns already started are re-sent at once (the screen does not restart their audio).
     await replay.play(rest, lambda e: s.log.emit(e["type"], e["data"]),
-                      turn_starts=_turn_starts(s.scenario_id, base), hold=s.pause_for_coach)
+                      turn_starts=_turn_starts(s.scenario_id, s.resume_ms), hold=s.pause_for_coach)
     _absorb(s, rest)
 
 
@@ -315,7 +315,11 @@ async def _run_live(s: Session) -> None:
             await asyncio.gather(*closing)
             if s.late_tasks:  # late deep answers (up to the 8 s LLM budget) still update the call
                 await asyncio.gather(*s.late_tasks, return_exceptions=True)
+            end_s = t0 + (turns[-1]["offset_ms"] + turns[-1]["duration_ms"]) / 1000 * settings.pace + shift_s
+            if (left := end_s - time.perf_counter()) > 0:  # the call is not over until its last audio is
+                await asyncio.sleep(left)
     except SttError:  # let the turns already heard close properly before the recorded tail takes over
+        s.resume_ms = int((time.perf_counter() - t0 - shift_s) * 1000)
         ticker.cancel()
         await asyncio.gather(*closing, return_exceptions=True)
         raise
@@ -428,7 +432,7 @@ class LiveTurn:
         self.nudge, self.nudge_late = line, self.closed  # a card shown after the turn ended gets no voice
         self.s.log.emit("stage.status", {"stage": "coaching", "turn_idx": self.idx, "text": "Coach"})
         self.s.log.emit("coach.nudge", {"finding_id": f.id, "rule_id": f.rule_id, "text": line["text"],
-                                        "audio_url": line["audio_url"],                                         "latency": lat})
+                                        "audio_url": line["audio_url"], "latency": lat})
 
     def _risk(self, before: int) -> int:
         upd = risk.update(before, list(self.known.values()))

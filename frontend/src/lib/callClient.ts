@@ -21,9 +21,12 @@ export class CallClient {
   private anchor: { t: number; at: number } | null = null
 
   private path: string
+  private hold: boolean // the "pause for the coach" choice made at start; the server uses the same one
+  private played = new Set<number>()
 
-  constructor(path: string) {
+  constructor(path: string, hold = false) {
     this.path = path
+    this.hold = hold
   }
 
   open() {
@@ -113,25 +116,25 @@ export class CallClient {
     const st = useSessionStore.getState()
     switch (env.type) {
       case 'turn.started':
+        // a turn re-sent by the recorded fallback must not restart audio that already played
+        if (this.played.has(env.data.turn_idx)) break
+        this.played.add(env.data.turn_idx)
         audio.playTurn(env.data.audio_url, env.data.turn_idx, env.data.speaker)
         break
       case 'coach.speak': {
         // The clip plays on top of the call at its event time; the call is never touched unless the user chose
         // "Pause the call while the coach speaks" (the server then also moves the later turns by the clip length).
-        const hold = audio.holdForCoach
         st.setNudgeSpeaking(true)
-        if (hold) {
+        if (this.hold) {
           st.setCoachHold(true)
           audio.pauseTurn()
-        }
-        audio.playCoach(env.data.audio_url, () => {
-          useSessionStore.getState().setNudgeSpeaking(false)
-          if (!hold) return
+          // the server moves later turns by the clip length plus the gap, even if the voice is muted meanwhile
           window.setTimeout(() => {
             useSessionStore.getState().setCoachHold(false)
             audio.resumeTurn()
-          }, COACH_GAP_MS)
-        })
+          }, (env.data.duration_ms ?? 0) + COACH_GAP_MS)
+        }
+        audio.playCoach(env.data.audio_url, () => useSessionStore.getState().setNudgeSpeaking(false))
         break
       }
       case 'coach.nudge':

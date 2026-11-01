@@ -91,6 +91,8 @@ async def play(events: list[dict], emit: Callable[[dict], None], pace: float | N
     events = as_replay(events)
     if turn_starts is not None:
         events = retime(events, turn_starts, hold)
+        for e in events:
+            e["t_ms"] = max(0, e["t_ms"])  # already due: send at once
     loop = asyncio.get_running_loop()
     t0, due = loop.time(), 0.0
     for delay, e in schedule(events):
