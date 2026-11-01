@@ -215,7 +215,7 @@ export function LiveCall() {
               <Clock className="h-[13px] w-[13px]" aria-hidden />
               Flag in {((st.latencyMs ?? 0) / 1000).toFixed(1)} s{st.mode === 'replay' ? ' · recorded' : ''}
             </span>
-            <span className="flex min-h-7 min-w-[132px] flex-wrap items-center gap-1.5" aria-label="Languages heard">
+            <span role="group" className="flex min-h-7 min-w-[132px] flex-wrap items-center gap-1.5" aria-label="Languages heard">
               {st.langs.map((l) => (
                 <span key={l} className="chip">{l}</span>
               ))}
