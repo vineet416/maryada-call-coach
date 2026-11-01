@@ -87,6 +87,7 @@ class TranscriptSegment:
     audio_end_ms: int  # end of this segment within the turn audio (cumulative)
     is_last: bool
     stream_t0: float = 0.0  # perf_counter when the first audio frame left (segment end = t0 + audio_end_ms)
+    via: str = "realtime"  # "rest" for a segment from the REST fallback (it covers audio that may not have been played yet)
 
 
 def load_profile(role: str) -> dict:

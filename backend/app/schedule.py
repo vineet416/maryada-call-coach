@@ -25,6 +25,27 @@ class Plan:
     starts: dict[int, int] = field(default_factory=dict)  # turn -> start (ms)
 
 
+def rest_text_lags(evs: list[dict], dur: dict[int, int]) -> dict[int, int]:
+    """Turns whose transcript came from the REST fallback -> recorded lag (ms after the turn's start) of the first REST segment.
+    New recordings mark such a segment (data.stt_path == "rest"). Older recordings carry no marker: there a turn whose LAST
+    segment arrived before the turn's audio ended is a REST turn (live text cannot arrive before the speech it transcribes is over:
+    connect time plus the vendor delay put it at least 0.3 s after the end). Needs the events' _idx and _lag."""
+    out: dict[int, int] = {}
+    segs: dict[int, list[dict]] = {}
+    for e in evs:
+        if e["type"] == "transcript.final" and e.get("_idx") is not None:
+            segs.setdefault(e["_idx"], []).append(e)
+    for k, sg in segs.items():
+        marked = [e["_lag"] for e in sg if e["data"].get("stt_path") == "rest"]
+        if marked:
+            out[k] = min(marked)
+        elif not any("stt_path" in e["data"] for e in sg):
+            last = max(sg, key=lambda e: e["data"].get("segment_idx", 0))
+            if k in dur and last["_lag"] < dur[k]:
+                out[k] = last["_lag"]
+    return out
+
+
 def plan(events: list[dict], turns: list[dict], hold: bool = False) -> Plan:
     """Put a recorded event stream on the call clock. `turns` is the manifest list (idx, speaker, offset_ms, duration_ms).
     Every event keeps its recorded lag after its own turn's start, so transcript and checks arrive as late as they did
@@ -36,15 +57,14 @@ def plan(events: list[dict], turns: list[dict], hold: bool = False) -> Plan:
     dur = {t["idx"]: t["duration_ms"] for t in turns}
     who = {t["idx"]: t["speaker"] for t in turns}
 
-    # Every event is filed under ITS OWN turn (data.turn_idx; a nudge: the turn of its finding; a coach clip: its nudge), not under
-    # the turn that happened to be current when it arrived: with a slow transcript an event can arrive during a later turn.
+    # Every event is filed under ITS OWN turn (data.turn_idx; a nudge: the turn of its finding; a coach clip: its nudge; a risk
+    # update: the turn that ends right after it), not under the turn that happened to be current when it arrived: with a slow
+    # transcript an event can arrive during a later turn.
     rec_start = {e["data"]["turn_idx"]: e["t_ms"] for e in evs if e["type"] == "turn.started"}
     finding_turn = {e["data"]["id"]: e["data"]["turn_idx"] for e in evs if e["type"] == "finding.detected" and "id" in e["data"]}
     cur = None
-    nudges: dict[int, dict] = {}  # turn -> {lag, speak: event}
-    ended_lag: dict[int, int] = {}
     pending: int | None = None
-    for e in evs:
+    for n, e in enumerate(evs):
         d = e["data"]
         if e["type"] == "turn.started":
             cur = d["turn_idx"]
@@ -53,11 +73,32 @@ def plan(events: list[dict], turns: list[dict], hold: bool = False) -> Plan:
             own = finding_turn.get(d.get("finding_id"), cur)
         elif e["type"] == "coach.speak":
             own = pending if pending is not None else cur
+        elif e["type"] == "risk.update" and n + 1 < len(evs) and evs[n + 1]["type"] == "turn.ended":
+            own = evs[n + 1]["data"]["turn_idx"]
         elif own is None:
             own = cur
         if own not in rec_start:  # before the first turn, or a stage label without a turn: keep the recorded time
             own = None
         e["_idx"], e["_lag"] = own, (e["t_ms"] - rec_start[own] if own is not None else 0)
+        if e["type"] == "coach.nudge" and own is not None:
+            pending = own
+        elif e["type"] == "coach.speak":
+            pending = None
+
+    # Text that came from the REST fallback is never shown before its turn's audio has ended (the live runner holds it the same
+    # way). The first REST segment and everything derived from it (checks, findings, nudge, turn end, risk) move later together.
+    for k, lag0 in rest_text_lags(evs, dur).items():
+        shift = dur.get(k, 0) - lag0
+        if shift > 0:
+            for e in evs:
+                if e["_idx"] == k and e["_lag"] >= lag0:
+                    e["_lag"] += shift
+
+    nudges: dict[int, dict] = {}  # turn -> {lag, speak: event}
+    ended_lag: dict[int, int] = {}
+    pending = None
+    for e in evs:
+        own = e["_idx"]
         if e["type"] == "turn.ended" and own is not None:
             ended_lag[own] = e["_lag"]
         if e["type"] == "coach.nudge" and own is not None:
