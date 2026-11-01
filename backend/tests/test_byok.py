@@ -503,4 +503,24 @@ def test_models_that_answered_400_are_hidden_and_the_rest_stay():
     listed = ["antigravity-preview-05-2026", "antigravity-preview-09-2026", "antigravity-preview-latest",
               "gemini-2.5-pro", "gemini-3.5-flash", "gemini-3.7-flash", "deep-research-max-preview-04-2026"]
     ids = clean_models({"models": [{"name": f"models/{m}"} for m in listed]})
-    assert ids == ["deep-research-max-preview-04-2026", "gemini-3.5-flash", "gemini-3.7-flash"]
+    assert ids == ["gemini-3.5-flash", "gemini-3.7-flash"]  # deep-research is hidden by the Gemini name rule
+
+
+GEMINI_KEEP = ["gemini-3-flash-preview", "gemini-3.1-flash-lite", "gemini-3.1-pro-preview", "gemini-3.5-flash",
+               "gemini-3.8-flash", "gemini-4-argon", "gemini-flash-latest", "gemini-nano-banana-2.1",
+               "gemini-omni-flash-preview", "gemini-pro-latest"]
+GEMINI_HIDE = ["antigravity-preview-latest", "deep-research-preview-04-2026", "gemini-2.5-computer-use-preview-10-2025",
+               "gemini-2.5-flash", "gemini-2.5-flash-preview-tts", "gemini-3.1-flash-live-preview", "gemini-3.8-live",
+               "gemini-robotics-er-2-preview", "gemma-4-31b-it", "lyria-3.5", "nano-banana-pro-preview",
+               "gemini-embedding-001", "imagen-4.0-generate-001", "veo-3.0-generate-001", "aqa"]
+
+
+def test_gemini_list_keeps_only_gemini_chat_names():
+    listing = {"models": [{"name": f"models/{m}"} for m in GEMINI_HIDE + GEMINI_KEEP]}
+    assert clean_models(listing) == sorted(GEMINI_KEEP, key=str.lower)
+
+
+def test_other_providers_are_not_filtered_by_the_gemini_name_rule():
+    # Groq, OpenRouter, OpenAI and Custom lists have no "models/" prefix: names such as gemma or live stay
+    ids = ["gemma2-9b-it", "llama-3.1-8b-instant", "google/gemini-live-demo", "my-live-chat-model", "gpt-4o-mini"]
+    assert clean_models({"data": [{"id": m} for m in ids]}) == sorted(ids, key=str.lower)

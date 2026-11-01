@@ -30,7 +30,7 @@ export const PROVIDERS: Provider[] = [
     baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai',
     keyUrl: 'https://aistudio.google.com/apikey',
     keyLabel: 'aistudio.google.com/apikey',
-    tier: 'Has a free tier with limited models and limits. Free-tier data may be used to improve Google products.',
+    tier: 'Has a free tier with limited models and limits. Free-tier data may be used to improve Google products. The model list shows Gemini models that look like chat models by name; we have not tested that each one works on a free key.',
   },
   {
     id: 'openrouter',
