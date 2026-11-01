@@ -5,6 +5,7 @@
 import argparse
 import asyncio
 import json
+import sys
 from pathlib import Path
 
 import httpx2 as httpx
@@ -31,9 +32,18 @@ async def main() -> None:
     ap.add_argument("--mode", default="live")
     ap.add_argument("--save")
     ap.add_argument("--quiet", action="store_true")
+    ap.add_argument("--local-keys", action="store_true",
+                    help="send the local development keys as visitor keys (what the Settings page does); never printed")
     a = ap.parse_args()
+    body: dict = {"scenario_id": a.scenario, "mode": a.mode}
+    if a.local_keys:
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "backend"))
+        from app.config import settings
+        body["credentials"] = {"gnani": {"api_key": settings.gnani_api_key_id},
+                               "llm": {"base_url": settings.euri_base_url, "api_key": settings.euri_api_key,
+                                       "model": settings.llm_model}}
     async with httpx.AsyncClient() as c:
-        r = (await c.post(f"{a.base}/api/sessions", json={"scenario_id": a.scenario, "mode": a.mode})).json()
+        r = (await c.post(f"{a.base}/api/sessions", json=body)).json()
     print("session", r)
     events = []
     drops = 0

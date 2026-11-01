@@ -1,0 +1,10 @@
+{"object":"list","data":[
+{"id":"llama-3.3-70b-versatile","object":"model","created":1733447754,"owned_by":"Meta","active":true,"context_window":131072},
+{"id":"llama-3.1-8b-instant","object":"model","created":1693721698,"owned_by":"Meta","active":true,"context_window":131072},
+{"id":"openai/gpt-oss-20b","object":"model","created":1754407957,"owned_by":"OpenAI","active":true,"context_window":131072},
+{"id":"meta-llama/llama-4-scout-17b-16e-instruct","object":"model","created":1743874824,"owned_by":"Meta","active":true,"context_window":131072},
+{"id":"whisper-large-v3","object":"model","created":1693721698,"owned_by":"OpenAI","active":true,"context_window":448},
+{"id":"whisper-large-v3-turbo","object":"model","created":1728413088,"owned_by":"OpenAI","active":true,"context_window":448},
+{"id":"meta-llama/llama-guard-4-12b","object":"model","created":1746743847,"owned_by":"Meta","active":true,"context_window":131072},
+{"id":"playai-tts","object":"model","created":1740682771,"owned_by":"PlayAI","active":true,"context_window":8192}
+]}

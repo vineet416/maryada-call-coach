@@ -1,0 +1,7 @@
+{"data":[
+{"id":"openai/gpt-4o-mini","name":"OpenAI: GPT-4o-mini","architecture":{"modality":"text+image->text","input_modalities":["text","image"],"output_modalities":["text"]}},
+{"id":"meta-llama/llama-3.3-70b-instruct:free","name":"Meta: Llama 3.3 70B Instruct (free)","architecture":{"modality":"text->text","input_modalities":["text"],"output_modalities":["text"]}},
+{"id":"google/gemini-2.5-flash","name":"Google: Gemini 2.5 Flash","architecture":{"modality":"text+image->text","input_modalities":["text","image"],"output_modalities":["text"]}},
+{"id":"black-forest-labs/flux-schnell","name":"FLUX Schnell","architecture":{"modality":"text->image","input_modalities":["text"],"output_modalities":["image"]}},
+{"id":"openai/text-embedding-3-small","name":"OpenAI: Text Embedding 3 Small","architecture":{"modality":"text->embeddings","input_modalities":["text"],"output_modalities":["embeddings"]}}
+]}

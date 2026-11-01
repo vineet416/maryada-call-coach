@@ -21,7 +21,8 @@ class Settings(BaseSettings):
     llm_fallback_model: str = "gpt-4.1-mini"
     skip_llm_max_words: int = 8  # agent text under this many words may skip the LLM (see rules/skip.py for the guard)
     stt_mode: str = "realtime"
-    daily_session_cap: int = 60
+    server_keys_enabled: bool = False  # True only for local development and the evaluation tools (env keys are read)
+    max_live_sessions: int = 3  # concurrent live sessions (visitor keys)
     replay_only: bool = False
     allowed_origins: str = "http://localhost:5173"
     pace: float = 1.0
@@ -35,8 +36,14 @@ class Settings(BaseSettings):
     db_path: Path = ROOT / "data" / "maryada.db"
 
     @property
+    def server_keys(self) -> bool:
+        """Env keys may be used for live sessions only when SERVER_KEYS_ENABLED is on AND both are present."""
+        return self.server_keys_enabled and bool(self.gnani_api_key_id and self.euri_api_key)
+
+    @property
     def live_capable(self) -> bool:
-        return bool(self.gnani_api_key_id and self.euri_api_key) and not self.replay_only
+        """Live calls are possible (with the visitor's own keys, or server keys in development) unless REPLAY_ONLY."""
+        return not self.replay_only
 
     @property
     def origins(self) -> list[str]:

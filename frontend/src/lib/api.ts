@@ -91,12 +91,33 @@ export const getScenarios = (signal?: AbortSignal) => getJson<ScenarioSummary[]>
 export const getScenario = (id: string, signal?: AbortSignal) =>
   getJson<ScenarioDetail>(`/api/scenarios/${encodeURIComponent(id)}`, signal)
 export const getRules = (signal?: AbortSignal) => getJson<Rule[]>('/api/rules', signal)
-export const createSession = (scenario_id: string, mode: 'live' | 'replay') =>
+export interface Credentials {
+  gnani: { api_key: string }
+  llm: { base_url: string; api_key: string; model: string }
+}
+
+/** Keys travel only in this POST body (HTTPS), never in a URL or query string. */
+export const createSession = (scenario_id: string, mode: 'live' | 'replay', credentials?: Credentials) =>
   request<SessionStart>('/api/sessions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ scenario_id, mode }),
+    body: JSON.stringify(credentials && mode === 'live' ? { scenario_id, mode, credentials } : { scenario_id, mode }),
   })
+
+const post = <T>(path: string, body: object) =>
+  request<T>(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+
+export interface TestResult {
+  ok: boolean
+  message_user: string
+  tokens?: number
+}
+
+export const testGnani = (api_key: string) => post<TestResult>('/api/credentials/test', { kind: 'gnani', api_key })
+export const testLlm = (base_url: string, api_key: string, model: string) =>
+  post<TestResult>('/api/credentials/test', { kind: 'llm', base_url, api_key, model })
+export const listModels = (base_url: string, api_key: string) =>
+  post<{ models: string[] }>('/api/llm/models', { base_url, api_key })
 
 export const audioUrl = (path: string) => `${API_BASE}${path}`
 export const wsUrl = (path: string) => API_BASE.replace(/^http/, 'ws') + path

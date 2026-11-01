@@ -1,17 +1,29 @@
 import asyncio
+import time
+from collections import deque
 from pathlib import Path
+from typing import Literal
 
+import httpx2 as httpx
 from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, SecretStr
 
 from .. import db
 from ..config import settings
 from ..models import Health
+from ..rules import llm
 from ..rules.loader import load_rules
+from ..security import redact, safe_http
+from ..security.credentials import CredentialsIn, Creds
+from ..security.models_list import clean_models
+from ..security.url_guard import UnsafeUrl, resolve_safe
 from ..session import assets, runner
+from ..stt import realtime
+from ..stt.base import SttAuthError, SttError
 
 VERSION = "0.1.0"
+KEYS_MSG = "Add your Gnani key and your language model details in Settings to start a live call, or play the recorded run."
 router = APIRouter()
 
 
@@ -58,17 +70,115 @@ def list_rules() -> list[dict]:
 class StartBody(BaseModel):
     scenario_id: str
     mode: str = "live"
+    credentials: CredentialsIn | None = None  # the visitor's keys; sent in the POST body only, never in a URL
+
+
+class TestBody(BaseModel):
+    kind: Literal["gnani", "llm"]
+    api_key: SecretStr = Field(max_length=300)
+    base_url: str = Field("", max_length=300)  # llm only
+    model: str = Field("", max_length=120)  # llm only
+
+
+class ModelsBody(BaseModel):
+    base_url: str = Field(max_length=300)
+    api_key: SecretStr = Field(max_length=300)
+
+
+_calls: deque[float] = deque()  # global rate limit for the key-check endpoints: 10 per minute
+RATE_PER_MIN = 10
+
+
+def _rate_limit() -> None:
+    now = time.monotonic()
+    while _calls and now - _calls[0] > 60:
+        _calls.popleft()
+    if len(_calls) >= RATE_PER_MIN:
+        raise _err(429, "rate_limited", "Too many checks in a minute. Wait a little and try again.", True)
+    _calls.append(now)
+
+
+async def _checked_url(url: str) -> None:
+    try:
+        await resolve_safe(url)
+    except UnsafeUrl as e:
+        raise _err(400, "invalid_base_url", str(e)) from None
 
 
 @router.post("/api/sessions")
-def create_session(body: StartBody) -> dict:
+async def create_session(body: StartBody) -> dict:
     if body.scenario_id not in assets.scenarios():
         raise _err(404, "unknown_scenario", "That case does not exist.")
-    s = runner.new_session(body.scenario_id, body.mode)
+    creds = None
+    if body.mode == "live":
+        if body.credentials is not None:
+            c = body.credentials
+            if not c.gnani.api_key.get_secret_value().strip() or not c.llm.api_key.get_secret_value().strip() \
+                    or not c.llm.base_url.strip() or not c.llm.model.strip():
+                raise _err(400, "keys_required", KEYS_MSG)
+            await _checked_url(c.llm.base_url.strip())
+            creds = Creds.from_body(c)
+        elif not settings.server_keys:
+            raise _err(400, "keys_required", KEYS_MSG)
+    s = runner.new_session(body.scenario_id, body.mode, creds)
     out = {"session_id": s.id, "effective_mode": s.effective_mode, "ws_url": f"/ws/session/{s.id}"}
     if s.reason:
         out["reason"] = s.reason
     return out
+
+
+@router.post("/api/llm/models")
+async def llm_models(body: ModelsBody) -> dict:
+    """The provider's chat models for the Settings dropdown (browsers cannot call most providers: CORS)."""
+    _rate_limit()
+    key = body.api_key.get_secret_value().strip()
+    if not key:
+        raise _err(400, "keys_required", "Enter the API key first.")
+    redact.register(key)
+    try:
+        async with httpx.AsyncClient() as client:
+            raw = await safe_http.request(client, body.base_url.strip(), "/models", key, method="GET")
+        models = clean_models(raw)
+    except UnsafeUrl as e:
+        raise _err(400, "invalid_base_url", str(e)) from None
+    except safe_http.ProviderError as e:
+        raise _err(502, "provider_error", e.message_user, True) from None
+    except ValueError:
+        raise _err(502, "provider_error", "The provider did not return a model list in the expected format.") from None
+    finally:
+        redact.unregister(key)
+    return {"models": models}
+
+
+@router.post("/api/credentials/test")
+async def test_credentials(body: TestBody) -> dict:
+    """Gnani: opens the speech WebSocket with the key and waits for 'connected' (no audio sent). LLM: one short
+    sample classification, checked for valid JSON, with the tokens used."""
+    _rate_limit()
+    key = body.api_key.get_secret_value().strip()
+    if not key:
+        raise _err(400, "keys_required", "Enter the API key first.")
+    redact.register(key)
+    try:
+        if body.kind == "gnani":
+            try:
+                await realtime.check_key(key)
+            except SttAuthError:
+                return {"ok": False, "message_user": "Gnani rejected this key. Check it and try again."}
+            except SttError:
+                return {"ok": False, "message_user": "Could not reach the Gnani speech service. Try again in a moment."}
+            return {"ok": True, "message_user": "Connected. Gnani accepted the key (no audio was sent)."}
+        if not body.base_url.strip() or not body.model.strip():
+            raise _err(400, "keys_required", "Enter the base URL and a model first.")
+        await _checked_url(body.base_url.strip())
+        creds = Creds(key, body.base_url.strip(), key, body.model.strip())
+        try:
+            async with httpx.AsyncClient() as client:
+                return await llm.test_call(client, creds)
+        finally:
+            creds.wipe()
+    finally:
+        redact.unregister(key)
 
 
 @router.get("/api/sessions/{sid}")

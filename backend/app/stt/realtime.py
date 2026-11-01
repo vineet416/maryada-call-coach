@@ -11,6 +11,7 @@ from ..config import settings
 from .base import (
     BYTES_PER_MS,
     FRAME,
+    SttAuthError,
     SttError,
     TranscriptSegment,
     is_last_segment,
@@ -63,5 +64,28 @@ async def stream_turn(wav_path: Path, profile: dict, api_key: str, pace: float |
                     sender.cancel()
                 if sender.done() and not sender.cancelled() and sender.exception():
                     raise sender.exception()  # type: ignore[misc]
+    except websockets.InvalidStatus as e:
+        code = e.response.status_code
+        raise (SttAuthError if code in (401, 403) else SttError)(f"realtime status {code}") from None
     except (websockets.WebSocketException, OSError, TimeoutError) as e:
         raise SttError(f"realtime {type(e).__name__}") from e
+
+
+async def check_key(api_key: str) -> None:
+    """Connection test: open the Prisma WebSocket with the key, wait for 'connected', close. No audio is sent.
+    Raises SttAuthError when the key is refused, SttError for any other failure."""
+    from .base import load_profile
+    profile = load_profile("agent")
+    hdr = {"x-api-key-id": api_key, "model": profile["model"], "language_code": profile["language_code"],
+           "x-sample-rate": "8000"}
+    try:
+        async with websockets.connect(settings.gnani_stt_ws_url, additional_headers=hdr, open_timeout=CONNECT_S) as ws:
+            await asyncio.wait_for(ws.recv(), CONNECT_S)
+    except websockets.InvalidStatus as e:
+        code = e.response.status_code
+        raise (SttAuthError if code in (401, 403) else SttError)(f"status {code}") from None
+    except websockets.ConnectionClosed as e:
+        code = e.rcvd.code if e.rcvd else None
+        raise (SttAuthError if code in (1008, 4001, 4003) else SttError)(f"closed {code}") from None
+    except (websockets.WebSocketException, OSError, TimeoutError) as e:
+        raise SttError(type(e).__name__) from None

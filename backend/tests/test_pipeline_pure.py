@@ -1,7 +1,6 @@
 import asyncio
 
-from app import db, replay
-from app.config import settings
+from app import replay
 from app.session.events import EventLog
 from app.stt.base import is_last_segment
 
@@ -33,12 +32,6 @@ def test_replay_schedule_and_labels():
     assert evs[0]["data"]["effective_mode"] == "live"  # the recording is untouched
     assert [round(d, 1) for d, _ in replay.schedule(rep)] == [0.0, 1.5, 0.2]
     assert [e["seq"] for e in rep] == [1, 2, 3] and [e["t_ms"] for e in rep] == [0, 1500, 1700]
-
-
-def test_daily_cap(tmp_path, monkeypatch):
-    monkeypatch.setattr(settings, "db_path", tmp_path / "t.db")
-    db.init_db()
-    assert [db.try_take_slot(2) for _ in range(3)] == [True, True, False]
 
 
 def test_remaining_rebases_time():

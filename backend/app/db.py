@@ -6,7 +6,6 @@ SCHEMA = """
 DROP TABLE IF EXISTS findings;
 DROP TABLE IF EXISTS turns;
 DROP TABLE IF EXISTS sessions;
-DROP TABLE IF EXISTS daily_counter;
 CREATE TABLE sessions (
   id TEXT PRIMARY KEY, scenario_id TEXT NOT NULL, mode TEXT NOT NULL,
   started_at TEXT NOT NULL, ended_at TEXT, risk_peak INTEGER NOT NULL DEFAULT 0
@@ -21,7 +20,6 @@ CREATE TABLE findings (
   reason TEXT, rbi_ref TEXT, rewrite TEXT, source TEXT
 );
 CREATE INDEX findings_session ON findings(session_id);
-CREATE TABLE daily_counter (day TEXT PRIMARY KEY, count INTEGER NOT NULL DEFAULT 0);
 """
 
 
@@ -41,24 +39,7 @@ def init_db() -> None:
         conn.close()
 
 
-# ---- session log and global daily cap (docs/02 §5; IST date) ----
-def ist_day() -> str:
-    from datetime import datetime, timedelta, timezone
-    return datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime("%Y-%m-%d")
-
-
-def try_take_slot(cap: int) -> bool:
-    """Count one live session for today. False when the cap is reached (caller falls back to replay)."""
-    conn = connect()
-    try:
-        with conn:
-            conn.execute("INSERT OR IGNORE INTO daily_counter(day, count) VALUES (?, 0)", (ist_day(),))
-            cur = conn.execute("UPDATE daily_counter SET count = count + 1 WHERE day = ? AND count < ?", (ist_day(), cap))
-            return cur.rowcount == 1
-    finally:
-        conn.close()
-
-
+# ---- session log (docs/02 §5) ----
 def log_session_start(sid: str, scenario_id: str, mode: str, started_at: str) -> None:
     conn = connect()
     try:

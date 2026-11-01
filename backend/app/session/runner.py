@@ -13,9 +13,11 @@ from ..rules import llm, risk, skip
 from ..rules.engine import deep_findings, fast_findings
 from ..rules.schemas import Finding, Turn
 from ..rules.text import tokenize
+from ..security.credentials import Creds
 from ..stt import realtime
 from ..stt import rest as stt_rest
 from ..stt.base import (
+    SttAuthError,
     SttError,
     TranscriptSegment,
     gnani_lock,
@@ -34,17 +36,18 @@ MAX_SPOKEN_PER_CALL = 3
 _RANK = {"good_practice": 0, "advisory": 1, "needs_review": 2, "violation": 3}
 
 SESSIONS: dict[str, "Session"] = {}
-_live_active: str | None = None
+_live_active: set[str] = set()  # ids of running live sessions (at most settings.max_live_sessions)
+UNSTARTED_TTL_S = 90  # a session whose WebSocket never connects drops its keys after this long
 
 
 class Session:
-    def __init__(self, scenario_id: str, mode: str, reason: str | None = None) -> None:
+    def __init__(self, scenario_id: str, mode: str, reason: str | None = None, creds: Creds | None = None) -> None:
         self.id = uuid.uuid4().hex[:10]
         self.scenario_id, self.effective_mode, self.reason = scenario_id, mode, reason
         self.log = EventLog()
         self.task: asyncio.Task | None = None
-        self.api_key: str | None = None  # BYOK slots (kept in memory only)
-        self.base_url: str | None = None
+        self.creds = creds  # the visitor's keys (memory only; wiped when the session ends)
+        self.llm_error = ""  # last plain-language reason the language model failed
         self.findings: dict[str, Finding] = {}
         self.risk_peak = 0
         self.late_tasks: list[asyncio.Task] = []
@@ -52,24 +55,38 @@ class Session:
         self.llm_skipped = 0  # LLM reviews skipped by the short-segment guard (not the same as a clean review)
 
 
-def new_session(scenario_id: str, requested: str) -> Session:
-    """Decide live vs replay (keys, REPLAY_ONLY, one live session at a time, daily cap)."""
+def new_session(scenario_id: str, requested: str, creds: Creds | None = None) -> Session:
+    """Decide live vs replay (REPLAY_ONLY, concurrent live limit, audio). A live request needs keys: the caller checks."""
     mode, reason = "replay", None
     if requested == "live":
         if not settings.live_capable:
             reason = "Live checking is not available right now."
-        elif _live_active is not None:
-            reason = "Another live call is running; showing the recorded run."
+        elif len(_live_active) + _waiting_live() >= settings.max_live_sessions:
+            reason = "All live call slots are busy right now; showing the recorded run."
         elif not assets.has_audio(scenario_id):
             reason = "No call audio for this case."
-        elif not db.try_take_slot(settings.daily_session_cap):
-            reason = "Live capacity reached today — showing recorded run."
         else:
             mode = "live"
-    s = Session(scenario_id, mode, reason)
+    if mode != "live" and creds is not None:
+        creds.wipe()  # a recorded run needs no keys: do not keep them
+        creds = None
+    s = Session(scenario_id, mode, reason, creds)
     SESSIONS[s.id] = s
     db.log_session_start(s.id, scenario_id, mode, _now())
+    if creds is not None:
+        asyncio.get_running_loop().call_later(UNSTARTED_TTL_S, _expire_unstarted, s)
     return s
+
+
+def _waiting_live() -> int:
+    """Live sessions created but not started yet also hold a slot."""
+    return sum(1 for x in SESSIONS.values() if x.effective_mode == "live" and x.task is None)
+
+
+def _expire_unstarted(s: Session) -> None:
+    if s.task is None and s.creds is not None:
+        s.creds.wipe()
+        s.creds = None
 
 
 def _now() -> str:
@@ -104,16 +121,19 @@ def summary(s: Session, stopped: bool = False) -> dict:
 
 
 async def _run(s: Session) -> None:
-    global _live_active
     try:
         async with asyncio.timeout(settings.session_max_s):
             if s.effective_mode == "live":
-                _live_active = s.id
+                _live_active.add(s.id)
                 try:
                     await _run_live(s)
+                except SttAuthError as e:  # the visitor's Gnani key was refused: say so, never fall back to ours
+                    log.warning("session=%s gnani key rejected: %s", s.id, e)
+                    s.log.emit("error", {"code": "gnani_key_rejected", "retryable": False, "message_user":
+                               "Your Gnani key was rejected. Check it in Settings, or play the recorded run."})
                 except SttError as e:
                     log.warning("session=%s stt failed: %s", s.id, e)
-                    _live_active = None  # the recorded tail does not use Gnani or the LLM: free the live slot
+                    _live_active.discard(s.id)  # the recorded tail does not use Gnani or the LLM: free the live slot
                     await _switch_to_replay(s)
             else:
                 await _run_replay(s)
@@ -128,12 +148,14 @@ async def _run(s: Session) -> None:
         s.log.emit("error", {"code": "internal", "message_user": "Something went wrong. Please try the recorded run.",
                              "retryable": True})
     finally:
-        if _live_active == s.id:
-            _live_active = None
+        _live_active.discard(s.id)
         _finish(s)
 
 
 def _finish(s: Session) -> None:
+    if s.creds is not None:
+        s.creds.wipe()
+        s.creds = None
     db.log_session_end(s.id, _now(), s.risk_peak)
     last = s.log.events[-1] if s.log.events else {}
     done = last.get("type") == "session.ended" and not last["data"]["summary"].get("stopped")
@@ -214,14 +236,19 @@ async def _run_live(s: Session) -> None:
     sc = assets.scenarios()[s.scenario_id]
     turns = assets.audio_manifest()[s.scenario_id]["turns"]
     ctx = assets.context_for(sc)
-    key = s.api_key or settings.gnani_api_key_id
+    creds = s.creds
+    if creds is None and not settings.server_keys:
+        s.log.emit("error", {"code": "keys_required", "retryable": False, "message_user":
+                   "Add your keys in Settings to start a live call, or play the recorded run."})
+        return
+    key = creds.gnani_key if creds else settings.gnani_api_key_id
     s.log.emit("session.started", {"scenario_id": s.scenario_id, "effective_mode": "live", "turns_total": len(turns),
                                    "simulated_start_time": ctx.simulated_start_time})
     s.log.emit("stage.status", {"stage": "connecting", "turn_idx": 0, "text": "Connecting"})
     history: list[Turn] = []
     score, spoken = 0, 0
     llm_client = llm.make_client()
-    warm = asyncio.create_task(llm.warm_up(llm_client, s.api_key, s.base_url))
+    warm = asyncio.create_task(llm.warm_up(llm_client, creds))
     try:
         async with httpx.AsyncClient(timeout=30) as stt_client:
             for n, t in enumerate(turns):
@@ -230,7 +257,7 @@ async def _run_live(s: Session) -> None:
                                             "duration_ms": t["duration_ms"]})
                 s.log.emit("stage.status", {"stage": "transcribing", "turn_idx": idx, "text": "Transcribing"})
                 turn = LiveTurn(s, ctx, history, idx, t["speaker"], llm_client)
-                async with gnani_lock():  # one active Gnani request per key
+                async with gnani_lock(key):  # one active Gnani request per key
                     async for seg in _segments(stt_client, settings.data_dir / "audio" / t["wav8k"], load_profile(role), key):
                         turn.on_segment(seg)
                 score = await turn.finish(score)
@@ -316,10 +343,12 @@ class LiveTurn:
             log.info("llm skipped session=%s turn=%s words=%d (short, no prefilter hit, no keyword)",
                      self.s.id, self.idx, len(text.split()))
             return
-        out, llm_ms = await llm.review(self.llm_client, self.ctx, self.history[-2:], text, self.s.api_key, self.s.base_url)
+        out, llm_ms = await llm.review(self.llm_client, self.ctx, self.history[-2:], text, self.s.creds,
+                                     on_error=lambda m: setattr(self.s, "llm_error", m))
         if out is None:
+            why = self.s.llm_error or "The language model did not answer in time."
             self.s.log.emit("banner", {"kind": "llm_degraded",
-                                       "message": "Reduced checking: the language model did not answer in time."})
+                                       "message": f"Language model unavailable, showing fast checks only. {why}"})
             return
         late = time.perf_counter() - arrived > FIRST_ANSWER_S
         deep = deep_findings(self.ctx, box["fast"], out, self.idx, text)

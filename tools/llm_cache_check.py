@@ -77,6 +77,7 @@ def _cached(ctx, hist, text) -> bool:
 
 async def main(limit: int) -> None:
     sys.stdout.reconfigure(encoding="utf-8")
+    settings.server_keys_enabled = True  # evaluation tool: uses the local env keys
     if not settings.euri_api_key:
         sys.exit("no local LLM key configured")
     sc = next(c for p in sorted((ROOT / "content" / "scenarios").glob("*.yaml"))
