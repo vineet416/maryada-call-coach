@@ -8,7 +8,7 @@ Demo with synthetic calls. Not legal advice. Based on RBI/2026-27/223 (effective
 Prefilter-only regression on all 30 sample calls (`python tools/prefilter_report.py`): 29 calls match their labels, 1 call (c28) has the false positive above, no misses, no findings on the clean and hard-negative calls.
 
 ## Shorter review prompt: measurement only (not adopted)
-Script: `tools/prompt_trim_eval.py`. The candidate prompt lives only in that file and is selected by a script argument; the live prompt in `backend/app/rules/llm.py` is unchanged. Model and settings are the same (`gpt-5.4-mini`, temperature 0, `max_tokens` 250). Context is the new segment plus the previous 2 turns. Token budget for the whole measurement: 35,000 (34,455 used).
+Script: `tools/prompt_trim_eval.py`. The candidate prompt lives only in that file and is selected by a script argument; the live prompt in `backend/app/rules/llm.py` is unchanged. Model and settings are the same (`gpt-5.4-mini`, temperature 0, `max_tokens` 250). Context is the new segment plus the previous 2 turns. Token budget for the whole measurement: 35,000. The new calls used 34,455 (the first attempt, two candidate hero runs and the four library pairs); the two baseline hero runs were reused from an earlier model comparison with the same prompt and settings, and were not run again.
 
 Candidate: system prompt 1,531 characters against 2,693 (43% shorter). Rule definitions, the JSON format, the confidence and conservatism guidance and the "copy the quote from the current agent turn in its original script" rule are kept; the four few-shot examples are cut to two (R3 and a clean turn). A first attempt that kept all four examples was only 20% shorter and saved 15% of the tokens, so it was not used for the main comparison.
 

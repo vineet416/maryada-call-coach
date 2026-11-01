@@ -12,7 +12,7 @@ set with the PROMPT_VARIANT environment variable. `c06` uses the recorded replay
 cumulative text, as the live pipeline sends it). Other calls use the scripted agent turns, one call per turn.
 `pair` alternates baseline and candidate turn by turn so both see the same network conditions.
 
-All token use is added to DIR/ledger.json; every call is refused once the total would pass TOKEN_BUDGET.
+All token use reported by the API is added to DIR/ledger.json (a failed call without usage adds nothing); every call is refused once the total would pass TOKEN_BUDGET.
 Failed calls are recorded and never retried. The API key is read through the app settings and never printed.
 """
 import argparse
@@ -34,7 +34,7 @@ from app.rules.schemas import Turn
 from app.session import assets
 
 TOKEN_BUDGET = 35_000
-EST_NEXT_CALL = 650  # refuse a call when the ledger plus this estimate would pass the budget
+EST_NEXT_CALL = 1000  # refuse a call when the ledger plus this estimate would pass the budget (a call costs up to ~900)
 
 CANDIDATE_FEW_SHOT = """Examples:
 A: "Sir, EMI do din se pending hai. Kya link bhej doon?"
