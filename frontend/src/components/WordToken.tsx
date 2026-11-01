@@ -43,7 +43,7 @@ export function Phrase({
         role="button"
         tabIndex={0}
         className={`tok tok-${finding.kind} cursor-pointer`}
-        aria-label={`${KIND_LABEL[finding.kind]}: ${finding.rule_id} ${tokens.map((t) => t.w).join(' ')}, press Enter for details`}
+        aria-label={`${tokens.map((t) => t.w).join(' ')}${showRule ? ` ${finding.rule_id}` : ''}: ${KIND_LABEL[finding.kind]}, press Enter for details`}
         onClick={open}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
