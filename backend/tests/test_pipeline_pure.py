@@ -91,7 +91,7 @@ def _recorded(nudge_lag=2500, with_nudge=True):
     speak = [ev(5, "coach.speak", 3300, duration_ms=4000)] if with_nudge else []
     return [ev(1, "session.started", 20), ev(2, "turn.started", 100, turn_idx=1), *nudge,
             ev(4, "turn.ended", 3100, turn_idx=1), *speak,
-            ev(6, "turn.started", 9000, turn_idx=2), ev(7, "transcript.final", 9500, turn_idx=2),
+            ev(6, "turn.started", 9000, turn_idx=2), ev(7, "transcript.final", 9500, turn_idx=2, stt_path="realtime"),
             ev(8, "turn.ended", 12000, turn_idx=2), ev(9, "turn.started", 14000, turn_idx=3),
             ev(10, "turn.started", 18000, turn_idx=4)]
 

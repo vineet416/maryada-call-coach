@@ -45,6 +45,13 @@ MAX_SESSIONS_KEPT = 400
 UNSTARTED_TTL_S = 90  # a session whose WebSocket never connects drops its keys after this long
 
 
+def rest_hold_s(turn_started_at: float, duration_ms: int, now: float) -> float:
+    """Seconds to hold the text of a REST-fallback segment so it is not shown before the turn's audio has ended. REST transcribes
+    the whole demo file at once; a real microphone stream has no such early text (its audio is real time), so this only applies
+    to demo audio, where the runner knows the turn's length."""
+    return max(0.0, turn_started_at + duration_ms / 1000 - now)
+
+
 class Session:
     def __init__(self, scenario_id: str, mode: str, reason: str | None = None, creds: Creds | None = None,
                  pause_for_coach: bool = False) -> None:
@@ -423,6 +430,9 @@ async def _run_live(s: Session) -> None:
                         turn = LiveTurn(s, ctx, list(history), idx, t["speaker"], llm_client)
                     return turn
                 async for seg in _segments(stt_client, settings.data_dir / "audio" / t["wav8k"], load_profile(role), key, gate):
+                    if seg.via == "rest":  # never show REST text before the turn's audio has ended
+                        await asyncio.sleep(min(rest_hold_s(start_at[idx], t["duration_ms"], time.perf_counter()),
+                                                t["duration_ms"] / 1000))
                     (await current()).on_segment(seg)
                 turn = await current()
                 history.append(Turn(speaker=t["speaker"], text=turn.text))
@@ -492,13 +502,13 @@ class LiveTurn:
             self.s.log.emit("transcript.final", {
                 "turn_idx": self.idx, "segment_idx": self.n_segments, "speaker": self.role, "text": "",
                 "lang_detected": self.lang, "tokens": [], "is_last_segment_of_turn": True,
-                "stt_latency_ms": 0, "source": "live"})
+                "stt_latency_ms": 0, "source": "live", "stt_path": "realtime"})
             self.saw_last = True
 
     def on_segment(self, seg: TranscriptSegment) -> None:
         now = time.perf_counter()
         self.n_segments, self.saw_last = max(self.n_segments, seg.segment_idx + 1), self.saw_last or seg.is_last
-        seg_end = seg.stream_t0 + seg.audio_end_ms / 1000 * settings.pace
+        seg_end = now if seg.via == "rest" else seg.stream_t0 + seg.audio_end_ms / 1000 * settings.pace  # REST text is shown after the turn's audio ended
         toks = tokens_for(self.ntok, seg.text)
         self.ntok += len(toks)
         self.text = f"{self.text} {seg.text}".strip()
@@ -506,7 +516,7 @@ class LiveTurn:
         self.s.log.emit("transcript.final", {
             "turn_idx": self.idx, "segment_idx": seg.segment_idx, "speaker": self.role, "text": seg.text,
             "lang_detected": seg.lang, "tokens": toks, "is_last_segment_of_turn": seg.is_last,
-            "stt_latency_ms": seg.latency_ms, "source": "live"})
+            "stt_latency_ms": seg.latency_ms, "source": "live", "stt_path": seg.via})
         if self.speaker != "A":
             return
         self.last_arrival = now

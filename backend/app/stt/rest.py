@@ -25,4 +25,4 @@ async def transcribe_turn(client: httpx.AsyncClient, wav_path: Path, profile: di
     j = r.json()
     return [TranscriptSegment(text=j.get("transcript", "").strip(), lang=j.get("detected_language_code", ""),
                               latency_ms=int((time.perf_counter() - t0) * 1000), segment_idx=first_idx,
-                              audio_end_ms=0, is_last=True, stream_t0=time.perf_counter())]
+                              audio_end_ms=0, is_last=True, stream_t0=time.perf_counter(), via="rest")]
