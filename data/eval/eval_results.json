@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-01T14:39:49+00:00",
+ "generated_at": "2026-11-01T14:43:45+00:00",
  "labels_hash": "21caa31f45898ae6",
  "n_calls": 30,
  "conditions": [
@@ -1394,6 +1394,40 @@
      "agent_turns_with_g1": 11
     }
    },
+   "examples": [
+    {
+     "type": "false_alarm",
+     "call": "c28",
+     "turn": 3,
+     "rule": "R3",
+     "text": "पैसा कब दे रहा है? दो महीने से ऊपर हो गए। तू सुनता ही नहीं है, phone उठाता नहीं। आज उठाया है तो सीधा बोल।",
+     "labelled_phrase": null,
+     "detection": {
+      "kind": "needs_review",
+      "confidence": 0.6,
+      "source": "prefilter",
+      "quote": "तू सुनता ही नहीं"
+     }
+    },
+    {
+     "type": "miss",
+     "call": "c06",
+     "turn": 7,
+     "rule": "R5",
+     "text": "Madam, ये सब तो हर कोई बोलता है। Next week, next week। मेरे को आज ही payment चाहिए। देखो, आज शाम तक payment नहीं आया ना, तो police को भेजूंगा आपके घर। आपके मोहल्ले में सबको बता दूंगा कि आप defaulter हो। Court का notice भी कल सुबह आ जाएगा। समझी?",
+     "labelled_phrase": "police ko bhejunga aapke ghar",
+     "detection": null
+    },
+    {
+     "type": "miss",
+     "call": "c13",
+     "turn": 7,
+     "rule": "R5",
+     "text": "सर, मैं clear बोल रहा हूँ Friday तक, पक्का ना? अगर Friday तक नहीं दिया तो हर दिन 5,000 रुपये penalty लगेगी और यह RBI का rule है।",
+     "labelled_phrase": "har din paanch hazaar rupaye penalty lagegi",
+     "detection": null
+    }
+   ],
    "tune": {
     "n_calls": 17,
     "per_rule": {

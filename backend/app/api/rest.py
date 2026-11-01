@@ -9,7 +9,7 @@ from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field, SecretStr
 
-from .. import db, replay
+from .. import db, evaluation, replay
 from ..config import log, settings
 from ..models import Health
 from ..rules import llm
@@ -66,6 +66,12 @@ def get_scenario(sid: str) -> dict:
 def list_rules() -> list[dict]:
     keys = ("id", "title", "kind_default", "rbi_ref", "summary", "why", "examples_bad", "examples_good")
     return [{k: r.get(k) for k in keys} for r in load_rules()["rules"]]
+
+
+@router.get("/api/eval")
+def get_eval() -> dict:
+    """Committed evaluation results (null when none are published) and time-to-flag statistics from the recordings."""
+    return evaluation.eval_payload()
 
 
 class StartBody(BaseModel):

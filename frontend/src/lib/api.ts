@@ -45,6 +45,92 @@ export interface Rule {
   why: string
 }
 
+export interface Prf {
+  tp: number
+  fp: number
+  fn: number
+  p: number | null
+  r: number | null
+  f1: number | null
+}
+export interface ScoreBlock {
+  strict: Prf
+  with_review: Prf
+  needs_review: { on_label: number; off_label: number }
+}
+export type Unit = [string, number, string] // call, agent turn, rule
+export interface PerCall {
+  call_id: string
+  hard_negative: boolean
+  expected: Unit[]
+  hit: Unit[]
+  hit_with_review: Unit[]
+  missed: Unit[]
+  missed_with_review: Unit[]
+  false_alarms: Unit[]
+  false_alarms_with_review: Unit[]
+}
+export interface Score {
+  n_calls: number
+  per_rule: Record<string, ScoreBlock>
+  overall: ScoreBlock
+  per_call: PerCall[]
+  negatives: { calls: number; calls_with_false_alarm: number; calls_with_false_alarm_with_review: number; false_alarm_units: number }
+  call_level: { expected: number; caught: number; caught_with_review: number }
+  g1: { findings: number; agent_turns_with_g1: number }
+}
+export interface EvalExample {
+  type: 'false_alarm' | 'miss'
+  call: string
+  turn: number
+  rule: string
+  text: string
+  labelled_phrase: string | null
+  detection: { kind: string; confidence: number; source: string; quote: string } | null
+}
+export interface RunResult {
+  calls_run: number
+  complete: boolean
+  all: Score
+  tune: Score | null
+  held_out: Score | null
+  seen_in_development: Score | null
+  examples: EvalExample[]
+  stt: { turns: number; requests_made: number; avg_latency_ms: number }
+  llm: { requests: number; cache_hits: number; skipped: number; degraded: number; tokens: number }
+}
+export interface LabelChange {
+  changed_on: string
+  call: string
+  turn: number
+  rule: string
+  action: string
+  label_hash_before: string
+  label_hash_after: string
+  reason: string
+}
+export interface EvalResults {
+  generated_at: string
+  labels_hash: string
+  n_calls: number
+  status: 'partial' | 'complete'
+  limits: string[]
+  label_changes: LabelChange[]
+  model_info: { stt: string; llm: string; thresholds: { violation: number; needs_review: number } }
+  full: Record<string, RunResult>
+  ablation_llm_off: Record<string, RunResult>
+}
+export interface LatencyRow {
+  label: string
+  n: number
+  p50_ms: number | null
+  p95_ms: number | null
+}
+export interface EvalPayload {
+  results: EvalResults | null
+  latency: { calls: string[]; rows: LatencyRow[]; method: string }
+}
+
 export interface SessionStart {
   session_id: string
   effective_mode: 'live' | 'replay'
@@ -92,6 +178,7 @@ export const getHealth = (signal?: AbortSignal) => getJson<Health>('/health', si
 export const getScenarios = (signal?: AbortSignal) => getJson<ScenarioSummary[]>('/api/scenarios', signal)
 export const getScenario = (id: string, signal?: AbortSignal) =>
   getJson<ScenarioDetail>(`/api/scenarios/${encodeURIComponent(id)}`, signal)
+export const getEval = (signal?: AbortSignal) => getJson<EvalPayload>('/api/eval', signal)
 export const getRules = (signal?: AbortSignal) => getJson<Rule[]>('/api/rules', signal)
 export interface Credentials {
   gnani: { api_key: string }

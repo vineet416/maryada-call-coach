@@ -30,6 +30,8 @@ data/audio/_listen/
 data/audio/noise/
 data/eval/audio/
 data/eval/transcripts_cache/
+data/eval/runs/
+data/eval/llm_cache.jsonl
 
 # Note: also exclude 8 kHz *.wav of scenarios that are replay-only
 # (only the hero + up to 6 LIVE scenarios keep WAVs; docs/10 s6). Target image data < 60 MB.
