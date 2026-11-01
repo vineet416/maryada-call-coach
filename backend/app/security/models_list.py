@@ -12,6 +12,17 @@ DENY_MODELS = frozenset({
     "antigravity-preview-05-2026", "antigravity-preview-09-2026", "antigravity-preview-latest",  # 400
 })
 
+# Gemini lists many models that are not chat models (image, speech, live, robotics, agents). For that provider only, an id
+# is shown when its name says "gemini-" and none of these words. This is a name check, not proof that a model works on a
+# free key.
+GEMINI_SKIP = ("image", "tts", "audio", "live", "embedding", "embed", "robotics", "computer-use", "deep-research",
+               "imagen", "veo", "aqa")
+
+
+def _gemini_chat_name(model_id: str) -> bool:
+    low = model_id.lower()
+    return low.startswith("gemini-") and not any(w in low for w in GEMINI_SKIP)
+
 
 def _is_chat(model_id: str, entry: dict) -> bool:
     low = model_id.lower()
@@ -44,7 +55,10 @@ def clean_models(raw: bytes | str | dict) -> list[str]:
         mid = e.get("id") or e.get("name")
         if not isinstance(mid, str) or not mid:
             continue
+        gemini = mid.startswith("models/")  # only the Gemini listing prefixes its ids with "models/"
         mid = mid.removeprefix("models/")
+        if gemini and not _gemini_chat_name(mid):
+            continue
         if mid not in DENY_MODELS and _is_chat(mid, e):
             ids.add(mid)
     return sorted(ids, key=str.lower)
