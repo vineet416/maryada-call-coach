@@ -252,7 +252,7 @@ async def _run_live(s: Session) -> None:
         for task in s.late_tasks:  # stopped or timed out: no LLM answer may arrive after the client is closed
             task.cancel()
         await llm_client.aclose()
-    log.info("session=%s llm_skipped=%d llm_calls=%d llm_cache_hits=%d", s.id, s.llm_skipped,
+    log.info("session=%s llm_skipped=%d | process totals: llm_calls=%d llm_cache_hits=%d", s.id, s.llm_skipped,
              llm.STATS["calls"], llm.STATS["cache_hits"])
     s.log.emit("session.ended", {"summary": summary(s)})
 

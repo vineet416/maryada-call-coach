@@ -1,4 +1,5 @@
 """Pure-function tests: short-segment skip guard and LLM result cache keys."""
+import pytest
 from app.rules import llm
 from app.rules.engine import fast_findings
 from app.rules.schemas import CallContext, Turn
@@ -48,13 +49,18 @@ def test_cache_key_ignores_nothing_but_the_prompt():
     assert llm.cache_key("m", "u", m1) != llm.cache_key("m", "v", m1)
 
 
-def test_disk_cache_round_trip(tmp_path):
-    path = tmp_path / "cache.jsonl"
+@pytest.fixture
+def clean_cache():
     llm._CACHE.clear()
+    yield
+    llm._disk = None
+    llm._CACHE.clear()
+
+
+def test_disk_cache_round_trip(tmp_path, clean_cache):
+    path = tmp_path / "cache.jsonl"
     llm.enable_disk_cache(path)
     llm._cache_put("m|abc", '{"findings":[],"good_practice":[]}')
     llm._CACHE.clear()
     assert llm.enable_disk_cache(path) == 1
     assert llm._CACHE["m|abc"].startswith("{")
-    llm._disk = None
-    llm._CACHE.clear()
