@@ -38,20 +38,20 @@ def latency_stats(runs: dict[str, list[dict]]) -> dict:
         seen_any: set[str] = set()
         seen_phase: set[tuple[str, str]] = set()
         for e in events:
-            if e.get("type") != "finding.detected":
+            d = e.get("data") if isinstance(e, dict) and e.get("type") == "finding.detected" else None
+            if not isinstance(d, dict):
                 continue
-            d = e["data"]
-            lat = d.get("latency") or {}
-            if d.get("kind") == "good_practice" or "total_ms" not in lat:
+            lat = d.get("latency")
+            if d.get("kind") == "good_practice" or not isinstance(lat, dict) or not isinstance(lat.get("total_ms"), int | float):
                 continue
-            key = f"{cid}:{d['id']}"
+            key, phase = f"{cid}:{d.get('id')}", d.get("phase")
             if key not in seen_any:
                 seen_any.add(key)
                 first.append(lat["total_ms"])
-            if (key, d["phase"]) not in seen_phase and d["phase"] in by_phase:
-                seen_phase.add((key, d["phase"]))
-                by_phase[d["phase"]].append(lat["total_ms"])
-                if d["phase"] == "deep" and lat.get("llm_ms"):
+            if (key, phase) not in seen_phase and phase in by_phase:
+                seen_phase.add((key, phase))
+                by_phase[phase].append(lat["total_ms"])
+                if phase == "deep" and lat.get("llm_ms"):
                     llm.append(lat["llm_ms"])
     rows = [_row("First flag (either check)", first), *(_row(label, by_phase[k]) for k, label in PHASES),
             _row("Language model step", llm)]
@@ -64,9 +64,11 @@ def _replays(root: Path) -> dict[str, list[dict]]:
     out = {}
     for p in sorted(root.glob("c*.json")):  # committed recordings only (not the private _runs folder)
         try:
-            out[p.stem] = json.loads(p.read_text(encoding="utf-8"))["events"]
+            events = json.loads(p.read_text(encoding="utf-8"))["events"]
         except (OSError, ValueError, KeyError, TypeError):
             continue
+        if isinstance(events, list):
+            out[p.stem] = events
     return out
 
 
@@ -77,6 +79,7 @@ def eval_payload() -> dict:
         results = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         results = None
-    if not isinstance(results, dict):
-        results = None
+    if not (isinstance(results, dict) and isinstance(results.get("full"), dict)
+            and isinstance(results.get("ablation_llm_off"), dict)):
+        results = None  # not a results file: the page shows "no results published"
     return {"results": results, "latency": latency_stats(_replays(settings.data_dir / "replay"))}

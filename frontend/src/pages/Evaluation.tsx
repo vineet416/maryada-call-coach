@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ErrorCard } from '@/components/ErrorCard'
 import {
   getEval,
@@ -46,6 +46,7 @@ const seconds = (ms: number | null) => (ms === null ? '–' : `${(ms / 1000).toF
 export function Evaluation() {
   const [data, setData] = useState<EvalPayload | null>(null)
   const [rules, setRules] = useState<Rule[]>([])
+  const [rulesFailed, setRulesFailed] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [engine, setEngine] = useState<Engine | null>(null)
   const [cond, setCond] = useState('clean')
@@ -60,7 +61,7 @@ export function Evaluation() {
       .catch((e: Error) => e.name !== 'AbortError' && setError(e.message))
     getRules(ctl.signal)
       .then(setRules)
-      .catch(() => undefined) // rule names are only labels
+      .catch(() => setRulesFailed(true)) // rule names are only labels; a note says so
     return () => ctl.abort()
   }, [])
   useEffect(() => load(), [load])
@@ -112,7 +113,10 @@ export function Evaluation() {
           <Coverage results={results} />
           <RunPicker results={results} eng={eng} cond={cond} setEngine={setEngine} setCond={setCond} />
           {run ? (
-            <RunView run={run} results={results} rules={rules} group={group} setGroup={setGroup} eng={eng} cond={cond} />
+            <>
+              {rulesFailed && <p role="status" className="text-[12.5px] text-[var(--mc-muted)]">Rule names and types could not be loaded; rules are shown by their ids only.</p>}
+              <RunView run={run} results={results} rules={rules} group={group} setGroup={setGroup} eng={eng} cond={cond} />
+            </>
           ) : (
             <section className="card p-6" role="status">
               <h2 className="text-[17px] font-semibold tracking-tight">Not run yet</h2>
@@ -390,8 +394,8 @@ function PerCall({ score }: { score: Score }) {
 }
 
 function Ablation({ results }: { results: EvalResults }) {
-  const off = results.ablation_llm_off.clean
-  const on = results.full.clean
+  const off = results.ablation_llm_off?.clean
+  const on = results.full?.clean
   const row = (label: string, r?: RunResult) => {
     const s = r?.all.overall.strict
     return (
@@ -477,14 +481,13 @@ function Latency({ rows, calls, method }: { rows: LatencyRow[]; calls: string[];
 }
 
 function Limits({ results }: { results: EvalResults }) {
-  const lines = useMemo(() => results.limits, [results])
   return (
     <section className="card flex min-w-[300px] flex-[1_1_380px] flex-col gap-3 p-6" aria-labelledby="lim-h">
       <h2 id="lim-h" className="text-base font-semibold">Honest limits</h2>
       <ul className="flex list-disc flex-col gap-2 pl-5 text-[13.5px] leading-relaxed text-[var(--mc-text-2)]">
-        {lines.map((l) => <li key={l}>{l}</li>)}
+        {(results.limits ?? []).map((l) => <li key={l}>{l}</li>)}
       </ul>
-      {results.label_changes.map((c) => (
+      {(results.label_changes ?? []).map((c) => (
         <p key={`${c.call}-${c.turn}-${c.rule}`} className="rounded-lg bg-[var(--mc-advisory-tint)] px-3 py-2 text-[12.5px] leading-relaxed text-[var(--mc-advisory-ink)]">
           Label changed after the first run: {c.rule} {c.action} on {c.call.toUpperCase()} turn {c.turn} ({c.changed_on}; labels {c.label_hash_before} to {c.label_hash_after}). {c.reason}
         </p>
