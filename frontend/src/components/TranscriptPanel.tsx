@@ -44,8 +44,8 @@ export function TranscriptPanel({ turns, findings, scenario, onOpen, children }:
   const offset = (idx: number) => scenario?.turns.find((t) => t.idx === idx)?.offset_ms ?? 0
 
   return (
-    <section className="card relative flex min-w-0 flex-col" aria-labelledby="transcript-h">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#eaecf0] px-4 py-4 sm:px-6">
+    <section className="call-tx-card card relative flex min-w-0 flex-col" aria-labelledby="transcript-h">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#eaecf0] px-4 py-3 sm:px-6">
         <h2 id="transcript-h" className="text-[15px] font-semibold">Live transcript</h2>
         <ul className="hidden gap-3.5 text-xs text-[#475467] sm:flex" aria-label="Legend">
           {LEGEND.map((k) => (
@@ -59,7 +59,7 @@ export function TranscriptPanel({ turns, findings, scenario, onOpen, children }:
         ref={box}
         id="call-transcript"
         onScroll={onScroll}
-        className="flex h-[min(62vh,640px)] flex-col gap-[18px] overflow-y-auto px-4 py-5 sm:px-6"
+        className="call-tx-scroll flex h-[min(62vh,640px)] flex-col gap-[18px] overflow-y-auto px-4 py-4 sm:px-6"
         aria-live="polite"
         aria-label="Call transcript"
         tabIndex={0}

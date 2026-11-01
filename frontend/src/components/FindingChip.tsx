@@ -4,11 +4,6 @@ import { KIND_LABEL } from '@/lib/events'
 import { tokId } from '@/lib/findings'
 import type { Rule } from '@/lib/api'
 
-const fmt = (ms: number) => {
-  const s = Math.floor(ms / 1000)
-  return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
-}
-
 export function scrollToFinding(f: Finding) {
   const el = document.getElementById(tokId(f.turn_idx, f.token_range[0]))
   if (!el) return
@@ -22,15 +17,13 @@ interface Props {
   findings: Finding[]
   rules: Rule[]
   onOpen: (f: Finding) => void
-  /** Start of a turn in the call, in ms, for the time on each row */
-  offsetOf?: (turnIdx: number) => number | null
 }
 
-export function FindingList({ findings: all, rules, onOpen, offsetOf }: Props) {
+export function FindingList({ findings: all, rules, onOpen }: Props) {
   const findings = all.filter((f) => f.kind !== 'good_practice')
   const good = all.length - findings.length
   return (
-    <section aria-label="Findings" className="card flex flex-col gap-3 p-4 sm:p-5">
+    <section aria-label="Findings" className="card flex min-h-0 flex-col gap-3 p-4 sm:p-5 lg:h-full">
       <div className="flex items-center justify-between">
         <h2 className="lbl">Findings</h2>
         <span className="text-xs text-[var(--mc-muted)]">{findings.length} this call</span>
@@ -38,9 +31,9 @@ export function FindingList({ findings: all, rules, onOpen, offsetOf }: Props) {
       {findings.length === 0 ? (
         <p className="text-sm text-[var(--mc-muted)]">Nothing flagged yet.</p>
       ) : (
-        <ul className="flex flex-col">
+        <ul className="findings-scroll flex min-h-0 flex-col overflow-y-auto">
           {findings.map((f) => {
-            const at = offsetOf?.(f.turn_idx)
+            const ms = f.latency?.total_ms
             const title = rules.find((r) => r.id === f.rule_id)?.title ?? KIND_LABEL[f.kind]
             return (
               <li key={f.id} className="rise border-b border-[var(--mc-line-soft)] last:border-0">
@@ -59,7 +52,10 @@ export function FindingList({ findings: all, rules, onOpen, offsetOf }: Props) {
                       {f.kind === 'violation' ? `“${f.quote}”` : `${KIND_LABEL[f.kind]} · “${f.quote}”`}
                     </span>
                   </span>
-                  {at != null && <span className="mono text-xs text-[var(--mc-muted)]">{fmt(at)}</span>}
+                  <span className="mono flex-none text-right text-xs leading-snug text-[var(--mc-muted)]">
+                    <span className="block">Turn {f.turn_idx}</span>
+                    {typeof ms === 'number' && <span className="block">flagged in {(ms / 1000).toFixed(1)} s</span>}
+                  </span>
                 </button>
               </li>
             )
@@ -67,9 +63,9 @@ export function FindingList({ findings: all, rules, onOpen, offsetOf }: Props) {
         </ul>
       )}
       {good > 0 && (
-        <p className="flex items-center gap-2 rounded-[10px] bg-[var(--mc-good-practice-tint)] px-3 py-[9px] text-[12.5px] font-medium text-[var(--mc-good-practice-ink)]">
+        <p className="flex flex-none items-center gap-2 rounded-[10px] bg-[var(--mc-good-practice-tint)] px-3 py-[9px] text-[12.5px] font-medium text-[var(--mc-good-practice-ink)]">
           <Check className="h-[15px] w-[15px] flex-none" strokeWidth={2.5} aria-hidden />
-          {good} good-practice moment{good === 1 ? '' : 's'}, highlighted green in the transcript
+          {good} good-practice moment{good === 1 ? '' : 's'} in the transcript
         </p>
       )}
     </section>

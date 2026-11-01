@@ -1,3 +1,4 @@
+import { usePageTitle } from '@/lib/usePageTitle'
 import { useCallback, useEffect, useState } from 'react'
 import { ErrorCard } from '@/components/ErrorCard'
 import {
@@ -44,6 +45,7 @@ const dateOf = (iso: string) => new Date(iso).toLocaleDateString('en-GB', { day:
 const seconds = (ms: number | null) => (ms === null ? '–' : `${(ms / 1000).toFixed(1)} s`)
 
 export function Evaluation() {
+  usePageTitle('Evaluation · Maryada')
   const [data, setData] = useState<EvalPayload | null>(null)
   const [rules, setRules] = useState<Rule[]>([])
   const [error, setError] = useState<string | null>(null)

@@ -24,6 +24,7 @@ import {
 } from '@/lib/api'
 import { audio } from '@/lib/audioEngine'
 import { CallClient } from '@/lib/callClient'
+import { usePageTitle } from '@/lib/usePageTitle'
 import type { Finding } from '@/lib/events'
 import { keysComplete, useHasKeys, useKeysStore } from '@/store/keysStore'
 import { useServerStore } from '@/store/serverStore'
@@ -51,6 +52,7 @@ export function LiveCall() {
   const client = useRef<CallClient | null>(null)
 
   const st = useSessionStore()
+  usePageTitle(scenario ? `${scenario.id.toUpperCase()} ${scenario.title} · Maryada` : 'Call · Maryada')
 
   const teardown = useCallback(() => {
     client.current?.close()
@@ -183,42 +185,41 @@ export function LiveCall() {
   const running = st.status === 'live' || st.status === 'connecting'
   const failed = st.status === 'error' || st.conn === 'failed'
   const total = scenario.duration_ms ?? 0
-  const offsetOf = (idx: number) => scenario.turns.find((t) => t.idx === idx)?.offset_ms ?? null
-  const summaryText = scenario.summary.replace(/^HERO\.\s*/, '')
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="call-fit flex flex-col gap-3 sm:gap-4">
       <ReconnectBanner />
 
-      {/* Top strip */}
-      <header className="card flex flex-col gap-4 p-4 sm:px-6 sm:py-5">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="flex min-w-0 flex-col gap-1 sm:min-w-[280px]">
+      {/* Top strip: one compact band, so the transcript gets the height */}
+      <header className="card flex flex-none flex-col gap-1 p-3 sm:px-5 sm:py-3">
+        <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+          <div className="flex min-w-0 flex-col gap-0.5 sm:min-w-[280px]">
             <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-[var(--mc-muted)]">
               <Link to="/" className="link !font-normal">Cases</Link>
               <span aria-hidden>/</span>
               <span>{scenario.id.toUpperCase()}</span>
             </nav>
-            <h1 className="text-lg font-semibold leading-tight tracking-tight sm:text-[22px]">{scenario.title}</h1>
-            <p className="text-[13px] text-[var(--mc-muted)]">
-              {summaryText}
-              {total ? ` · ${fmt(total)}` : ''}
-            </p>
+            <h1 className="text-lg font-semibold leading-tight tracking-tight sm:text-xl">{scenario.title}</h1>
           </div>
-          <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex flex-wrap items-center gap-2">
             <ModeBadge mode={st.mode} status={st.status} />
             <span className="chip mono text-[13px] font-semibold text-[var(--mc-text)]" aria-label="Call timer">
               {fmt(timeMs)} {total > 0 && <span className="font-medium text-[var(--mc-muted)]">/ {fmt(total)}</span>}
             </span>
-            {st.latencyMs !== null && (
-              <span className="chip mono" title="From the end of the agent words to the coach card">
-                <Clock className="h-[13px] w-[13px]" aria-hidden />
-                Flag in {(st.latencyMs / 1000).toFixed(1)} s{st.mode === 'replay' ? ' · recorded' : ''}
-              </span>
-            )}
-            {st.langs.map((l) => (
-              <span key={l} className="chip">{l}</span>
-            ))}
+            {/* These two slots keep their width while empty, so the band never jumps when a chip appears */}
+            <span
+              className={`chip mono ${st.latencyMs === null ? 'invisible' : ''}`}
+              title="From the end of the agent words to the coach card"
+              aria-hidden={st.latencyMs === null}
+            >
+              <Clock className="h-[13px] w-[13px]" aria-hidden />
+              Flag in {((st.latencyMs ?? 0) / 1000).toFixed(1)} s{st.mode === 'replay' ? ' · recorded' : ''}
+            </span>
+            <span className="flex min-h-7 min-w-[132px] flex-wrap items-center gap-1.5" aria-label="Languages heard">
+              {st.langs.map((l) => (
+                <span key={l} className="chip">{l}</span>
+              ))}
+            </span>
             <button
               onClick={() => {
                 audio.setMuted(!muted)
@@ -264,8 +265,8 @@ export function LiveCall() {
       {idle && !failed ? (
         <StartCard scenario={scenario} busy={phase === 'starting'} onStart={(m) => void begin(m)} />
       ) : (
-        <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_380px] lg:grid-rows-[auto_auto_1fr] lg:items-start">
-          <div className="min-w-0 order-3 lg:order-none lg:col-start-1 lg:row-span-3 lg:row-start-1">
+        <div className="call-grid grid grid-cols-[minmax(0,1fr)] gap-3 sm:gap-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:grid-rows-[auto_auto_minmax(0,1fr)] lg:items-start">
+          <div className="call-tx min-w-0 order-3 lg:order-none lg:col-start-1 lg:row-span-3 lg:row-start-1">
             <TranscriptPanel turns={st.turns} findings={st.findings} scenario={scenario} onOpen={setOpen}>
               <StageLine />
             </TranscriptPanel>
@@ -276,8 +277,8 @@ export function LiveCall() {
           <div className="min-w-0 order-2 lg:order-none lg:col-start-2 lg:row-start-2">
             <RiskMeter />
           </div>
-          <div className="min-w-0 order-4 lg:order-none lg:col-start-2 lg:row-start-3">
-            <FindingList findings={st.findings} rules={rules} onOpen={setOpen} offsetOf={offsetOf} />
+          <div className="call-find min-h-0 min-w-0 order-4 lg:order-none lg:col-start-2 lg:row-start-3">
+            <FindingList findings={st.findings} rules={rules} onOpen={setOpen} />
           </div>
         </div>
       )}

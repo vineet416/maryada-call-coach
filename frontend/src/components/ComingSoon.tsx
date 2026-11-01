@@ -1,3 +1,4 @@
+import { usePageTitle } from '@/lib/usePageTitle'
 import { Link } from 'react-router-dom'
 import { Hourglass } from 'lucide-react'
 
@@ -11,6 +12,7 @@ interface Props {
 
 /** Empty state for a page whose data does not exist yet. It shows no numbers, only what will appear. */
 export function ComingSoon({ title, intro, items, note }: Props) {
+  usePageTitle(`${title} · Maryada`)
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">

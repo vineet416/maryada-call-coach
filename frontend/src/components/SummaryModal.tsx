@@ -1,7 +1,7 @@
 import { X } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import type { Rule, ScenarioDetail } from '@/lib/api'
+import { getScenarios, type Rule, type ScenarioDetail } from '@/lib/api'
 import type { Finding } from '@/lib/events'
 import { useFocusTrap } from '@/lib/useFocusTrap'
 import type { Mode, Summary } from '@/store/sessionStore'
@@ -24,6 +24,7 @@ const len = (ms: number | null) => {
 
 export function SummaryModal({ scenario, summary, findings, rules, mode, onRunAgain, onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null)
+  const [next, setNext] = useState<string | null>(null)
   const good = findings.filter((f) => f.kind === 'good_practice').length
   const flagged = findings.filter((f) => f.kind !== 'good_practice')
   const violations = flagged.filter((f) => f.kind === 'violation').length
@@ -35,6 +36,19 @@ export function SummaryModal({ scenario, summary, findings, rules, mode, onRunAg
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [onClose])
+
+  // The next recorded run after this one in the list (wrapping round); no suggestion if there is none
+  useEffect(() => {
+    const ctl = new AbortController()
+    getScenarios(ctl.signal)
+      .then((all) => {
+        const at = all.findIndex((c) => c.id === scenario.id)
+        const after = [...all.slice(at + 1), ...all.slice(0, Math.max(at, 0))]
+        setNext(after.find((c) => c.has_replay && c.id !== scenario.id)?.id ?? null)
+      })
+      .catch(() => undefined) // the suggestion is optional
+    return () => ctl.abort()
+  }, [scenario.id])
 
   const rows = Object.entries(summary.by_rule)
 
@@ -101,6 +115,9 @@ export function SummaryModal({ scenario, summary, findings, rules, mode, onRunAg
           <div className="flex flex-wrap gap-2.5">
             <button onClick={onClose} className="btn">Review transcript</button>
             <Link to="/" className="btn">Back to cases</Link>
+            {next && (
+              <Link to={`/call/${next}`} className="btn">Try another recorded run</Link>
+            )}
             <button onClick={onRunAgain} className="btn btn-primary">Run again</button>
           </div>
         </div>

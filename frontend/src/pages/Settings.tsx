@@ -1,3 +1,4 @@
+import { usePageTitle } from '@/lib/usePageTitle'
 import { ChevronDown, Eye, EyeOff, Lock, LoaderCircle } from 'lucide-react'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
@@ -11,6 +12,7 @@ import { useKeysStore } from '@/store/keysStore'
 type Test = TestResult | 'busy' | null
 
 export function Settings() {
+  usePageTitle('Settings · Maryada')
   const { keys, remember, set, setRemember, clear } = useKeysStore()
   const provider = PROVIDERS.find((p) => p.id === keys.provider) ?? PROVIDERS[0]
   const custom = provider.id === 'custom'
