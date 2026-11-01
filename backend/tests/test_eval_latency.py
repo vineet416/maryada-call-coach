@@ -29,3 +29,10 @@ def test_same_id_in_two_calls_is_two_findings_and_empty_input():
     assert latency_stats(runs)["rows"][0]["n"] == 2
     empty = latency_stats({})["rows"]
     assert all(r["n"] == 0 and r["p50_ms"] is None for r in empty)
+
+
+def test_malformed_events_are_skipped_not_fatal():
+    bad = [ev("a", ["fast"], 1000), {"type": "finding.detected", "data": "x"}, "junk", {"type": "finding.detected", "data": {"latency": 5}},
+           ev("b", "deep", 2000, 900)]
+    rows = {r["label"]: r for r in latency_stats({"c1": bad})["rows"]}
+    assert rows["First flag (either check)"]["n"] == 1 and rows["Deep language check"]["n"] == 1

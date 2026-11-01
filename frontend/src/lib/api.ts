@@ -91,10 +91,10 @@ export interface EvalExample {
 export interface RunResult {
   calls_run: number
   complete: boolean
-  all: Score
-  tune: Score | null
-  held_out: Score | null
-  seen_in_development: Score | null
+  all?: Score | null
+  tune?: Score | null
+  held_out?: Score | null
+  seen_in_development?: Score | null
   examples?: EvalExample[]
   stt: { turns: number; requests_made: number; avg_latency_ms: number }
   llm: { requests: number; cache_hits: number; skipped: number; degraded: number; tokens: number }
@@ -116,7 +116,7 @@ export interface EvalResults {
   status: 'partial' | 'complete'
   limits: string[]
   label_changes: LabelChange[]
-  model_info: { stt: string; llm: string; thresholds: { violation: number; needs_review: number } }
+  model_info?: { stt?: string; llm?: string; thresholds?: { violation: number; needs_review: number } }
   full: Record<string, RunResult>
   ablation_llm_off: Record<string, RunResult>
 }

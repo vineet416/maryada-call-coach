@@ -45,6 +45,8 @@ def latency_stats(runs: dict[str, list[dict]]) -> dict:
             if d.get("kind") == "good_practice" or not isinstance(lat, dict) or not isinstance(lat.get("total_ms"), int | float):
                 continue
             key, phase = f"{cid}:{d.get('id')}", d.get("phase")
+            if not isinstance(phase, str):
+                continue
             if key not in seen_any:
                 seen_any.add(key)
                 first.append(lat["total_ms"])

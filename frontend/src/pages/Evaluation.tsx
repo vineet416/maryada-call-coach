@@ -46,10 +46,9 @@ const seconds = (ms: number | null) => (ms === null ? '–' : `${(ms / 1000).toF
 export function Evaluation() {
   const [data, setData] = useState<EvalPayload | null>(null)
   const [rules, setRules] = useState<Rule[]>([])
-  const [rulesFailed, setRulesFailed] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [engine, setEngine] = useState<Engine | null>(null)
-  const [cond, setCond] = useState('clean')
+  const [cond, setCond] = useState<string | null>(null)
   const [group, setGroup] = useState<Group>('all')
 
   const load = useCallback(() => {
@@ -61,16 +60,18 @@ export function Evaluation() {
       .catch((e: Error) => e.name !== 'AbortError' && setError(e.message))
     getRules(ctl.signal)
       .then(setRules)
-      .catch(() => setRulesFailed(true)) // rule names are only labels; a note says so
+      .catch(() => undefined) // rule names are only labels; the page works without them
     return () => ctl.abort()
   }, [])
   useEffect(() => load(), [load])
 
   const results = data?.results ?? null
-  const has = (e: Engine, c: string) => Boolean(results?.[e]?.[c])
-  // Default view: the full engine on clean audio when it exists, else the rules-only baseline.
-  const eng: Engine = engine ?? (has('full', 'clean') ? 'full' : 'ablation_llm_off')
-  const run = results?.[eng]?.[cond] ?? null
+  const ran = (e: Engine) => CONDITIONS.filter((c) => results?.[e]?.[c.id]).map((c) => c.id)
+  // Default view: the full engine on clean audio as soon as the full engine has results; else the rules-only baseline.
+  const eng: Engine = engine ?? (ran('full').length ? 'full' : 'ablation_llm_off')
+  const available = ran(eng)
+  const cd = cond ?? (available.includes('clean') ? 'clean' : (available[0] ?? 'clean'))
+  const run = results?.[eng]?.[cd] ?? null
 
   if (error) return <ErrorCard message={error} onRetry={load} />
   if (!data) {
@@ -96,7 +97,7 @@ export function Evaluation() {
         </div>
         {results && (
           <span className="chip chip-warn" title="Saved results, not a live run">
-            Recorded run · {dateOf(results.generated_at)}
+            Results saved {dateOf(results.generated_at)}
           </span>
         )}
       </div>
@@ -111,17 +112,15 @@ export function Evaluation() {
       ) : (
         <>
           <Coverage results={results} />
-          <RunPicker results={results} eng={eng} cond={cond} setEngine={setEngine} setCond={setCond} />
+          <RunPicker results={results} eng={eng} cond={cd} setEngine={setEngine} setCond={setCond} />
           {run ? (
-            <>
-              {rulesFailed && <p role="status" className="text-[12.5px] text-[var(--mc-muted)]">Rule names and types could not be loaded; rules are shown by their ids only.</p>}
-              <RunView run={run} results={results} rules={rules} group={group} setGroup={setGroup} eng={eng} cond={cond} />
-            </>
+            <RunView run={run} results={results} rules={rules} group={group} setGroup={setGroup} eng={eng} cond={cd} />
           ) : (
             <section className="card p-6" role="status">
               <h2 className="text-[17px] font-semibold tracking-tight">Not run yet</h2>
               <p className="mt-1 text-[13.5px] text-[var(--mc-text-2)]">
-                {ENGINES.find((e) => e.id === eng)?.label} on {lc(CONDITIONS.find((c) => c.id === cond)?.label ?? '')} has not been run, so there are no numbers to show for it.
+                {ENGINES.find((e) => e.id === eng)?.label} on {lc(CONDITIONS.find((c) => c.id === cd)?.label ?? '')} has not been run, so there are no numbers to show for it.
+                There are also no errors to show under “Where it went wrong” for this selection. Pick a run that has results above.
               </p>
             </section>
           )}
@@ -223,34 +222,41 @@ function RunView({ run, results, rules, group, setGroup, eng, cond }: {
   eng: Engine
   cond: string
 }) {
-  const score: Score | null = run[group]
-  const held = run.held_out
+  const score: Score | null = run[group] ?? null
+  const held = run.held_out ?? null
+  const all = run.all ?? null
   const name = (id: string) => rules.find((r) => r.id === id)?.title ?? ''
   // chip tone and the needs-review label come from the rulebook (/api/rules), not from this page
   const kind = (id: string) => rules.find((r) => r.id === id)?.kind_default ?? 'violation'
   return (
     <>
-      <section aria-label="Headline scores" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat label="Violations found" prf={run.all.overall.strict} kind="r" note="labelled units, strict" />
-        <Stat label="Flags that were correct" prf={run.all.overall.strict} kind="p" note="flags, strict" />
-        <Stat label="Found, counting needs review" prf={run.all.overall.with_review} kind="r" note="labelled units" />
-        {held ? (
-          <Stat label={`Held-out calls (${held.n_calls})`} prf={held.overall.strict} kind="r" note="labelled units, strict" />
-        ) : (
-          <div className="card p-5"><div className="lbl">Held-out calls</div><div className="mt-1 text-[13px] text-[var(--mc-muted)]">Not in this run.</div></div>
-        )}
-      </section>
-      <p className="-mt-3 text-[12.5px] text-[var(--mc-muted)]">
-        All headline cards: {ENGINES.find((e) => e.id === eng)?.label.toLowerCase()}, {lc(CONDITIONS.find((c) => c.id === cond)?.label ?? '')}, {run.all.n_calls} calls.
-        Strict counts violations and advisories only. A unit is one agent turn and one rule.
-      </p>
+      {all ? (
+        <>
+          <section aria-label="Headline scores" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <Stat label="Violations found" prf={all.overall.strict} kind="r" note="labelled units, strict" />
+            <Stat label="Flags that were correct" prf={all.overall.strict} kind="p" note="flags, strict" />
+            <Stat label="Found, counting needs review" prf={all.overall.with_review} kind="r" note="labelled units" />
+            {held ? (
+              <Stat label={`Held-out calls (${held.n_calls})`} prf={held.overall.strict} kind="r" note="labelled units, strict" />
+            ) : (
+              <div className="card p-5"><div className="lbl">Held-out calls</div><div className="mt-1 text-[13px] text-[var(--mc-muted)]">Not in this run.</div></div>
+            )}
+          </section>
+          <p className="-mt-3 text-[12.5px] text-[var(--mc-muted)]">
+            All headline cards: {ENGINES.find((e) => e.id === eng)?.label.toLowerCase()}, {lc(CONDITIONS.find((c) => c.id === cond)?.label ?? '')}, {all.n_calls} calls.
+            Strict counts violations and advisories only. A unit is one agent turn and one rule.
+          </p>
+        </>
+      ) : (
+        <p role="status" className="card p-5 text-[13.5px] text-[var(--mc-muted)]">This run has no combined scores, so the headline cards are left out. The groups below show what exists.</p>
+      )}
 
       <section className="card overflow-hidden" aria-labelledby="rule-h">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--mc-line)] px-6 py-4">
           <h2 id="rule-h" className="text-base font-semibold">Results by rule</h2>
           <div role="group" aria-label="Which calls" className="flex flex-wrap gap-2">
             {GROUPS.map((g) => {
-              const s = run[g.id]
+              const s = run[g.id] ?? null
               return (
                 <button key={g.id} type="button" disabled={!s} aria-pressed={group === g.id} onClick={() => setGroup(g.id)} title={g.note}
                   className={`chip cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 ${group === g.id ? '!border-[var(--mc-accent)] !bg-[var(--mc-accent)] !font-semibold !text-white' : 'hover:bg-[var(--mc-line-soft)]'}`}>
@@ -265,9 +271,14 @@ function RunView({ run, results, rules, group, setGroup, eng, cond }: {
       </section>
 
       <Examples examples={run.examples ?? []} kind={kind} />
-      <PerCall score={run.all} />
+      {all && <PerCall score={all} />}
       <p className="text-[12px] text-[var(--mc-muted)]">
-        Model: {results.model_info.llm} · speech: {results.model_info.stt} · thresholds {results.model_info.thresholds.violation} (violation) and {results.model_info.thresholds.needs_review} (needs review) · labels {results.labels_hash}
+        {[
+          results.model_info?.llm && `Model: ${results.model_info.llm}`,
+          results.model_info?.stt && `speech: ${results.model_info.stt}`,
+          results.model_info?.thresholds && `thresholds ${results.model_info.thresholds.violation} (violation) and ${results.model_info.thresholds.needs_review} (needs review)`,
+          results.labels_hash && `labels ${results.labels_hash}`,
+        ].filter(Boolean).join(' · ')}
       </p>
     </>
   )
@@ -397,7 +408,7 @@ function Ablation({ results }: { results: EvalResults }) {
   const off = results.ablation_llm_off?.clean
   const on = results.full?.clean
   const row = (label: string, r?: RunResult) => {
-    const s = r?.all.overall.strict
+    const s = r?.all?.overall?.strict
     return (
       <div className="flex flex-col gap-1.5">
         <div className="flex items-baseline justify-between gap-3 text-[13px]">
@@ -417,7 +428,7 @@ function Ablation({ results }: { results: EvalResults }) {
       {row('Rules and language model', on)}
       <p className="text-[12px] text-[var(--mc-muted)]">
         Strict recall on clean audio, all calls: labelled units found.{' '}
-        {on && off ? `The language model changes the number found from ${off.all.overall.strict.tp} to ${on.all.overall.strict.tp} of ${on.all.overall.strict.tp + on.all.overall.strict.fn}.` : 'The full engine has not been run, so there is nothing to compare yet.'}
+        {on?.all && off?.all ? `The language model changes the number found from ${off.all.overall.strict.tp} to ${on.all.overall.strict.tp} of ${on.all.overall.strict.tp + on.all.overall.strict.fn}.` : 'The full engine has not been run, so there is nothing to compare yet.'}
       </p>
     </section>
   )
@@ -430,7 +441,7 @@ function Noise({ results, eng }: { results: EvalResults; eng: Engine }) {
       <p className="-mt-1 text-[12.5px] text-[var(--mc-muted)]">Strict recall for {ENGINES.find((e) => e.id === eng)?.label.toLowerCase()}, all calls, as phone-line noise increases.</p>
       <div className="grid grid-cols-4 gap-3">
         {CONDITIONS.map((c) => {
-          const s = results[eng]?.[c.id]?.all.overall.strict
+          const s = results[eng]?.[c.id]?.all?.overall?.strict
           return (
             <div key={c.id} className="flex flex-col items-center gap-1.5">
               <div className="flex h-[120px] w-full items-end justify-center border-b border-[var(--mc-line)]" aria-hidden>
