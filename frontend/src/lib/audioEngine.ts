@@ -56,6 +56,7 @@ class AudioEngine {
   private turnStartT = 0 // call time (server clock, ms) at which the current turn's audio starts
   private turnPlayedAt = 0 // performance.now() when it was started here
   private frozenInto = 0 // ms into the turn while the call is held
+  private held = false // the call is paused for the coach (the pause option); a finished clip also reports paused
   coachVoice = readFlag(COACH_KEY, true)
   muted = readFlag(MUTE_KEY, false)
   /** Option: the call pauses only while the coach clip plays. Default off (the coach plays over the call). */
@@ -94,6 +95,7 @@ class AudioEngine {
     this.turnStartT = startT
     this.turnPlayedAt = performance.now()
     this.frozenInto = 0
+    this.held = false
     void a.play().catch(() => undefined)
   }
 
@@ -118,10 +120,14 @@ class AudioEngine {
 
   /** Hold the call audio where it is (only used by the "pause while the coach speaks" option). */
   pauseTurn() {
+    this.frozenInto = this.turnIntoMs() ?? this.frozenInto
+    this.held = true
     this.turn?.pause()
   }
 
   resumeTurn() {
+    if (this.held && this.turn?.ended) this.turnPlayedAt = performance.now() - this.frozenInto
+    this.held = false
     if (this.turn && !this.turn.ended) void this.turn.play().catch(() => undefined)
   }
 
@@ -132,7 +138,7 @@ class AudioEngine {
    */
   turnIntoMs(): number | null {
     if (!this.turn) return null
-    if (this.turn.paused) return this.frozenInto
+    if (this.held) return this.frozenInto
     const audioMs = this.turn.currentTime * 1000
     this.frozenInto = this.turn.ended ? Math.max(audioMs, performance.now() - this.turnPlayedAt) : audioMs
     return this.frozenInto
