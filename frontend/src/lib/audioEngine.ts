@@ -6,14 +6,25 @@ const MUTE_KEY = 'maryada.muted'
 const PAUSE_KEY = 'maryada.pauseForCoach'
 
 /**
- * Browser gains. The library already mixes the voices at agent -22, borrower -24, third party -25 and coach -27 LUFS;
- * the coach clip plays on top of the call, so it gets a further -1.9 dB (0.8): about 5 dB under the borrower and
- * 7 dB under the agent. The call voices play at full level. (iOS ignores element volume, so there the library levels
- * alone keep the order.)
+ * Browser gains. The library already mixes the voices at agent -22, borrower -24, third party -25 and coach -27 LUFS.
+ * The coach clip plays on top of the call, so it gets a further -6.9 dB (0.45), and the call is lowered by DUCK_DB while
+ * the clip plays: the coach ends up about 8 dB under the borrower and 10 dB under the agent. The call voices play at full
+ * level. (iOS ignores element volume, so there only the library levels apply.)
  */
-const GAIN = { agent: 1, borrower: 1, third_party: 1, coach: 0.8 }
-/** The call audio is lowered by this much while the coach clip plays (3-4 dB; 0 turns ducking off). */
-export const DUCK_DB = -3.5
+const CALL_GAIN = { agent: 1, borrower: 1, third_party: 1 }
+export const COACH_GAIN = 0.45
+/** The call audio is lowered by this much while the coach clip plays (0 turns ducking off). */
+export const DUCK_DB = -2
+
+/** Tuning by ear in the dev server only: ?coach=<gain 0.1-1>&duck=<dB 0-6>. Missing or invalid values are ignored. */
+function override(name: string, lo: number, hi: number): number | null {
+  if (!import.meta.env.DEV) return null
+  const raw = new URLSearchParams(window.location.search).get(name)
+  const v = raw === null || raw.trim() === '' ? NaN : Number(raw)
+  return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : null
+}
+const coachGain = () => override('coach', 0.1, 1) ?? COACH_GAIN
+const duckDb = () => (override('duck', 0, 6) !== null ? -(override('duck', 0, 6) as number) : DUCK_DB)
 const FADE_MS = 150
 
 function readFlag(key: string, fallback: boolean): boolean {
@@ -68,12 +79,12 @@ class AudioEngine {
     void a.play().catch(() => undefined)
   }
 
-  playTurn(url: string, idx: number, speaker: keyof typeof GAIN = 'agent') {
+  playTurn(url: string, idx: number, speaker: keyof typeof CALL_GAIN = 'agent') {
     this.stopTurn()
     const a = this.get(url)
     a.currentTime = 0
     a.muted = this.muted
-    this.turnGain = GAIN[speaker]
+    this.turnGain = CALL_GAIN[speaker]
     a.volume = this.turnGain * this.duckLevel
     this.turn = a
     this.currentTurnIdx = idx
@@ -88,9 +99,9 @@ class AudioEngine {
 
   /** Lower (or restore) the call audio with a short fade. */
   private setDuck(on: boolean) {
-    this.duckTarget = on ? 10 ** (DUCK_DB / 20) : 1
+    this.duckTarget = on ? 10 ** (duckDb() / 20) : 1
     window.clearInterval(this.duckTimer)
-    const step = ((1 - 10 ** (DUCK_DB / 20)) * 20) / FADE_MS || 1
+    const step = ((1 - 10 ** (duckDb() / 20)) * 20) / FADE_MS || 1
     this.duckTimer = window.setInterval(() => {
       const d = this.duckTarget - this.duckLevel
       this.duckLevel = Math.abs(d) <= step ? this.duckTarget : this.duckLevel + Math.sign(d) * step
@@ -121,7 +132,7 @@ class AudioEngine {
     }
     const a = this.get(url)
     a.currentTime = 0
-    a.volume = GAIN.coach
+    a.volume = coachGain()
     this.coach = a
     this.onCoachEnd = onEnd
     if (duck) this.setDuck(true)
