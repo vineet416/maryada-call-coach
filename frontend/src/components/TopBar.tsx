@@ -26,7 +26,7 @@ export function TopBar() {
   ))
   return (
     <header className="border-b border-[var(--mc-line)] bg-white">
-      <div className="mx-auto flex min-h-16 max-w-[1280px] flex-wrap items-center gap-x-7 gap-y-2 px-4 sm:px-8">
+      <div className="mx-auto flex min-h-16 max-w-[var(--page-w)] flex-wrap items-center gap-x-7 gap-y-2 px-4 sm:px-8">
         <Link to="/" className="flex items-center gap-2.5 rounded-lg" aria-label="Maryada, home">
           <span className="flex h-[30px] w-[30px] items-center justify-center rounded-lg bg-[var(--mc-accent)]">
             <ShieldCheck className="h-[18px] w-[18px] text-white" aria-hidden />

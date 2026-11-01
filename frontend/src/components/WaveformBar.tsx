@@ -26,7 +26,7 @@ export function WaveformBar({ scenario, findings, onTime, running }: Props) {
     const s = WaveSurfer.create({
       container: box.current,
       url: audioUrl(scenario.call_audio_url),
-      height: 48,
+      height: 32,
       waveColor: '#d0d5dd',
       progressColor: '#4338ca',
       cursorColor: '#0f172a',
@@ -80,11 +80,11 @@ export function WaveformBar({ scenario, findings, onTime, running }: Props) {
     marks.set(f.turn_idx, m)
   }
   return (
-    <div className="relative pb-[18px] pt-1.5">
+    <div className="relative pb-[18px] pt-1">
       {failed ? (
-        <div className="h-12 rounded-md bg-[var(--mc-line)]/50" aria-hidden />
+        <div className="h-8 rounded-md bg-[var(--mc-line)]/50" aria-hidden />
       ) : (
-        <div ref={box} aria-hidden className="h-12" />
+        <div ref={box} aria-hidden className="h-8" />
       )}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-4">
         {[...marks].map(([idx, m]) => {

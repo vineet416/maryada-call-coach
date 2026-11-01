@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { findingAt } from '@/lib/findings'
 import type { Finding } from '@/lib/events'
-import type { TurnView } from '@/store/sessionStore'
-import { WordToken } from '@/components/WordToken'
+import type { TokenView, TurnView } from '@/store/sessionStore'
+import { Phrase, Word } from '@/components/WordToken'
 import { ShimmerLine } from '@/components/ShimmerLine'
 
 const WHO = {
@@ -32,6 +32,7 @@ export function Bubble({ turn, offsetMs, findings, onOpen }: Props) {
   const n = Math.max(1, Math.max(0, ...turn.tokens.map((t) => t.n)))
   const step = Math.min(40, 1200 / n)
   const flagged = findings.filter((f) => f.turn_idx === turn.idx && f.kind !== 'good_practice').length
+  const { groups, broadGood } = useMemo(() => group(turn, findings), [turn, findings])
 
   return (
     <article
@@ -55,6 +56,19 @@ export function Bubble({ turn, offsetMs, findings, onOpen }: Props) {
               </span>
             </>
           )}
+          {broadGood && (
+            <>
+              {' · '}
+              <button
+                type="button"
+                onClick={() => onOpen(broadGood)}
+                aria-label="Good practice in this turn, press Enter for details"
+                className="chip chip-good_practice h-5 cursor-pointer px-2 text-[11px] hover:brightness-95"
+              >
+                Good practice
+              </button>
+            </>
+          )}
         </div>
         <div
           className={`px-4 py-3 ${
@@ -70,17 +84,13 @@ export function Bubble({ turn, offsetMs, findings, onOpen }: Props) {
             </div>
           ) : (
             <p className="text-left text-[15px] leading-[1.9] [word-spacing:normal]" style={{ fontFamily: 'var(--font-transcript)' }}>
-              {turn.tokens.map((t) => (
-                <WordToken
-                  key={t.i}
-                  turnIdx={turn.idx}
-                  token={t}
-                  finding={findingAt(findings, turn.idx, t.i)}
-                  reveal={reveal}
-                  step={step}
-                  onOpen={onOpen}
-                />
-              ))}
+              {groups.map((g) =>
+                g.finding ? (
+                  <Phrase key={g.tokens[0].i} turnIdx={turn.idx} tokens={g.tokens} finding={g.finding} reveal={reveal} step={step} onOpen={onOpen} />
+                ) : (
+                  g.tokens.map((t) => <Word key={t.i} turnIdx={turn.idx} token={t} reveal={reveal} step={step} />)
+                ),
+              )}
             </p>
           )}
           {turn.analysing && !waiting && <ShimmerLine label="Checking against the rulebook" />}
@@ -105,4 +115,32 @@ function useSlow(turn: TurnView) {
     return () => window.clearTimeout(t)
   }, [pending, turn.startedAt, turn.durationMs])
   return slow
+}
+
+/** A good-practice span longer than this share of the turn is not painted: a tag on the bubble shows it instead. */
+const BROAD_SHARE = 0.7
+
+interface Group {
+  finding: Finding | null
+  tokens: TokenView[]
+}
+
+/** Consecutive words under the same finding become one phrase. Returns the broad good-practice finding, if any. */
+function group(turn: TurnView, findings: Finding[]): { groups: Group[]; broadGood: Finding | null } {
+  let broadGood: Finding | null = null
+  const groups: Group[] = []
+  for (const t of turn.tokens) {
+    let f = findingAt(findings, turn.idx, t.i)
+    if (f && f.kind === 'good_practice') {
+      const covered = turn.tokens.filter((x) => x.i >= f!.token_range[0] && x.i < f!.token_range[1]).length
+      if (covered / turn.tokens.length > BROAD_SHARE) {
+        broadGood = broadGood ?? f
+        f = null
+      }
+    }
+    const last = groups[groups.length - 1]
+    if (last && last.finding?.id === f?.id && (f !== null || last.finding === null)) last.tokens.push(t)
+    else groups.push({ finding: f, tokens: [t] })
+  }
+  return { groups, broadGood }
 }

@@ -1,3 +1,4 @@
+import { usePageTitle } from '@/lib/usePageTitle'
 import { ChevronRight, Gauge, Headset, Mic, ShieldCheck, TextAlignStart } from 'lucide-react'
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
@@ -51,6 +52,7 @@ const LEGEND: { kind: Kind; text: string }[] = [
 ]
 
 export function HowItWorks() {
+  usePageTitle('How it works · Maryada')
   const [rules, setRules] = useState<Rule[] | null>(null)
   const [failed, setFailed] = useState(false)
   useEffect(() => {

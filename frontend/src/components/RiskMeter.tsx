@@ -31,9 +31,9 @@ export function RiskMeter() {
   )
 
   return (
-    <section aria-label="Risk meter" className="card p-3.5 sm:p-5">
-      {/* Phone: compact number and bar */}
-      <div className="flex items-center gap-3 sm:hidden">
+    <section aria-label="Risk meter" className="card p-3.5 sm:p-4">
+      {/* Phones and short screens (laptops about 768 px high): compact number and bar */}
+      <div className="risk-compact items-center gap-3">
         <div className="mono text-[26px] font-bold leading-none tracking-tight" style={{ color: ink }} role="img" aria-label={`Risk ${risk.score} out of 100, ${risk.band}`}>
           {risk.score}
         </div>
@@ -48,8 +48,8 @@ export function RiskMeter() {
         </div>
       </div>
 
-      {/* Larger screens: gauge */}
-      <div className="hidden flex-col items-center gap-1.5 sm:flex">
+      {/* Tall screens: gauge */}
+      <div className="risk-gauge flex-col items-center gap-1.5">
         <div className="flex w-full items-center justify-between">
           <span className="lbl">Risk</span>
           <span className={`chip chip-${BAND_CHIP[risk.band]} font-semibold`}>{BAND_LABEL[risk.band]}</span>

@@ -264,6 +264,7 @@ body {
   display: inline;
   text-underline-offset: 5px;
   text-decoration-thickness: 2px;
+  text-decoration-skip-ink: none;
   border-radius: 3px;
   transition:
     background-color 0.35s ease,
@@ -294,6 +295,7 @@ body {
   filter: brightness(0.96);
 }
 .rt {
+  display: inline-block; /* keeps the phrase underline from running under the rule tag */
   font-size: 10px;
   font-weight: 700;
   color: var(--mc-violation-ink);
@@ -419,5 +421,78 @@ body {
   .pulse-dot,
   .wave {
     animation: none;
+  }
+}
+
+/* ---- Risk meter: bar on phones and short screens, gauge when there is height ---- */
+.risk-compact {
+  display: flex;
+}
+.risk-gauge {
+  display: none;
+}
+@media (min-width: 640px) and (min-height: 940px) {
+  .risk-compact {
+    display: none;
+  }
+  .risk-gauge {
+    display: flex;
+  }
+}
+
+/* ---- Call page on a laptop: one screen. The transcript is the only scroll area; findings scroll inside their card ---- */
+@media (min-width: 1024px) and (min-height: 640px) {
+  .shell-call {
+    height: 100dvh;
+    min-height: 0;
+  }
+  .shell-call > main {
+    min-height: 0;
+    overflow: hidden;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+  }
+  .shell-call .call-fit {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto; /* only the start card and error states ever scroll here; the running call fits */
+  }
+  .shell-call .call-grid {
+    flex: 1 1 0;
+    min-height: 0;
+    align-items: stretch;
+  }
+  .shell-call .call-tx,
+  .shell-call .call-find {
+    height: 100%;
+    min-height: 0;
+  }
+  .shell-call .call-tx-card {
+    height: 100%;
+    min-height: 0;
+  }
+  .shell-call .call-tx-scroll {
+    height: auto;
+    flex: 1 1 0;
+    min-height: 0;
+  }
+  .shell-call footer {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+}
+
+/* ---- Page width: 1280 px, a little wider on big screens so the content does not float in the margins ---- */
+.shell {
+  --page-w: 1280px;
+}
+@media (min-width: 1600px) {
+  .shell {
+    --page-w: 1360px;
+  }
+  .shell-call {
+    --page-w: 1440px;
   }
 }

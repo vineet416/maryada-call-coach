@@ -2,7 +2,8 @@ import { Clock, Headset, Mic, Play, Search, ShieldAlert } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ErrorCard } from '@/components/ErrorCard'
-import { getRules, getScenarios, type Rule, type ScenarioSummary } from '@/lib/api'
+import { getEval, getRules, getScenarios, type LatencyRow, type Rule, type ScenarioSummary } from '@/lib/api'
+import { usePageTitle } from '@/lib/usePageTitle'
 import { useHasKeys } from '@/store/keysStore'
 
 const lengthLabel = (s: number | null) => {
@@ -16,11 +17,13 @@ const tagKind = (t: string) =>
   t.startsWith('G') ? 'good_practice' : t === 'R6' ? 'needs_review' : t === 'R1' || t === 'R2' ? 'advisory' : 'violation'
 
 export function Cases() {
+  usePageTitle('Maryada · live RBI-conduct coach for loan-recovery agents')
   const [cases, setCases] = useState<ScenarioSummary[] | null>(null)
   const [rules, setRules] = useState<Rule[]>([])
   const [error, setError] = useState<string | null>(null)
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
+  const [flag, setFlag] = useState<LatencyRow | null>(null)
 
   const load = useCallback(() => {
     setError(null)
@@ -32,12 +35,18 @@ export function Cases() {
     getRules(ctl.signal)
       .then(setRules)
       .catch(() => undefined) // rule names are only a label; the page works without them
+    getEval(ctl.signal)
+      .then((e) => setFlag(e.latency.rows.find((r) => r.p50_ms !== null && r.n > 0) ?? null))
+      .catch(() => undefined) // the time-to-flag fact is hidden when it cannot be read
     return () => ctl.abort()
   }, [])
   useEffect(() => load(), [load])
 
   const hero = cases?.find((c) => c.hero)
-  const all = useMemo(() => cases ?? [], [cases])
+  // Recorded runs first (they play with no keys); the original order is kept inside each group
+  const all = useMemo(() => [...(cases ?? [])].sort((a, b) => Number(b.has_replay) - Number(a.has_replay)), [cases])
+  const recorded = all.filter((c) => c.has_replay).length
+  const families = rules.filter((r) => r.id.startsWith('R')).length
   const ruleTags = useMemo(
     () => [...new Set(all.flatMap((c) => c.tags))].filter((t) => t.startsWith('R')).sort(),
     [all],
@@ -47,6 +56,7 @@ export function Cases() {
     const q = query.trim().toLowerCase()
     if (q && !`${c.id} ${c.title} ${c.summary}`.toLowerCase().includes(q)) return false
     if (filter === 'all') return true
+    if (filter === 'recorded') return c.has_replay
     if (filter === 'clean') return !c.tags.some((t) => t.startsWith('R'))
     return c.tags.includes(filter)
   })
@@ -66,6 +76,7 @@ export function Cases() {
         </div>
       ) : (
         <>
+          <ProductLine calls={all.length} families={families} flag={flag} />
           {hero && <Hero c={hero} name={name} />}
           <section aria-labelledby="samples-h" className="flex flex-col gap-4">
             <div className="flex flex-wrap items-end justify-between gap-4">
@@ -89,6 +100,7 @@ export function Cases() {
             </div>
             <div role="group" aria-label="Filter calls" className="flex flex-wrap gap-2">
               <FilterChip on={filter === 'all'} onClick={() => setFilter('all')}>All {all.length}</FilterChip>
+              <FilterChip on={filter === 'recorded'} onClick={() => setFilter('recorded')}>Recorded runs {recorded}</FilterChip>
               {ruleTags.map((t) => (
                 <FilterChip key={t} on={filter === t} onClick={() => setFilter(t)}>
                   {t}
@@ -110,6 +122,30 @@ export function Cases() {
             )}
           </section>
         </>
+      )}
+    </div>
+  )
+}
+
+/** One line on what Maryada is, with facts read from the data: call count, rule families, measured time to flag. */
+function ProductLine({ calls, families, flag }: { calls: number; families: number; flag: LatencyRow | null }) {
+  const facts = [
+    calls > 0 && `${calls} synthetic calls`,
+    families > 0 && `${families} rule families`,
+    flag?.p50_ms != null && `median ${(flag.p50_ms / 1000).toFixed(1)} s to first flag in the recorded runs`,
+  ].filter(Boolean) as string[]
+  return (
+    <div className="flex flex-col gap-1.5">
+      <p className="text-lg font-semibold tracking-tight">A live RBI-conduct coach for loan-recovery agents</p>
+      {facts.length > 0 && (
+        <ul className="flex flex-wrap gap-x-5 gap-y-1 text-[13px] text-[var(--mc-muted)]" aria-label="Facts">
+          {facts.map((f) => (
+            <li key={f} className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--mc-accent)]" aria-hidden />
+              {f}
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   )
@@ -184,7 +220,6 @@ function Peek({ icon, title, text }: { icon: React.ReactNode; title: string; tex
 }
 
 function CaseCard({ c }: { c: ScenarioSummary }) {
-  const hasKeys = useHasKeys()
   return (
     <Link to={`/call/${c.id}`} className="card flex flex-col gap-3 p-5 transition hover:border-[var(--mc-accent-ring)] hover:shadow-md">
       <div className="flex items-center justify-between gap-2">
@@ -192,7 +227,7 @@ function CaseCard({ c }: { c: ScenarioSummary }) {
         {c.has_replay ? (
           <span className="text-xs text-[var(--mc-muted)]">Recorded run</span>
         ) : (
-          !hasKeys && <span className="chip chip-warn h-5 text-[11px]">Needs your keys</span>
+          <span className="chip h-5 text-[11px]" title="No recorded run: this call needs your own keys">Live only</span>
         )}
       </div>
       <h3 className="text-base font-semibold leading-snug tracking-tight">{c.title}</h3>
