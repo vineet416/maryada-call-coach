@@ -56,3 +56,45 @@ def find_phrase(words: list[tuple[str, int]], phrase: str) -> list[tuple[int, in
 def words_of(tokens: list[tuple[str, int, int]]) -> list[tuple[str, int]]:
     """Flatten tokens to (normalised word, token_index)."""
     return [(w, i) for i, t in enumerate(tokens) for w in normalize_word(t[0])]
+
+
+# ---- script-tolerant matching: used ONLY for the R2 and R6 phrase lists (the other rules keep exact matching) ----
+# A word is reduced to a rough consonant skeleton that is the same for its Roman and Devanagari spellings
+# (record = रिकॉर्ड = "rkrd", zaroori = ज़रूरी = जरूरी = "jr"), so text mixing both scripts still matches.
+_DEV = {**dict.fromkeys("कखक़ख़", "k"), **dict.fromkeys("गघग़", "g"), **dict.fromkeys("चछ", "C"), **dict.fromkeys("जझज़", "j"),
+        **dict.fromkeys("टठतथ", "t"), **dict.fromkeys("डढदधड़ढ़", "d"), **dict.fromkeys("णन", "n"),
+        **dict.fromkeys("पफफ़", "p"), **dict.fromkeys("बभ", "b"), "म": "m", "र": "r", "ल": "l", "ळ": "l",
+        **dict.fromkeys("शषस", "s"), "ह": "h", "ं": "n", "ँ": "n", "ः": "h"}
+_ASPIRABLE = set("kgCjtdpb")
+
+
+def skeleton(word: str) -> str:
+    """Consonant skeleton of one normalised word (vowels, y, w, v, nukta and halant dropped, aspiration folded)."""
+    w = unicodedata.normalize("NFD", word).replace("़", "")  # NFD splits precomposed ज़ ड़ ...; the nukta is dropped
+    w = w.replace("ch", "C").replace("sh", "s")
+    out: list[str] = []
+    for ch in w:
+        c = _DEV.get(ch)
+        if c is None:
+            if "a" <= ch <= "z":
+                c = {"c": "k", "q": "k", "x": "k", "z": "j", "f": "p"}.get(ch, ch)
+                if c in "aeiouywv":
+                    continue
+                if c == "h" and out and out[-1] in _ASPIRABLE:
+                    continue  # bh, kh, th ... -> b, k, t
+            elif ch.isdigit() or ch == "C":
+                c = ch
+            else:
+                continue  # Devanagari vowels and signs, halant, other marks
+        if not out or out[-1] != c:
+            out.append(c)
+    return "".join(out)
+
+
+def tolerant_words(words: list[tuple[str, int]]) -> list[tuple[str, int]]:
+    """(word, token_index) pairs as skeletons; words with no consonant are dropped (on both the phrase and text side)."""
+    return [(s, i) for w, i in words if (s := skeleton(w))]
+
+
+def tolerant_phrase(entry_variant: str) -> str:
+    return " ".join(s for w in entry_variant.split() if (s := skeleton(w)))

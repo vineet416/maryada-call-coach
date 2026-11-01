@@ -3,7 +3,14 @@ from typing import Any
 
 from .loader import load_rules
 from .schemas import CallContext, Finding, Turn
-from .text import find_phrase, split_variants, tokenize, words_of
+from .text import (
+    find_phrase,
+    split_variants,
+    tokenize,
+    tolerant_phrase,
+    tolerant_words,
+    words_of,
+)
 
 STRONG, WEAK = 0.9, 0.6
 DAY_START, DAY_END = 8 * 60, 19 * 60  # 08:00 .. 19:00 inclusive
@@ -32,12 +39,58 @@ def _any(words: list[tuple[str, int]], entries: list[str]) -> bool:
     return bool(_hits(words, entries))
 
 
+def _tolerant_hits(words: list[tuple[str, int]], entries: list[str]) -> list[tuple[int, int, str]]:
+    """Like _hits, but on consonant skeletons so Roman, Devanagari and mixed spellings match (R2 and R6 only)."""
+    tw = tolerant_words(words)
+    out = []
+    for entry in entries:
+        for variant in split_variants(entry):
+            if (phrase := tolerant_phrase(variant)):
+                out.extend((s, e, variant) for s, e in find_phrase(tw, phrase))
+    return out
+
+
+def _tolerant_any(words: list[tuple[str, int]], entries: list[str]) -> bool:
+    return bool(_tolerant_hits(words, entries))
+
+
+_MAIN = {"main", "mai", "मैं", "मै"}
+_BOL = {"bol", "बोल"}
+_RAHA = {"raha", "rahi", "rahe", "rha", "rhi", "रहा", "रही", "रहे"}
+_HOON = {"hoon", "hun", "hu", "ho", "हूँ", "हूं", "हु", "हो", "हूँ।"}
+_SE = {"se", "से"}
+
+
+def _self_intro_end(ws: list[str], i: int) -> int | None:
+    """Index just after a self-name phrase starting at i: 'bol raha/rahi hoon' (any script), or 'main'/'मैं'."""
+    if ws[i] in _MAIN:
+        return i + 1
+    if ws[i] in _BOL and i + 2 < len(ws) and ws[i + 1] in _RAHA and ws[i + 2] in _HOON:
+        return i + 3
+    return None
+
+
+def has_identification(turn: str) -> bool:
+    """A self-name phrase followed by 'se/से' and company words (the lender's spelling is not checked), in either order:
+    'main Neha, <company> se', 'Pooja bol rahi hoon <company> se', '<company> se Amit bol raha hoon'."""
+    ws = [w for w, _ in words_of(tokenize(turn))]
+    for i in range(len(ws)):
+        end = _self_intro_end(ws, i)
+        if end is not None and any(ws[j] in _SE for j in range(end + 1, min(len(ws), end + 8))):
+            return True
+        if ws[i] in _SE and i >= 1 and any(_self_intro_end(ws, j) is not None and ws[j] not in _MAIN
+                                         for j in range(i + 1, min(len(ws), i + 5))):
+            return True
+    return False
+
+
 def r2_missing(agent_turns: list[str]) -> bool:
-    """Look-back over the first two agent turns: name + lender AND recording notice must both appear."""
+    """Look-back over the first two agent turns: name + lender AND recording notice must both appear.
+    Script-tolerant (Roman, Devanagari or mixed). Call it with the COMPLETED second turn, never partial text."""
     pf = load_rules_by_id()["R2"]["prefilter"]
-    words = [w for t in agent_turns[:2] for w in words_of(tokenize(t))]
-    ident = _any(words, pf["identification_patterns"])
-    rec = _any(words, pf["recording_patterns"])
+    first_two = agent_turns[:2]
+    ident = any(has_identification(t) for t in first_two)
+    rec = _tolerant_any([w for t in first_two for w in words_of(tokenize(t))], pf["recording_patterns"])
     return not (ident and rec)
 
 
@@ -68,8 +121,8 @@ def prefilter(ctx: CallContext, history: list[Turn], turn_idx: int, text: str) -
                 out.append(_make(turn_idx, "R4", STRONG if len(v.split()) > 1 else WEAK, text, toks, s, e))
     pf = rules["R6"]["prefilter"]
     borrower_words = [w for t in history if t.speaker == "B" for w in words_of(tokenize(t.text))]
-    if _any(borrower_words, pf["borrower_context_triggers"]) or ctx.borrower_context:
-        for s, e, _ in _hits(words, pf["agent_pressing_patterns"]):
+    if _tolerant_any(borrower_words, pf["borrower_context_triggers"]) or ctx.borrower_context:
+        for s, e, _ in _tolerant_hits(words, pf["agent_pressing_patterns"]):
             out.append(_make(turn_idx, "R6", STRONG, text, toks, s, e, "needs_review"))
     return _merge_same_rule(out)
 
@@ -94,14 +147,16 @@ def _merge_same_rule(items: list[Finding]) -> list[Finding]:
     return out
 
 
-def gate_findings(ctx: CallContext, turn_idx: int, agent_turn_no: int, text: str, agent_turns: list[str]) -> list[Finding]:
-    """R1 on the first agent turn, R2 on the second. Whole-turn findings ('*')."""
+def gate_findings(ctx: CallContext, turn_idx: int, agent_turn_no: int, text: str, agent_turns: list[str],
+                  complete: bool = True) -> list[Finding]:
+    """R1 on the first agent turn, R2 on the second. Whole-turn findings ('*').
+    R2 is judged only on the completed second turn (`complete`), never on a partial segment."""
     n = len(tokenize(text))
     out: list[Finding] = []
     if agent_turn_no == 1 and r1_violation(ctx.simulated_start_time):
         out.append(Finding(turn_idx=turn_idx, rule_id="R1", kind="violation", confidence=1.0,
                            token_range=(0, n), source="gate"))
-    if agent_turn_no == 2 and r2_missing(agent_turns):
+    if agent_turn_no == 2 and complete and r2_missing(agent_turns):
         out.append(Finding(turn_idx=turn_idx, rule_id="R2", kind="advisory", confidence=1.0,
                            token_range=(0, n), source="gate"))
     return out
