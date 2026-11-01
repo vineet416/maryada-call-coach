@@ -113,18 +113,27 @@ export class CallClient {
     const st = useSessionStore.getState()
     switch (env.type) {
       case 'turn.started':
-        audio.playTurn(env.data.audio_url, env.data.turn_idx)
+        audio.playTurn(env.data.audio_url, env.data.turn_idx, env.data.speaker)
         break
-      case 'coach.speak':
-        // The call is held while the coach speaks (server waits duration + 300 ms)
-        st.setCoachHold(true)
+      case 'coach.speak': {
+        // The clip plays on top of the call at its event time; the call is never touched unless the user chose
+        // "Pause the call while the coach speaks" (the server then also moves the later turns by the clip length).
+        const hold = audio.holdForCoach
         st.setNudgeSpeaking(true)
-        audio.playCoach(env.data.audio_url, () => useSessionStore.getState().setNudgeSpeaking(false))
-        window.setTimeout(
-          () => useSessionStore.getState().setCoachHold(false),
-          (env.data.duration_ms ?? 0) + COACH_GAP_MS,
-        )
+        if (hold) {
+          st.setCoachHold(true)
+          audio.pauseTurn()
+        }
+        audio.playCoach(env.data.audio_url, () => {
+          useSessionStore.getState().setNudgeSpeaking(false)
+          if (!hold) return
+          window.setTimeout(() => {
+            useSessionStore.getState().setCoachHold(false)
+            audio.resumeTurn()
+          }, COACH_GAP_MS)
+        })
         break
+      }
       case 'coach.nudge':
         if (env.data.audio_url) audio.preload([env.data.audio_url])
         break

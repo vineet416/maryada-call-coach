@@ -71,6 +71,7 @@ class StartBody(BaseModel):
     scenario_id: str
     mode: str = "live"
     credentials: CredentialsIn | None = None  # the visitor's keys; sent in the POST body only, never in a URL
+    pause_for_coach: bool = False  # the user's option: the call pauses only while a coach clip plays
 
 
 class TestBody(BaseModel):
@@ -120,7 +121,7 @@ async def create_session(body: StartBody) -> dict:
             creds = Creds.from_body(c)
         elif not settings.server_keys:
             raise _err(400, "keys_required", KEYS_MSG)
-    s = runner.new_session(body.scenario_id, body.mode, creds)
+    s = runner.new_session(body.scenario_id, body.mode, creds, body.pause_for_coach)
     out = {"session_id": s.id, "effective_mode": s.effective_mode, "ws_url": f"/ws/session/{s.id}"}
     if s.reason:
         out["reason"] = s.reason

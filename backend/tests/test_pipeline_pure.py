@@ -76,3 +76,25 @@ def test_slice_wav(tmp_path):
         assert w.getnframes() == 6000 and w.getframerate() == 8000
     with wave.open(io.BytesIO(slice_wav(p, 5000))) as w:
         assert w.getnframes() == 0
+
+
+def _recorded():
+    ev = lambda seq, typ, t, **d: {"seq": seq, "type": typ, "t_ms": t, "data": d}
+    return [ev(1, "session.started", 20), ev(2, "turn.started", 100, turn_idx=1),
+            ev(3, "transcript.final", 3000, turn_idx=1), ev(4, "turn.ended", 4000, turn_idx=1),
+            ev(5, "coach.speak", 4010, duration_ms=2000),
+            ev(6, "turn.started", 9000, turn_idx=2), ev(7, "turn.ended", 12000, turn_idx=2)]
+
+
+def test_retime_keeps_lag_and_moves_turns_to_the_audio_clock():
+    out = replay.retime(_recorded(), {1: 300, 2: 3000})
+    assert [(e["type"], e["t_ms"]) for e in out] == [
+        ("session.started", 20), ("turn.started", 300), ("turn.started", 3000), ("transcript.final", 3200),
+        ("turn.ended", 4200), ("coach.speak", 4210), ("turn.ended", 6000)]
+    assert [e["seq"] for e in out] == list(range(1, 8))  # re-sequenced in time order
+
+
+def test_retime_hold_moves_what_happens_after_the_coach_clip():
+    out = replay.retime(_recorded(), {1: 300, 2: 3000}, hold=True)
+    assert [(e["type"], e["t_ms"]) for e in out][-1] == ("turn.ended", 8300)  # 6000 + 2000 clip + 300 gap
+    assert ("turn.started", 3000) in [(e["type"], e["t_ms"]) for e in out]  # started before the clip: untouched

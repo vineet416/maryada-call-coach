@@ -31,7 +31,7 @@ log = logging.getLogger("maryada.session")
 
 FIRST_ANSWER_S = 4.0  # docs/13 §4.5: wait this long for the LLM before closing a turn; later answers are "late" updates
 FIRST_SEGMENT_S = 15.0  # docs/01 §4: no transcript for this long -> fallback
-COACH_GAP_MS = 300
+COACH_GAP_MS = replay.COACH_GAP_MS
 MAX_SPOKEN_PER_CALL = 3
 _RANK = {"good_practice": 0, "advisory": 1, "needs_review": 2, "violation": 3}
 
@@ -42,11 +42,13 @@ UNSTARTED_TTL_S = 90  # a session whose WebSocket never connects drops its keys 
 
 
 class Session:
-    def __init__(self, scenario_id: str, mode: str, reason: str | None = None, creds: Creds | None = None) -> None:
+    def __init__(self, scenario_id: str, mode: str, reason: str | None = None, creds: Creds | None = None,
+                 pause_for_coach: bool = False) -> None:
         self.id = uuid.uuid4().hex[:10]
         self.scenario_id, self.effective_mode, self.reason = scenario_id, mode, reason
         self.log = EventLog()
         self.task: asyncio.Task | None = None
+        self.pause_for_coach = pause_for_coach  # the user's option: the call waits while a coach clip plays
         self.creds = creds  # the visitor's keys (memory only; wiped when the session ends)
         self.visitor = creds is not None  # a visitor session never falls back to the server's keys
         self.llm_error = ""  # last plain-language reason the language model failed
@@ -57,7 +59,7 @@ class Session:
         self.llm_skipped = 0  # LLM reviews skipped by the short-segment guard (not the same as a clean review)
 
 
-def new_session(scenario_id: str, requested: str, creds: Creds | None = None) -> Session:
+def new_session(scenario_id: str, requested: str, creds: Creds | None = None, pause_for_coach: bool = False) -> Session:
     """Decide live vs replay (REPLAY_ONLY, concurrent live limit, audio). A live request needs keys: the caller checks."""
     mode, reason = "replay", None
     if requested == "live":
@@ -73,7 +75,7 @@ def new_session(scenario_id: str, requested: str, creds: Creds | None = None) ->
         creds.wipe()  # a recorded run needs no keys: do not keep them
         creds = None
     _prune()
-    s = Session(scenario_id, mode, reason, creds)
+    s = Session(scenario_id, mode, reason, creds, pause_for_coach)
     SESSIONS[s.id] = s
     db.log_session_start(s.id, scenario_id, mode, _now())
     if mode == "live":
@@ -190,13 +192,18 @@ def _absorb(s: Session, events: list[dict]) -> None:
             s.risk_peak = max(s.risk_peak, e["data"]["score"])
 
 
+def _turn_starts(scenario_id: str, base_ms: int = 0) -> dict[int, int]:
+    """Natural start of each turn on the call clock (the audio schedule), in ms."""
+    return {t["idx"]: t["offset_ms"] - base_ms for t in assets.audio_manifest().get(scenario_id, {}).get("turns", [])}
+
+
 async def _run_replay(s: Session) -> None:
     events = replay.load(s.scenario_id)
     if events is None:
         s.log.emit("error", {"code": "no_replay", "message_user": "No recorded run exists for this case.",
                              "retryable": False})
         return
-    await replay.play(events, s.log.push)
+    await replay.play(events, s.log.push, turn_starts=_turn_starts(s.scenario_id), hold=s.pause_for_coach)
     _absorb(s, events)
 
 
@@ -211,7 +218,11 @@ async def _switch_to_replay(s: Session) -> None:
     s.log.emit("banner", {"kind": "replay", "message": "Live transcription is unavailable, showing the recorded run."})
     after = max((e["data"].get("turn_idx", 0) for e in s.log.events if e["type"] == "turn.ended"), default=0)
     rest = replay.remaining(events, after)
-    await replay.play(rest, lambda e: s.log.emit(e["type"], e["data"]))
+    first = next((e["data"]["turn_idx"] for e in rest if e["type"] == "turn.started"), None)
+    starts = _turn_starts(s.scenario_id)
+    base = starts.get(first, 0) if first is not None else 0
+    await replay.play(rest, lambda e: s.log.emit(e["type"], e["data"]),
+                      turn_starts=_turn_starts(s.scenario_id, base), hold=s.pause_for_coach)
     _absorb(s, rest)
 
 
@@ -258,37 +269,60 @@ async def _run_live(s: Session) -> None:
                                    "simulated_start_time": ctx.simulated_start_time})
     s.log.emit("stage.status", {"stage": "connecting", "turn_idx": 0, "text": "Connecting"})
     history: list[Turn] = []
-    score, spoken = 0, 0
+    spoken = 0
+    shift_s = 0.0  # grows while the user's option holds the call for the coach
+    t0 = time.perf_counter()
+    started = {t["idx"]: asyncio.Event() for t in turns}
+    closing: list[asyncio.Task] = []
     llm_client = llm.make_client()
     warm = asyncio.create_task(llm.warm_up(llm_client, creds))
+
+    async def clock() -> None:
+        """The call itself: each turn starts at its audio offset, whatever transcription and checking are doing."""
+        for t in turns:
+            while (left := t0 + t["offset_ms"] / 1000 * settings.pace + shift_s - time.perf_counter()) > 0:
+                await asyncio.sleep(left)
+            s.log.emit("turn.started", {"turn_idx": t["idx"], "speaker": assets.SPEAKER[t["speaker"]],
+                                        "audio_url": "/audio/" + t["mp3"], "duration_ms": t["duration_ms"]})
+            started[t["idx"]].set()
+
+    async def close_turn(turn: LiveTurn, idx: int, prev: asyncio.Task | None) -> int:
+        """Close one turn once the previous one is closed (risk follows the order of the call); never blocks the call."""
+        nonlocal spoken, shift_s
+        score = await turn.finish(await prev if prev else 0)
+        s.log.emit("turn.ended", {"turn_idx": idx})
+        if turn.nudge and not turn.nudge_late and spoken < MAX_SPOKEN_PER_CALL:
+            spoken += 1
+            s.log.emit("coach.speak", {"audio_url": turn.nudge["audio_url"], "duration_ms": turn.nudge["duration_ms"]})
+            if s.pause_for_coach:  # the user's option: the call waits while the coach speaks
+                shift_s += (turn.nudge["duration_ms"] + COACH_GAP_MS) / 1000
+        return score
+
+    ticker = asyncio.create_task(clock())
     try:
         async with httpx.AsyncClient(timeout=30) as stt_client:
-            for n, t in enumerate(turns):
+            for t in turns:
                 idx, role = t["idx"], assets.SPEAKER[t["speaker"]]
-                s.log.emit("turn.started", {"turn_idx": idx, "speaker": role, "audio_url": "/audio/" + t["mp3"],
-                                            "duration_ms": t["duration_ms"]})
+                await started[idx].wait()  # the audio of this turn is playing now
                 s.log.emit("stage.status", {"stage": "transcribing", "turn_idx": idx, "text": "Transcribing"})
-                turn = LiveTurn(s, ctx, history, idx, t["speaker"], llm_client)
+                turn = LiveTurn(s, ctx, list(history), idx, t["speaker"], llm_client)
                 async with gnani_lock(key):  # one active Gnani request per key
                     async for seg in _segments(stt_client, settings.data_dir / "audio" / t["wav8k"], load_profile(role), key):
                         turn.on_segment(seg)
-                score = await turn.finish(score)
-                s.log.emit("turn.ended", {"turn_idx": idx})
                 history.append(Turn(speaker=t["speaker"], text=turn.text))
                 db.log_turn(s.id, idx, t["speaker"], turn.text, turn.lang, turn.stt_ms)
-                if turn.nudge and not turn.nudge_late and spoken < MAX_SPOKEN_PER_CALL:
-                    spoken += 1
-                    s.log.emit("coach.speak", {"audio_url": turn.nudge["audio_url"], "duration_ms": turn.nudge["duration_ms"]})
-                    if settings.coach_mode == "hold":  # the call waits while the coach speaks
-                        await asyncio.sleep((turn.nudge["duration_ms"] + COACH_GAP_MS) / 1000)
-                if n + 1 < len(turns):  # the natural pause between turns, from the audio schedule
-                    gap = turns[n + 1]["offset_ms"] - t["offset_ms"] - t["duration_ms"]
-                    await asyncio.sleep(max(0, gap) / 1000 * settings.pace)
+                closing.append(asyncio.create_task(close_turn(turn, idx, closing[-1] if closing else None)))
+            await asyncio.gather(*closing)
             if s.late_tasks:  # late deep answers (up to the 8 s LLM budget) still update the call
                 await asyncio.gather(*s.late_tasks, return_exceptions=True)
+    except SttError:  # let the turns already heard close properly before the recorded tail takes over
+        ticker.cancel()
+        await asyncio.gather(*closing, return_exceptions=True)
+        raise
     finally:
         warm.cancel()
-        for task in s.late_tasks:  # stopped or timed out: no LLM answer may arrive after the client is closed
+        ticker.cancel()
+        for task in [*closing, *s.late_tasks]:  # stopped or timed out: nothing may arrive after the client is closed
             task.cancel()
         await llm_client.aclose()
     log.info("session=%s llm_skipped=%d | process totals: llm_calls=%d llm_cache_hits=%d", s.id, s.llm_skipped,
@@ -394,8 +428,7 @@ class LiveTurn:
         self.nudge, self.nudge_late = line, self.closed  # a card shown after the turn ended gets no voice
         self.s.log.emit("stage.status", {"stage": "coaching", "turn_idx": self.idx, "text": "Coach"})
         self.s.log.emit("coach.nudge", {"finding_id": f.id, "rule_id": f.rule_id, "text": line["text"],
-                                        "audio_url": line["audio_url"], "duck": settings.coach_mode == "duck",
-                                        "latency": lat})
+                                        "audio_url": line["audio_url"],                                         "latency": lat})
 
     def _risk(self, before: int) -> int:
         upd = risk.update(before, list(self.known.values()))

@@ -3,6 +3,15 @@ import { audioUrl } from '@/lib/api'
 
 const COACH_KEY = 'maryada.coachVoice'
 const MUTE_KEY = 'maryada.muted'
+const PAUSE_KEY = 'maryada.pauseForCoach'
+
+/**
+ * Browser gains. The library already mixes the voices at agent -22, borrower -24, third party -25 and coach -27 LUFS;
+ * the coach clip plays on top of the call, so it gets a further -1.9 dB (0.8): about 5 dB under the borrower and
+ * 7 dB under the agent. The call voices play at full level. (iOS ignores element volume, so there the library levels
+ * alone keep the order.)
+ */
+const GAIN = { agent: 1, borrower: 1, third_party: 1, coach: 0.8 }
 
 function readFlag(key: string, fallback: boolean): boolean {
   try {
@@ -28,6 +37,8 @@ class AudioEngine {
   currentTurnIdx: number | null = null
   coachVoice = readFlag(COACH_KEY, true)
   muted = readFlag(MUTE_KEY, false)
+  /** Option: the call pauses only while the coach clip plays. Default off (the coach plays over the call). */
+  pauseForCoach = readFlag(PAUSE_KEY, false)
 
   private get(url: string): HTMLAudioElement {
     let a = this.cache.get(url)
@@ -50,11 +61,12 @@ class AudioEngine {
     void a.play().catch(() => undefined)
   }
 
-  playTurn(url: string, idx: number) {
+  playTurn(url: string, idx: number, speaker: keyof typeof GAIN = 'agent') {
     this.stopTurn()
     const a = this.get(url)
     a.currentTime = 0
     a.muted = this.muted
+    a.volume = GAIN[speaker]
     this.turn = a
     this.currentTurnIdx = idx
     void a.play().catch(() => undefined)
@@ -64,6 +76,15 @@ class AudioEngine {
     this.turn?.pause()
     this.turn = null
     this.currentTurnIdx = null
+  }
+
+  /** Hold the call audio where it is (only used by the "pause while the coach speaks" option). */
+  pauseTurn() {
+    this.turn?.pause()
+  }
+
+  resumeTurn() {
+    if (this.turn && !this.turn.ended) void this.turn.play().catch(() => undefined)
   }
 
   /** Position inside the current turn audio in ms (null when nothing plays). */
@@ -79,7 +100,7 @@ class AudioEngine {
     }
     const a = this.get(url)
     a.currentTime = 0
-    a.volume = 1
+    a.volume = GAIN.coach
     this.coach = a
     this.onCoachEnd = onEnd
     a.onended = () => this.finishCoach()
@@ -111,6 +132,16 @@ class AudioEngine {
     writeFlag(MUTE_KEY, v)
     if (this.turn) this.turn.muted = v
     if (v) this.stopCoach()
+  }
+
+  setPauseForCoach(v: boolean) {
+    this.pauseForCoach = v
+    writeFlag(PAUSE_KEY, v)
+  }
+
+  /** What the server is told at start: pause only when the coach will really be heard. */
+  get holdForCoach(): boolean {
+    return this.pauseForCoach && this.coachVoice && !this.muted
   }
 
   setCoachVoice(v: boolean) {
