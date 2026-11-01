@@ -6,11 +6,16 @@ export interface Provider {
   keyUrl: string
   keyLabel: string
   tier: string
+  /** Short honest label shown on the provider chip */
+  note: string
+  noteTone: 'free' | 'plain'
 }
 
 export const PROVIDERS: Provider[] = [
   {
     id: 'groq',
+    note: 'free tier, tested here',
+    noteTone: 'free',
     label: 'Groq',
     baseUrl: 'https://api.groq.com/openai/v1',
     keyUrl: 'https://console.groq.com/keys',
@@ -19,6 +24,8 @@ export const PROVIDERS: Provider[] = [
   },
   {
     id: 'gemini',
+    note: 'free tier, strict rate limits',
+    noteTone: 'free',
     label: 'Google Gemini',
     baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai',
     keyUrl: 'https://aistudio.google.com/apikey',
@@ -27,6 +34,8 @@ export const PROVIDERS: Provider[] = [
   },
   {
     id: 'openrouter',
+    note: 'free models are often rate-limited',
+    noteTone: 'free',
     label: 'OpenRouter',
     baseUrl: 'https://openrouter.ai/api/v1',
     keyUrl: 'https://openrouter.ai/keys',
@@ -35,6 +44,8 @@ export const PROVIDERS: Provider[] = [
   },
   {
     id: 'openai',
+    note: 'paid, bring your own key',
+    noteTone: 'plain',
     label: 'OpenAI',
     baseUrl: 'https://api.openai.com/v1',
     keyUrl: 'https://platform.openai.com/api-keys',
@@ -43,6 +54,8 @@ export const PROVIDERS: Provider[] = [
   },
   {
     id: 'custom',
+    note: 'any OpenAI-compatible endpoint',
+    noteTone: 'plain',
     label: 'Custom',
     baseUrl: '',
     keyUrl: '',

@@ -1,4 +1,4 @@
-import { Play, Square, Volume2, VolumeX } from 'lucide-react'
+import { Clock, KeyRound, Play, Square, Volume2, VolumeX } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { CoachCard } from '@/components/CoachCard'
@@ -162,7 +162,7 @@ export function LiveCall() {
   if (phase === 'error')
     return (
       <ErrorCard title="Could not start the call" message={error ?? 'Please try again.'} onRetry={load}>
-        <Link to="/" className="rounded-md border border-[var(--mc-line)] px-4 py-2 text-sm hover:bg-[var(--mc-line)]">
+        <Link to="/" className="btn">
           Back to cases
         </Link>
       </ErrorCard>
@@ -170,9 +170,9 @@ export function LiveCall() {
 
   if (phase === 'loading' || !scenario)
     return (
-      <div aria-busy="true" aria-label="Loading call" className="space-y-4">
-        <div className="skeleton h-14" />
-        <div className="grid gap-4 lg:grid-cols-[3fr_2fr]">
+      <div aria-busy="true" aria-label="Loading call" className="space-y-5">
+        <div className="skeleton h-40" />
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_380px]">
           <div className="skeleton h-96" />
           <div className="skeleton h-96" />
         </div>
@@ -182,98 +182,102 @@ export function LiveCall() {
   const idle = phase === 'ready' || phase === 'starting'
   const running = st.status === 'live' || st.status === 'connecting'
   const failed = st.status === 'error' || st.conn === 'failed'
+  const total = scenario.duration_ms ?? 0
+  const offsetOf = (idx: number) => scenario.turns.find((t) => t.idx === idx)?.offset_ms ?? null
+  const summaryText = scenario.summary.replace(/^HERO\.\s*/, '')
 
   return (
-    <div>
+    <div className="flex flex-col gap-5">
       <ReconnectBanner />
 
       {/* Top strip */}
-      <header className="mb-4 rounded-2xl border border-[var(--mc-line)] bg-[var(--mc-surface)] p-3 sm:p-4">
-        <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
-          <div className="min-w-0 flex-1">
-            <p className="mono text-[11px] text-[var(--mc-muted)]">{scenario.id.toUpperCase()}</p>
-            <h1 className="truncate text-base font-semibold sm:text-lg">{scenario.title}</h1>
+      <header className="card flex flex-col gap-4 p-4 sm:px-6 sm:py-5">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="flex min-w-0 flex-col gap-1 sm:min-w-[280px]">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-[var(--mc-muted)]">
+              <Link to="/" className="link !font-normal">Cases</Link>
+              <span aria-hidden>/</span>
+              <span>{scenario.id.toUpperCase()}</span>
+            </nav>
+            <h1 className="text-lg font-semibold leading-tight tracking-tight sm:text-[22px]">{scenario.title}</h1>
+            <p className="text-[13px] text-[var(--mc-muted)]">
+              {summaryText}
+              {total ? ` · ${fmt(total)}` : ''}
+            </p>
           </div>
-          <ModeBadge mode={st.mode} status={st.status} />
-          <span className="mono rounded-md bg-[var(--mc-bg)] px-2 py-1 text-sm" aria-label="Call timer">
-            {fmt(timeMs)}
-          </span>
-          {st.latencyMs !== null && (
-            <span className="mono rounded-full border border-[var(--mc-line)] px-2.5 py-0.5 text-xs text-[var(--mc-muted)]" title="From the end of the agent's words to the coach card">
-              Flag in {(st.latencyMs / 1000).toFixed(1)}s{st.mode === 'replay' ? ' · recorded' : ''}
+          <div className="flex flex-wrap items-center gap-2.5">
+            <ModeBadge mode={st.mode} status={st.status} />
+            <span className="chip mono text-[13px] font-semibold text-[var(--mc-text)]" aria-label="Call timer">
+              {fmt(timeMs)} {total > 0 && <span className="font-medium text-[var(--mc-muted)]">/ {fmt(total)}</span>}
             </span>
-          )}
-          {st.langs.map((l) => (
-            <span key={l} className="rounded-full bg-[var(--mc-line)] px-2 py-0.5 text-[11px] text-[var(--mc-muted)]">
-              {l}
-            </span>
-          ))}
-          <button
-            onClick={() => {
-              audio.setMuted(!muted)
-              setMuted(!muted)
-            }}
-            aria-label={muted ? 'Unmute call audio' : 'Mute call audio'}
-            className="rounded-md p-2 hover:bg-[var(--mc-line)]"
-          >
-            {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-          </button>
-          {running && st.status === 'live' && (
-            <button onClick={stop} className="flex items-center gap-1.5 rounded-md border border-[var(--mc-line)] px-3 py-1.5 text-sm hover:bg-[var(--mc-line)]">
-              <Square className="h-3.5 w-3.5 fill-current" aria-hidden /> Stop
+            {st.latencyMs !== null && (
+              <span className="chip mono" title="From the end of the agent words to the coach card">
+                <Clock className="h-[13px] w-[13px]" aria-hidden />
+                Flag in {(st.latencyMs / 1000).toFixed(1)} s{st.mode === 'replay' ? ' · recorded' : ''}
+              </span>
+            )}
+            {st.langs.map((l) => (
+              <span key={l} className="chip">{l}</span>
+            ))}
+            <button
+              onClick={() => {
+                audio.setMuted(!muted)
+                setMuted(!muted)
+              }}
+              aria-label={muted ? 'Unmute call audio' : 'Mute call audio'}
+              className="btn btn-sm !px-2.5"
+            >
+              {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
             </button>
-          )}
+            {running && st.status === 'live' && (
+              <button onClick={stop} className="btn btn-sm">
+                <Square className="h-2.5 w-2.5 fill-current" aria-hidden /> Stop
+              </button>
+            )}
+          </div>
         </div>
         <WaveformBar scenario={scenario} findings={st.findings} onTime={onTime} running={!idle} />
       </header>
 
-      {st.banner && st.banner.kind !== 'replay' && (
-        <p role="status" className="mb-3 rounded-lg border border-[var(--mc-advisory)]/40 bg-[var(--mc-advisory)]/10 px-3 py-2 text-sm text-[var(--mc-advisory)]">
-          {st.banner.message}
-        </p>
-      )}
-      {st.banner?.kind === 'replay' && (
-        <p role="status" className="mb-3 rounded-lg border border-[var(--mc-advisory)]/40 bg-[var(--mc-advisory)]/10 px-3 py-2 text-sm text-[var(--mc-advisory)]">
-          Replay mode: showing a recorded run. {st.banner.message}
+      {st.banner && (
+        <p role="status" className="banner banner-warn">
+          {st.banner.kind === 'replay' ? `Recorded run. ${st.banner.message}` : st.banner.message}
         </p>
       )}
 
       {failed && (
-        <div className="mb-4">
-          <ErrorCard title="The connection was lost" message={st.error ?? 'The live connection could not be restored.'} onRetry={load}>
-            {scenario?.has_replay && (
-              <button
-                onClick={() => {
-                  teardown()
-                  void begin('replay')
-                }}
-                className="rounded-md border border-[var(--mc-line)] px-4 py-2 text-sm hover:bg-[var(--mc-line)]"
-              >
-                Try recorded run
-              </button>
-            )}
-          </ErrorCard>
-        </div>
+        <ErrorCard title="The connection was lost" message={st.error ?? 'The live connection could not be restored.'} onRetry={load}>
+          {scenario?.has_replay && (
+            <button
+              onClick={() => {
+                teardown()
+                void begin('replay')
+              }}
+              className="btn"
+            >
+              Try recorded run
+            </button>
+          )}
+        </ErrorCard>
       )}
 
       {idle && !failed ? (
-        <StartCard
-          scenario={scenario}
-          busy={phase === 'starting'}
-          onStart={(m) => void begin(m)}
-        />
+        <StartCard scenario={scenario} busy={phase === 'starting'} onStart={(m) => void begin(m)} />
       ) : (
-        <div className="grid gap-4 lg:grid-cols-[3fr_2fr]">
-          <div className="space-y-3">
-            <TranscriptPanel turns={st.turns} findings={st.findings} scenario={scenario} onOpen={setOpen} />
-            <section aria-label="Stage" className="rounded-xl border border-[var(--mc-line)] bg-[var(--mc-surface)] px-4 py-3">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_380px] lg:grid-rows-[auto_auto_1fr] lg:items-start">
+          <div className="min-w-0 order-3 lg:order-none lg:col-start-1 lg:row-span-3 lg:row-start-1">
+            <TranscriptPanel turns={st.turns} findings={st.findings} scenario={scenario} onOpen={setOpen}>
               <StageLine />
-            </section>
+            </TranscriptPanel>
           </div>
-          <div className="space-y-4">
+          <div className="min-w-0 order-1 lg:order-none lg:col-start-2 lg:row-start-1">
             <CoachCard rules={rules} voiceOn={voiceOn} onVoice={setVoiceOn} />
+          </div>
+          <div className="min-w-0 order-2 lg:order-none lg:col-start-2 lg:row-start-2">
             <RiskMeter />
-            <FindingList findings={st.findings} rules={rules} onOpen={setOpen} />
+          </div>
+          <div className="min-w-0 order-4 lg:order-none lg:col-start-2 lg:row-start-3">
+            <FindingList findings={st.findings} rules={rules} onOpen={setOpen} offsetOf={offsetOf} />
           </div>
         </div>
       )}
@@ -281,9 +285,11 @@ export function LiveCall() {
       <DetailDrawer finding={open} rule={rule(open)} onClose={closeDrawer} />
       {st.status === 'ended' && st.summary && summaryOpen && (
         <SummaryModal
+          scenario={scenario}
           summary={st.summary}
           findings={st.findings}
           rules={rules}
+          mode={st.mode}
           onRunAgain={() => load()}
           onClose={() => setSummaryOpen(false)}
         />
@@ -297,23 +303,21 @@ function StartCard({ scenario, busy, onStart }: { scenario: ScenarioDetail; busy
   const [needKeys, setNeedKeys] = useState(false)
   if (needKeys && !hasKeys)
     return (
-      <section className="rise mx-auto mt-6 max-w-xl rounded-2xl border border-[var(--mc-line)] bg-[var(--mc-surface)] p-6 text-center sm:p-8">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--mc-accent)]">Needs your keys</p>
-        <h2 className="mb-2 text-xl font-semibold">Add your keys to start a live call</h2>
-        <p className="mb-6 text-sm text-[var(--mc-muted)]">
-          Live calls use your own Gnani key and your own language model. This site keeps no keys of its own.
-          {scenario.has_replay ? ' The recorded run needs none.' : ' This call has no recorded run.'}
+      <section className="card rise mx-auto flex w-full max-w-xl flex-col gap-3.5 p-6 sm:p-7" aria-labelledby="keys-h">
+        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--mc-accent-tint)]">
+          <KeyRound className="h-5 w-5 text-[var(--mc-accent)]" aria-hidden />
+        </span>
+        <h2 id="keys-h" className="text-[17px] font-semibold tracking-tight">Add your keys to start a live call</h2>
+        <p className="text-[13.5px] leading-relaxed text-[var(--mc-muted)]">
+          Live calls run on your own Gnani and language model keys. Nothing is stored.
+          {scenario.has_replay ? ' Or play a recorded run with no keys at all.' : ' This call has no recorded run.'}
         </p>
-        <div className="flex flex-wrap justify-center gap-3">
-          <Link to="/settings" className="rounded-full bg-[var(--mc-accent)] px-6 py-3 text-sm font-semibold text-white hover:brightness-110">
+        <div className="flex flex-wrap gap-2.5">
+          <Link to="/settings" className="btn btn-primary">
             Open Settings
           </Link>
           {scenario.has_replay && (
-            <button
-              disabled={busy}
-              onClick={() => onStart('replay')}
-              className="rounded-full border border-[var(--mc-line)] px-5 py-3 text-sm hover:bg-[var(--mc-line)] disabled:opacity-60"
-            >
+            <button disabled={busy} onClick={() => onStart('replay')} className="btn">
               Play recorded run
             </button>
           )}
@@ -321,32 +325,26 @@ function StartCard({ scenario, busy, onStart }: { scenario: ScenarioDetail; busy
       </section>
     )
   return (
-    <section className="rise mx-auto mt-6 max-w-xl rounded-2xl border border-[var(--mc-line)] bg-[var(--mc-surface)] p-6 text-center sm:p-8">
-      <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--mc-accent)]">Ready</p>
-      <h2 className="mb-2 text-xl font-semibold">{scenario.title}</h2>
-      <p className="mb-6 text-sm text-[var(--mc-muted)]">{scenario.summary.replace(/^HERO\.\s*/, '')}</p>
-      <div className="flex flex-wrap items-center justify-center gap-3">
+    <section className="card rise mx-auto flex w-full max-w-xl flex-col gap-3.5 p-6 sm:p-7" aria-labelledby="ready-h">
+      <span className="lbl">Ready</span>
+      <h2 id="ready-h" className="text-xl font-semibold tracking-tight">{scenario.title}</h2>
+      <p className="text-[13.5px] leading-relaxed text-[var(--mc-muted)]">{scenario.summary.replace(/^HERO\.\s*/, '')}</p>
+      <div className="flex flex-wrap items-center gap-3">
+        {scenario.has_replay && (
+          <button disabled={busy} onClick={() => onStart('replay')} className="btn btn-lg btn-primary">
+            <Play className="h-3.5 w-3.5 fill-current" aria-hidden /> {busy ? 'Starting…' : 'Play recorded run'}
+          </button>
+        )}
         <button
           disabled={busy}
           onClick={() => (hasKeys ? onStart('live') : setNeedKeys(true))}
-          className="inline-flex items-center gap-2 rounded-full bg-[var(--mc-accent)] px-6 py-3 text-sm font-semibold text-white hover:brightness-110 disabled:opacity-60"
+          className={`btn btn-lg ${scenario.has_replay ? '' : 'btn-primary'}`}
         >
-          <Play className="h-4 w-4 fill-current" aria-hidden /> {busy ? 'Starting…' : 'Start live call'}
-          {!hasKeys && !busy && (
-            <span className="rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-medium">Needs your keys</span>
-          )}
+          Start live call
+          {!hasKeys && !busy && <span className="chip chip-warn h-5 text-[11px]">Needs your keys</span>}
         </button>
-        {scenario.has_replay && (
-          <button
-            disabled={busy}
-            onClick={() => onStart('replay')}
-            className="rounded-full border border-[var(--mc-line)] px-5 py-3 text-sm hover:bg-[var(--mc-line)] disabled:opacity-60"
-          >
-            Play recorded run
-          </button>
-        )}
       </div>
-      <p className="mt-4 text-xs text-[var(--mc-muted)]">
+      <p className="text-xs text-[var(--mc-muted)]">
         Press start to allow sound. The coach card shows on screen; its voice is optional.
       </p>
     </section>

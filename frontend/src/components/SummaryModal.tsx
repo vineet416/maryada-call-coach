@@ -1,22 +1,34 @@
-import { useEffect, useRef, useState } from 'react'
+import { X } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import type { Rule } from '@/lib/api'
+import type { Rule, ScenarioDetail } from '@/lib/api'
 import type { Finding } from '@/lib/events'
-import type { Summary } from '@/store/sessionStore'
+import { useFocusTrap } from '@/lib/useFocusTrap'
+import type { Mode, Summary } from '@/store/sessionStore'
 
 interface Props {
+  scenario: ScenarioDetail
   summary: Summary
   findings: Finding[]
   rules: Rule[]
+  mode: Mode
   onRunAgain: () => void
   onClose: () => void
 }
 
-export function SummaryModal({ summary, findings, rules, onRunAgain, onClose }: Props) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [copied, setCopied] = useState(false)
-  const good = findings.filter((f) => f.kind === 'good_practice').length
+const len = (ms: number | null) => {
+  if (!ms) return ''
+  const s = Math.round(ms / 1000)
+  return s >= 60 ? `${Math.floor(s / 60)} min ${String(s % 60).padStart(2, '0')} s` : `${s} s`
+}
 
+export function SummaryModal({ scenario, summary, findings, rules, mode, onRunAgain, onClose }: Props) {
+  const ref = useRef<HTMLDivElement>(null)
+  const good = findings.filter((f) => f.kind === 'good_practice').length
+  const flagged = findings.filter((f) => f.kind !== 'good_practice')
+  const violations = flagged.filter((f) => f.kind === 'violation').length
+
+  useFocusTrap(ref, true, () => document.getElementById('call-transcript'))
   useEffect(() => {
     ref.current?.focus()
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
@@ -24,19 +36,10 @@ export function SummaryModal({ summary, findings, rules, onRunAgain, onClose }: 
     return () => window.removeEventListener('keydown', onKey)
   }, [onClose])
 
-  const share = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href)
-      setCopied(true)
-      window.setTimeout(() => setCopied(false), 1500)
-    } catch {
-      /* clipboard may be blocked */
-    }
-  }
   const rows = Object.entries(summary.by_rule)
 
   return (
-    <div className="fixed inset-0 z-40 flex items-end justify-center bg-black/60 p-0 sm:items-center sm:p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-40 flex items-end justify-center overflow-y-auto bg-[#0f172a]/40 sm:items-start sm:px-6 sm:pt-16" onClick={onClose}>
       <div
         ref={ref}
         tabIndex={-1}
@@ -44,51 +47,74 @@ export function SummaryModal({ summary, findings, rules, onRunAgain, onClose }: 
         aria-modal="true"
         aria-label="Call summary"
         onClick={(e) => e.stopPropagation()}
-        className="rise w-full max-w-md rounded-t-2xl border border-[var(--mc-line)] bg-[var(--mc-surface)] p-6 sm:rounded-2xl"
+        className="rise flex outline-none max-h-[92vh] w-full max-w-[760px] flex-col overflow-hidden rounded-t-[18px] bg-white shadow-[0_24px_64px_rgb(15_23_42/0.28)] sm:max-h-none sm:rounded-[18px]"
       >
-        <h2 className="text-lg font-semibold">{summary.stopped ? 'Call stopped' : 'Call complete'}</h2>
-        <div className="my-4 grid grid-cols-3 gap-3 text-center">
-          <Stat label="Risk peak" value={String(summary.risk_peak)} />
-          <Stat label="Findings" value={String(summary.findings_count)} />
-          <Stat label="Went well" value={String(good)} />
+        <div className="flex items-start justify-between gap-4 border-b border-[#eaecf0] px-5 pb-4 pt-5 sm:px-7 sm:pt-6">
+          <div className="min-w-0">
+            <div className="lbl">Call summary · {scenario.id.toUpperCase()}</div>
+            <h2 className="mb-0.5 mt-1 text-xl font-semibold tracking-tight sm:text-[22px]">{summary.stopped ? 'Call stopped' : 'Call complete'}</h2>
+            <p className="text-[13px] text-[var(--mc-muted)]">
+              {scenario.title} · {mode === 'replay' ? 'Recorded run' : 'Live call'}
+              {scenario.duration_ms ? ` · ${len(scenario.duration_ms)}` : ''}
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="Close summary"
+            className="flex h-[34px] w-[34px] flex-none items-center justify-center rounded-[9px] border border-[var(--mc-line)] bg-white hover:bg-[var(--mc-line-soft)]"
+          >
+            <X className="h-4 w-4 text-[#475467]" aria-hidden />
+          </button>
         </div>
-        {rows.length > 0 && (
-          <ul className="mb-4 divide-y divide-[var(--mc-line)] rounded-lg border border-[var(--mc-line)] text-sm">
-            {rows.map(([id, n]) => (
-              <li key={id} className="flex justify-between px-3 py-2">
-                <span>
-                  <span className="mono mr-2 text-[var(--mc-muted)]">{id}</span>
-                  {rules.find((r) => r.id === id)?.title ?? id}
-                </span>
-                <span className="mono">{n}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-        <div className="flex flex-wrap gap-2">
-          <button onClick={onRunAgain} className="rounded-md bg-[var(--mc-accent)] px-4 py-2 text-sm font-medium text-white hover:brightness-110">
-            Run again
-          </button>
-          <Link to="/eval" className="rounded-md border border-[var(--mc-line)] px-4 py-2 text-sm hover:bg-[var(--mc-line)]">
-            See evaluation
-          </Link>
-          <button onClick={share} className="rounded-md border border-[var(--mc-line)] px-4 py-2 text-sm hover:bg-[var(--mc-line)]">
-            {copied ? 'Link copied' : 'Share this'}
-          </button>
-          <button onClick={onClose} className="ml-auto px-2 py-2 text-sm text-[var(--mc-muted)] hover:text-[var(--mc-text)]">
-            Review transcript
-          </button>
+
+        <div className="flex flex-col gap-6 overflow-y-auto px-5 py-5 sm:px-7 sm:py-6">
+          <div className="grid grid-cols-3 gap-3">
+            <Stat label="Peak risk" value={String(summary.risk_peak)} tone="bg-[#f9fafb]" ink="text-[var(--mc-text)]" note="out of 100" />
+            <Stat
+              label="Findings"
+              value={String(summary.findings_count)}
+              tone="bg-[var(--mc-violation-tint)]"
+              ink="text-[var(--mc-violation-ink)]"
+              note={`${violations} violation${violations === 1 ? '' : 's'}, ${flagged.length - violations} other`}
+            />
+            <Stat label="Went well" value={String(good)} tone="bg-[var(--mc-good-practice-tint)]" ink="text-[var(--mc-good-practice-ink)]" note="good-practice moments" />
+          </div>
+
+          {rows.length > 0 && (
+            <div className="flex flex-col gap-3">
+              <span className="lbl">Findings by rule</span>
+              <ul className="flex flex-col gap-2.5">
+                {rows.map(([id, n]) => (
+                  <li key={id} className="flex items-center gap-2.5">
+                    <span className={`chip chip-${flagged.find((f) => f.rule_id === id)?.kind ?? 'violation'} h-[22px]`}>{id}</span>
+                    <span className="flex-1 text-[13px]">{rules.find((r) => r.id === id)?.title ?? id}</span>
+                    <b className="mono font-semibold">{n}</b>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#eaecf0] bg-[#f9fafb] px-5 py-4 sm:px-7">
+          <span className="text-xs text-[var(--mc-muted)]">Synthetic call. Detections are by Maryada, not a legal finding.</span>
+          <div className="flex flex-wrap gap-2.5">
+            <button onClick={onClose} className="btn">Review transcript</button>
+            <Link to="/" className="btn">Back to cases</Link>
+            <button onClick={onRunAgain} className="btn btn-primary">Run again</button>
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function Stat({ label, value, tone, ink, note }: { label: string; value: string; tone: string; ink: string; note: string }) {
   return (
-    <div className="rounded-lg bg-[var(--mc-bg)] py-3">
-      <div className="mono text-2xl font-semibold">{value}</div>
-      <div className="text-[11px] text-[var(--mc-muted)]">{label}</div>
+    <div className={`rounded-xl px-4 py-3.5 ${tone}`}>
+      <div className={`lbl ${ink}`}>{label}</div>
+      <div className={`mono text-[28px] font-bold leading-tight tracking-tight ${ink}`}>{value}</div>
+      <div className={`text-xs ${ink === 'text-[var(--mc-text)]' ? 'text-[var(--mc-muted)]' : ink}`}>{note}</div>
     </div>
   )
 }

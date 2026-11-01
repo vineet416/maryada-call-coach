@@ -2,56 +2,59 @@ import { Headset } from 'lucide-react'
 import type { Rule } from '@/lib/api'
 import { audio } from '@/lib/audioEngine'
 import { useSessionStore } from '@/store/sessionStore'
+import { Switch } from '@/components/Switch'
+
+const KIND: Record<string, string> = { violation: 'violation', advisory: 'advisory', needs_review: 'needs_review', good_practice: 'good_practice' }
 
 /** The coach nudge: the card is the primary channel, the voice (optional) plays over the call, quieter than the callers. */
 export function CoachCard({ rules, voiceOn, onVoice }: { rules: Rule[]; voiceOn: boolean; onVoice: (v: boolean) => void }) {
   const nudge = useSessionStore((s) => s.nudge)
   const hold = useSessionStore((s) => s.coachHold)
   const rule = nudge ? rules.find((r) => r.id === nudge.ruleId) : null
+  const tone = KIND[rule?.kind_default ?? 'violation'] ?? 'violation'
 
   return (
     <section
       aria-label="Coach"
-      className="relative overflow-hidden rounded-2xl border bg-[var(--mc-surface)] p-4"
-      style={{ borderColor: nudge ? 'color-mix(in srgb, var(--mc-coach) 55%, transparent)' : 'var(--mc-line)' }}
+      className="card flex flex-col gap-3.5 p-4 sm:p-5"
+      style={nudge ? { borderColor: 'var(--mc-accent-ring)', boxShadow: '0 0 0 4px var(--mc-accent-tint)' } : undefined}
     >
-      <div className="mb-2 flex items-center gap-2">
-        <span
-          className="flex h-8 w-8 items-center justify-center rounded-full"
-          style={{ background: 'color-mix(in srgb, var(--mc-coach) 16%, transparent)', color: 'var(--mc-coach)' }}
-        >
-          <Headset className="h-4 w-4" aria-hidden />
+      <div className="flex items-center gap-3">
+        <span className="flex h-[38px] w-[38px] flex-none items-center justify-center rounded-full bg-[var(--mc-accent-tint)] text-[var(--mc-accent)]">
+          <Headset className="h-5 w-5" aria-hidden />
         </span>
-        <div className="leading-tight">
-          <p className="text-sm font-semibold">Coach</p>
-          <p className="text-[11px] text-[var(--mc-muted)]">Heard only by the agent</p>
+        <div className="flex-1 leading-tight">
+          <p className="text-[15px] font-semibold">Coach</p>
+          <p className="text-xs text-[var(--mc-muted)]">Heard only by the agent</p>
         </div>
-        <label className="ml-auto flex cursor-pointer items-center gap-1.5 text-xs text-[var(--mc-muted)]">
-          <input
-            type="checkbox"
+        <label className="inline-flex items-center gap-2 text-xs text-[#475467]">
+          Voice
+          <Switch
+            small
+            label="Coach voice"
             checked={voiceOn}
-            onChange={(e) => {
-              audio.setCoachVoice(e.target.checked)
-              onVoice(e.target.checked)
+            onChange={(v) => {
+              audio.setCoachVoice(v)
+              onVoice(v)
             }}
-            className="accent-[var(--mc-coach)]"
           />
-          Coach voice
         </label>
       </div>
 
       {nudge ? (
-        <div key={nudge.findingId ?? nudge.text} className="rise">
-          <p className="mb-1 text-xs font-medium uppercase tracking-wide" style={{ color: 'var(--mc-coach)' }}>
-            {nudge.ruleId} · {rule?.title ?? 'Rule'}
-          </p>
-          <p className="text-[15px] leading-relaxed">{nudge.text}</p>
-          <div className="mt-2 flex items-center gap-2 text-xs text-[var(--mc-muted)]" aria-live="polite">
+        <div key={nudge.findingId ?? nudge.text} className="rise flex flex-col gap-3.5">
+          <div>
+            <span className={`chip chip-${tone} text-[11px] font-semibold uppercase tracking-wide`}>
+              {nudge.ruleId} · {rule?.title ?? 'Rule'}
+            </span>
+          </div>
+          <p className="text-[17px] font-medium leading-normal tracking-[-0.005em]">{nudge.text}</p>
+          <div className="flex items-center gap-2.5 text-[13px] text-[#475467]" aria-live="polite">
             {nudge.speaking ? (
               <>
-                <span className="flex h-3 items-end gap-0.5" aria-hidden>
+                <span className="flex h-4 items-end gap-0.5" aria-hidden>
                   {[0, 1, 2, 3].map((i) => (
-                    <span key={i} className="wave h-3 w-0.5 rounded bg-[var(--mc-coach)]" style={{ animationDelay: `${i * 0.1}s` }} />
+                    <span key={i} className="wave w-[3px] rounded-sm bg-[var(--mc-accent)]" style={{ height: [8, 14, 10, 16][i], animationDelay: `${i * 0.1}s` }} />
                   ))}
                 </span>
                 Speaking in the agent's headset
@@ -64,14 +67,10 @@ export function CoachCard({ rules, voiceOn, onVoice }: { rules: Rule[]; voiceOn:
           </div>
         </div>
       ) : (
-        <p className="py-2 text-sm text-[var(--mc-muted)]">Quiet so far. The coach speaks up when a rule is at risk.</p>
+        <p className="py-1 text-sm text-[var(--mc-muted)]">Quiet so far. The coach speaks up when a rule is at risk.</p>
       )}
 
-      {hold && (
-        <p className="mt-3 rounded-md bg-[var(--mc-coach)]/10 px-2.5 py-1.5 text-xs" style={{ color: 'var(--mc-coach)' }}>
-          Call paused while the coach speaks
-        </p>
-      )}
+      {hold && <div className="banner">Demo: the call is paused while the coach speaks</div>}
     </section>
   )
 }

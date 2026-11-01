@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>States</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F7F9;color:#0F172A;font-family:Inter,'Noto Sans Devanagari',system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#4338CA;text-decoration:none}
+.card{background:#fff;border:1px solid #E5E7EB;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:500;border:1px solid #E5E7EB;background:#fff;color:#475467;white-space:nowrap}
+.lbl{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#5B6577}
+.btn{height:40px;padding:0 16px;border-radius:10px;font:inherit;font-weight:600;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+.sk{background:#EAECF0;border-radius:6px}
+</style>
+</helmet>
+<div style="width:1440px;height:980px;background:#F6F7F9;padding:40px;display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;align-items:baseline;gap:14px"><h1 style="margin:0;font-size:24px;font-weight:700;letter-spacing:-0.02em">States</h1><span style="color:#5B6577;font-size:13px">Cold start, reconnecting, error fallback, capacity, loading and 404</span></div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:24px;flex:1;min-height:0">
+
+    <section class="card" style="padding:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center">
+      <span class="lbl">Cold start</span>
+      <div style="width:44px;height:44px;border-radius:50%;border:4px solid #EEF0FF;border-top-color:#4338CA"></div>
+      <div style="font-size:18px;font-weight:650;letter-spacing:-0.01em">Waking up the server</div>
+      <div style="font-size:13.5px;color:#5B6577;max-width:300px;line-height:1.6">This demo runs on a free server that sleeps when idle. The first request can take up to a minute.</div>
+      <div style="width:260px;height:6px;border-radius:999px;background:#EAECF0;overflow:hidden"><div style="width:38%;height:100%;background:#4338CA;border-radius:999px"></div></div>
+      <div style="font-size:12px;color:#5B6577;font-variant-numeric:tabular-nums">00:23 elapsed</div>
+    </section>
+
+    <section class="card" style="padding:0;overflow:hidden;display:flex;flex-direction:column">
+      <div style="padding:12px 20px;background:#FFFAEB;border-bottom:1px solid #FEC84B;display:flex;align-items:center;gap:10px;color:#93370D;font-size:13px;font-weight:500">
+        <div style="width:16px;height:16px;border-radius:50%;border:2.5px solid #FEC84B;border-top-color:#B54708;flex:none"></div>
+        Connection lost. Reconnecting, your call is safe&hellip;
+      </div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:12px;flex:1">
+        <span class="lbl">Reconnecting banner</span>
+        <div style="background:#F6F7FB;border-radius:4px 14px 14px 14px;padding:12px 14px;font-size:14px;line-height:1.8;max-width:90%">Madam, ये सब तो हर कोई बोलता है&hellip;</div>
+        <div style="font-size:12.5px;color:#5B6577;line-height:1.6">The banner appears only after 1.5 s without a connection. When it returns, missed events are applied silently: no repeated cards, no jump in the risk meter.</div>
+      </div>
+    </section>
+
+    <section class="card" style="padding:28px;display:flex;flex-direction:column;gap:14px;justify-content:center">
+      <span class="lbl">Error with fallback</span>
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <div style="width:40px;height:40px;border-radius:50%;background:#FEF3F2;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D92D20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8v5M12 17h.01"/><path d="M10.3 3.9L2.4 17.5A2 2 0 004.1 20.5h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg></div>
+        <div>
+          <div style="font-size:16px;font-weight:650;letter-spacing:-0.01em">The live speech service is unavailable</div>
+          <div style="font-size:13.5px;color:#5B6577;margin-top:4px;line-height:1.6">Switching to the recorded run so the demo can continue. The findings are the same.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <span class="btn" style="background:#4338CA;color:#fff;border:1px solid #4338CA">Play recorded run</span>
+        <span class="btn" style="background:#fff;color:#344054;border:1px solid #D0D5DD">Try live again</span>
+      </div>
+    </section>
+
+    <section class="card" style="padding:28px;display:flex;flex-direction:column;gap:14px;justify-content:center">
+      <span class="lbl">Live call needs keys</span>
+      <div style="width:40px;height:40px;border-radius:50%;background:#EEF0FF;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4338CA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/></svg></div>
+      <div style="font-size:17px;font-weight:650;letter-spacing:-0.01em">Add your keys to start a live call</div>
+      <div style="font-size:13.5px;color:#5B6577;line-height:1.6">Live calls run on your own Gnani and language model keys. Nothing is stored. Or play a recorded run with no keys at all.</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <span class="btn" style="background:#4338CA;color:#fff;border:1px solid #4338CA">Open Settings</span>
+        <span class="btn" style="background:#fff;color:#344054;border:1px solid #D0D5DD">Play recorded run</span>
+      </div>
+    </section>
+
+    <section class="card" style="padding:24px;display:flex;flex-direction:column;gap:14px">
+      <span class="lbl">Loading</span>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+        <div style="border:1px solid #EAECF0;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px"><div class="sk" style="height:10px;width:30%"></div><div class="sk" style="height:14px;width:90%"></div><div class="sk" style="height:10px;width:70%"></div><div class="sk" style="height:22px;width:40%;border-radius:999px"></div></div>
+        <div style="border:1px solid #EAECF0;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px"><div class="sk" style="height:10px;width:30%"></div><div class="sk" style="height:14px;width:80%"></div><div class="sk" style="height:10px;width:60%"></div><div class="sk" style="height:22px;width:40%;border-radius:999px"></div></div>
+        <div style="border:1px solid #EAECF0;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px"><div class="sk" style="height:10px;width:30%"></div><div class="sk" style="height:14px;width:85%"></div><div class="sk" style="height:10px;width:65%"></div><div class="sk" style="height:22px;width:40%;border-radius:999px"></div></div>
+        <div style="border:1px solid #EAECF0;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px"><div class="sk" style="height:10px;width:30%"></div><div class="sk" style="height:14px;width:75%"></div><div class="sk" style="height:10px;width:55%"></div><div class="sk" style="height:22px;width:40%;border-radius:999px"></div></div>
+      </div>
+    </section>
+
+    <section class="card" style="padding:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center">
+      <span class="lbl">Page not found</span>
+      <div style="font-size:64px;font-weight:700;letter-spacing:-0.04em;color:#C7CCFA;line-height:1">404</div>
+      <div style="font-size:17px;font-weight:650;letter-spacing:-0.01em">This page does not exist</div>
+      <div style="font-size:13.5px;color:#5B6577;max-width:280px;line-height:1.6">The link may be old or mistyped. Start again from the sample calls.</div>
+      <span class="btn" style="background:#4338CA;color:#fff;border:1px solid #4338CA;margin-top:6px">Back to cases</span>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":980}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

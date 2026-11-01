@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Live call - coach hold</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F7F9;color:#0F172A;font-family:Inter,'Noto Sans Devanagari',system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#4338CA;text-decoration:none}a:hover{color:#3730A3}
+.nv{padding:8px 12px;border-radius:8px;font-size:14px;font-weight:500;color:#475467}
+.nv:hover{background:#F2F4F7;color:#0F172A}
+.nv.on{background:#EEF0FF;color:#3730A3}
+.card{background:#fff;border:1px solid #E5E7EB;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:500;border:1px solid #E5E7EB;background:#fff;color:#475467;white-space:nowrap}
+.lbl{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#5B6577}
+.tv{background:#FEF3F2;text-decoration:underline;text-decoration-style:solid;text-decoration-color:#D92D20;text-decoration-thickness:2px;text-underline-offset:5px;border-radius:3px;padding:1px 2px}
+.tr{background:#FFFAEB;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:#F79009;text-decoration-thickness:2px;text-underline-offset:5px;border-radius:3px;padding:1px 2px}
+.tc{text-decoration:underline;text-decoration-style:dashed;text-decoration-color:#2E6BF0;text-decoration-thickness:2px;text-underline-offset:5px}
+.tg{background:#DCFAE6;border-radius:3px;padding:1px 2px}
+.rt{font-size:10px;font-weight:700;color:#B42318;margin-left:2px;letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height:1000px;background:#F6F7F9">
+  <header style="background:#fff;border-bottom:1px solid #E5E7EB">
+    <div style="max-width:1280px;margin:0 auto;padding:0 32px;min-height:64px;display:flex;align-items:center;gap:28px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:30px;height:30px;border-radius:8px;background:#4338CA;display:flex;align-items:center;justify-content:center">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <span style="font-size:17px;font-weight:700;letter-spacing:-0.01em">Maryada</span>
+      </div>
+      <nav style="display:flex;gap:4px;flex:1;flex-wrap:wrap">
+        <a class="nv on" href="Cases.dc.html">Cases</a>
+        <a class="nv" href="Manager.dc.html">Manager</a>
+        <a class="nv" href="Evaluation.dc.html">Evaluation</a>
+        <a class="nv" href="HowItWorks.dc.html">How it works</a>
+        <a class="nv" href="Settings.dc.html">Settings</a>
+      </nav>
+      <span class="chip" style="background:#F9FAFB">Synthetic demo &middot; not legal advice</span>
+    </div>
+  </header>
+
+  <main style="max-width:1280px;margin:0 auto;padding:24px 32px 48px;display:flex;flex-direction:column;gap:20px">
+
+    <section class="card" style="padding:20px 24px;display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <div style="display:flex;flex-direction:column;gap:4px;min-width:280px">
+          <div style="font-size:12px;color:#5B6577;display:flex;gap:6px;align-items:center"><a href="Cases.dc.html">Cases</a><span aria-hidden="true">/</span><span>C06</span></div>
+          <h1 style="margin:0;font-size:22px;line-height:1.25;font-weight:650;letter-spacing:-0.015em">The threat that broke two RBI rules</h1>
+          <div style="color:#5B6577;font-size:13px">Tarang Finserv &middot; Personal loan recovery &middot; Hindi + English &middot; 1 min 27 s</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span class="chip" style="background:#FFFAEB;border-color:#FEC84B;color:#B54708"><span style="width:7px;height:7px;border-radius:50%;background:#F79009"></span>Replay mode</span>
+          <span class="chip" style="font-variant-numeric:tabular-nums;color:#0F172A;font-weight:600;font-size:13px">00:52 <span style="color:#98A2B3;font-weight:500">/ 01:27</span></span>
+          <span class="chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#475467" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Flag in 3.0 s</span>
+          <button style="height:34px;padding:0 14px;border-radius:9px;border:1px solid #D0D5DD;background:#fff;font:inherit;font-weight:600;font-size:13px;color:#344054;display:inline-flex;align-items:center;gap:8px;cursor:pointer"><span style="width:10px;height:10px;border-radius:2px;background:#344054"></span>Stop</button>
+        </div>
+      </div>
+      <div style="position:relative;padding:6px 0 18px">
+        <div style="display:flex;align-items:center;gap:2px;height:48px">
+          <sc-for list="{{bars}}" as="b" hint-placeholder-count="120">
+            <div style="{{b.style}}"></div>
+          </sc-for>
+        </div>
+        <div style="position:absolute;left:14%;bottom:0;display:flex;flex-direction:column;align-items:center;gap:2px;transform:translateX(-50%)"><span style="width:9px;height:9px;border-radius:50%;background:#F79009"></span><span style="font-size:10px;color:#5B6577">R2</span></div>
+        <div style="position:absolute;left:38%;bottom:0;display:flex;flex-direction:column;align-items:center;gap:2px;transform:translateX(-50%)"><span style="width:9px;height:9px;border-radius:50%;background:#D92D20"></span><span style="font-size:10px;color:#5B6577">R5 &middot; R3</span></div>
+      </div>
+    </section>
+
+    <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap">
+
+      <section class="card" style="flex:999 1 620px;min-width:0;display:flex;flex-direction:column">
+        <div style="padding:16px 24px;border-bottom:1px solid #EAECF0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <div style="font-size:15px;font-weight:600">Live transcript</div>
+          <div style="display:flex;gap:14px;font-size:12px;color:#475467;flex-wrap:wrap">
+            <span><span class="tv">Violation</span></span>
+            <span><span class="tr">Needs review</span></span>
+            <span><span class="tc">Context</span></span>
+            <span><span class="tg">Good practice</span></span>
+          </div>
+        </div>
+        <div style="padding:20px 24px;display:flex;flex-direction:column;gap:18px">
+
+          <div style="align-self:center"><span class="chip" style="background:#F9FAFB;color:#475467">4 earlier turns &middot; identification and recording notice given</span></div>
+
+          <div style="display:flex;gap:12px;max-width:86%">
+            <div style="width:32px;height:32px;border-radius:50%;background:#EEF0FF;color:#3730A3;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex:none">AG</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="font-size:12px;color:#5B6577"><b style="color:#0F172A;font-weight:600">Agent</b> &middot; 00:14</div>
+              <div style="background:#F6F7FB;border-radius:4px 14px 14px 14px;padding:12px 16px;font-size:15px;line-height:1.75">
+                <span class="tg">स्मिता जी</span>, आपके personal loan की 2 EMI pending हैं। दोनों बार bounce हो गई हैं। ऊपर से penalty भी लग रही है। आप payment कब कर रही हैं?
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;max-width:86%;align-self:flex-end;flex-direction:row-reverse">
+            <div style="width:32px;height:32px;border-radius:50%;background:#F2F4F7;color:#475467;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex:none">BR</div>
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+              <div style="font-size:12px;color:#5B6577"><b style="color:#0F172A;font-weight:600">Borrower</b> &middot; 00:23</div>
+              <div style="background:#fff;border:1px solid #E5E7EB;border-radius:14px 4px 14px 14px;padding:12px 16px;font-size:15px;line-height:1.75">
+                Sir, please थोड़ा समझो ना। मेरी job चली गई है, 2 महीने हो गए। Next week तक थोड़ा पैसा आ जाएगा। पर एक साथ पूरा नहीं दे पाऊँगी।
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;max-width:92%">
+            <div style="width:32px;height:32px;border-radius:50%;background:#EEF0FF;color:#3730A3;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex:none">AG</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="font-size:12px;color:#5B6577"><b style="color:#0F172A;font-weight:600">Agent</b> &middot; 00:33 &middot; <span style="color:#B42318;font-weight:600">3 findings</span></div>
+              <div style="background:#F6F7FB;border:1px solid #FDA29B;border-radius:4px 14px 14px 14px;padding:12px 16px;font-size:15px;line-height:1.9">
+                Madam, ये सब तो हर कोई बोलता है। Next week, next week... मेरे को आज ही payment चाहिए। देखो, आज शाम तक payment नहीं आया ना, तो <span class="tv">पुलिस को भेजूंगा आपके घर</span><sup class="rt">R5</sup>। आपके <span class="tv">मोहल्ले में सबको बता दूंगा कि आप defaulter हो</span><sup class="rt">R3</sup>। <span class="tv">कोर्ट का नोटिस भी कल सुबह आ जाएगा</span><sup class="rt">R5</sup>, समझी?
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;max-width:70%;align-self:flex-end;flex-direction:row-reverse">
+            <div style="width:32px;height:32px;border-radius:50%;background:#F2F4F7;color:#475467;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex:none">BR</div>
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+              <div style="font-size:12px;color:#5B6577"><b style="color:#0F172A;font-weight:600">Borrower</b> &middot; 00:51</div>
+              <div style="background:#fff;border:1px solid #E5E7EB;border-radius:14px 4px 14px 14px;padding:12px 16px;font-size:15px;line-height:1.75">
+                अरे sir, धमकी क्यों दे रहे हो? मैंने कब बोला<span style="display:inline-block;width:2px;height:16px;background:#4338CA;vertical-align:middle;margin-left:2px"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:14px 24px;border-top:1px solid #EAECF0;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px">
+          <span style="display:inline-flex;align-items:center;gap:8px;color:#067647;font-weight:500"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#067647" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"/></svg>Listening</span>
+          <span style="color:#D0D5DD">&mdash;</span>
+          <span style="display:inline-flex;align-items:center;gap:8px;color:#067647;font-weight:500"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#067647" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"/></svg>Transcribing</span>
+          <span style="color:#D0D5DD">&mdash;</span>
+          <span style="display:inline-flex;align-items:center;gap:8px;color:#067647;font-weight:500"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#067647" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"/></svg>Checking rules</span>
+          <span style="color:#D0D5DD">&mdash;</span>
+          <span style="display:inline-flex;align-items:center;gap:8px;color:#3730A3;font-weight:600;background:#EEF0FF;padding:4px 12px;border-radius:999px"><span style="width:8px;height:8px;border-radius:50%;background:#4338CA"></span>Coaching</span>
+          <span style="margin-left:auto;color:#5B6577;font-size:12px">Each agent turn is checked against the rulebook as it is spoken</span>
+        </div>
+      </section>
+
+      <aside style="flex:1 1 360px;min-width:320px;max-width:420px;display:flex;flex-direction:column;gap:20px">
+
+        <section class="card" style="padding:20px;display:flex;flex-direction:column;gap:14px;border-color:#C7CCFA;box-shadow:0 0 0 4px #EEF0FF">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:38px;height:38px;border-radius:50%;background:#EEF0FF;display:flex;align-items:center;justify-content:center">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4338CA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14v-2a8 8 0 0116 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg>
+            </div>
+            <div style="flex:1">
+              <div style="font-size:15px;font-weight:600">Coach</div>
+              <div style="font-size:12px;color:#5B6577">Heard only by the agent</div>
+            </div>
+            <label style="display:inline-flex;align-items:center;gap:8px;font-size:12px;color:#475467">Voice
+              <span style="width:34px;height:20px;border-radius:999px;background:#4338CA;position:relative;display:inline-block"><span style="position:absolute;right:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff"></span></span>
+            </label>
+          </div>
+          <div><span class="chip" style="background:#FEF3F2;border-color:#FDA29B;color:#B42318;font-weight:600;letter-spacing:.03em;text-transform:uppercase;font-size:11px">R3 &middot; Abuse, threats, humiliation</span></div>
+          <div style="font-size:17px;line-height:1.5;font-weight:500;letter-spacing:-0.005em">Rukiye &mdash; yahan dhamki mat dijiye. Shaanti se EMI ka option batayiye.</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#475467">
+            <span style="display:inline-flex;align-items:flex-end;gap:2px;height:16px"><span style="width:3px;height:8px;background:#4338CA;border-radius:2px"></span><span style="width:3px;height:14px;background:#4338CA;border-radius:2px"></span><span style="width:3px;height:10px;background:#4338CA;border-radius:2px"></span><span style="width:3px;height:16px;background:#4338CA;border-radius:2px"></span></span>
+            Speaking in the agent&#39;s headset
+          </div>
+          <div style="background:#EEF0FF;color:#3730A3;border-radius:10px;padding:10px 12px;font-size:12.5px;font-weight:500">Demo: the call is paused while the coach speaks</div>
+        </section>
+
+        <section class="card" style="padding:20px;display:flex;flex-direction:column;align-items:center;gap:6px">
+          <div style="align-self:stretch;display:flex;justify-content:space-between;align-items:center"><span class="lbl">Risk</span><span class="chip" style="background:#FEF3F2;border-color:#FDA29B;color:#B42318;font-weight:600">High risk</span></div>
+          <div style="position:relative;width:220px;height:124px;margin-top:6px">
+            <svg width="220" height="124" viewBox="0 0 220 124" aria-hidden="true">
+              <path d="M20 112 A90 90 0 0 1 200 112" fill="none" stroke="#EAECF0" stroke-width="16" stroke-linecap="round"/>
+              <path d="M20 112 A90 90 0 0 1 200 112" fill="none" stroke="#D92D20" stroke-width="16" stroke-linecap="round" stroke-dasharray="183.8 282.7"/>
+            </svg>
+            <div style="position:absolute;left:0;right:0;bottom:2px;text-align:center;font-size:40px;font-weight:700;letter-spacing:-0.03em;color:#B42318;line-height:1;font-variant-numeric:tabular-nums">65</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;width:196px;font-size:11px;color:#98A2B3"><span>0</span><span>100</span></div>
+          <span class="chip" style="background:#FEF3F2;border-color:#FDA29B;color:#B42318;font-weight:600;margin-top:4px">+65 &middot; R5 false legal threat</span>
+        </section>
+
+        <section class="card" style="padding:20px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span class="lbl">Findings</span><span style="font-size:12px;color:#5B6577">4 this call</span></div>
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #F2F4F7;align-items:flex-start"><span class="chip" style="background:#FEF3F2;border-color:#FDA29B;color:#B42318;font-weight:700;height:22px">R5</span><div style="flex:1"><div style="font-weight:500;font-size:13px">False or misleading statements</div><div style="font-size:12px;color:#5B6577">&ldquo;पुलिस को भेजूंगा आपके घर&rdquo;</div></div><span style="font-size:12px;color:#98A2B3">00:33</span></div>
+            <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #F2F4F7;align-items:flex-start"><span class="chip" style="background:#FEF3F2;border-color:#FDA29B;color:#B42318;font-weight:700;height:22px">R3</span><div style="flex:1"><div style="font-weight:500;font-size:13px">Abuse, threats, humiliation</div><div style="font-size:12px;color:#5B6577">&ldquo;मोहल्ले में सबको बता दूंगा&hellip;&rdquo;</div></div><span style="font-size:12px;color:#98A2B3">00:33</span></div>
+            <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #F2F4F7;align-items:flex-start"><span class="chip" style="background:#FEF3F2;border-color:#FDA29B;color:#B42318;font-weight:700;height:22px">R5</span><div style="flex:1"><div style="font-weight:500;font-size:13px">False or misleading statements</div><div style="font-size:12px;color:#5B6577">&ldquo;कोर्ट का नोटिस भी कल सुबह&hellip;&rdquo;</div></div><span style="font-size:12px;color:#98A2B3">00:33</span></div>
+            <div style="display:flex;gap:10px;padding:10px 0;align-items:flex-start"><span class="chip" style="background:#FFFAEB;border-color:#FEC84B;color:#B54708;font-weight:700;height:22px">R2</span><div style="flex:1"><div style="font-weight:500;font-size:13px">Identify and recording notice</div><div style="font-size:12px;color:#5B6577">Advisory &middot; needs review</div></div><span style="font-size:12px;color:#98A2B3">00:05</span></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;background:#ECFDF3;color:#067647;border-radius:10px;padding:9px 12px;font-size:12.5px;font-weight:500"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#067647" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"/></svg>9 good-practice moments, highlighted green in the transcript</div>
+        </section>
+      </aside>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const bars = [];
+    const total = 120;
+    const played = 74;
+    for (let i = 0; i < total; i++) {
+      let amp = Math.abs(Math.sin(i * 0.61) * Math.cos(i * 0.17)) * 22 + Math.abs(Math.sin(i * 1.7)) * 8 + 6;
+      if (i >= 44 && i <= 62) amp += 8;
+      const h = Math.round(Math.min(46, amp));
+      const color = i < played ? '#4338CA' : '#D0D5DD';
+      let style = 'flex:1;min-width:2px;border-radius:2px;height:' + h + 'px;background:' + color;
+      if (i === played) style = 'flex:none;width:2px;border-radius:2px;height:48px;background:#0F172A';
+      bars.push({ style });
+    }
+    return { bars };
+  }
+}
+</script>
+</body>
+</html>

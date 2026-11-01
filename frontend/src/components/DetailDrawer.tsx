@@ -3,28 +3,33 @@ import { useEffect, useRef, useState } from 'react'
 import type { Rule } from '@/lib/api'
 import type { Finding } from '@/lib/events'
 import { KIND_LABEL } from '@/lib/events'
-import { KIND_COLOR, SOURCE_LABEL, confidenceLabel } from '@/lib/findings'
+import { SOURCE_LABEL, confidenceLabel } from '@/lib/findings'
+import { useFocusTrap } from '@/lib/useFocusTrap'
+
+const QUOTE_BG = {
+  violation: 'bg-[var(--mc-violation-tint)]',
+  advisory: 'bg-[var(--mc-advisory-tint)]',
+  needs_review: 'bg-[var(--mc-needs-review-tint)]',
+  good_practice: 'bg-[var(--mc-good-practice-tint)]',
+} as const
 
 /** Right-side drawer on desktop, bottom sheet on mobile. Esc or a tap outside closes it. */
 export function DetailDrawer({ finding, rule, onClose }: { finding: Finding | null; rule?: Rule; onClose: () => void }) {
   const closeBtn = useRef<HTMLButtonElement>(null)
+  const panel = useRef<HTMLElement>(null)
   const [copied, setCopied] = useState(false)
 
+  useFocusTrap(panel, !!finding)
   useEffect(() => {
     if (!finding) return
-    const opener = document.activeElement as HTMLElement | null
     closeBtn.current?.focus()
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
     window.addEventListener('keydown', onKey)
     setCopied(false)
-    return () => {
-      window.removeEventListener('keydown', onKey)
-      opener?.focus?.()
-    }
+    return () => window.removeEventListener('keydown', onKey)
   }, [finding, onClose])
 
   if (!finding) return null
-  const color = KIND_COLOR[finding.kind]
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(finding.rewrite)
@@ -34,69 +39,89 @@ export function DetailDrawer({ finding, rule, onClose }: { finding: Finding | nu
       /* clipboard may be blocked; the text stays selectable */
     }
   }
+  const latency = finding.latency?.total_ms
 
   return (
     <div className="fixed inset-0 z-40" role="presentation" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/50" />
+      <div className="absolute inset-0 bg-[#0f172a]/40" />
       <aside
+        ref={panel}
         role="dialog"
         aria-modal="true"
         aria-label={`${rule?.title ?? finding.rule_id} details`}
         onClick={(e) => e.stopPropagation()}
-        className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-2xl border-t border-[var(--mc-line)] bg-[var(--mc-surface)] p-5 shadow-2xl sm:inset-y-0 sm:left-auto sm:right-0 sm:max-h-none sm:w-[420px] sm:rounded-none sm:border-l sm:border-t-0"
+        className="absolute inset-x-0 bottom-0 flex max-h-[88vh] flex-col overflow-hidden rounded-t-2xl bg-white shadow-[0_-16px_48px_rgb(15_23_42/0.18)] sm:inset-y-0 sm:left-auto sm:right-0 sm:max-h-none sm:w-[500px] sm:rounded-none sm:shadow-[-16px_0_48px_rgb(15_23_42/0.18)]"
         style={{ animation: 'sheet-in 0.25s ease both' }}
       >
-        <div className="mb-3 flex items-start gap-3">
-          <div className="flex-1">
-            <p className="mb-1 flex flex-wrap items-center gap-2 text-xs">
-              <span className="rounded px-1.5 py-0.5 font-semibold" style={{ color, background: `color-mix(in srgb, ${color} 14%, transparent)` }}>
-                {KIND_LABEL[finding.kind]}
-              </span>
-              <span className="text-[var(--mc-muted)]">{finding.rule_id}</span>
-            </p>
-            <h2 className="text-lg font-semibold leading-snug">{rule?.title ?? finding.rule_id}</h2>
-            {(finding.rbi_ref || rule?.rbi_ref) && (
-              <p className="mono mt-0.5 text-xs text-[var(--mc-muted)]">RBI para {finding.rbi_ref || rule?.rbi_ref}</p>
-            )}
+        <div className="flex items-center justify-between gap-3 border-b border-[#eaecf0] px-5 py-5 sm:px-6">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span className={`chip chip-${finding.kind}`}>{finding.rule_id}</span>
+            <h2 className="text-base font-semibold leading-snug">{rule?.title ?? finding.rule_id}</h2>
           </div>
-          <button ref={closeBtn} onClick={onClose} aria-label="Close details" className="rounded-md p-1.5 hover:bg-[var(--mc-line)]">
-            <X className="h-4 w-4" />
+          <button
+            ref={closeBtn}
+            onClick={onClose}
+            aria-label="Close details"
+            className="flex h-[34px] w-[34px] flex-none items-center justify-center rounded-[9px] border border-[var(--mc-line)] bg-white hover:bg-[var(--mc-line-soft)]"
+          >
+            <X className="h-4 w-4 text-[#475467]" aria-hidden />
           </button>
         </div>
 
-        <Block title="What was said">
-          <blockquote lang="hi" className="border-l-2 pl-3 leading-[1.7]" style={{ borderColor: color, fontFamily: 'var(--font-transcript)' }}>
-            {finding.quote}
-          </blockquote>
-        </Block>
+        <div className="flex flex-col gap-[22px] overflow-y-auto p-5 sm:p-6">
+          <div className="flex flex-wrap gap-2">
+            <span className={`chip chip-${finding.kind} font-semibold`}>{KIND_LABEL[finding.kind]}</span>
+            <span className="chip">Agent turn {finding.turn_idx}</span>
+            <span className="chip">Confidence: {confidenceLabel(finding)}</span>
+            {(finding.rbi_ref || rule?.rbi_ref) && <span className="chip mono">RBI para {finding.rbi_ref || rule?.rbi_ref}</span>}
+          </div>
 
-        {finding.reason && <Block title="Why it was flagged">{finding.reason}</Block>}
-        {rule?.why && <Block title="Why this matters"><span className="whitespace-pre-line">{rule.why}</span></Block>}
-
-        {finding.rewrite && (
-          <Block title="Try saying instead">
-            <div className="rounded-lg border border-[var(--mc-good-practice)]/40 bg-[var(--mc-good-practice)]/8 p-3">
-              <p lang="hi" className="leading-[1.7]" style={{ fontFamily: 'var(--font-transcript)' }}>
-                {finding.rewrite}
-              </p>
-              <button onClick={copy} className="mt-2 flex items-center gap-1.5 text-xs text-[var(--mc-good-practice)]">
-                {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                {copied ? 'Copied' : 'Copy'}
-              </button>
-            </div>
+          <Block title="What the agent said">
+            <blockquote lang="hi" className={`rounded-xl px-4 py-3.5 text-[17px] leading-[1.8] ${QUOTE_BG[finding.kind]}`}>
+              “<span className={`tok tok-${finding.kind}`}>{finding.quote}</span>”
+            </blockquote>
           </Block>
-        )}
 
-        <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-2 border-t border-[var(--mc-line)] pt-3 text-xs">
-          <div>
-            <dt className="text-[var(--mc-muted)]">Confidence</dt>
-            <dd className="font-medium">{confidenceLabel(finding)}</dd>
-          </div>
-          <div>
-            <dt className="text-[var(--mc-muted)]">Found by</dt>
-            <dd className="font-medium">{SOURCE_LABEL[finding.source]}</dd>
-          </div>
-        </dl>
+          {finding.reason && <Block title="Why it is flagged"><p className="text-sm leading-relaxed text-[var(--mc-text-2)]">{finding.reason}</p></Block>}
+          {rule?.why && (
+            <Block title="Why this matters">
+              <p className="whitespace-pre-line text-sm leading-relaxed text-[var(--mc-text-2)]">{rule.why}</p>
+            </Block>
+          )}
+
+          {finding.rewrite && (
+            <Block title="Suggested rewording">
+              <div className="rounded-xl bg-[var(--mc-good-practice-tint)] px-4 py-3.5">
+                <p lang="hi" className="text-[15px] leading-[1.8] text-[#054f31]">“{finding.rewrite}”</p>
+                <button onClick={copy} className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-[var(--mc-good-practice-ink)]">
+                  {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                  {copied ? 'Copied' : 'Copy'}
+                </button>
+              </div>
+            </Block>
+          )}
+
+          <Block title="How it was detected">
+            <dl className="overflow-hidden rounded-xl border border-[#eaecf0] text-[13px]">
+              <div className="flex justify-between border-b border-[#eaecf0] px-3.5 py-2.5">
+                <dt className="text-[var(--mc-muted)]">Found by</dt>
+                <dd className="font-semibold">{SOURCE_LABEL[finding.source]}</dd>
+              </div>
+              <div className={`flex justify-between px-3.5 py-2.5 ${latency ? 'border-b border-[#eaecf0]' : ''}`}>
+                <dt className="text-[var(--mc-muted)]">Confidence</dt>
+                <dd className="font-semibold">{confidenceLabel(finding)}</dd>
+              </div>
+              {latency ? (
+                <div className="flex justify-between px-3.5 py-2.5">
+                  <dt className="text-[var(--mc-muted)]">Time to flag</dt>
+                  <dd className="mono font-semibold">{(latency / 1000).toFixed(1)} s</dd>
+                </div>
+              ) : null}
+            </dl>
+          </Block>
+
+          <p className="text-xs leading-normal text-[var(--mc-muted)]">Illustrative guidance for a synthetic demo. Not legal advice.</p>
+        </div>
       </aside>
     </div>
   )
@@ -104,9 +129,9 @@ export function DetailDrawer({ finding, rule, onClose }: { finding: Finding | nu
 
 function Block({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="mb-4">
-      <h3 className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--mc-muted)]">{title}</h3>
-      <div className="text-sm">{children}</div>
+    <section className="flex flex-col gap-2">
+      <h3 className="lbl">{title}</h3>
+      {children}
     </section>
   )
 }

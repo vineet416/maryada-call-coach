@@ -23,7 +23,7 @@ export function ServerChip() {
   return (
     <span
       role="status"
-      className="rounded-full border border-[var(--mc-line)] px-2 py-0.5 text-xs text-[var(--mc-muted)]"
+      className="chip chip-warn max-w-[220px] truncate"
     >
       {label}
     </span>

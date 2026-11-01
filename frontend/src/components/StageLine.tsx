@@ -1,3 +1,4 @@
+import { Check } from 'lucide-react'
 import { useSessionStore } from '@/store/sessionStore'
 
 const STEPS = [
@@ -7,32 +8,40 @@ const STEPS = [
   { key: 'coaching', label: 'Coaching' },
 ] as const
 
-/** "Listening → Transcribing → Checking rules → Coaching": the real stage, always visible. */
+/** "Listening, Transcribing, Checking rules, Coaching": the real stage, always visible. */
 export function StageLine() {
   const stage = useSessionStore((s) => s.stage)
   const status = useSessionStore((s) => s.status)
   const current = stage?.stage ?? (status === 'connecting' ? 'connecting' : 'listening')
   const at = STEPS.findIndex((s) => s.key === current)
+  const label = at >= 0 ? STEPS[at].label : ''
+  const detail = stage?.text ?? (current === 'connecting' ? 'Connecting' : 'Each agent turn is checked against the rulebook as it is spoken')
+  // The detail line never repeats the step name that is already highlighted
+  const showDetail = detail.trim().toLowerCase() !== label.toLowerCase()
   return (
-    <div role="status" aria-live="polite" className="text-xs">
-      <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
-        {STEPS.map((s, i) => (
-          <li key={s.key} className="flex items-center gap-1.5">
-            <span
-              className={
-                i === at
-                  ? 'font-semibold text-[var(--mc-text)]'
-                  : 'text-[var(--mc-muted)]/70'
-              }
-            >
-              {i === at && <span className="pulse-dot mr-1 inline-block h-1.5 w-1.5 rounded-full bg-[var(--mc-accent)]" aria-hidden />}
-              {s.label}
-            </span>
-            {i < STEPS.length - 1 && <span aria-hidden className="text-[var(--mc-line)]">→</span>}
-          </li>
-        ))}
+    <div role="status" aria-live="polite" aria-label="Stage" className="flex flex-col gap-2 border-t border-[#eaecf0] px-4 py-3.5 text-[13px] sm:flex-row sm:flex-wrap sm:items-center sm:px-6">
+      <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1.5 sm:gap-x-2.5">
+        {STEPS.map((s, i) => {
+          const done = at >= 0 && i < at
+          return (
+            <li key={s.key} className="flex items-center gap-1.5 sm:gap-2.5">
+              {i === at ? (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--mc-accent-tint)] px-2.5 py-1 text-xs font-semibold text-[var(--mc-accent-dark)] sm:gap-2 sm:px-3 sm:text-[13px]">
+                  <span className="pulse-dot h-2 w-2 rounded-full bg-[var(--mc-accent)]" aria-hidden />
+                  {s.label}
+                </span>
+              ) : (
+                <span className={`inline-flex items-center gap-1 text-xs font-medium sm:gap-2 sm:text-[13px] ${done ? 'text-[var(--mc-good-practice-ink)]' : 'text-[var(--mc-muted)]'}`}>
+                  {done && <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={2.5} aria-hidden />}
+                  {s.label}
+                </span>
+              )}
+              {i < STEPS.length - 1 && <span aria-hidden className="hidden text-[#d0d5dd] sm:inline">—</span>}
+            </li>
+          )
+        })}
       </ol>
-      <p className="mt-1 text-[var(--mc-muted)]">{stage?.text ?? (current === 'connecting' ? 'Connecting' : 'Ready')}</p>
+      {showDetail && <span className="text-xs text-[var(--mc-muted)] sm:ml-auto">{detail}</span>}
     </div>
   )
 }

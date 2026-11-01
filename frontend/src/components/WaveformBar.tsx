@@ -26,10 +26,10 @@ export function WaveformBar({ scenario, findings, onTime, running }: Props) {
     const s = WaveSurfer.create({
       container: box.current,
       url: audioUrl(scenario.call_audio_url),
-      height: 52,
-      waveColor: '#33465c',
-      progressColor: '#4f8cff',
-      cursorColor: '#e6edf3',
+      height: 48,
+      waveColor: '#d0d5dd',
+      progressColor: '#4338ca',
+      cursorColor: '#0f172a',
       cursorWidth: 2,
       barWidth: 2,
       barGap: 2,
@@ -70,24 +70,35 @@ export function WaveformBar({ scenario, findings, onTime, running }: Props) {
     return () => cancelAnimationFrame(raf)
   }, [running, scenario.turns, total, onTime])
 
-  const marks = findings.filter((f) => f.kind !== 'good_practice')
+  // One marker per agent turn that has flags, labelled with its rule ids
+  const marks = new Map<number, { ids: string[]; kind: Finding['kind'] }>()
+  for (const f of findings) {
+    if (f.kind === 'good_practice') continue
+    const m = marks.get(f.turn_idx) ?? { ids: [], kind: f.kind }
+    if (!m.ids.includes(f.rule_id)) m.ids.push(f.rule_id)
+    if (f.kind === 'violation') m.kind = 'violation'
+    marks.set(f.turn_idx, m)
+  }
   return (
-    <div className="relative">
+    <div className="relative pb-[18px] pt-1.5">
       {failed ? (
-        <div className="h-[52px] rounded-md bg-[var(--mc-line)]/50" aria-hidden />
+        <div className="h-12 rounded-md bg-[var(--mc-line)]/50" aria-hidden />
       ) : (
-        <div ref={box} aria-hidden className="h-[52px]" />
+        <div ref={box} aria-hidden className="h-12" />
       )}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1.5">
-        {marks.map((f) => {
-          const t = scenario.turns.find((x) => x.idx === f.turn_idx)
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-4">
+        {[...marks].map(([idx, m]) => {
+          const t = scenario.turns.find((x) => x.idx === idx)
           if (!t) return null
           return (
             <span
-              key={f.id}
-              className="absolute bottom-0 h-1.5 w-1.5 -translate-x-1/2 rounded-full"
-              style={{ left: `${(t.offset_ms / total) * 100}%`, background: KIND_COLOR[f.kind] }}
-            />
+              key={idx}
+              className="absolute bottom-0 flex -translate-x-1/2 flex-col items-center gap-0.5"
+              style={{ left: `${(t.offset_ms / total) * 100}%` }}
+            >
+              <span className="h-[9px] w-[9px] rounded-full" style={{ background: KIND_COLOR[m.kind] }} />
+              <span className="text-[10px] leading-none text-[var(--mc-muted)]">{m.ids.join(' · ')}</span>
+            </span>
           )
         })}
       </div>
