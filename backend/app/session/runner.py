@@ -37,6 +37,7 @@ _RANK = {"good_practice": 0, "advisory": 1, "needs_review": 2, "violation": 3}
 
 SESSIONS: dict[str, "Session"] = {}
 _live_active: set[str] = set()  # ids of running live sessions (at most settings.max_live_sessions)
+MAX_SESSIONS_KEPT = 400
 UNSTARTED_TTL_S = 90  # a session whose WebSocket never connects drops its keys after this long
 
 
@@ -47,6 +48,7 @@ class Session:
         self.log = EventLog()
         self.task: asyncio.Task | None = None
         self.creds = creds  # the visitor's keys (memory only; wiped when the session ends)
+        self.visitor = creds is not None  # a visitor session never falls back to the server's keys
         self.llm_error = ""  # last plain-language reason the language model failed
         self.findings: dict[str, Finding] = {}
         self.risk_peak = 0
@@ -61,7 +63,7 @@ def new_session(scenario_id: str, requested: str, creds: Creds | None = None) ->
     if requested == "live":
         if not settings.live_capable:
             reason = "Live checking is not available right now."
-        elif len(_live_active) + _waiting_live() >= settings.max_live_sessions:
+        elif len(_live_active) >= settings.max_live_sessions:
             reason = "All live call slots are busy right now; showing the recorded run."
         elif not assets.has_audio(scenario_id):
             reason = "No call audio for this case."
@@ -70,23 +72,31 @@ def new_session(scenario_id: str, requested: str, creds: Creds | None = None) ->
     if mode != "live" and creds is not None:
         creds.wipe()  # a recorded run needs no keys: do not keep them
         creds = None
+    _prune()
     s = Session(scenario_id, mode, reason, creds)
     SESSIONS[s.id] = s
     db.log_session_start(s.id, scenario_id, mode, _now())
-    if creds is not None:
+    if mode == "live":
+        _live_active.add(s.id)  # the slot is held from creation, so a burst cannot exceed the limit
         asyncio.get_running_loop().call_later(UNSTARTED_TTL_S, _expire_unstarted, s)
     return s
 
 
-def _waiting_live() -> int:
-    """Live sessions created but not started yet also hold a slot."""
-    return sum(1 for x in SESSIONS.values() if x.effective_mode == "live" and x.task is None)
+def _prune() -> None:
+    """Keep the in-memory session table bounded: drop the oldest finished sessions."""
+    if len(SESSIONS) >= MAX_SESSIONS_KEPT:
+        for sid in [k for k, v in SESSIONS.items() if v.task is not None and v.task.done()][:MAX_SESSIONS_KEPT // 4]:
+            del SESSIONS[sid]
 
 
 def _expire_unstarted(s: Session) -> None:
-    if s.task is None and s.creds is not None:
-        s.creds.wipe()
-        s.creds = None
+    """A live session whose WebSocket never connected gives up its slot and its keys."""
+    if s.task is None:
+        _live_active.discard(s.id)
+        SESSIONS.pop(s.id, None)
+        if s.creds is not None:
+            s.creds.wipe()
+            s.creds = None
 
 
 def _now() -> str:
@@ -223,6 +233,8 @@ async def _segments(client: httpx.AsyncClient, wav, profile: dict, key: str):
                     break
                 got, covered = got + 1, seg.audio_end_ms
                 yield seg
+        except SttAuthError:
+            raise  # a refused key is not retried over REST
         except (SttError, TimeoutError) as e:
             log.warning("realtime stt failed after %d segments, retrying over REST: %s %s", got, type(e).__name__,
                         e.__cause__ or e)
@@ -237,7 +249,7 @@ async def _run_live(s: Session) -> None:
     turns = assets.audio_manifest()[s.scenario_id]["turns"]
     ctx = assets.context_for(sc)
     creds = s.creds
-    if creds is None and not settings.server_keys:
+    if creds is None and (s.visitor or not settings.server_keys):
         s.log.emit("error", {"code": "keys_required", "retryable": False, "message_user":
                    "Add your keys in Settings to start a live call, or play the recorded run."})
         return
@@ -338,6 +350,8 @@ class LiveTurn:
         self._handle(fast, "fast", {"stt_ms": seg.latency_ms, "prefilter_ms": prefilter_ms, "llm_ms": 0}, seg_end)
 
     async def _deep(self, box: dict, text: str, seg: TranscriptSegment, seg_end: float, arrived: float) -> None:
+        if self.s.visitor and self.s.creds is None:
+            return  # keys already wiped: never fall through to the server's key
         if skip.should_skip(self.ctx, self.history, text, box["fast"]):
             self.s.llm_skipped += 1
             log.info("llm skipped session=%s turn=%s words=%d (short, no prefilter hit, no keyword)",

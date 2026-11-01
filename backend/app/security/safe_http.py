@@ -1,4 +1,5 @@
 """One guarded HTTPS call to a visitor-supplied base URL: pinned public IP, no redirects, size cap, friendly errors."""
+import asyncio
 import json as _json
 
 import httpx2 as httpx
@@ -51,10 +52,11 @@ async def request(client: httpx.AsyncClient, base_url: str, path: str, api_key: 
                   resolver: Resolver | None = None) -> bytes:
     """Validate + resolve + pin, send, never follow redirects, read at most max_bytes. Raises UnsafeUrl / ProviderError."""
     target = await resolve_safe(base_url, resolver)  # re-resolved on every call; the IP checked here is the IP we connect to
-    host_header = target.host if target.port == 443 else f"{target.host}:{target.port}"
+    name = f"[{target.host}]" if ":" in target.host else target.host
+    host_header = name if target.port == 443 else f"{name}:{target.port}"
     headers = {"Authorization": f"Bearer {api_key}", "Host": host_header, "Accept": "application/json"}
     try:
-        async with client.stream(method, target.pinned(path), json=json, headers=headers, timeout=timeout,
+        async with asyncio.timeout(timeout * 2), client.stream(method, target.pinned(path), json=json, headers=headers, timeout=timeout,
                                  follow_redirects=False, extensions={"sni_hostname": target.host}) as r:
             if r.status_code != 200:
                 detail = await _error_detail(r)
@@ -66,7 +68,7 @@ async def request(client: httpx.AsyncClient, base_url: str, path: str, api_key: 
                 if len(buf) > max_bytes:
                     raise ProviderError("The provider's reply was too large and was dropped.")
             return bytes(buf)
-    except httpx.TimeoutException:
+    except (httpx.TimeoutException, TimeoutError):
         raise ProviderError("The provider did not answer in time.") from None
     except httpx.HTTPError as e:
         raise ProviderError(f"Could not reach the provider ({type(e).__name__}).") from None

@@ -440,3 +440,36 @@ def test_filter_keeps_args_usable_for_uvicorn_style_formatters():
     assert redact.RedactFilter().filter(rec)
     _client, method, _path, _ver, status = rec.args  # uvicorn unpacks the args itself
     assert (method, status) == ("POST", 200) and rec.getMessage().endswith("200")
+
+
+def test_unstarted_live_sessions_hold_a_slot_then_release_it(monkeypatch, tmp_path):
+    monkeypatch.setattr(settings, "db_path", tmp_path / "t.db")
+    monkeypatch.setattr(settings, "max_live_sessions", 3)
+    db.init_db()
+    monkeypatch.setattr(runner, "_live_active", set())
+    monkeypatch.setattr(runner, "SESSIONS", {})
+
+    async def go():
+        made = [runner.new_session("c06", "live", _creds()) for _ in range(4)]  # nobody connects a WebSocket
+        modes = [m.effective_mode for m in made]
+        for m in made:
+            runner._expire_unstarted(m)  # the timeout fires
+        again = runner.new_session("c06", "live", _creds())
+        return modes, made, again
+
+    modes, made, again = run(go())
+    assert modes == ["live", "live", "live", "replay"]  # a burst cannot exceed the limit
+    assert all(m.creds is None for m in made) and not runner._live_active - {again.id}
+    assert again.effective_mode == "live"  # the slots came back; nothing is locked out
+    assert len(runner.SESSIONS) == 1
+
+
+def test_visitor_session_never_uses_server_keys_after_wipe(monkeypatch):
+    monkeypatch.setattr(settings, "server_keys_enabled", True)
+    monkeypatch.setattr(settings, "euri_api_key", "env-llm-key-123456")
+    monkeypatch.setattr(settings, "gnani_api_key_id", "env-gnani-key-123456")
+    s = runner.Session("c06", "live", None, _creds())
+    s.creds.wipe()
+    s.creds = None  # what an expired or finished visitor session looks like
+    run(runner._run_live(s))
+    assert s.log.events[-1]["data"]["code"] == "keys_required"  # stopped; the server's keys were not used
