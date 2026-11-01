@@ -134,7 +134,7 @@ async def _post_server(client: httpx.AsyncClient, body: dict) -> dict:
 async def _post_visitor(client: httpx.AsyncClient, creds: Creds, body: dict) -> dict:
     """The visitor's provider through the guarded call. Newer OpenAI models want max_completion_tokens and no
     temperature: the request settings are adapted once for each, driven by the provider's own error text."""
-    for _ in range(3):
+    for _ in range(4):
         try:
             return json.loads(await safe_http.request(client, creds.base_url, "/chat/completions", creds.llm_key,
                                                       json=body, timeout=LATE_TIMEOUT_S))
