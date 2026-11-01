@@ -3,13 +3,12 @@
  "call_id": "c28",
  "condition": "clean",
  "mode": "rules_only",
- "labels_hash": "be1f14d003059999",
+ "labels_hash": "21caa31f45898ae6",
  "engine": {
   "violation_min": 0.75,
   "review_min": 0.45,
   "skip_words": 8,
-  "llm_model": null,
-  "rules_prompt_hash": "1d00a71c99b73ca1"
+  "rules_prompt_hash": "d41d4c6123ed19ab"
  },
  "stt": {
   "requests": 0,
@@ -119,5 +118,5 @@
    "quote": "होशियारी मत दिखा,"
   }
  ],
- "completed_at": "2026-11-01T14:28:35+00:00"
+ "completed_at": "2026-11-01T14:39:49+00:00"
 }

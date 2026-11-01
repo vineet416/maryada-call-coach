@@ -11,7 +11,7 @@ model answers by (model, endpoint, prompt hash) (data/eval/llm_cache.jsonl). A G
 token cap stops the run cleanly (nothing half-written); run it again later to continue.
 
   backend/.venv/Scripts/python.exe tools/run_eval.py --mode rules_only --conditions clean
-  backend/.venv/Scripts/python.exe tools/run_eval.py --mode full --conditions clean,snr10 --limit 3 --max-tokens 20000
+  backend/.venv/Scripts/python.exe tools/run_eval.py --mode full --conditions clean,snr10 --limit 3 --token-budget 20000
   backend/.venv/Scripts/python.exe tools/run_eval.py --report --mode rules_only --conditions clean
   backend/.venv/Scripts/python.exe tools/run_eval.py --estimate
 
@@ -40,11 +40,25 @@ from app.stt import rest
 from app.stt.base import SttAuthError, SttError, load_profile
 
 CONDITIONS = ("clean", "snr10", "snr20", "snr5")
+GROUPS = ("tune", "held_out", "seen_in_development")
+GROUP_TITLES = {"all": "ALL CALLS", "tune": "TUNE SET", "held_out": "HELD-OUT SET (not run during development)",
+                "seen_in_development": "SEEN IN DEVELOPMENT (held-out calls that were run through the engine)"}
+LIMITS = [
+    "Synthetic calls: the speech is text-to-speech from authored scripts, not real recordings.",
+    "Small set: 30 calls, 35 labelled units; one run per condition.",
+    "STT in this evaluation is Gnani REST, one request per turn; the live app streams audio, so live transcripts can differ.",
+    "All 30 scripts were visible when the phrase lists were written, so the held-out set only protects against prompt tuning.",
+    "Thresholds are fixed (violation 0.75, needs review 0.45) and were not tuned for this evaluation.",
+    "R6 (sensitive occasions) is a needs-review rule by design, so it has no strict recall.",
+    "Calls c24, c28 and c30 were run through the engine during development and are reported apart from held-out.",
+    "Rules come from one RBI source (RBI/2026-27/223). Demo with synthetic calls, not legal advice.",
+]
 EVAL = settings.data_dir / "eval"
 CACHE = EVAL / "transcripts_cache"
 RUNS = EVAL / "runs"
 LLM_CACHE = EVAL / "llm_cache.jsonl"
 RESULTS = EVAL / "eval_results.json"
+LABEL_CHANGES = EVAL / "label_changes.json"  # labels changed after a first run: written by hand with the reason, read here
 STT_TIMEOUT_S, LLM_TIMEOUT_S, STT_TRIES = 60.0, 30.0, 3
 TOKENS_PER_REQUEST = 904  # measured on the hero call (docs/EVAL-NOTES.md: 10,849 tokens / 12 requests)
 
@@ -100,8 +114,8 @@ async def review(client: httpx.AsyncClient, ctx, hist: list[Turn], text: str, st
         if ck in llm._CACHE and (out := engine.parse_llm(llm._CACHE[ck])) is not None:
             st["cache_hits"] += 1
             return out
-        if budget is not None and llm.STATS["tokens"] + TOKENS_PER_REQUEST > budget:
-            raise Stop(f"token cap {budget} reached ({llm.STATS['tokens']} used in this run)")
+        if budget is not None and llm.STATS["tokens"] >= budget:
+            raise Stop(f"token budget {budget} reached ({llm.STATS['tokens']} reported tokens used in this run)")
         try:
             raw, _ = await asyncio.wait_for(llm.chat(client, model, messages, None), LLM_TIMEOUT_S)
         except httpx.HTTPStatusError as e:
@@ -170,9 +184,11 @@ def engine_block(mode: str) -> dict:
     h = hashlib.sha256()
     for name in ("rules.yaml", "rules_phrases.yaml"):
         h.update((settings.content_dir / name).read_bytes())
-    h.update(llm.system_prompt().encode())
-    return {"violation_min": VIOLATION_MIN, "review_min": REVIEW_MIN, "skip_words": settings.skip_llm_max_words,
-            "llm_model": settings.llm_model if mode == "full" else None, "rules_prompt_hash": h.hexdigest()[:16]}
+    block = {"violation_min": VIOLATION_MIN, "review_min": REVIEW_MIN, "skip_words": settings.skip_llm_max_words}
+    if mode == "full":  # the ablation never uses the model: neither the prompt nor the models are part of its identity
+        h.update(llm.system_prompt().encode())
+        block |= {"llm_model": settings.llm_model, "llm_fallback_model": settings.llm_fallback_model}
+    return block | {"rules_prompt_hash": h.hexdigest()[:16]}
 
 
 def run_path(mode: str, cond: str, cid: str) -> Path:
@@ -209,7 +225,7 @@ def aggregate(scenarios: list[dict], mode: str, cond: str, labels_h: str) -> dic
     dets = [d for c in done for d in runs[c]["detections"]]
     sp = split()
     out = {"calls_run": len(done), "complete": len(done) == len(scenarios), "all": es.score(scenarios, dets, done)}
-    for name in ("tune", "held_out"):
+    for name in GROUPS:
         ids = [c for c in done if c in sp[name]]
         out[name] = es.score(scenarios, dets, ids) if ids else None
     n_stt = sum(runs[c]["stt"]["requests"] + runs[c]["stt"]["cached"] for c in done)
@@ -225,7 +241,8 @@ def write_results(scenarios: list[dict], labels_h: str) -> dict:
            "n_calls": len(scenarios), "conditions": list(CONDITIONS),
            "model_info": {"stt": "Gnani Prisma V3.0 (REST, one request per turn)", "llm": settings.llm_model,
                           "thresholds": {"violation": VIOLATION_MIN, "needs_review": REVIEW_MIN}},
-           "full": {}, "ablation_llm_off": {}}
+           "limits": LIMITS, "label_changes": json.loads(LABEL_CHANGES.read_text(encoding="utf-8")) if LABEL_CHANGES.exists() else [],
+           "splits": split(), "full": {}, "ablation_llm_off": {}}
     for mode, key in (("full", "full"), ("rules_only", "ablation_llm_off")):
         for cond in CONDITIONS:
             if (a := aggregate(scenarios, mode, cond, labels_h)) is not None:
@@ -246,11 +263,11 @@ def units(us: list) -> str:
 
 def print_report(a: dict, title: str) -> None:
     say(f"\n=== {title}: {a['calls_run']} calls{'' if a['complete'] else ' (INCOMPLETE)'} ===")
-    for label, key in (("ALL CALLS", "all"), ("TUNE SET", "tune"), ("HELD-OUT SET", "held_out")):
+    for key in ("all", *GROUPS):
         s = a[key]
         if s is None:
             continue
-        say(f"\n--- {label} ({s['n_calls']} calls) ---")
+        say(f"\n--- {GROUP_TITLES[key]} ({s['n_calls']} calls) ---")
         say("rule | strict: P     R     F1    TP FP FN | with review: P     R     F1    TP FP FN | needs_review on/off label")
         for r in (*es.RULES, "ALL"):
             b = s["overall"] if r == "ALL" else s["per_rule"][r]
@@ -304,7 +321,8 @@ async def main() -> int:
     ap.add_argument("--conditions", default="clean", help="comma list from: " + ",".join(CONDITIONS))
     ap.add_argument("--calls", default="", help="comma list of call ids (default: all 30)")
     ap.add_argument("--limit", type=int, default=0, help="only the first N calls")
-    ap.add_argument("--max-tokens", type=int, default=0, help="stop before the language model passes this many tokens in this run")
+    ap.add_argument("--token-budget", "--max-tokens", dest="token_budget", type=int, default=0,
+                    help="stop by itself once the language model has used this many reported tokens in this run; rerun to resume")
     ap.add_argument("--report", action="store_true", help="no run: print the report from the results on disk")
     ap.add_argument("--estimate", action="store_true", help="no run: estimate a full-mode run from the clean ablation transcripts")
     ap.add_argument("--rerun", action="store_true", help="ignore existing results for the selected calls (STT and LLM caches still apply)")
@@ -336,7 +354,7 @@ async def main() -> int:
                 say("EURI_API_KEY is not set (environment); cannot run the language model")
                 return 2
             say(f"language model answers cached on disk: {llm.enable_disk_cache(LLM_CACHE)} entries")
-        budget = args.max_tokens or None
+        budget = args.token_budget or None
         stopped = ""
         async with httpx.AsyncClient(timeout=STT_TIMEOUT_S) as stt_client, \
                 httpx.AsyncClient(timeout=LLM_TIMEOUT_S, http2=settings.llm_http2) as llm_client:

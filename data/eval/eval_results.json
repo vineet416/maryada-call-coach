@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-11-01T14:28:35+00:00",
- "labels_hash": "be1f14d003059999",
+ "generated_at": "2026-11-01T14:39:49+00:00",
+ "labels_hash": "21caa31f45898ae6",
  "n_calls": 30,
  "conditions": [
   "clean",
@@ -15,6 +15,67 @@
    "violation": 0.75,
    "needs_review": 0.45
   }
+ },
+ "limits": [
+  "Synthetic calls: the speech is text-to-speech from authored scripts, not real recordings.",
+  "Small set: 30 calls, 35 labelled units; one run per condition.",
+  "STT in this evaluation is Gnani REST, one request per turn; the live app streams audio, so live transcripts can differ.",
+  "All 30 scripts were visible when the phrase lists were written, so the held-out set only protects against prompt tuning.",
+  "Thresholds are fixed (violation 0.75, needs review 0.45) and were not tuned for this evaluation.",
+  "R6 (sensitive occasions) is a needs-review rule by design, so it has no strict recall.",
+  "Calls c24, c28 and c30 were run through the engine during development and are reported apart from held-out.",
+  "Rules come from one RBI source (RBI/2026-27/223). Demo with synthetic calls, not legal advice."
+ ],
+ "label_changes": [
+  {
+   "changed_on": "2026-11-01",
+   "after_first_run": true,
+   "call": "c17",
+   "turn": 7,
+   "rule": "R4",
+   "action": "added",
+   "label_hash_before": "be1f14d003059999",
+   "label_hash_after": "21caa31f45898ae6",
+   "reason": "The agent again asks the spouse to relay the payment, the same disclosure as in turn 5. The clean rules-only baseline was first scored with the old labels (34 labelled units) and re-scored with the new ones (35)."
+  }
+ ],
+ "splits": {
+  "tune": [
+   "c01",
+   "c03",
+   "c04",
+   "c06",
+   "c07",
+   "c09",
+   "c11",
+   "c13",
+   "c15",
+   "c17",
+   "c19",
+   "c20",
+   "c22",
+   "c23",
+   "c25",
+   "c27",
+   "c29"
+  ],
+  "held_out": [
+   "c02",
+   "c05",
+   "c08",
+   "c10",
+   "c12",
+   "c14",
+   "c16",
+   "c18",
+   "c21",
+   "c26"
+  ],
+  "seen_in_development": [
+   "c24",
+   "c28",
+   "c30"
+  ]
  },
  "full": {},
  "ablation_llm_off": {
@@ -94,18 +155,18 @@
       "strict": {
        "tp": 2,
        "fp": 0,
-       "fn": 3,
+       "fn": 4,
        "p": 1.0,
-       "r": 0.4,
-       "f1": 0.5714285714285715
+       "r": 0.3333333333333333,
+       "f1": 0.5
       },
       "with_review": {
        "tp": 3,
        "fp": 0,
-       "fn": 2,
+       "fn": 3,
        "p": 1.0,
-       "r": 0.6,
-       "f1": 0.7499999999999999
+       "r": 0.5,
+       "f1": 0.6666666666666666
       },
       "needs_review": {
        "on_label": 1,
@@ -161,18 +222,18 @@
      "strict": {
       "tp": 20,
       "fp": 0,
-      "fn": 14,
+      "fn": 15,
       "p": 1.0,
-      "r": 0.5882352941176471,
-      "f1": 0.7407407407407407
+      "r": 0.5714285714285714,
+      "f1": 0.7272727272727273
      },
      "with_review": {
       "tp": 26,
       "fp": 1,
-      "fn": 8,
+      "fn": 9,
       "p": 0.9629629629629629,
-      "r": 0.7647058823529411,
-      "f1": 0.8524590163934426
+      "r": 0.7428571428571429,
+      "f1": 0.8387096774193549
      },
      "needs_review": {
       "on_label": 6,
@@ -773,6 +834,11 @@
         "c17",
         5,
         "R4"
+       ],
+       [
+        "c17",
+        7,
+        "R4"
        ]
       ],
       "hit": [],
@@ -788,9 +854,20 @@
         "c17",
         5,
         "R4"
+       ],
+       [
+        "c17",
+        7,
+        "R4"
        ]
       ],
-      "missed_with_review": [],
+      "missed_with_review": [
+       [
+        "c17",
+        7,
+        "R4"
+       ]
+      ],
       "false_alarms": [],
       "false_alarms_with_review": [],
       "expected_rules": [
@@ -1390,7 +1467,7 @@
       "strict": {
        "tp": 0,
        "fp": 0,
-       "fn": 3,
+       "fn": 4,
        "p": null,
        "r": 0.0,
        "f1": null
@@ -1398,10 +1475,10 @@
       "with_review": {
        "tp": 1,
        "fp": 0,
-       "fn": 2,
+       "fn": 3,
        "p": 1.0,
-       "r": 0.3333333333333333,
-       "f1": 0.5
+       "r": 0.25,
+       "f1": 0.4
       },
       "needs_review": {
        "on_label": 1,
@@ -1457,18 +1534,18 @@
      "strict": {
       "tp": 10,
       "fp": 0,
-      "fn": 10,
+      "fn": 11,
       "p": 1.0,
-      "r": 0.5,
-      "f1": 0.6666666666666666
+      "r": 0.47619047619047616,
+      "f1": 0.6451612903225806
      },
      "with_review": {
       "tp": 14,
       "fp": 0,
-      "fn": 6,
+      "fn": 7,
       "p": 1.0,
-      "r": 0.7,
-      "f1": 0.8235294117647058
+      "r": 0.6666666666666666,
+      "f1": 0.8
      },
      "needs_review": {
       "on_label": 4,
@@ -1810,6 +1887,11 @@
         "c17",
         5,
         "R4"
+       ],
+       [
+        "c17",
+        7,
+        "R4"
        ]
       ],
       "hit": [],
@@ -1825,9 +1907,20 @@
         "c17",
         5,
         "R4"
+       ],
+       [
+        "c17",
+        7,
+        "R4"
        ]
       ],
-      "missed_with_review": [],
+      "missed_with_review": [
+       [
+        "c17",
+        7,
+        "R4"
+       ]
+      ],
       "false_alarms": [],
       "false_alarms_with_review": [],
       "expected_rules": [
@@ -2138,7 +2231,7 @@
     }
    },
    "held_out": {
-    "n_calls": 13,
+    "n_calls": 10,
     "per_rule": {
      "R1": {
       "strict": {
@@ -2164,7 +2257,29 @@
      },
      "R2": {
       "strict": {
-       "tp": 2,
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R3": {
+      "strict": {
+       "tp": 3,
        "fp": 0,
        "fn": 0,
        "p": 1.0,
@@ -2172,7 +2287,7 @@
        "f1": 1.0
       },
       "with_review": {
-       "tp": 2,
+       "tp": 3,
        "fp": 0,
        "fn": 0,
        "p": 1.0,
@@ -2182,28 +2297,6 @@
       "needs_review": {
        "on_label": 0,
        "off_label": 0
-      }
-     },
-     "R3": {
-      "strict": {
-       "tp": 4,
-       "fp": 0,
-       "fn": 0,
-       "p": 1.0,
-       "r": 1.0,
-       "f1": 1.0
-      },
-      "with_review": {
-       "tp": 4,
-       "fp": 1,
-       "fn": 0,
-       "p": 0.8,
-       "r": 1.0,
-       "f1": 0.888888888888889
-      },
-      "needs_review": {
-       "on_label": 0,
-       "off_label": 1
       }
      },
      "R4": {
@@ -2275,24 +2368,24 @@
     },
     "overall": {
      "strict": {
-      "tp": 10,
+      "tp": 7,
       "fp": 0,
       "fn": 4,
       "p": 1.0,
-      "r": 0.7142857142857143,
-      "f1": 0.8333333333333333
+      "r": 0.6363636363636364,
+      "f1": 0.7777777777777778
      },
      "with_review": {
-      "tp": 12,
-      "fp": 1,
+      "tp": 9,
+      "fp": 0,
       "fn": 2,
-      "p": 0.9230769230769231,
-      "r": 0.8571428571428571,
-      "f1": 0.888888888888889
+      "p": 1.0,
+      "r": 0.8181818181818182,
+      "f1": 0.9
      },
      "needs_review": {
       "on_label": 2,
-      "off_label": 1
+      "off_label": 0
      }
     },
     "per_call": [
@@ -2608,44 +2701,6 @@
       ]
      },
      {
-      "call_id": "c24",
-      "hard_negative": false,
-      "expected": [
-       [
-        "c24",
-        3,
-        "R2"
-       ]
-      ],
-      "hit": [
-       [
-        "c24",
-        3,
-        "R2"
-       ]
-      ],
-      "hit_with_review": [
-       [
-        "c24",
-        3,
-        "R2"
-       ]
-      ],
-      "missed": [],
-      "missed_with_review": [],
-      "false_alarms": [],
-      "false_alarms_with_review": [],
-      "expected_rules": [
-       "R2"
-      ],
-      "caught_rules": [
-       "R2"
-      ],
-      "caught_rules_with_review": [
-       "R2"
-      ]
-     },
-     {
       "call_id": "c26",
       "hard_negative": false,
       "expected": [
@@ -2694,6 +2749,220 @@
       "caught_rules": [],
       "caught_rules_with_review": [
        "R6"
+      ]
+     }
+    ],
+    "negatives": {
+     "calls": 3,
+     "calls_with_false_alarm": 0,
+     "false_alarm_units": 0,
+     "calls_with_false_alarm_with_review": 0
+    },
+    "call_level": {
+     "expected": 7,
+     "caught": 5,
+     "caught_with_review": 6
+    },
+    "g1": {
+     "findings": 3,
+     "agent_turns_with_g1": 3
+    }
+   },
+   "seen_in_development": {
+    "n_calls": 3,
+    "per_rule": {
+     "R1": {
+      "strict": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R2": {
+      "strict": {
+       "tp": 2,
+       "fp": 0,
+       "fn": 0,
+       "p": 1.0,
+       "r": 1.0,
+       "f1": 1.0
+      },
+      "with_review": {
+       "tp": 2,
+       "fp": 0,
+       "fn": 0,
+       "p": 1.0,
+       "r": 1.0,
+       "f1": 1.0
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R3": {
+      "strict": {
+       "tp": 1,
+       "fp": 0,
+       "fn": 0,
+       "p": 1.0,
+       "r": 1.0,
+       "f1": 1.0
+      },
+      "with_review": {
+       "tp": 1,
+       "fp": 1,
+       "fn": 0,
+       "p": 0.5,
+       "r": 1.0,
+       "f1": 0.6666666666666666
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 1
+      }
+     },
+     "R4": {
+      "strict": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R5": {
+      "strict": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R6": {
+      "strict": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     }
+    },
+    "overall": {
+     "strict": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "p": 1.0,
+      "r": 1.0,
+      "f1": 1.0
+     },
+     "with_review": {
+      "tp": 3,
+      "fp": 1,
+      "fn": 0,
+      "p": 0.75,
+      "r": 1.0,
+      "f1": 0.8571428571428571
+     },
+     "needs_review": {
+      "on_label": 0,
+      "off_label": 1
+     }
+    },
+    "per_call": [
+     {
+      "call_id": "c24",
+      "hard_negative": false,
+      "expected": [
+       [
+        "c24",
+        3,
+        "R2"
+       ]
+      ],
+      "hit": [
+       [
+        "c24",
+        3,
+        "R2"
+       ]
+      ],
+      "hit_with_review": [
+       [
+        "c24",
+        3,
+        "R2"
+       ]
+      ],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [],
+      "false_alarms_with_review": [],
+      "expected_rules": [
+       "R2"
+      ],
+      "caught_rules": [
+       "R2"
+      ],
+      "caught_rules_with_review": [
+       "R2"
       ]
      },
      {
@@ -2774,19 +3043,19 @@
      }
     ],
     "negatives": {
-     "calls": 4,
+     "calls": 1,
      "calls_with_false_alarm": 0,
      "false_alarm_units": 0,
      "calls_with_false_alarm_with_review": 0
     },
     "call_level": {
-     "expected": 10,
-     "caught": 8,
-     "caught_with_review": 9
+     "expected": 3,
+     "caught": 3,
+     "caught_with_review": 3
     },
     "g1": {
-     "findings": 4,
-     "agent_turns_with_g1": 4
+     "findings": 1,
+     "agent_turns_with_g1": 1
     }
    },
    "stt": {
