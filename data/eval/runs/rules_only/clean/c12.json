@@ -1,0 +1,118 @@
+{
+ "schema": 1,
+ "call_id": "c12",
+ "condition": "clean",
+ "mode": "rules_only",
+ "labels_hash": "be1f14d003059999",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": null
+ },
+ "stt": {
+  "requests": 11,
+  "cached": 0,
+  "latency_ms": 5320,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "नमस्ते रेखा कदम बोल रही हैं।",
+   "stt_ms": 532,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ, बोलिए।",
+   "stt_ms": 298,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "कविता बोल रही हूँ। सारंग Finserv से madam। एक minute। यह line recorded है।",
+   "stt_ms": 628,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ बोलो।",
+   "stt_ms": 280,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "रेखा जी, आपकी 6,000 की EMI 25 दिन से pending है, एक बार bounce भी हुई, आप कब तक भर पाएंगी?",
+   "stt_ms": 642,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "हाँ madam, मुझे पता है घर में दिक्कत चल रही है, अगले महीने तक कर दूँगी।",
+   "stt_ms": 543,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "अगले महीने तक? रेखा जी, यह नहीं चलेगा, देखिए मैं RBI की तरफ से भी बोल रही हूँ, RBI आपका loan account block कर देगी और आपको किसी bank से loan नहीं मिलेगा जिंदगी भर।",
+   "stt_ms": 691,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "क्या RBI ऐसा हो सकता है क्या? मेरे को तो पता ही नहीं था।",
+   "stt_ms": 455,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "हाँ madam, इसलिए आज ही भर दीजिए, थोड़ा भी भर दो तो चलेगा",
+   "stt_ms": 352,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "आज नहीं हो पाएगा madam कल शाम तक कर दूंगी पक्का बोल रही हूँ।",
+   "stt_ms": 448,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "ठीक है कल शाम तक पक्का UPI से कर देना।",
+   "stt_ms": 451,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c12",
+   "turn": 7,
+   "rule": "R5",
+   "kind": "violation",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "loan account block"
+  }
+ ],
+ "completed_at": "2026-11-01T14:25:13+00:00"
+}

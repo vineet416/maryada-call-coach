@@ -1,0 +1,145 @@
+{
+ "schema": 1,
+ "call_id": "c07",
+ "condition": "clean",
+ "mode": "rules_only",
+ "labels_hash": "be1f14d003059999",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": null
+ },
+ "stt": {
+  "requests": 11,
+  "cached": 0,
+  "latency_ms": 5292,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "नमस्ते, महेश थोरात बोल रहे हैं।",
+   "stt_ms": 272,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ जी, महेश बोल रहा हूँ।",
+   "stt_ms": 398,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "एक मिनट महेश जी, यह line recorded है। मैं कविता सारंग Finserve से।",
+   "stt_ms": 449,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ madam, बोलो।",
+   "stt_ms": 244,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "महेश जी, shop loan की 9,500 की EMI तीन हफ्ते से pending है, दो बार bounce हो चुकी है, ऊपर से penalty लग रही है, payment कब करेंगे?",
+   "stt_ms": 588,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Madam, थोड़ा time लगेगा, 2 हफ्ते दुकान बंद थी ना, धंधा ही नहीं हुआ।",
+   "stt_ms": 525,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "महेश जी, हर बार यही कहानी, मुझे date चाहिए, गोल गोल जवाब नहीं चलेगा, आपको शर्म नहीं आती, loan लेकर भूल जाते हो, आप जैसे लोग ही system खराब करते हैं।",
+   "stt_ms": 619,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "Madam, ऐसे नहीं बोलो ना, मैं भागने वाला नहीं हूँ, बस दुकान चलने दो।",
+   "stt_ms": 494,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "भागने का सोचना भी मत, सीधे-सीधे बोलो कब दोगे, वरना मुझसे बुरा कोई नहीं होगा",
+   "stt_ms": 536,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "Madam, ऐसे डर से बात मत करो, Friday को 5,000 दे दूंगा, बाकी next month.",
+   "stt_ms": 663,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "ठीक है Friday को 5,000 पक्का मैं नोट कर लेती हूँ UPI से कर देना।",
+   "stt_ms": 504,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c07",
+   "turn": 7,
+   "rule": "R3",
+   "kind": "needs_review",
+   "confidence": 0.6,
+   "source": "prefilter",
+   "quote": "हर बार यही कहानी,"
+  },
+  {
+   "call": "c07",
+   "turn": 7,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "आपको शर्म नहीं आती,"
+  },
+  {
+   "call": "c07",
+   "turn": 9,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "भागने का सोचना भी मत,"
+  },
+  {
+   "call": "c07",
+   "turn": 9,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "मुझसे बुरा कोई नहीं होगा"
+  }
+ ],
+ "completed_at": "2026-11-01T14:24:46+00:00"
+}

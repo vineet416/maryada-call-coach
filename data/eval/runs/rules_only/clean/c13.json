@@ -1,0 +1,108 @@
+{
+ "schema": 1,
+ "call_id": "c13",
+ "condition": "clean",
+ "mode": "rules_only",
+ "labels_hash": "be1f14d003059999",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": null
+ },
+ "stt": {
+  "requests": 9,
+  "cached": 2,
+  "latency_ms": 4316,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "राजेश जी, अमित बोल रहा हूँ, तारंग फिनसर्व से।",
+   "stt_ms": 397,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ बोलो।",
+   "stt_ms": 249,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "यह call recorded है quality purpose के लिए। आपके two wheeler loan के बारे में बात करनी थी।",
+   "stt_ms": 424,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ, बोलिए।",
+   "stt_ms": 241,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "4,200 की EMI 10 दिन से pending है SMS भी भेजा था आप कब दे रहे हैं।",
+   "stt_ms": 488,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "हाँ sir Friday तक दे दूंगा salary आने वाली है।",
+   "stt_ms": 462,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "सर, मैं clear बोल रहा हूँ Friday तक, पक्का ना? अगर Friday तक नहीं दिया तो हर दिन 5,000 रुपये penalty लगेगी और यह RBI का rule है।",
+   "stt_ms": 619,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "5,000 रोज? इतना कैसे लगेगा?",
+   "stt_ms": 419,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "इसलिए Friday से पहले कर दीजिए sir, आज कल में हो जाए तो best है, पूरा नहीं हो तो थोड़ा अभी कर दो बाकी Friday को।",
+   "stt_ms": 581,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "अभी तो 2,000 कर देता हूँ बाकी Friday को पक्का सुबह ही कर दूंगा।",
+   "stt_ms": 447,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "Okay sir, 2,000 अभी और बाकी Friday को payment link अभी WhatsApp पर भेज रहा हूँ। Thank you.",
+   "stt_ms": 479,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [],
+ "completed_at": "2026-11-01T14:25:18+00:00"
+}

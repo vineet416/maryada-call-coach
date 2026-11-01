@@ -1,0 +1,118 @@
+{
+ "schema": 1,
+ "call_id": "c06",
+ "condition": "clean",
+ "mode": "rules_only",
+ "labels_hash": "be1f14d003059999",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": null
+ },
+ "stt": {
+  "requests": 11,
+  "cached": 0,
+  "latency_ms": 7179,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Hello, स्मिता पाटिल बोल रही हैं।",
+   "stt_ms": 727,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ, बोल रही हूँ। आप कौन?",
+   "stt_ms": 392,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "मैं रोहित बोल रहा हूँ। तारंग फिनसर्व से यह call quality और training के लिए record हो रही है।",
+   "stt_ms": 712,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ बोलो, क्या हुआ?",
+   "stt_ms": 416,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "स्मिता जी, आपके personal loan की 2 EMI pending हैं, दोनों बार bounce हो गई हैं, ऊपर से penalty भी लग रही है, आप payment कब कर रही हैं?",
+   "stt_ms": 852,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Sir, please थोड़ा समझो ना, मेरी job चली गई है, 2 महीने हो गए, next week तक थोड़ा पैसा आ जाएगा पर एक साथ पूरा नहीं दे पाऊँगी।",
+   "stt_ms": 584,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "Madam, ये सब तो हर कोई बोलता है। Next week, next week। मेरे को आज ही payment चाहिए। देखो, आज शाम तक payment नहीं आया ना, तो police को भेजूंगा आपके घर। आपके मोहल्ले में सबको बता दूंगा कि आप defaulter हो। Court का notice भी कल सुबह आ जाएगा। समझी?",
+   "stt_ms": 812,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "अरे sir, धमकी क्यों दे रहे हो? मैंने कब बोला कि पैसा नहीं दूँगी, बस थोड़ा time चाहिए, समझो ना।",
+   "stt_ms": 551,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "Sorry madam, आप गलत मत समझिए, देखिए पूरा एक साथ नहीं हो रहा तो थोड़ा अभी कर दो, बाकी की installment बना देते हैं, Friday तक कितना कर सकती हैं?",
+   "stt_ms": 611,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "Okay ठीक है Friday तक 3,000 दे सकती हूँ बाकी next month से थोड़ा थोड़ा करके दूँगी।",
+   "stt_ms": 612,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "ठीक है madam Friday तक 3,000 पक्का। बाकी का plan next month से मैं system में note कर देता हूँ। Payment link अभी WhatsApp पर भेज रहा हूँ। Thank you। आपका दिन अच्छा रहे।",
+   "stt_ms": 910,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c06",
+   "turn": 7,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "मोहल्ले में सबको बता"
+  }
+ ],
+ "completed_at": "2026-11-01T14:24:08+00:00"
+}

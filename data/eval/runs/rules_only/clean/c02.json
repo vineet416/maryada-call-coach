@@ -1,0 +1,118 @@
+{
+ "schema": 1,
+ "call_id": "c02",
+ "condition": "clean",
+ "mode": "rules_only",
+ "labels_hash": "be1f14d003059999",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": null
+ },
+ "stt": {
+  "requests": 11,
+  "cached": 0,
+  "latency_ms": 4811,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Hello अनिल जी।",
+   "stt_ms": 266,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ, कौन?",
+   "stt_ms": 258,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "अनिल जी, विक्रम बोल रहा हूँ Starlink Finserv से। यह call record हो रही है quality और training के लिए।",
+   "stt_ms": 547,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ भाई, बोलो।",
+   "stt_ms": 339,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "आपकी 12,500 रुपये की EMI दो हफ्ते से अटकी हुई है, एक बार bounce भी हो चुकी है, आप भर कब रहे हैं?",
+   "stt_ms": 563,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "अरे sir, थोड़ी problem है अभी, अगले महीने देखता हूँ, वैसे ये late fees क्यों लगा रहे हो आप लोग?",
+   "stt_ms": 609,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "Sir, agreement के हिसाब से late होने पर late fees लगती है और credit score पर भी असर पड़ता है, इसलिए मैं चाहता हूँ कि आप जल्दी से जल्दी भर दें।",
+   "stt_ms": 585,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "अच्छा, समझ गया, इस हफ्ते के end तक कोशिश करता हूँ।",
+   "stt_ms": 378,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "कोशिश नहीं sir, मेरे को एक date चाहिए Friday या Saturday कौन सा ठीक रहेगा?",
+   "stt_ms": 402,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "Saturday, Saturday तक कर दूँगा।",
+   "stt_ms": 315,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "ठीक है Saturday पक्का। अगर आसानी चाहिए तो EMI date change करने का option भी देख सकते हैं। उसके लिए आप कभी भी call कर लेना। Thank you.",
+   "stt_ms": 549,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c02",
+   "turn": 11,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "prefilter",
+   "quote": "option"
+  }
+ ],
+ "completed_at": "2026-11-01T14:24:26+00:00"
+}

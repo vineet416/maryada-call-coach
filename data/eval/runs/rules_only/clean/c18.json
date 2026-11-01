@@ -1,0 +1,94 @@
+{
+ "schema": 1,
+ "call_id": "c18",
+ "condition": "clean",
+ "mode": "rules_only",
+ "labels_hash": "be1f14d003059999",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": null
+ },
+ "stt": {
+  "requests": 9,
+  "cached": 0,
+  "latency_ms": 4504,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Hello, प्रमोद जी हैं?",
+   "stt_ms": 396,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "T",
+   "text": "नहीं जी, अभी घर पर नहीं हैं। मैं उनकी wife बोल रही हूँ, क्या काम है?",
+   "stt_ms": 585,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "नमस्ते madam, अमित बोल रहा हूँ तारंगफिनसर्व से, एक minute, यह line recorded है, बस बता रहा हूँ, प्रमोद जी के लिए एक जरूरी call है, वो कब तक मिलेंगे?",
+   "stt_ms": 583,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "T",
+   "text": "वो शाम को आते हैं, आप मेरे को बता दो क्या बात है, मैं बोल दूंगी।",
+   "stt_ms": 407,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "नहीं madam, बात उनसे ही करनी है, आप बस इतना बता दीजिए कि अमित का phone आया था और वो इस number पर वापस call कर लें।",
+   "stt_ms": 605,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "T",
+   "text": "लेकिन किस बारे में है, ये तो बता दो, मेरे को tension हो रहा है",
+   "stt_ms": 488,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "Madam, tension की कोई बात नहीं है, बस एक जरूरी call है और वो उनसे ही discuss करनी है, आप उनको सिर्फ call करने के लिए बोल दीजिए।",
+   "stt_ms": 542,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "T",
+   "text": "अच्छा ठीक है, मैं बोल दूंगी। नंबर यही है ना जिससे आपने फोन किया?",
+   "stt_ms": 437,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "जी madam यही number है मैं कल सुबह दोबारा कोशिश करूँगा।",
+   "stt_ms": 461,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [],
+ "completed_at": "2026-11-01T14:25:43+00:00"
+}

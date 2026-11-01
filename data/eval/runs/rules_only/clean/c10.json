@@ -1,0 +1,118 @@
+{
+ "schema": 1,
+ "call_id": "c10",
+ "condition": "clean",
+ "mode": "rules_only",
+ "labels_hash": "be1f14d003059999",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": null
+ },
+ "stt": {
+  "requests": 10,
+  "cached": 1,
+  "latency_ms": 4801,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Hello गणेश जी।",
+   "stt_ms": 596,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "जी हाँ, बोलो।",
+   "stt_ms": 345,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "गणेश चौहान जी, मैं प्रिया सारंग Finserv से, इस call की recording हो रही है training के लिए।",
+   "stt_ms": 597,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ madam, बोलो।",
+   "stt_ms": 244,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "आपकी 7,000 की EMI 15 दिन से pending है, bounce हो गई थी, reminder भी भेजा था, payment कब कर रहे हैं?",
+   "stt_ms": 526,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Madam, next week try करता हूँ, अभी घर का खर्चा बहुत है, salary भी late आती है।",
+   "stt_ms": 454,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "Next week, next week. पिछली बार भी यही बोला था, मुझे पक्की date चाहिए sir, गोल-गोल जवाब से कुछ नहीं होता।",
+   "stt_ms": 487,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "Madam salary पर depend करता है, पक्का अभी नहीं बोल सकता, जैसे ही आएगी कर दूंगा।",
+   "stt_ms": 552,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "आप लोग हमेशा अगले हफ्ते बोलते हो, कैसे इंसान हैं आप, जुबान का कोई मोल नहीं",
+   "stt_ms": 391,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "ऐसे नहीं बोलो madam, मैं अगले Tuesday को दे दूंगा, पक्का, पूरा नहीं तो आधा दे दूंगा।",
+   "stt_ms": 452,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "अच्छा ठीक है अगले Tuesday को आधा पक्का मैं reminder भेज दूंगी।",
+   "stt_ms": 401,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c10",
+   "turn": 9,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "कैसे इंसान हैं आप,"
+  }
+ ],
+ "completed_at": "2026-11-01T14:25:02+00:00"
+}

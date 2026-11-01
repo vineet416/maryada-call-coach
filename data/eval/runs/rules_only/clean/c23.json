@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "call_id": "c23",
+ "condition": "clean",
+ "mode": "rules_only",
+ "labels_hash": "be1f14d003059999",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": null
+ },
+ "stt": {
+  "requests": 9,
+  "cached": 0,
+  "latency_ms": 4479,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "मंगेश धुरी, आप ही हो?",
+   "stt_ms": 319,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ, मैं ही हूँ। कौन?",
+   "stt_ms": 319,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "मंगेश जी, EMI bounce हो गई है 7,000 रुपये। 16 दिन हो गए और penalty भी लग रही है, कब दोगे? मेरे को एक date चाहिए।",
+   "stt_ms": 531,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "पहले अपना नाम तो बता दो, फिर पैसा मांगना। कौन सी company से हो? ऐसे सीधा पैसा मांग रहे हो!",
+   "stt_ms": 536,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "ठीक है, ठीक है। संदीप बोल रहा हूँ। Taranfinserv से personal loan की EMI pending है, इसलिए सीधा पूछ लिया। Payment कब तक कर दोगे?",
+   "stt_ms": 655,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "अच्छा, तारंग से फोन उठाते ही पैसा पैसा, यह कोई तरीका है? Next week देखता हूँ।",
+   "stt_ms": 489,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "Next week में कौन सा दिन? Date बोलो sir, देखता हूँ बोलके काम नहीं चलेगा, पूरा नहीं हो तो थोड़ा अभी कर दो।",
+   "stt_ms": 732,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "अच्छा, Monday को कर दूंगा। आधा Monday को आधा महीने के end में।",
+   "stt_ms": 367,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "चलो Monday को आधा, बाकी आधा महीने के end तक Monday सुबह तक UPI से कर देना।",
+   "stt_ms": 531,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c23",
+   "turn": 3,
+   "rule": "R2",
+   "kind": "advisory",
+   "confidence": 1.0,
+   "source": "gate",
+   "quote": ""
+  }
+ ],
+ "completed_at": "2026-11-01T14:26:07+00:00"
+}

@@ -1,0 +1,113 @@
+{
+ "schema": 1,
+ "call_id": "c20",
+ "condition": "clean",
+ "mode": "rules_only",
+ "labels_hash": "be1f14d003059999",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": null
+ },
+ "stt": {
+  "requests": 9,
+  "cached": 0,
+  "latency_ms": 4280,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Good evening, सुनील जी।",
+   "stt_ms": 369,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "जी बोलिए, अभी काम पे हूँ, जल्दी बोलो।",
+   "stt_ms": 399,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "पूजा बोल रही हूँ। Starung Finserv से ध्यान रहे call record की जा रही है। इतनी late call के लिए sorry sir। बस 2 minute लूँगी।",
+   "stt_ms": 648,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ बोलो जल्दी meeting चल रही है बाहर आया हूँ",
+   "stt_ms": 410,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "सुनील जी, आपकी 6,000 की EMI 12 दिन से अटकी हुई है और penalty भी लग रही है, क्या आप कल तक भर सकते हैं?",
+   "stt_ms": 613,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "कल नहीं परसों, अभी थोड़ा tight चल रहा है, salary कल आने वाली है।",
+   "stt_ms": 370,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "अच्छा अच्छा, तो परसों पक्का ना sir, पूरा नहीं हो तो थोड़ा अभी भी कर सकते हैं, बाकी परसों इससे आपको भी tension नहीं रहेगी।",
+   "stt_ms": 516,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "नहीं, परसों एक साथ कर दूँगा, पक्का। अब रखूँ? meeting में वापस जाना है।",
+   "stt_ms": 443,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "ठीक है sir, परसों पक्का। मैं note कर लेती हूँ। SMS भेज दूंगी। आपकी evening अच्छी रहे।",
+   "stt_ms": 512,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c20",
+   "turn": 1,
+   "rule": "R1",
+   "kind": "violation",
+   "confidence": 1.0,
+   "source": "gate",
+   "quote": ""
+  },
+  {
+   "call": "c20",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "prefilter",
+   "quote": "sorry sir।"
+  }
+ ],
+ "completed_at": "2026-11-01T14:25:53+00:00"
+}
