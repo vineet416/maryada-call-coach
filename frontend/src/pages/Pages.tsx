@@ -5,6 +5,7 @@ export { Cases } from '@/pages/Cases'
 export { LiveCall } from '@/pages/LiveCall'
 export { HowItWorks } from '@/pages/HowItWorks'
 export { Settings } from '@/pages/Settings'
+export { Evaluation } from '@/pages/Evaluation'
 
 export const Manager = () => (
   <ComingSoon
@@ -18,22 +19,6 @@ export const Manager = () => (
       { name: 'Agent by rule', text: 'Which agent breaks which rule, as a compact grid.' },
       { name: 'Violations per day and calls by hour', text: 'Trends over time, and calls placed outside permitted hours.' },
       { name: 'Needs attention', text: 'Agents who may need training, with a coaching suggestion and an example call.' },
-    ]}
-  />
-)
-
-export const Evaluation = () => (
-  <ComingSoon
-    title="Evaluation"
-    intro="How well Maryada finds rule violations in the labelled synthetic calls."
-    note="The evaluation run has not been published yet, so no scores are shown. This page will read the committed results file only, and will not show example values."
-    items={[
-      { name: 'Headline scores', text: 'Violation recall, violation precision, macro F1 on clean audio, and the number of held-out calls.' },
-      { name: 'Results by rule', text: 'Precision and recall for each rule, on clean audio.' },
-      { name: 'With and without the language model', text: 'The phrase check on its own compared with the phrase check plus the language model.' },
-      { name: 'Noise robustness', text: 'How the score changes as phone-line noise increases.' },
-      { name: 'One failure, explained', text: 'A single miss walked through in plain language.' },
-      { name: 'Honest limits', text: 'What the numbers do not show, including speech recognition errors on mixed Hindi and English.' },
     ]}
   />
 )

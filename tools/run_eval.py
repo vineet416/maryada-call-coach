@@ -216,6 +216,27 @@ def split() -> dict:
     return yaml.safe_load((settings.content_dir / "split.yaml").read_text(encoding="utf-8"))
 
 
+def examples(scenarios: list[dict], runs: dict, per_call: list[dict], per_kind: int = 2) -> list[dict]:
+    """A few real errors for the Evaluation page: false alarms (counted with needs_review) and misses, each with the
+    transcribed turn, what the engine said about that unit (if anything) and, for a miss, the labelled phrase."""
+    by_id = {sc["id"]: sc for sc in scenarios}
+    out: list[dict] = []
+    for kind, key in (("false_alarm", "false_alarms_with_review"), ("miss", "missed_with_review")):
+        n = 0
+        for c in per_call:
+            for cid, turn, rule in c[key]:
+                if n >= per_kind:
+                    break
+                run = runs[cid]
+                det = next((d for d in run["detections"] if d["turn"] == turn and d["rule"] == rule), None)
+                phrase = next((lab[1] for lab in by_id[cid]["turns"][turn - 1].get("L") or [] if lab[0] == rule), None)
+                out.append({"type": kind, "call": cid, "turn": turn, "rule": rule, "text": run["turns"][turn - 1]["text"],
+                            "labelled_phrase": phrase if kind == "miss" else None,
+                            "detection": None if det is None else {k: det[k] for k in ("kind", "confidence", "source", "quote")}})
+                n += 1
+    return out
+
+
 def aggregate(scenarios: list[dict], mode: str, cond: str, labels_h: str) -> dict | None:
     """Scores over the calls whose result exists for (mode, cond). None when no call has run."""
     runs = {sc["id"]: load_run(mode, cond, sc["id"], labels_h) for sc in scenarios}
@@ -225,6 +246,7 @@ def aggregate(scenarios: list[dict], mode: str, cond: str, labels_h: str) -> dic
     dets = [d for c in done for d in runs[c]["detections"]]
     sp = split()
     out = {"calls_run": len(done), "complete": len(done) == len(scenarios), "all": es.score(scenarios, dets, done)}
+    out["examples"] = examples(scenarios, runs, out["all"]["per_call"])
     for name in GROUPS:
         ids = [c for c in done if c in sp[name]]
         out[name] = es.score(scenarios, dets, ids) if ids else None
