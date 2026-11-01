@@ -304,10 +304,12 @@ async def _run_live(s: Session) -> None:
         deadline = nat_due + rules_clock.AGENT_WAIT_S
         if clip is None:  # wait for the check of turn k to settle or a nudge to appear, at most 2 s past the natural start
             waits = [asyncio.ensure_future(voiced[k].wait()), asyncio.ensure_future(settled[k].wait())]
-            done, pending = await asyncio.wait(waits, timeout=max(0.0, deadline - time.perf_counter()),
-                                               return_when=asyncio.FIRST_COMPLETED)
-            for p in pending:
-                p.cancel()
+            try:
+                done, _ = await asyncio.wait(waits, timeout=max(0.0, deadline - time.perf_counter()),
+                                             return_when=asyncio.FIRST_COMPLETED)
+            finally:
+                for w in waits:
+                    w.cancel()
             if not done:
                 agent_anyway += 1
                 return deadline
@@ -398,7 +400,9 @@ async def _run_live(s: Session) -> None:
             await asyncio.gather(*closing)
             if s.late_tasks:  # late deep answers (up to the 8 s LLM budget) still update the call
                 await asyncio.gather(*s.late_tasks, return_exceptions=True)
-            await asyncio.gather(*coach_tasks)  # a nudge on the last turn plays before the call ends
+            for res in await asyncio.gather(*coach_tasks, return_exceptions=True):  # a nudge on the last turn plays before the call ends
+                if isinstance(res, Exception):
+                    log.warning("session=%s coach clip failed: %s", s.id, res)
             last = turns[-1]
             end_at = max([start_at[last["idx"]] + last["duration_ms"] / 1000, *(c["end"] for c in coaching.values())])
             await sleep_until(end_at)  # the call is not over until its last audio is
@@ -407,6 +411,7 @@ async def _run_live(s: Session) -> None:
     except SttError:  # let the turns already heard close properly before the recorded tail takes over
         s.resume_ms = int((time.perf_counter() - t0 - shift_s) * 1000)
         ticker.cancel()
+        s.voice_nudge = None  # turns still closing must not start a live clip while the recorded tail takes over
         for task in coach_tasks:
             task.cancel()
         await asyncio.gather(*closing, return_exceptions=True)
