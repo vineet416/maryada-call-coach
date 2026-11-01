@@ -87,3 +87,13 @@ def test_live_hold_is_the_time_left_until_the_audio_ends():
     # c25 turn 7: started at 39.3 s, 7.5 s long, REST text ready at 40.7 s -> hold 6.1 s
     assert abs(rest_hold_s(39.3, 7500, 40.7) - 6.1) < 1e-9
     assert rest_hold_s(39.3, 7500, 47.5) == 0.0  # already past the end: no hold
+
+
+def test_live_hold_follows_the_call_pace():
+    assert abs(rest_hold_s(10.0, 8000, 11.0, pace=0.5) - 3.0) < 1e-9
+
+
+def test_a_rest_marker_on_a_turn_missing_from_the_manifest_does_not_break_the_replay():
+    evs = recording("rest") + [ev(OFF[9] + 500, "turn.started", turn_idx=99),
+                               ev(OFF[9] + 900, "transcript.final", turn_idx=99, segment_idx=0, stt_path="rest")]
+    plan(sorted(evs, key=lambda e: e["t_ms"]), TURNS)  # must not raise

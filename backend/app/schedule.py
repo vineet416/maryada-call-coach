@@ -88,7 +88,7 @@ def plan(events: list[dict], turns: list[dict], hold: bool = False) -> Plan:
     # Text that came from the REST fallback is never shown before its turn's audio has ended (the live runner holds it the same
     # way). The first REST segment and everything derived from it (checks, findings, nudge, turn end, risk) move later together.
     for k, lag0 in rest_text_lags(evs, dur).items():
-        shift = dur[k] - lag0
+        shift = dur.get(k, 0) - lag0
         if shift > 0:
             for e in evs:
                 if e["_idx"] == k and e["_lag"] >= lag0:

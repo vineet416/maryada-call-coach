@@ -45,11 +45,11 @@ MAX_SESSIONS_KEPT = 400
 UNSTARTED_TTL_S = 90  # a session whose WebSocket never connects drops its keys after this long
 
 
-def rest_hold_s(turn_started_at: float, duration_ms: int, now: float) -> float:
+def rest_hold_s(turn_started_at: float, duration_ms: int, now: float, pace: float = 1.0) -> float:
     """Seconds to hold the text of a REST-fallback segment so it is not shown before the turn's audio has ended. REST transcribes
     the whole demo file at once; a real microphone stream has no such early text (its audio is real time), so this only applies
     to demo audio, where the runner knows the turn's length."""
-    return max(0.0, turn_started_at + duration_ms / 1000 - now)
+    return max(0.0, turn_started_at + duration_ms / 1000 * pace - now)
 
 
 class Session:
@@ -431,8 +431,8 @@ async def _run_live(s: Session) -> None:
                     return turn
                 async for seg in _segments(stt_client, settings.data_dir / "audio" / t["wav8k"], load_profile(role), key, gate):
                     if seg.via == "rest":  # never show REST text before the turn's audio has ended
-                        await asyncio.sleep(min(rest_hold_s(start_at[idx], t["duration_ms"], time.perf_counter()),
-                                                t["duration_ms"] / 1000))
+                        await asyncio.sleep(min(rest_hold_s(start_at[idx], t["duration_ms"], time.perf_counter(), settings.pace),
+                                                t["duration_ms"] / 1000 * settings.pace))
                     (await current()).on_segment(seg)
                 turn = await current()
                 history.append(Turn(speaker=t["speaker"], text=turn.text))
