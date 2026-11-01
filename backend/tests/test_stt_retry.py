@@ -147,3 +147,31 @@ def test_catch_up_is_at_most_4x_and_never_ahead_of_the_live_position():
     assert times[-1] == pytest.approx(ts + n * frame)  # finishes with the live audio
     caught = next(i for i, t in enumerate(times) if t <= ts + (i + 1) * frame + 1e-9)
     assert caught * frame == pytest.approx(4.0, abs=0.2)  # 3 s behind, gaining 0.75 s per second: live again after 4 s of audio
+
+
+def test_rest_starts_after_the_text_that_was_delivered_when_the_retry_fails_too(monkeypatch, wav):
+    rest = []
+    o = run_turn(monkeypatch, wav, ["partial_then_close", "close_early"], rest)
+    assert [s.via for s in o["segs"]] == ["realtime", "rest"] and rest == [800]  # REST covers only what is left
+    assert o["gate"].stats() == {"early_closes": 1, "retries": 1, "retry_ok": 0, "rest_turns": 1}
+
+
+def test_a_rejected_key_is_never_retried(monkeypatch, wav):
+    from app.stt.base import SttAuthError
+    monkeypatch.setattr(settings, "pace", PACE)
+    calls = {"n": 0}
+
+    def reject(conn, request):
+        calls["n"] += 1
+        return conn.respond(401, "no\n")
+
+    async def go():
+        async with serve(lambda ws: None, "127.0.0.1", 0, process_request=reject) as server:
+            monkeypatch.setattr(settings, "gnani_stt_ws_url", f"ws://127.0.0.1:{server.sockets[0].getsockname()[1]}")
+            gate = SttGate(label="test")
+            with pytest.raises(SttAuthError):
+                async for _ in runner._segments(None, wav, PROFILE, "k", gate, label="turn 1", turn_started_at=time.perf_counter()):
+                    pass
+            return gate
+    gate = asyncio.run(asyncio.wait_for(go(), 15))
+    assert calls["n"] == 1 and gate.stats() == {"early_closes": 0, "retries": 0, "retry_ok": 0, "rest_turns": 0}

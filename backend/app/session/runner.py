@@ -280,8 +280,11 @@ async def _segments(client: httpx.AsyncClient, wav, profile: dict, key: str, gat
             except SttAuthError:
                 raise  # a refused key is not retried
             except (SttError, TimeoutError) as e:
-                if complete:
-                    return  # the last segment of the turn was already delivered
+                if complete:  # the last segment of the turn was already delivered: nothing is missing
+                    if attempt and got > first_new:
+                        gate.retry_ok += 1
+                        log.info("session=%r %s: retry delivered %d segment(s)", gate.label, label, got - first_new)
+                    return
                 failed, why = True, f"{type(e).__name__} {e.__cause__ or e}"
             finally:
                 if gen is not None:
