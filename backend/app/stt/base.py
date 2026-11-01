@@ -51,6 +51,8 @@ class SttGate:
     def __init__(self, label: str = "", max_sockets: int = MAX_SOCKETS) -> None:
         self.label, self.max_sockets = label, max_sockets
         self.serial, self.active, self.refusals = False, 0, 0
+        # per call, for the session summary: sockets that closed early, retries on a new socket, retries that delivered text, REST turns
+        self.early_closes, self.retries, self.retry_ok, self.rest_turns = 0, 0, 0, 0
         self._cv = asyncio.Condition()
 
     async def acquire(self) -> int:
@@ -69,6 +71,9 @@ class SttGate:
         async with self._cv:
             self.active = max(0, self.active - 1)
             self._cv.notify_all()
+
+    def stats(self) -> dict:
+        return {"early_closes": self.early_closes, "retries": self.retries, "retry_ok": self.retry_ok, "rest_turns": self.rest_turns}
 
     def go_serial(self, why: str) -> None:
         self.refusals += 1
