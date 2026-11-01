@@ -27,7 +27,8 @@ class Plan:
 
 def rest_text_lags(evs: list[dict], dur: dict[int, int]) -> dict[int, int]:
     """Turns whose transcript came from the REST fallback -> recorded lag (ms after the turn's start) of the first REST segment.
-    New recordings mark such a segment (data.stt_path == "rest"). Older recordings carry no marker: there a turn whose LAST
+    New recordings mark such a segment (data.stt_path == "rest"); a segment from a retried realtime socket
+    (stt_path == "realtime_retry") is live but follows the same never-before-its-audio rule. Older recordings carry no marker: there a turn whose LAST
     segment arrived before the turn's audio ended is a REST turn (live text cannot arrive before the speech it transcribes is over:
     connect time plus the vendor delay put it at least 0.3 s after the end). Needs the events' _idx and _lag."""
     out: dict[int, int] = {}
@@ -39,10 +40,13 @@ def rest_text_lags(evs: list[dict], dur: dict[int, int]) -> dict[int, int]:
         marked = [e["_lag"] for e in sg if e["data"].get("stt_path") == "rest"]
         if marked:
             out[k] = min(marked)
-        elif not any("stt_path" in e["data"] for e in sg):
-            last = max(sg, key=lambda e: e["data"].get("segment_idx", 0))
-            if k in dur and last["_lag"] < dur[k]:
-                out[k] = last["_lag"]
+            continue
+        last = max(sg, key=lambda e: e["data"].get("segment_idx", 0))
+        path = last["data"].get("stt_path")
+        # a retried socket's segment was live, but it is held the same way: never shown before the audio it covers has ended
+        old_style = path is None and not any("stt_path" in e["data"] for e in sg)
+        if (path == "realtime_retry" or old_style) and k in dur and last["_lag"] < dur[k]:
+            out[k] = last["_lag"]
     return out
 
 

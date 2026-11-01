@@ -70,6 +70,7 @@ class Session:
         self.late_tasks: list[asyncio.Task] = []
         self.coach_used: dict[str, int] = {}
         self.llm_skipped = 0  # LLM reviews skipped by the short-segment guard (not the same as a clean review)
+        self.stt_gate: SttGate | None = None  # the live run's socket gate: its counters go into the summary
 
 
 def new_session(scenario_id: str, requested: str, creds: Creds | None = None, pause_for_coach: bool = False) -> Session:
@@ -142,7 +143,10 @@ def summary(s: Session, stopped: bool = False) -> dict:
     for f in s.findings.values():
         if f.kind != "good_practice":
             by_rule[f.rule_id] = by_rule.get(f.rule_id, 0) + 1
-    return {"risk_peak": s.risk_peak, "findings_count": sum(by_rule.values()), "by_rule": by_rule, "stopped": stopped}
+    out = {"risk_peak": s.risk_peak, "findings_count": sum(by_rule.values()), "by_rule": by_rule, "stopped": stopped}
+    if s.stt_gate is not None:  # speech recognition health of a live call: early socket closes, retries, retries that worked, REST turns
+        out["stt"] = s.stt_gate.stats()
+    return out
 
 
 async def _run(s: Session) -> None:
@@ -241,32 +245,55 @@ async def _switch_to_replay(s: Session) -> None:
 
 
 # ---------------------------------------------------------------- live
-async def _segments(client: httpx.AsyncClient, wav, profile: dict, key: str, gate: SttGate | None = None):
-    """Realtime first. If it fails (before or during the turn) the turn is retried ONCE over REST with the same profile,
-    continuing after the segments already delivered. If REST fails too, SttError (the caller falls back to replay)."""
-    got, covered = 0, 0
-    gen = None
+async def _segments(client: httpx.AsyncClient, wav, profile: dict, key: str, gate: SttGate | None = None, label: str = "",
+                    turn_started_at: float | None = None):
+    """Realtime first. If the socket fails (before or during the turn, or it ends with no text) the turn is retried ONCE on a
+    new realtime socket that resumes after the segments already delivered and catches up to the live position faster than real
+    time (segments marked "realtime_retry"). If that fails too, ONE REST request covers the rest, as before. A stream that ends
+    cleanly with some text, or by the post-commit timeout with some text, is kept as it is. If REST fails too, SttError
+    (the caller falls back to replay)."""
+    gate = gate or SttGate()
+    got, covered, complete, why_first = 0, 0, False, ""
     if settings.stt_mode == "realtime":
-        try:
-            gen = realtime.stream_turn(wav, profile, key, gate=gate)
-            while True:
-                try:
-                    seg = await asyncio.wait_for(anext(gen), FIRST_SEGMENT_S if got == 0 else None)
-                except StopAsyncIteration:
-                    if got:
-                        return
-                    log.warning("realtime stt ended without any segment, retrying over REST")
-                    break
-                got, covered = got + 1, seg.audio_end_ms
-                yield seg
-        except SttAuthError:
-            raise  # a refused key is not retried over REST
-        except (SttError, TimeoutError) as e:
-            log.warning("realtime stt failed after %d segments, retrying over REST: %s %s", got, type(e).__name__,
-                        e.__cause__ or e)
-        finally:
-            if gen is not None:
-                await gen.aclose()  # closes the socket and frees its slot now, also when the turn is cancelled
+        for attempt in (0, 1):
+            first_new, gen, failed, why = got, None, False, ""
+            if attempt:
+                gate.retries += 1
+                log.info("session=%r %s: retrying on a new realtime socket from %d ms (%s)", gate.label, label, covered, why_first)
+            try:
+                gen = realtime.stream_turn(wav, profile, key, gate=gate, start_ms=covered, first_idx=got,
+                                           turn_started_at=turn_started_at if attempt else None,
+                                           via="realtime_retry" if attempt else "realtime")
+                while True:
+                    try:
+                        seg = await asyncio.wait_for(anext(gen), FIRST_SEGMENT_S if got == first_new else None)
+                    except StopAsyncIteration:
+                        if got > first_new or (attempt == 0 and got):  # text arrived (or kept as today when it ended with text)
+                            if attempt:
+                                gate.retry_ok += 1
+                                log.info("session=%r %s: retry delivered %d segment(s)", gate.label, label, got - first_new)
+                            return
+                        failed, why = True, "no text before the end of the stream"
+                        break
+                    got, covered, complete = got + 1, seg.audio_end_ms, seg.is_last
+                    yield seg
+            except SttAuthError:
+                raise  # a refused key is not retried
+            except (SttError, TimeoutError) as e:
+                if complete:
+                    return  # the last segment of the turn was already delivered
+                failed, why = True, f"{type(e).__name__} {e.__cause__ or e}"
+            finally:
+                if gen is not None:
+                    await gen.aclose()  # closes the socket and frees its slot now, also when the turn is cancelled
+            if not failed:
+                return
+            if attempt == 0:
+                gate.early_closes += 1
+                why_first = why
+            else:
+                log.warning("session=%r %s: the retry failed too (%s), using REST", gate.label, label, why)
+    gate.rest_turns += 1
     start = retry_start_ms(got, covered, rest_tried=False)
     lock = rest_lock(key)
     try:
@@ -408,6 +435,7 @@ async def _run_live(s: Session) -> None:
 
     ticker = asyncio.create_task(clock())
     gate = SttGate(label=s.id)  # parallel sockets (max 3); serial for the rest of the call if Gnani refuses a second one
+    s.stt_gate = gate
     turn_tasks: list[asyncio.Task] = []
     try:
         async with httpx.AsyncClient(timeout=30) as stt_client:
@@ -429,9 +457,13 @@ async def _run_live(s: Session) -> None:
                                 log.warning("session=%s turn %d processed before turn %d finished", s.id, idx, idx - 1)
                         turn = LiveTurn(s, ctx, list(history), idx, t["speaker"], llm_client)
                     return turn
-                async for seg in _segments(stt_client, settings.data_dir / "audio" / t["wav8k"], load_profile(role), key, gate):
+                async for seg in _segments(stt_client, settings.data_dir / "audio" / t["wav8k"], load_profile(role), key, gate,
+                                           label=f"turn {idx}", turn_started_at=start_at[idx]):
                     if seg.via == "rest":  # never show REST text before the turn's audio has ended
                         await asyncio.sleep(min(rest_hold_s(start_at[idx], t["duration_ms"], time.perf_counter(), settings.pace),
+                                                t["duration_ms"] / 1000 * settings.pace))
+                    elif seg.via == "realtime_retry":  # caught up, but never before the audio of this segment has been played
+                        await asyncio.sleep(min(rest_hold_s(start_at[idx], seg.audio_end_ms, time.perf_counter(), settings.pace),
                                                 t["duration_ms"] / 1000 * settings.pace))
                     (await current()).on_segment(seg)
                 turn = await current()

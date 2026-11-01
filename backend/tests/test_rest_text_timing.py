@@ -97,3 +97,14 @@ def test_a_rest_marker_on_a_turn_missing_from_the_manifest_does_not_break_the_re
     evs = recording("rest") + [ev(OFF[9] + 500, "turn.started", turn_idx=99),
                                ev(OFF[9] + 900, "transcript.final", turn_idx=99, segment_idx=0, stt_path="rest")]
     plan(sorted(evs, key=lambda e: e["t_ms"]), TURNS)  # must not raise
+
+
+def test_retry_segments_are_live_but_still_never_shown_before_their_audio_has_ended():
+    # a retried socket caught up and delivered the last segment of turn 7 at lag 1.4 s, long before the 7.5 s of audio ended
+    p = plan(recording("realtime_retry"), TURNS)
+    assert at(p, "transcript.final", 7) == p.starts[7] + DUR[7]
+
+
+def test_a_retry_segment_that_arrives_after_the_audio_end_is_not_moved():
+    p = plan(recording("realtime_retry", seg_lag7=DUR[7] + 600), TURNS)
+    assert at(p, "transcript.final", 7) == p.starts[7] + DUR[7] + 600
