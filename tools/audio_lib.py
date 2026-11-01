@@ -280,15 +280,32 @@ def earcon(sr: int = 24000) -> np.ndarray:
     return (0.6 * np.concatenate([tone(880), tone(1320)])).astype(np.float32)
 
 
+def edge_silence_ms(x: np.ndarray, sr: int, floor_db: float = -45.0) -> tuple[float, float]:
+    """Silence at the start and at the end of a clip in ms (10 ms frames below `floor_db`), as trim_silence sees it."""
+    frame = max(1, int(sr * 0.01))
+    n = len(x) // frame
+    if n == 0:
+        return 0.0, 0.0
+    rms = np.sqrt(np.mean(x[: n * frame].reshape(n, frame) ** 2, axis=1) + 1e-12)
+    active = np.where(20 * np.log10(rms) > floor_db)[0]
+    if len(active) == 0:
+        return len(x) * 1000 / sr, 0.0
+    return active[0] * frame * 1000 / sr, (len(x) - (active[-1] + 1) * frame) * 1000 / sr
+
+
 def assemble_call(turns: list[np.ndarray], sr: int, call_id: str, lead_ms: int = 300,
-                  gap_ms: tuple[int, int] = (350, 700)) -> tuple[np.ndarray, list[int]]:
-    """Join turns with random gaps (seed 42 + crc32 of the id) and return the audio plus each turn's start offset in ms."""
+                  gap_ms: tuple[int, int] = (1000, 1500)) -> tuple[np.ndarray, list[int]]:
+    """Join turns and return the audio plus each turn's start offset in ms. `gap_ms` is the silence people HEAR between the
+    last word of one turn and the first word of the next: the silence already at the clip edges is counted, so
+    the inserted gap is shorter by that much. The heard gap is random per pair (seed 42 + crc32 of the id)."""
     rng = np.random.default_rng(42 + zlib.crc32(call_id.encode()))
     pos = int(sr * lead_ms / 1000)
     pieces, offsets = [np.zeros(pos, dtype=np.float32)], []
     for i, t in enumerate(turns):
         if i:
-            gap = int(sr * rng.integers(gap_ms[0], gap_ms[1] + 1) / 1000)
+            heard = int(rng.integers(gap_ms[0], gap_ms[1] + 1))
+            inserted = max(0, round(heard - edge_silence_ms(turns[i - 1], sr)[1] - edge_silence_ms(t, sr)[0]))
+            gap = int(sr * inserted / 1000)
             pieces.append(np.zeros(gap, dtype=np.float32))
             pos += gap
         offsets.append(round(pos * 1000 / sr))

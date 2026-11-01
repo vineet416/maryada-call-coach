@@ -54,7 +54,8 @@ phone_chain:       # applied to call audio only (not coach)
   bandpass_hz: [300, 3400]      # Butterworth order 4
   compressor: {threshold_db: -18, ratio: 3, attack_ms: 5, release_ms: 80}
   mulaw_codec: false            # optional extra realism, off by default
-  turn_gap_ms: [350, 700]       # random, seed 42
+  turn_gap_ms: [1000, 1500]     # silence heard between the last word of one turn and the first word of the next; random per pair, seed 42 + call id (2026-11-01, was 350-700)
+  edge_silence_ms: 50           # silence kept at the start and end of every turn clip
   leading_silence_ms: 300
 vo_chain:          # voice-over only: same compressor as the call chain, wider band, no noise
   resample_hz: 16000

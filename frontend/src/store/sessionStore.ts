@@ -167,7 +167,12 @@ export const useSessionStore = create<SessionState>((set, get) => ({
         for (const t of raw) if (LANG_CODE[t.lang]) langs.add(LANG_CODE[t.lang])
         const turns = s.turns.map((t) =>
           t.idx === d.turn_idx && !t.tokens.some((x) => add.length && x.i === add[0].i)
-            ? { ...t, tokens: [...t.tokens, ...add].sort((a, b) => a.i - b.i) }
+            ? {
+                ...t,
+                tokens: [...t.tokens, ...add].sort((a, b) => a.i - b.i),
+                // the words arrived after the audio had already played: show them at once
+                instant: t.instant || Date.now() - t.startedAt > t.durationMs,
+              }
             : t,
         )
         patch.turns = turns

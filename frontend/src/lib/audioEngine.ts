@@ -3,6 +3,29 @@ import { audioUrl } from '@/lib/api'
 
 const COACH_KEY = 'maryada.coachVoice'
 const MUTE_KEY = 'maryada.muted'
+const PAUSE_KEY = 'maryada.pauseForCoach'
+
+/**
+ * Browser gains. The library already mixes the voices at agent -22, borrower -24, third party -25 and coach -27 LUFS.
+ * The coach clip plays on top of the call, so it gets a further -1.5 dB (0.84), and the call is lowered by DUCK_DB while
+ * the clip plays: the coach ends up about 3 dB under the borrower (-28.5 against -25.5 LUFS) and 5 dB under the agent. The call voices play at full
+ * level. (iOS ignores element volume, so there only the library levels apply.)
+ */
+const CALL_GAIN = { agent: 1, borrower: 1, third_party: 1 }
+export const COACH_GAIN = 0.84
+/** The call audio is lowered by this much while the coach clip plays (0 turns ducking off). */
+export const DUCK_DB = -1.5
+
+/** Tuning by ear in the dev server only: ?coach=<gain 0.1-1>&duck=<dB 0-6>. Missing or invalid values are ignored. */
+function override(name: string, lo: number, hi: number): number | null {
+  if (!import.meta.env.DEV) return null
+  const raw = new URLSearchParams(window.location.search).get(name)
+  const v = raw === null || raw.trim() === '' ? NaN : Number(raw)
+  return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : null
+}
+const coachGain = () => override('coach', 0.1, 1) ?? COACH_GAIN
+const duckDb = () => (override('duck', 0, 6) !== null ? -(override('duck', 0, 6) as number) : DUCK_DB)
+const FADE_MS = 150
 
 function readFlag(key: string, fallback: boolean): boolean {
   try {
@@ -25,9 +48,15 @@ class AudioEngine {
   private coach: HTMLAudioElement | null = null
   private cache = new Map<string, HTMLAudioElement>()
   private onCoachEnd: (() => void) | null = null
+  private turnGain = 1
+  private duckLevel = 1 // current multiplier on the call audio (1 = not ducked)
+  private duckTarget = 1
+  private duckTimer: number | undefined
   currentTurnIdx: number | null = null
   coachVoice = readFlag(COACH_KEY, true)
   muted = readFlag(MUTE_KEY, false)
+  /** Option: the call pauses only while the coach clip plays. Default off (the coach plays over the call). */
+  pauseForCoach = readFlag(PAUSE_KEY, false)
 
   private get(url: string): HTMLAudioElement {
     let a = this.cache.get(url)
@@ -50,11 +79,13 @@ class AudioEngine {
     void a.play().catch(() => undefined)
   }
 
-  playTurn(url: string, idx: number) {
+  playTurn(url: string, idx: number, speaker: keyof typeof CALL_GAIN = 'agent') {
     this.stopTurn()
     const a = this.get(url)
     a.currentTime = 0
     a.muted = this.muted
+    this.turnGain = CALL_GAIN[speaker]
+    a.volume = this.turnGain * this.duckLevel
     this.turn = a
     this.currentTurnIdx = idx
     void a.play().catch(() => undefined)
@@ -66,12 +97,34 @@ class AudioEngine {
     this.currentTurnIdx = null
   }
 
+  /** Lower (or restore) the call audio with a short fade. */
+  private setDuck(on: boolean) {
+    this.duckTarget = on ? 10 ** (duckDb() / 20) : 1
+    window.clearInterval(this.duckTimer)
+    const step = ((1 - 10 ** (duckDb() / 20)) * 20) / FADE_MS || 1
+    this.duckTimer = window.setInterval(() => {
+      const d = this.duckTarget - this.duckLevel
+      this.duckLevel = Math.abs(d) <= step ? this.duckTarget : this.duckLevel + Math.sign(d) * step
+      if (this.turn) this.turn.volume = this.turnGain * this.duckLevel
+      if (this.duckLevel === this.duckTarget) window.clearInterval(this.duckTimer)
+    }, 20)
+  }
+
+  /** Hold the call audio where it is (only used by the "pause while the coach speaks" option). */
+  pauseTurn() {
+    this.turn?.pause()
+  }
+
+  resumeTurn() {
+    if (this.turn && !this.turn.ended) void this.turn.play().catch(() => undefined)
+  }
+
   /** Position inside the current turn audio in ms (null when nothing plays). */
   turnTimeMs(): number | null {
     return this.turn && !this.turn.paused ? this.turn.currentTime * 1000 : null
   }
 
-  playCoach(url: string, onEnd: () => void) {
+  playCoach(url: string, onEnd: () => void, duck = true) {
     this.stopCoach()
     if (!this.coachVoice || this.muted) {
       onEnd()
@@ -79,15 +132,17 @@ class AudioEngine {
     }
     const a = this.get(url)
     a.currentTime = 0
-    a.volume = 1
+    a.volume = coachGain()
     this.coach = a
     this.onCoachEnd = onEnd
+    if (duck) this.setDuck(true)
     a.onended = () => this.finishCoach()
     a.onerror = () => this.finishCoach()
     void a.play().catch(() => this.finishCoach())
   }
 
   private finishCoach() {
+    this.setDuck(false)
     const cb = this.onCoachEnd
     this.onCoachEnd = null
     if (this.coach) this.coach.onended = null
@@ -111,6 +166,16 @@ class AudioEngine {
     writeFlag(MUTE_KEY, v)
     if (this.turn) this.turn.muted = v
     if (v) this.stopCoach()
+  }
+
+  setPauseForCoach(v: boolean) {
+    this.pauseForCoach = v
+    writeFlag(PAUSE_KEY, v)
+  }
+
+  /** What the server is told at start: pause only when the coach will really be heard. */
+  get holdForCoach(): boolean {
+    return this.pauseForCoach && this.coachVoice && !this.muted
   }
 
   setCoachVoice(v: boolean) {

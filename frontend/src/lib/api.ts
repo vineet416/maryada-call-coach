@@ -97,11 +97,20 @@ export interface Credentials {
 }
 
 /** Keys travel only in this POST body (HTTPS), never in a URL or query string. */
-export const createSession = (scenario_id: string, mode: 'live' | 'replay', credentials?: Credentials) =>
+export const createSession = (
+  scenario_id: string,
+  mode: 'live' | 'replay',
+  credentials?: Credentials,
+  pause_for_coach = false,
+) =>
   request<SessionStart>('/api/sessions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(credentials && mode === 'live' ? { scenario_id, mode, credentials } : { scenario_id, mode }),
+    body: JSON.stringify(
+      credentials && mode === 'live'
+        ? { scenario_id, mode, credentials, pause_for_coach }
+        : { scenario_id, mode, pause_for_coach },
+    ),
   })
 
 const post = <T>(path: string, body: object) =>

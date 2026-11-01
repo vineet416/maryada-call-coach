@@ -1,5 +1,6 @@
 import { CircleHelp, Eye, EyeOff, LoaderCircle } from 'lucide-react'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { audio } from '@/lib/audioEngine'
 import { listModels, testGnani, testLlm, type TestResult } from '@/lib/api'
 import { GNANI_KEY_URL, PROVIDERS } from '@/lib/providers'
 import { useKeysStore } from '@/store/keysStore'
@@ -21,6 +22,7 @@ export function Settings() {
   const [gnaniTest, setGnaniTest] = useState<TestResult | 'busy' | null>(null)
   const [llmTest, setLlmTest] = useState<TestResult | 'busy' | null>(null)
   const [cleared, setCleared] = useState(false)
+  const [pauseCoach, setPauseCoach] = useState(audio.pauseForCoach)
   const seq = useRef(0)
 
   // The preset decides the stored base URL; Custom keeps what the visitor typed.
@@ -189,6 +191,28 @@ export function Settings() {
           <Result r={llmTest} />
         </div>
         <p className="mt-2 text-xs text-[var(--mc-muted)]">The test sends one short sample line and checks the reply is valid JSON (a few hundred tokens at most).</p>
+      </section>
+
+      <section className={box} aria-labelledby="playback-h">
+        <h2 id="playback-h" className="mb-3 font-semibold">Playback</h2>
+        <label className="flex items-start gap-2 text-sm">
+          <input
+            type="checkbox"
+            className="mt-1"
+            checked={pauseCoach}
+            onChange={(e) => {
+              audio.setPauseForCoach(e.target.checked)
+              setPauseCoach(e.target.checked)
+            }}
+          />
+          <span>
+            Pause the call while the coach speaks
+            <span className="block text-xs text-[var(--mc-muted)]">
+              Off (default): the call plays on without stopping and the coach is heard quietly on top of it. On: the call
+              pauses only while the coach clip plays. Applies to the next call you start.
+            </span>
+          </span>
+        </label>
       </section>
 
       <section className={box}>

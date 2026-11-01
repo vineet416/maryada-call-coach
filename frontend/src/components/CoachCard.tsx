@@ -3,7 +3,7 @@ import type { Rule } from '@/lib/api'
 import { audio } from '@/lib/audioEngine'
 import { useSessionStore } from '@/store/sessionStore'
 
-/** The coach nudge: the card is the primary channel, the voice (optional) plays at the pause. */
+/** The coach nudge: the card is the primary channel, the voice (optional) plays over the call, quieter than the callers. */
 export function CoachCard({ rules, voiceOn, onVoice }: { rules: Rule[]; voiceOn: boolean; onVoice: (v: boolean) => void }) {
   const nudge = useSessionStore((s) => s.nudge)
   const hold = useSessionStore((s) => s.coachHold)
@@ -57,7 +57,7 @@ export function CoachCard({ rules, voiceOn, onVoice }: { rules: Rule[]; voiceOn:
                 Speaking in the agent's headset
               </>
             ) : voiceOn ? (
-              'Voice plays at the next pause'
+              'Voice plays with the nudge'
             ) : (
               'Voice is off. The card still shows.'
             )}
@@ -69,7 +69,7 @@ export function CoachCard({ rules, voiceOn, onVoice }: { rules: Rule[]; voiceOn:
 
       {hold && (
         <p className="mt-3 rounded-md bg-[var(--mc-coach)]/10 px-2.5 py-1.5 text-xs" style={{ color: 'var(--mc-coach)' }}>
-          Demo: call paused while the coach speaks
+          Call paused while the coach speaks
         </p>
       )}
     </section>

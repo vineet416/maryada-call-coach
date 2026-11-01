@@ -114,12 +114,13 @@ export function LiveCall() {
                 llm: { base_url: k.baseUrl.trim(), api_key: k.llmKey.trim(), model: k.model.trim() },
               }
             : undefined
-        const s = await createSession(scenario.id, mode, creds)
+        const hold = audio.holdForCoach
+        const s = await createSession(scenario.id, mode, creds, hold)
         const store = useSessionStore.getState()
         store.setSessionId(s.session_id)
         store.setMode(s.effective_mode)
         audio.preload(scenario.turns.map((t) => t.audio_url))
-        client.current = new CallClient(s.ws_url)
+        client.current = new CallClient(s.ws_url, hold)
         client.current.open()
         setPhase('running')
       } catch (e) {
@@ -189,7 +190,7 @@ export function LiveCall() {
             <p className="mono text-[11px] text-[var(--mc-muted)]">{scenario.id.toUpperCase()}</p>
             <h1 className="truncate text-base font-semibold sm:text-lg">{scenario.title}</h1>
           </div>
-          <ModeBadge mode={st.mode} />
+          <ModeBadge mode={st.mode} status={st.status} />
           <span className="mono rounded-md bg-[var(--mc-bg)] px-2 py-1 text-sm" aria-label="Call timer">
             {fmt(timeMs)}
           </span>

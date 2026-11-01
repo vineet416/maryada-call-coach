@@ -5,6 +5,7 @@ import json
 from collections.abc import Callable
 from pathlib import Path
 
+from . import schedule as clock_rules
 from .config import settings
 
 
@@ -55,9 +56,27 @@ def schedule(events: list[dict]) -> list[tuple[float, dict]]:
     return res
 
 
-async def play(events: list[dict], emit: Callable[[dict], None], pace: float | None = None) -> None:
-    """Re-emit the recorded envelopes with their original relative timing (scaled by PACE)."""
+def retime(events: list[dict], turns: list[dict], hold: bool = False) -> list[dict]:
+    """The recorded stream on the call clock (rules in schedule.py): same envelopes, new times, re-sequenced in time order."""
+    return clock_rules.plan(events, turns, hold).events
+
+
+async def play(events: list[dict], emit: Callable[[dict], None], pace: float | None = None,
+               turns: list[dict] | None = None, hold: bool = False) -> clock_rules.Plan | None:
+    """Re-emit the recorded envelopes on the call clock (see schedule.plan), scaled by PACE."""
     pace = settings.pace if pace is None else pace
-    for delay, e in schedule(as_replay(events)):
-        await asyncio.sleep(delay * pace)
+    events = as_replay(events)
+    planned = None
+    if turns is not None:
+        planned = clock_rules.plan(events, turns, hold)
+        events = planned.events
+        for e in events:
+            e["t_ms"] = max(0, e["t_ms"])  # already due: send at once
+    loop = asyncio.get_running_loop()
+    t0, due = loop.time(), 0.0
+    for delay, e in schedule(events):
+        due += delay * pace  # against the start, so sleeps never add up to drift
+        if (wait := t0 + due - loop.time()) > 0:
+            await asyncio.sleep(wait)
         emit(e)
+    return planned
