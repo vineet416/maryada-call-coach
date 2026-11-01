@@ -5,9 +5,12 @@ NON_CHAT = ("embed", "whisper", "tts", "speech", "audio", "transcribe", "dall-e"
             "moderation", "rerank", "guard", "realtime", "vision-preview", "aqa", "babbage", "davinci", "playai",
             "orpheus", "sora", "video", "ocr", "diffusion")
 
-# Listed by the provider but answered "404" to a chat request when probed with a real key on 2026-11-01 (retired).
-# Keep this short; add an id only after a probe shows it fails.
-DENY_MODELS = frozenset({"gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.5-pro"})
+# Listed by the provider but answered "404" or "400" to a chat request when probed with a real key on 2026-11-01.
+# Keep this short; add an id only after a probe shows it fails (a 429 is not a reason).
+DENY_MODELS = frozenset({
+    "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.5-pro",  # 404, retired
+    "antigravity-preview-05-2026", "antigravity-preview-09-2026", "antigravity-preview-latest",  # 400
+})
 
 
 def _is_chat(model_id: str, entry: dict) -> bool:

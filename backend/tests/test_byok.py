@@ -497,3 +497,10 @@ def test_chat_404_says_the_model_is_not_available():
 def test_retired_models_are_hidden_from_the_list():
     ids = clean_models({"data": [{"id": "models/gemini-2.5-flash"}, {"id": "models/gemini-3.5-flash"}]})
     assert ids == ["gemini-3.5-flash"]
+
+
+def test_models_that_answered_400_are_hidden_and_the_rest_stay():
+    listed = ["antigravity-preview-05-2026", "antigravity-preview-09-2026", "antigravity-preview-latest",
+              "gemini-2.5-pro", "gemini-3.5-flash", "gemini-3.7-flash", "deep-research-max-preview-04-2026"]
+    ids = clean_models({"models": [{"name": f"models/{m}"} for m in listed]})
+    assert ids == ["deep-research-max-preview-04-2026", "gemini-3.5-flash", "gemini-3.7-flash"]
