@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """SessionStart: print a compact resume brief (replaces Claude re-reading files). Never fails."""
-import datetime, os, re, subprocess
+import datetime, os, re, subprocess, sys
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 root = os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd())
 t = datetime.date.today()
 print(f"[Maryada] today {t} | build ends Nov 4, buffer Nov 5, submit by Nov 9 (plan: docs/07)")
