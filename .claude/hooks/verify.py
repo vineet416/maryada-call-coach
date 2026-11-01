@@ -2,6 +2,8 @@
 """Mechanical pre-PR verification. `verify.py --quick` (before commits) or `verify.py` (full, before PR/merge).
 A full pass writes .claude/.verified = HEAD sha; guard_bash blocks `gh pr create/merge` without it."""
 import glob, json, os, re, shutil, subprocess, sys
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 root = os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd()); os.chdir(root)
 quick = "--quick" in sys.argv
 fails, notes = [], []
@@ -9,7 +11,7 @@ fails, notes = [], []
 def run(cmd, cwd=".", timeout=600):
     try:
         cmd = [shutil.which(cmd[0]) or cmd[0], *cmd[1:]]  # Windows: resolve npx.cmd / npm.cmd
-        r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout)
+        r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=timeout)
         return r.returncode, (r.stdout + r.stderr).strip()
     except Exception as e:
         return 1, str(e)
