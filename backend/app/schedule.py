@@ -36,19 +36,33 @@ def plan(events: list[dict], turns: list[dict], hold: bool = False) -> Plan:
     dur = {t["idx"]: t["duration_ms"] for t in turns}
     who = {t["idx"]: t["speaker"] for t in turns}
 
-    cur, rec_start = None, 0
+    # Every event is filed under ITS OWN turn (data.turn_idx; a nudge: the turn of its finding; a coach clip: its nudge), not under
+    # the turn that happened to be current when it arrived: with a slow transcript an event can arrive during a later turn.
+    rec_start = {e["data"]["turn_idx"]: e["t_ms"] for e in evs if e["type"] == "turn.started"}
+    finding_turn = {e["data"]["id"]: e["data"]["turn_idx"] for e in evs if e["type"] == "finding.detected" and "id" in e["data"]}
+    cur = None
     nudges: dict[int, dict] = {}  # turn -> {lag, speak: event}
     ended_lag: dict[int, int] = {}
     pending: int | None = None
     for e in evs:
+        d = e["data"]
         if e["type"] == "turn.started":
-            cur, rec_start = e["data"]["turn_idx"], e["t_ms"]
-        e["_idx"], e["_lag"] = cur, e["t_ms"] - rec_start
-        if e["type"] == "turn.ended" and cur is not None:
-            ended_lag[cur] = e["_lag"]
-        if e["type"] == "coach.nudge" and cur is not None:
-            pending = cur
-            nudges.setdefault(cur, {"lag": e["_lag"], "speak": None})
+            cur = d["turn_idx"]
+        own = d.get("turn_idx") if isinstance(d, dict) else None
+        if e["type"] == "coach.nudge":
+            own = finding_turn.get(d.get("finding_id"), cur)
+        elif e["type"] == "coach.speak":
+            own = pending if pending is not None else cur
+        elif own is None:
+            own = cur
+        if own not in rec_start:  # before the first turn, or a stage label without a turn: keep the recorded time
+            own = None
+        e["_idx"], e["_lag"] = own, (e["t_ms"] - rec_start[own] if own is not None else 0)
+        if e["type"] == "turn.ended" and own is not None:
+            ended_lag[own] = e["_lag"]
+        if e["type"] == "coach.nudge" and own is not None:
+            pending = own
+            nudges.setdefault(own, {"lag": e["_lag"], "speak": None})
         elif e["type"] == "coach.speak" and pending is not None:
             nudges[pending]["speak"] = e
             pending = None

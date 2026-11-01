@@ -20,8 +20,8 @@ from ..stt import rest as stt_rest
 from ..stt.base import (
     SttAuthError,
     SttError,
+    SttGate,
     TranscriptSegment,
-    gnani_lock,
     load_profile,
     retry_start_ms,
 )
@@ -32,6 +32,8 @@ log = logging.getLogger("maryada.session")
 
 FIRST_ANSWER_S = 4.0  # docs/13 §4.5: wait this long for the LLM before closing a turn; later answers are "late" updates
 FIRST_SEGMENT_S = 15.0  # docs/01 §4: no transcript for this long -> fallback
+REST_WAIT_S = 35.0  # longest wait for another turn's REST fallback to finish (one REST request per key)
+PREV_TURN_S = 15.0  # a turn's first segment is processed after the previous turn's transcript is complete, waiting at most this long
 COACH_GAP_MS = rules_clock.COACH_HOLD_GAP_MS
 MAX_SPOKEN_PER_CALL = 3
 _RANK = {"good_practice": 0, "advisory": 1, "needs_review": 2, "violation": 3}
@@ -231,13 +233,13 @@ async def _switch_to_replay(s: Session) -> None:
 
 
 # ---------------------------------------------------------------- live
-async def _segments(client: httpx.AsyncClient, wav, profile: dict, key: str):
+async def _segments(client: httpx.AsyncClient, wav, profile: dict, key: str, gate: SttGate | None = None):
     """Realtime first. If it fails (before or during the turn) the turn is retried ONCE over REST with the same profile,
     continuing after the segments already delivered. If REST fails too, SttError (the caller falls back to replay)."""
     got, covered = 0, 0
     if settings.stt_mode == "realtime":
         try:
-            gen = realtime.stream_turn(wav, profile, key)
+            gen = realtime.stream_turn(wav, profile, key, gate=gate)
             while True:
                 try:
                     seg = await asyncio.wait_for(anext(gen), FIRST_SEGMENT_S if got == 0 else None)
@@ -254,7 +256,16 @@ async def _segments(client: httpx.AsyncClient, wav, profile: dict, key: str):
             log.warning("realtime stt failed after %d segments, retrying over REST: %s %s", got, type(e).__name__,
                         e.__cause__ or e)
     start = retry_start_ms(got, covered, rest_tried=False)
-    for seg in await stt_rest.transcribe_turn(client, wav, profile, key, start or 0, got):
+    gate = gate or SttGate()
+    try:
+        await asyncio.wait_for(gate.rest_lock.acquire(), REST_WAIT_S)
+    except TimeoutError:
+        raise SttError("rest slot timeout") from None
+    try:
+        segs = await stt_rest.transcribe_turn(client, wav, profile, key, start or 0, got)
+    finally:
+        gate.rest_lock.release()
+    for seg in segs:
         if seg.text or got == 0:  # nothing left to transcribe after the delivered segments is not an error
             yield seg
 
@@ -384,19 +395,42 @@ async def _run_live(s: Session) -> None:
         return score
 
     ticker = asyncio.create_task(clock())
+    gate = SttGate(label=s.id)  # parallel sockets (max 3); serial for the rest of the call if Gnani refuses a second one
+    turn_tasks: list[asyncio.Task] = []
     try:
         async with httpx.AsyncClient(timeout=30) as stt_client:
-            for t in turns:
+            async def transcribe(t: dict, prev_done: asyncio.Event | None, done: asyncio.Event) -> None:
+                """One turn: its socket opens when its audio starts; it does not wait for the previous turn's socket.
+                Only the processing of its segments follows the order of the call (history, risk)."""
                 idx, role = t["idx"], assets.SPEAKER[t["speaker"]]
                 await started[idx].wait()  # the audio of this turn is playing now
                 s.log.emit("stage.status", {"stage": "transcribing", "turn_idx": idx, "text": "Transcribing"})
-                turn = LiveTurn(s, ctx, list(history), idx, t["speaker"], llm_client)
-                async with gnani_lock(key):  # one active Gnani request per key
-                    async for seg in _segments(stt_client, settings.data_dir / "audio" / t["wav8k"], load_profile(role), key):
-                        turn.on_segment(seg)
+                turn: LiveTurn | None = None
+
+                async def current() -> LiveTurn:
+                    nonlocal turn
+                    if turn is None:
+                        if prev_done is not None:
+                            try:
+                                await asyncio.wait_for(prev_done.wait(), PREV_TURN_S)
+                            except TimeoutError:
+                                log.warning("session=%s turn %d processed before turn %d finished", s.id, idx, idx - 1)
+                        turn = LiveTurn(s, ctx, list(history), idx, t["speaker"], llm_client)
+                    return turn
+                async for seg in _segments(stt_client, settings.data_dir / "audio" / t["wav8k"], load_profile(role), key, gate):
+                    (await current()).on_segment(seg)
+                turn = await current()
                 history.append(Turn(speaker=t["speaker"], text=turn.text))
                 db.log_turn(s.id, idx, t["speaker"], turn.text, turn.lang, turn.stt_ms)
                 closing.append(asyncio.create_task(close_turn(turn, idx, closing[-1] if closing else None)))
+                done.set()
+
+            prev_done: asyncio.Event | None = None
+            for t in turns:
+                done = asyncio.Event()
+                turn_tasks.append(asyncio.create_task(transcribe(t, prev_done, done)))
+                prev_done = done
+            await asyncio.gather(*turn_tasks)
             await asyncio.gather(*closing)
             if s.late_tasks:  # late deep answers (up to the 8 s LLM budget) still update the call
                 await asyncio.gather(*s.late_tasks, return_exceptions=True)
@@ -411,6 +445,8 @@ async def _run_live(s: Session) -> None:
     except SttError:  # let the turns already heard close properly before the recorded tail takes over
         s.resume_ms = int((time.perf_counter() - t0 - shift_s) * 1000)
         ticker.cancel()
+        for task in turn_tasks:
+            task.cancel()
         s.voice_nudge = None  # turns still closing must not start a live clip while the recorded tail takes over
         for task in coach_tasks:
             task.cancel()
@@ -420,7 +456,7 @@ async def _run_live(s: Session) -> None:
         warm.cancel()
         ticker.cancel()
         s.voice_nudge = None
-        for task in [*closing, *coach_tasks, *s.late_tasks]:  # stopped or timed out: nothing may arrive after the client is closed
+        for task in [*turn_tasks, *closing, *coach_tasks, *s.late_tasks]:  # stopped or timed out: nothing may arrive after the client is closed
             task.cancel()
         await llm_client.aclose()
     log.info("session=%s llm_skipped=%d | process totals: llm_calls=%d llm_cache_hits=%d", s.id, s.llm_skipped,
