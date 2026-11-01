@@ -7,14 +7,14 @@ const PAUSE_KEY = 'maryada.pauseForCoach'
 
 /**
  * Browser gains. The library already mixes the voices at agent -22, borrower -24, third party -25 and coach -27 LUFS.
- * The coach clip plays on top of the call, so it gets a further -6.9 dB (0.45), and the call is lowered by DUCK_DB while
- * the clip plays: the coach ends up about 8 dB under the borrower and 10 dB under the agent. The call voices play at full
+ * The coach clip plays on top of the call, so it gets a further -1.5 dB (0.84), and the call is lowered by DUCK_DB while
+ * the clip plays: the coach ends up about 3 dB under the borrower (-28.5 against -25.5 LUFS) and 5 dB under the agent. The call voices play at full
  * level. (iOS ignores element volume, so there only the library levels apply.)
  */
 const CALL_GAIN = { agent: 1, borrower: 1, third_party: 1 }
-export const COACH_GAIN = 0.45
+export const COACH_GAIN = 0.84
 /** The call audio is lowered by this much while the coach clip plays (0 turns ducking off). */
-export const DUCK_DB = -2
+export const DUCK_DB = -1.5
 
 /** Tuning by ear in the dev server only: ?coach=<gain 0.1-1>&duck=<dB 0-6>. Missing or invalid values are ignored. */
 function override(name: string, lo: number, hi: number): number | null {
