@@ -27,7 +27,7 @@ Latency is unchanged within noise: the saving is in input tokens, and the reply 
 
 Findings that differ from the baseline (the two baseline runs differ from each other in no finding):
 - **Early R3 on turn 7.** The baseline flags the sarcastic first sentence of turn 7 ("Madam, ये सब तो हर कोई बोलता है next week, next week") as R3 with confidence 0.84 and 0.81. The candidate does not flag it in either run. The R3 findings on the later parts of turn 7 (0.98-0.99) and the R5 finding (0.93-0.94 baseline, 0.97 candidate) are present in both.
-- **R2 on correct introductions.** The candidate reported R2 on turns where the agent did introduce the company and the recording notice (hero run 1, turns 1 and 3; library call c01, turn 3). The baseline never did.
+- **R2 on correct introductions.** The candidate reported R2 on turns where the agent did introduce the company and the recording notice (hero run 1, turns 1 and 3; library call c01, turn 3). The baseline never did. Resolved: R2 is now rule-based only, judged on the completed second agent turn, with script-tolerant matching (see DECISIONS, 2026-11-01); hero risk path is 0, 0, 0, 65, 55, 45.
 - **R3 on a mild phrase.** In one candidate run (and in the first attempt), turn 9 ("Sorry madam, आप गलत मत समझिए") is flagged as R3 at 0.88-0.97. The baseline does not flag it.
 - **Invalid JSON.** One candidate reply was cut off at `max_tokens` 250 (a long quote in `good_practice`). The baseline reply for the same segment used 244 of the 250 tokens.
 - Quotes found verbatim in the original text: 10 of 10 (baseline 12 of 12). No confidence shift above 0.10 on a finding both versions report.

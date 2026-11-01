@@ -100,11 +100,11 @@ def finalize(items: list[Finding], turn_idx: int, text: str) -> list[Finding]:
     return sorted(out, key=lambda x: x.token_range[0])
 
 
-def fast_findings(ctx: CallContext, history: list[Turn], turn_idx: int, text: str) -> list[Finding]:
-    """Fast phase: gates + prefilter + good practice (no LLM)."""
+def fast_findings(ctx: CallContext, history: list[Turn], turn_idx: int, text: str, complete: bool = True) -> list[Finding]:
+    """Fast phase: gates + prefilter + good practice (no LLM). `complete` = `text` is the whole turn (R2 waits for it)."""
     agent_texts = [t.text for t in history if t.speaker == "A"] + [text]
     agent_no = len(agent_texts)
-    items = gate_findings(ctx, turn_idx, agent_no, text, agent_texts)
+    items = gate_findings(ctx, turn_idx, agent_no, text, agent_texts, complete)
     items += prefilter(ctx, history, turn_idx, text) + good_practice(text, turn_idx)
     return finalize(items, turn_idx, text)
 
@@ -113,7 +113,7 @@ def deep_findings(ctx: CallContext, fast: list[Finding], llm: LlmOut | None, tur
     """Deep phase: merge the LLM result into the fast findings. llm=None -> fast findings unchanged."""
     if llm is None:
         return fast
-    from_llm = llm_to_findings(llm, turn_idx, text)
+    from_llm = [f for f in llm_to_findings(llm, turn_idx, text) if f.rule_id != "R2"]  # R2 is rule-based only, like R1
     if ctx.answered_by == "borrower":  # R4 gate applies to the LLM too
         from_llm = [f for f in from_llm if f.rule_id != "R4"]
     items = [f for f in fast if f.kind != "good_practice"] + from_llm

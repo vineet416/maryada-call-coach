@@ -103,7 +103,7 @@ def test_hero_call_flags_r5_r3_r5_on_turn_7_and_nothing_else():
     sc = _call("c06")
     assert len(sc["turns"]) == 11
     ctx = CallContext(answered_by=sc["answered_by"], simulated_start_time=sc["time"])
-    hist, score, peak = [], 0, 0
+    hist, score, peak, path = [], 0, 0, []
     for i, t in enumerate(sc["turns"], 1):
         if t["s"] == "A":
             found = fast_findings(ctx, hist, i, t["t"])
@@ -111,7 +111,9 @@ def test_hero_call_flags_r5_r3_r5_on_turn_7_and_nothing_else():
             assert bad == (["R5", "R3", "R5"] if i == 7 else []), f"turn {i}: {bad}"
             score = risk.update(score, found).score
             peak = max(peak, score)
+            path.append(score)
         hist.append(Turn(speaker=t["s"], text=t["t"]))
+    assert path == [0, 0, 0, 65, 55, 45]  # no R2 on turn 3: the introduction and the recording notice are there
     assert peak == 65 and risk.band(peak) == "high"
 
 

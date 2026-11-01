@@ -443,6 +443,7 @@ class LiveTurn:
         self.score_before = 0
         self.last_arrival = 0.0
         self.n_segments, self.saw_last = 0, False
+        self.gate_done = False  # the whole-turn (R2) check has run on the completed turn
 
     def close_segments(self) -> None:
         """The STT stream can end without marking its last segment: close the turn's transcript explicitly."""
@@ -476,7 +477,8 @@ class LiveTurn:
             self.tasks.append(task)
             self.s.late_tasks.append(task)
         t0 = time.perf_counter()
-        fast = fast_findings(self.ctx, self.history, self.idx, self.text)
+        fast = fast_findings(self.ctx, self.history, self.idx, self.text, complete=seg.is_last)
+        self.gate_done = self.gate_done or seg.is_last
         box["fast"] = fast  # set before the task's first await completes
         prefilter_ms = int((time.perf_counter() - t0) * 1000)
         self._handle(fast, "fast", {"stt_ms": seg.latency_ms, "prefilter_ms": prefilter_ms, "llm_ms": 0}, seg_end)
@@ -542,6 +544,10 @@ class LiveTurn:
         self.close_segments()
         if self.speaker != "A":
             return score_before
+        if self.text and not self.gate_done:  # the stream never marked the last segment: judge the whole turn now
+            self.gate_done = True
+            self._handle(fast_findings(self.ctx, self.history, self.idx, self.text), "fast",
+                         {"stt_ms": self.stt_ms, "prefilter_ms": 0, "llm_ms": 0}, time.perf_counter())
         if self.tasks:
             left = max(0.0, FIRST_ANSWER_S - (time.perf_counter() - self.last_arrival))
             await asyncio.wait(self.tasks, timeout=left)
