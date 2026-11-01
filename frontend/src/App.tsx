@@ -7,9 +7,9 @@ import { Cases, Evaluation, HowItWorks, LiveCall, Manager, NotFound, Settings } 
 function Shell() {
   const onCall = useLocation().pathname.startsWith('/call/')
   return (
-    <div className={`flex min-h-screen flex-col ${onCall ? 'shell-call' : ''}`}>
+    <div className={`shell flex min-h-screen flex-col ${onCall ? 'shell-call' : ''}`}>
       <TopBar />
-      <main className="mx-auto w-full max-w-[1280px] flex-1 px-4 py-6 sm:px-8 sm:py-8">
+      <main className="mx-auto w-full max-w-[var(--page-w)] flex-1 px-4 py-6 sm:px-8 sm:py-8">
         <Routes>
           <Route path="/" element={<Cases />} />
           <Route path="/call/:id" element={<LiveCall />} />

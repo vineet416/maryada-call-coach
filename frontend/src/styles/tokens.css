@@ -431,7 +431,7 @@ body {
 .risk-gauge {
   display: none;
 }
-@media (min-width: 640px) and (min-height: 821px) {
+@media (min-width: 640px) and (min-height: 940px) {
   .risk-compact {
     display: none;
   }
@@ -481,5 +481,18 @@ body {
   .shell-call footer {
     padding-top: 8px;
     padding-bottom: 8px;
+  }
+}
+
+/* ---- Page width: 1280 px, a little wider on big screens so the content does not float in the margins ---- */
+.shell {
+  --page-w: 1280px;
+}
+@media (min-width: 1600px) {
+  .shell {
+    --page-w: 1360px;
+  }
+  .shell-call {
+    --page-w: 1440px;
   }
 }
