@@ -18,9 +18,9 @@ export function confidenceLabel(f: Finding): 'High' | 'Medium' | 'Needs review' 
 }
 
 export const SOURCE_LABEL: Record<Finding['source'], string> = {
-  prefilter: 'Rules',
-  llm: 'AI',
-  both: 'Rules + AI',
+  prefilter: 'Fast phrase check',
+  llm: 'Language model',
+  both: 'Fast phrase check + language model',
 }
 
 export const KIND_COLOR: Record<Kind, string> = {

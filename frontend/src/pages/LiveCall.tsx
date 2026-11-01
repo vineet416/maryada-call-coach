@@ -264,19 +264,19 @@ export function LiveCall() {
       {idle && !failed ? (
         <StartCard scenario={scenario} busy={phase === 'starting'} onStart={(m) => void begin(m)} />
       ) : (
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_380px] lg:grid-rows-[auto_auto_1fr] lg:items-start">
-          <div className="order-3 lg:order-none lg:col-start-1 lg:row-span-3 lg:row-start-1">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_380px] lg:grid-rows-[auto_auto_1fr] lg:items-start">
+          <div className="min-w-0 order-3 lg:order-none lg:col-start-1 lg:row-span-3 lg:row-start-1">
             <TranscriptPanel turns={st.turns} findings={st.findings} scenario={scenario} onOpen={setOpen}>
               <StageLine />
             </TranscriptPanel>
           </div>
-          <div className="order-1 lg:order-none lg:col-start-2 lg:row-start-1">
+          <div className="min-w-0 order-1 lg:order-none lg:col-start-2 lg:row-start-1">
             <CoachCard rules={rules} voiceOn={voiceOn} onVoice={setVoiceOn} />
           </div>
-          <div className="order-2 lg:order-none lg:col-start-2 lg:row-start-2">
+          <div className="min-w-0 order-2 lg:order-none lg:col-start-2 lg:row-start-2">
             <RiskMeter />
           </div>
-          <div className="order-4 lg:order-none lg:col-start-2 lg:row-start-3">
+          <div className="min-w-0 order-4 lg:order-none lg:col-start-2 lg:row-start-3">
             <FindingList findings={st.findings} rules={rules} onOpen={setOpen} offsetOf={offsetOf} />
           </div>
         </div>

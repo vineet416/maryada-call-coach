@@ -69,7 +69,7 @@ export function Bubble({ turn, offsetMs, findings, onOpen }: Props) {
               <div className="shimmer w-2/5" />
             </div>
           ) : (
-            <p className="text-[15px] leading-[1.9]" style={{ fontFamily: 'var(--font-transcript)' }}>
+            <p className="text-left text-[15px] leading-[1.9] [word-spacing:normal]" style={{ fontFamily: 'var(--font-transcript)' }}>
               {turn.tokens.map((t) => (
                 <WordToken
                   key={t.i}

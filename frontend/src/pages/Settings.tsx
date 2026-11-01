@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { Switch } from '@/components/Switch'
 import { audio } from '@/lib/audioEngine'
 import { listModels, testGnani, testLlm, type TestResult } from '@/lib/api'
+import { CALL_LIMIT_S, CONCURRENT_CALLS } from '@/lib/limits'
 import { GNANI_KEY_URL, PROVIDERS } from '@/lib/providers'
 import { useKeysStore } from '@/store/keysStore'
 
@@ -297,8 +298,8 @@ export function Settings() {
             <h2 className="text-[15px] font-semibold">Live call limits</h2>
             <dl className="overflow-hidden rounded-xl border border-[#eaecf0] text-[13px]">
               <Row k="Who pays" v="Your own accounts" />
-              <Row k="Call length" v="200 s" />
-              <Row k="Calls at once" v="3" last />
+              <Row k="Call length" v={`${CALL_LIMIT_S} s`} />
+              <Row k="Calls at once" v={String(CONCURRENT_CALLS)} last />
             </dl>
           </section>
 

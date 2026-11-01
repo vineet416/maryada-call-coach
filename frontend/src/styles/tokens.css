@@ -55,7 +55,6 @@ body {
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
 }
 .mono {
   font-variant-numeric: tabular-nums;
@@ -306,6 +305,11 @@ body {
   outline: 2px solid var(--mc-accent);
   outline-offset: 2px;
   box-shadow: 0 0 0 5px var(--mc-accent-ring);
+}
+/* A dialog container is focused by script only so keys work inside it; it is not a control */
+[role='dialog']:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 .tok-flash {
   animation: flash 1.2s ease;

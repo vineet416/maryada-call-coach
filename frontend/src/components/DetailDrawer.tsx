@@ -4,6 +4,7 @@ import type { Rule } from '@/lib/api'
 import type { Finding } from '@/lib/events'
 import { KIND_LABEL } from '@/lib/events'
 import { SOURCE_LABEL, confidenceLabel } from '@/lib/findings'
+import { useFocusTrap } from '@/lib/useFocusTrap'
 
 const QUOTE_BG = {
   violation: 'bg-[var(--mc-violation-tint)]',
@@ -15,19 +16,17 @@ const QUOTE_BG = {
 /** Right-side drawer on desktop, bottom sheet on mobile. Esc or a tap outside closes it. */
 export function DetailDrawer({ finding, rule, onClose }: { finding: Finding | null; rule?: Rule; onClose: () => void }) {
   const closeBtn = useRef<HTMLButtonElement>(null)
+  const panel = useRef<HTMLElement>(null)
   const [copied, setCopied] = useState(false)
 
+  useFocusTrap(panel, !!finding)
   useEffect(() => {
     if (!finding) return
-    const opener = document.activeElement as HTMLElement | null
     closeBtn.current?.focus()
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
     window.addEventListener('keydown', onKey)
     setCopied(false)
-    return () => {
-      window.removeEventListener('keydown', onKey)
-      opener?.focus?.()
-    }
+    return () => window.removeEventListener('keydown', onKey)
   }, [finding, onClose])
 
   if (!finding) return null
@@ -46,6 +45,7 @@ export function DetailDrawer({ finding, rule, onClose }: { finding: Finding | nu
     <div className="fixed inset-0 z-40" role="presentation" onClick={onClose}>
       <div className="absolute inset-0 bg-[#0f172a]/40" />
       <aside
+        ref={panel}
         role="dialog"
         aria-modal="true"
         aria-label={`${rule?.title ?? finding.rule_id} details`}

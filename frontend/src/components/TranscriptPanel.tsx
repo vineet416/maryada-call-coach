@@ -57,6 +57,7 @@ export function TranscriptPanel({ turns, findings, scenario, onOpen, children }:
       </div>
       <div
         ref={box}
+        id="call-transcript"
         onScroll={onScroll}
         className="flex h-[min(62vh,640px)] flex-col gap-[18px] overflow-y-auto px-4 py-5 sm:px-6"
         aria-live="polite"

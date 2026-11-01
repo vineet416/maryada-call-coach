@@ -1,8 +1,9 @@
 import { X } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import type { Rule, ScenarioDetail } from '@/lib/api'
 import type { Finding } from '@/lib/events'
+import { useFocusTrap } from '@/lib/useFocusTrap'
 import type { Mode, Summary } from '@/store/sessionStore'
 
 interface Props {
@@ -23,11 +24,11 @@ const len = (ms: number | null) => {
 
 export function SummaryModal({ scenario, summary, findings, rules, mode, onRunAgain, onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null)
-  const [copied, setCopied] = useState(false)
   const good = findings.filter((f) => f.kind === 'good_practice').length
   const flagged = findings.filter((f) => f.kind !== 'good_practice')
   const violations = flagged.filter((f) => f.kind === 'violation').length
 
+  useFocusTrap(ref, true, () => document.getElementById('call-transcript'))
   useEffect(() => {
     ref.current?.focus()
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
@@ -35,15 +36,6 @@ export function SummaryModal({ scenario, summary, findings, rules, mode, onRunAg
     return () => window.removeEventListener('keydown', onKey)
   }, [onClose])
 
-  const share = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href)
-      setCopied(true)
-      window.setTimeout(() => setCopied(false), 1500)
-    } catch {
-      /* clipboard may be blocked */
-    }
-  }
   const rows = Object.entries(summary.by_rule)
 
   return (
@@ -109,7 +101,6 @@ export function SummaryModal({ scenario, summary, findings, rules, mode, onRunAg
           <div className="flex flex-wrap gap-2.5">
             <button onClick={onClose} className="btn">Review transcript</button>
             <Link to="/" className="btn">Back to cases</Link>
-            <button onClick={share} className="btn">{copied ? 'Link copied' : 'Share this'}</button>
             <button onClick={onRunAgain} className="btn btn-primary">Run again</button>
           </div>
         </div>
