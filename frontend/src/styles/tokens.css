@@ -457,6 +457,7 @@ body {
   .shell-call .call-fit {
     flex: 1 1 0;
     min-height: 0;
+    overflow-y: auto; /* only the start card and error states ever scroll here; the running call fits */
   }
   .shell-call .call-grid {
     flex: 1 1 0;

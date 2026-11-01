@@ -41,7 +41,9 @@ export function SummaryModal({ scenario, summary, findings, rules, mode, onRunAg
   useEffect(() => {
     const ctl = new AbortController()
     getScenarios(ctl.signal)
-      .then((all) => {
+      .then((list) => {
+        // same order as the Cases page: recorded runs first
+        const all = [...list].sort((a, b) => Number(b.has_replay) - Number(a.has_replay))
         const at = all.findIndex((c) => c.id === scenario.id)
         const after = [...all.slice(at + 1), ...all.slice(0, Math.max(at, 0))]
         setNext(after.find((c) => c.has_replay && c.id !== scenario.id)?.id ?? null)
