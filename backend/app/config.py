@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     llm_http2: bool = True  # HTTP/2 for Euri; falls back to HTTP/1.1 if negotiation fails
     llm_model: str = "gpt-5.4-mini"
     llm_fallback_model: str = "gpt-4.1-mini"
+    skip_llm_max_words: int = 8  # agent text under this many words may skip the LLM (see rules/skip.py for the guard)
     stt_mode: str = "realtime"
     daily_session_cap: int = 60
     replay_only: bool = False

@@ -102,7 +102,7 @@ def ledger_add(out: Path, n: int) -> int:
 
 
 def hero_calls():
-    """(turn_idx, history[-2:], cumulative text) for every agent segment of c06 with >= MIN_WORDS words."""
+    """(turn_idx, history[-2:], cumulative text) for every agent segment of c06 with >= 4 words."""
     ev = json.loads((ROOT / "data/replay/c06.json").read_text(encoding="utf-8"))["events"]
     segs = [e["data"] for e in ev if e["type"] == "transcript.final"]
     spk = {t["idx"]: t["speaker"] for t in assets.audio_manifest()["c06"]["turns"]}
@@ -111,7 +111,7 @@ def hero_calls():
         text = ""
         for s in (s for s in segs if s["turn_idx"] == idx):
             text = f"{text} {s['text']}".strip()
-            if spk[idx] == "A" and len(text.split()) >= llm.MIN_WORDS:
+            if spk[idx] == "A" and len(text.split()) >= 4:
                 calls.append((idx, list(history[-2:]), text))
         history.append(Turn(speaker=spk[idx], text=text))
     return calls
@@ -121,7 +121,7 @@ def scripted_calls(cid: str, only: set[int] | None):
     turns = assets.scenarios()[cid]["turns"]
     history, calls = [], []
     for n, t in enumerate(turns, 1):
-        if t["s"] == "A" and len(t["t"].split()) >= llm.MIN_WORDS and (only is None or n in only):
+        if t["s"] == "A" and len(t["t"].split()) >= 4 and (only is None or n in only):
             calls.append((n, list(history[-2:]), t["t"]))
         history.append(Turn(speaker=t["s"], text=t["t"]))
     return calls
