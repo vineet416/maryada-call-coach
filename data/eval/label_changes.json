@@ -1,0 +1,13 @@
+[
+  {
+    "changed_on": "2026-11-01",
+    "after_first_run": true,
+    "call": "c17",
+    "turn": 7,
+    "rule": "R4",
+    "action": "added",
+    "label_hash_before": "be1f14d003059999",
+    "label_hash_after": "21caa31f45898ae6",
+    "reason": "The agent again asks the spouse to relay the payment, the same disclosure as in turn 5. The clean rules-only baseline was first scored with the old labels (34 labelled units) and re-scored with the new ones (35)."
+  }
+]

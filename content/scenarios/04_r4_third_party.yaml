@@ -118,6 +118,7 @@ scenarios:
       - s: A
         t: "Haan madam, aap unko bol dijiye ki is hafte tak kuch payment kar dein. Mujhe ek date mil jaye toh main system mein note kar lungi."
         td: "हाँ मैडम, आप उनको बोल दीजिए कि इस हफ्ते तक कुछ पेमेंट कर दें। मुझे एक डेट मिल जाए तो मैं सिस्टम में नोट कर लूँगी।"
+        L: [[R4, "aap unko bol dijiye ki is hafte tak kuch payment kar dein"]]
       - s: T
         t: "Haan, main bol dungi. Aap kitne baje phir se phone karoge?"
         td: "हाँ, मैं बोल दूँगी। आप कितने बजे फिर से फोन करोगे?"

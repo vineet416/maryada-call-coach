@@ -1,0 +1,94 @@
+{
+ "schema": 1,
+ "call_id": "c01",
+ "condition": "clean",
+ "mode": "rules_only",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "rules_prompt_hash": "d41d4c6123ed19ab"
+ },
+ "stt": {
+  "requests": 0,
+  "cached": 9,
+  "latency_ms": 0,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "नमस्ते, सुरेश भोसले बोल रहे हैं।",
+   "stt_ms": 847,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ जी, बोलिए।",
+   "stt_ms": 444,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "मैं नेहा तारंग फिनसर्व से। यह call quality और training के लिए record हो रही है।",
+   "stt_ms": 560,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ madam, बोलो क्या हुआ?",
+   "stt_ms": 446,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "सुरेश जी, आपकी 6,200 रुपये की EMI bounce हुई थी, 12 दिन से pending है, penalty भी लग रही है, कब तक हो जाएगा?",
+   "stt_ms": 740,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Madam, company ने इस बार salary late कर दी, हर महीने जल्दी आती है, अभी तक नहीं आई, 15 तक आ जाएगी।",
+   "stt_ms": 615,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "अच्छा अच्छा, तो salary आते ही payment हो जाएगा ना? मुझे एक पक्की date चाहिए sir, 15 के आसपास से काम नहीं चलेगा।",
+   "stt_ms": 645,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "हाँ हाँ 15 को salary आते ही कर दूंगा। दो तीन दिन का time लगेगा।",
+   "stt_ms": 440,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "ठीक है, तो 18 तारीख तक पक्का, मैं note कर लेती हूँ और SMS भेज देती हूँ और अगर salary पहले आ जाए तो पहले भी कर सकते हैं, thank you sir.",
+   "stt_ms": 458,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [],
+ "completed_at": "2026-11-01T14:39:48+00:00"
+}

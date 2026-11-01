@@ -1,0 +1,145 @@
+{
+ "schema": 1,
+ "call_id": "c25",
+ "condition": "clean",
+ "mode": "rules_only",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "rules_prompt_hash": "d41d4c6123ed19ab"
+ },
+ "stt": {
+  "requests": 0,
+  "cached": 11,
+  "latency_ms": 0,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "नमस्ते विजय घाडगे जी।",
+   "stt_ms": 347,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ, बोल रहा हूँ।",
+   "stt_ms": 364,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "प्रिया बोल रही हूँ तारंग फिनसर्व से और यह call quality और training के लिए record हो रही है।",
+   "stt_ms": 452,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "Madam, कल मेरे पिताजी गुजर गए, घर में सब रोने-धोने में लगे हैं, relatives आए हुए हैं।",
+   "stt_ms": 503,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "ओह sorry to hear that लेकिन विजय जी 6,000 की EMI 14 दिन से pending है मुझे आज ही कुछ update चाहिए आज ही कुछ भेज दीजिए",
+   "stt_ms": 686,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Madam, अभी 13वीं भी नहीं हुई, पैसा सब क्रियाकर्म में लग रहा है, कैसे कर सकता हूँ?",
+   "stt_ms": 470,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "विजय जी, समझ सकती हूँ पर due date निकल चुकी है, कल तक payment जरूरी है, थोड़ा भी कर दो तो चलेगा।",
+   "stt_ms": 463,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "Madam please ठीक है कल कुछ करने की कोशिश करता हूँ पर पक्का नहीं बोल सकता।",
+   "stt_ms": 574,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "कोशिश नहीं, पक्का बताइए कितना कर सकते हैं कल तक",
+   "stt_ms": 453,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "2,000, 2,000 कल तक भेज दूंगा।",
+   "stt_ms": 409,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "Okay 2,000 कल तक। Payment link अभी WhatsApp पर भेज रही हूँ। Thank you.",
+   "stt_ms": 437,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c25",
+   "turn": 5,
+   "rule": "R6",
+   "kind": "needs_review",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "आज ही कुछ भेज"
+  },
+  {
+   "call": "c25",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "prefilter",
+   "quote": "समझ सकती हूँ"
+  },
+  {
+   "call": "c25",
+   "turn": 7,
+   "rule": "R6",
+   "kind": "needs_review",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "due date निकल चुकी"
+  },
+  {
+   "call": "c25",
+   "turn": 7,
+   "rule": "R6",
+   "kind": "needs_review",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "कल तक payment जरूरी"
+  }
+ ],
+ "completed_at": "2026-11-01T14:39:49+00:00"
+}

@@ -1,0 +1,94 @@
+{
+ "schema": 1,
+ "call_id": "c15",
+ "condition": "clean",
+ "mode": "rules_only",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "rules_prompt_hash": "d41d4c6123ed19ab"
+ },
+ "stt": {
+  "requests": 0,
+  "cached": 9,
+  "latency_ms": 0,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Hello, ये हेमंत जोशी जी का number है?",
+   "stt_ms": 405,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "T",
+   "text": "हाँ, पर वो घर पर नहीं हैं। मैं उनकी wife बोल रही हूँ। आप कौन?",
+   "stt_ms": 435,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "रोहित बोल रहा हूँ। तारंग Finserv से call record हो रही है। quality और training के लिए हेमंत जी से ही बात करनी है। वो कब तक मिलेंगे?",
+   "stt_ms": 674,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "T",
+   "text": "बाहर गए हैं, शाम को आएँगे। क्या काम है उनसे?",
+   "stt_ms": 389,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "Madam, काम यह है कि आपके पति ने Taran Singh Service से loan लिया था और 6 महीने से EMI नहीं भर रहे, total 20,000 रुपये बाकी हैं, हम कितने दिन से call कर रहे हैं वो phone ही नहीं उठाते, मुझे उनसे बात करनी ही पड़ेगी।",
+   "stt_ms": 899,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "T",
+   "text": "मेरे को कुछ पता नहीं है, उन्होंने मेरे को कुछ बताया नहीं, आप मेरे को क्यों बोल रहे हो ये सब?",
+   "stt_ms": 448,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "अच्छा अच्छा, ठीक है madam, उनको बोल देना कि रोहित का phone आया था, वो वापस call कर लें। आज शाम तक कर लें तो अच्छा है।",
+   "stt_ms": 689,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "T",
+   "text": "हाँ, मैं बोल दूँगी, पर आप बार-बार phone मत करना, घर में tension हो जाता है।",
+   "stt_ms": 435,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "ठीक है madam, मैं शाम को एक बार दोबारा call करूँगा।",
+   "stt_ms": 501,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [],
+ "completed_at": "2026-11-01T14:39:49+00:00"
+}

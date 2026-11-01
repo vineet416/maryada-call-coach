@@ -1,0 +1,118 @@
+{
+ "schema": 1,
+ "call_id": "c30",
+ "condition": "clean",
+ "mode": "rules_only",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "rules_prompt_hash": "d41d4c6123ed19ab"
+ },
+ "stt": {
+  "requests": 0,
+  "cached": 11,
+  "latency_ms": 0,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Good afternoon, नरेंद्र शिर्के जी।",
+   "stt_ms": 390,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "फिर से फोन? कितनी बार फोन करोगे",
+   "stt_ms": 464,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "मैं नेहा तारंग Finserv से। यह call record हो रही है। Quality और training के लिए बस 1 minute लूँगी।",
+   "stt_ms": 634,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "देखिए madam, पैसा नहीं है अभी। मुझे बार-बार phone मत करो।",
+   "stt_ms": 400,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "नरेंद्र जी, मैं समझ सकती हूँ कि आपको परेशानी है, लेकिन आपके personal loan की 10,000 रुपये की EMI 2 महीने से pending है, bounce हो चुकी है। मैं आपको सीधा बता देती हूँ कि payment न होने पर late fee लगती है और credit score का नुकसान होता है।",
+   "stt_ms": 864,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "तो क्या करूँ? मेरे पास सच में पैसा नहीं है",
+   "stt_ms": 388,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "आप बस यह बता दीजिए कि कितना और कब तक arrange हो सकता है, हम छोटी installment का plan भी बना सकते हैं।",
+   "stt_ms": 402,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "5,000 next week बाकी उसके बाद",
+   "stt_ms": 360,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "ठीक है sir, next week 5,000। आप date बता दीजिए, मैं note कर लेती हूँ।",
+   "stt_ms": 528,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "Next Wednesday तक",
+   "stt_ms": 325,
+   "lang": "en-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "Wednesday पक्का, मैं reminder भेज दूंगी, thank you sir.",
+   "stt_ms": 563,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c30",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "prefilter",
+   "quote": "समझ सकती हूँ"
+  }
+ ],
+ "completed_at": "2026-11-01T14:39:49+00:00"
+}

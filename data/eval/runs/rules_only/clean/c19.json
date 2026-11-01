@@ -1,0 +1,122 @@
+{
+ "schema": 1,
+ "call_id": "c19",
+ "condition": "clean",
+ "mode": "rules_only",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "rules_prompt_hash": "d41d4c6123ed19ab"
+ },
+ "stt": {
+  "requests": 0,
+  "cached": 9,
+  "latency_ms": 0,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Good morning, अजय म्हात्रे बोल रहे हैं।",
+   "stt_ms": 348,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ, इतनी सुबह कौन बोल रहा है?",
+   "stt_ms": 463,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "अमित बोल रहा हूँ तारंग Finserv से। यह call record हो रही है। quality और training के लिए ही इतनी सुबह phone किया, sorry sir।",
+   "stt_ms": 673,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ बोलिए, क्या हुआ? इतनी सुबह कोई phone करता है क्या?",
+   "stt_ms": 457,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "Sorry sir, बस एक minute लूँगा। अजय जी, 5,000 की EMI 9 दिन से pending है, bounce हो गई थी, बस याद दिलाना था payment कब तक कर देंगे।",
+   "stt_ms": 847,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Friday को भर दूंगा तब तक salary आ जाएगी थोड़ा wait करो।",
+   "stt_ms": 384,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "Friday पक्का ना? सर, किसी भी हाल में Friday तक। ठीक है, Friday लिख लेता हूँ। Payment link Friday सुबह WhatsApp पर भेज दूंगा।",
+   "stt_ms": 600,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "हाँ भाई, पक्का, अब थोड़ा सो जाने दो, कल रात देर से सोया था।",
+   "stt_ms": 474,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "हाँ सर, बिल्कुल, मैं Friday सुबह एक reminder भेज दूँगा।",
+   "stt_ms": 387,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c19",
+   "turn": 1,
+   "rule": "R1",
+   "kind": "violation",
+   "confidence": 1.0,
+   "source": "gate",
+   "quote": ""
+  },
+  {
+   "call": "c19",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "prefilter",
+   "quote": "sorry sir।"
+  },
+  {
+   "call": "c19",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "prefilter",
+   "quote": "Sorry sir,"
+  }
+ ],
+ "completed_at": "2026-11-01T14:39:49+00:00"
+}

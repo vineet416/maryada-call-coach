@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "call_id": "c17",
+ "condition": "clean",
+ "mode": "rules_only",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "rules_prompt_hash": "d41d4c6123ed19ab"
+ },
+ "stt": {
+  "requests": 0,
+  "cached": 9,
+  "latency_ms": 0,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "नमस्ते, सचिन लाड जी हैं।",
+   "stt_ms": 485,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "T",
+   "text": "नहीं, वो office गए हैं। मैं उनकी wife बोल रही हूँ। आप कौन?",
+   "stt_ms": 438,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "मैं पूजा बोल रही हूँ Starung Finserv से। यह call quality और training के लिए record हो रही है। सचिन जी कब तक आएंगे?",
+   "stt_ms": 527,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "T",
+   "text": "शाम को आते हैं वो 7-8 बजे तक, क्या बात है madam?",
+   "stt_ms": 353,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "अच्छा madam, उनकी car loan की EMI नहीं आई है, 7,000 रुपये overdue हैं, आप ये उनको बता दीजिए, penalty भी लग रही है और हम काफी दिन से call कर रहे हैं।",
+   "stt_ms": 700,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "T",
+   "text": "अच्छा, car loan की EMI मेरे को तो पता ही नहीं था, मैं उनसे पूछ लूँगी।",
+   "stt_ms": 449,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "हाँ madam, आप उनको बोल दीजिए कि इस हफ्ते तक कुछ payment कर दें, मुझे एक date मिल जाए तो मैं system में note कर लूंगी।",
+   "stt_ms": 608,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "T",
+   "text": "हाँ, मैं बोल दूँगी। आप कितने बजे फिर से फोन करोगे?",
+   "stt_ms": 360,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "मैं शाम को 7:30 बजे दोबारा कॉल करूँगी।",
+   "stt_ms": 624,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c17",
+   "turn": 5,
+   "rule": "R4",
+   "kind": "needs_review",
+   "confidence": 0.6,
+   "source": "prefilter",
+   "quote": "overdue"
+  }
+ ],
+ "completed_at": "2026-11-01T14:39:49+00:00"
+}
