@@ -105,8 +105,8 @@ async def review(client: httpx.AsyncClient, ctx, hist: list[Turn], text: str, st
         try:
             raw, _ = await asyncio.wait_for(llm.chat(client, model, messages, None), LLM_TIMEOUT_S)
         except httpx.HTTPStatusError as e:
-            if e.response.status_code in (403, 429):
-                raise Stop(f"Euri answered {e.response.status_code}; allowance used up or rate limited") from e
+            if e.response.status_code in (401, 403, 429):
+                raise Stop(f"Euri answered {e.response.status_code}; key refused, allowance used up or rate limited") from e
             continue
         except (TimeoutError, httpx.HTTPError, KeyError, IndexError, ValueError, TypeError):
             continue
@@ -160,10 +160,19 @@ async def run_call(sc: dict, cond: str, mode: str, labels_h: str, clients: dict,
         history.append(Turn(speaker=t["s"], text=text))
     lm["tokens"] = llm.STATS["tokens"] - tok0
     return {"schema": 1, "call_id": cid, "condition": cond, "mode": mode, "labels_hash": labels_h,
-            "engine": {"violation_min": VIOLATION_MIN, "review_min": REVIEW_MIN, "skip_words": settings.skip_llm_max_words,
-                       "llm_model": settings.llm_model if mode == "full" else None},
+            "engine": engine_block(mode),
             "stt": {**stt, "model": load_profile("agent")["model"], "path": "rest"}, "llm": lm, "turns": turns,
             "detections": dets, "completed_at": datetime.now(UTC).isoformat(timespec="seconds")}
+
+
+def engine_block(mode: str) -> dict:
+    """What the engine was when a result was made: thresholds, skip, model, and a hash of the rule files and the prompt."""
+    h = hashlib.sha256()
+    for name in ("rules.yaml", "rules_phrases.yaml"):
+        h.update((settings.content_dir / name).read_bytes())
+    h.update(llm.system_prompt().encode())
+    return {"violation_min": VIOLATION_MIN, "review_min": REVIEW_MIN, "skip_words": settings.skip_llm_max_words,
+            "llm_model": settings.llm_model if mode == "full" else None, "rules_prompt_hash": h.hexdigest()[:16]}
 
 
 def run_path(mode: str, cond: str, cid: str) -> Path:
@@ -175,7 +184,7 @@ def load_run(mode: str, cond: str, cid: str, labels_h: str) -> dict | None:
     if not p.exists():
         return None
     r = json.loads(p.read_text(encoding="utf-8"))
-    return r if r.get("labels_hash") == labels_h else None
+    return r if r.get("labels_hash") == labels_h and r.get("engine") == engine_block(mode) else None  # else: stale, run again
 
 
 def save_run(r: dict) -> None:
@@ -338,6 +347,9 @@ async def main() -> int:
                         if not args.rerun and load_run(args.mode, cond, sc["id"], labels_h):
                             continue
                         r = await run_call(sc, cond, args.mode, labels_h, clients, key, budget)
+                        if r["llm"]["degraded"]:  # a turn without a model answer would silently become rules-only: do not keep it
+                            raise Stop(f"{sc['id']}/{cond}: the language model gave no usable answer for {r['llm']['degraded']} turn(s); "
+                                       "result not saved")
                         save_run(r)
                         say(f"{args.mode}/{cond}/{sc['id']}: {len(r['detections'])} findings | stt {r['stt']['requests']} new, "
                             f"{r['stt']['cached']} cached | llm {r['llm']}")

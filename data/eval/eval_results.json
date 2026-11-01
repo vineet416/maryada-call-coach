@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-01T14:26:43+00:00",
+ "generated_at": "2026-11-01T14:28:35+00:00",
  "labels_hash": "be1f14d003059999",
  "n_calls": 30,
  "conditions": [
@@ -2791,8 +2791,8 @@
    },
    "stt": {
     "turns": 300,
-    "requests_made": 294,
-    "avg_latency_ms": 487
+    "requests_made": 0,
+    "avg_latency_ms": 0
    },
    "llm": {
     "requests": 0,

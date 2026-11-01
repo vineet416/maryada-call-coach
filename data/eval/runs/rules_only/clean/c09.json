@@ -8,12 +8,13 @@
   "violation_min": 0.75,
   "review_min": 0.45,
   "skip_words": 8,
-  "llm_model": null
+  "llm_model": null,
+  "rules_prompt_hash": "1d00a71c99b73ca1"
  },
  "stt": {
-  "requests": 10,
-  "cached": 1,
-  "latency_ms": 4336,
+  "requests": 0,
+  "cached": 11,
+  "latency_ms": 0,
   "model": "prisma-v3.0",
   "path": "rest"
  },
@@ -132,5 +133,5 @@
    "quote": "कल सुबह तक चाहिए"
   }
  ],
- "completed_at": "2026-11-01T14:24:57+00:00"
+ "completed_at": "2026-11-01T14:28:34+00:00"
 }

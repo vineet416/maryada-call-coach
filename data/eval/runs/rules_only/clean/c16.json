@@ -8,12 +8,13 @@
   "violation_min": 0.75,
   "review_min": 0.45,
   "skip_words": 8,
-  "llm_model": null
+  "llm_model": null,
+  "rules_prompt_hash": "1d00a71c99b73ca1"
  },
  "stt": {
-  "requests": 9,
-  "cached": 0,
-  "latency_ms": 4517,
+  "requests": 0,
+  "cached": 9,
+  "latency_ms": 0,
   "model": "prisma-v3.0",
   "path": "rest"
  },
@@ -127,5 +128,5 @@
    "quote": "सबको पता चलना चाहिए।"
   }
  ],
- "completed_at": "2026-11-01T14:25:33+00:00"
+ "completed_at": "2026-11-01T14:28:35+00:00"
 }
