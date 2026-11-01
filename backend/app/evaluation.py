@@ -65,7 +65,7 @@ def _replays(root: Path) -> dict[str, list[dict]]:
     for p in sorted(root.glob("c*.json")):  # committed recordings only (not the private _runs folder)
         try:
             out[p.stem] = json.loads(p.read_text(encoding="utf-8"))["events"]
-        except (OSError, ValueError, KeyError):
+        except (OSError, ValueError, KeyError, TypeError):
             continue
     return out
 
@@ -76,5 +76,7 @@ def eval_payload() -> dict:
     try:
         results = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
+        results = None
+    if not isinstance(results, dict):
         results = None
     return {"results": results, "latency": latency_stats(_replays(settings.data_dir / "replay"))}

@@ -95,7 +95,7 @@ export interface RunResult {
   tune: Score | null
   held_out: Score | null
   seen_in_development: Score | null
-  examples: EvalExample[]
+  examples?: EvalExample[]
   stt: { turns: number; requests_made: number; avg_latency_ms: number }
   llm: { requests: number; cache_hits: number; skipped: number; degraded: number; tokens: number }
 }

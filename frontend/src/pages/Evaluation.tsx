@@ -39,7 +39,7 @@ const GROUPS: { id: Group; label: string; note: string }[] = [
 const lc = (s: string) => s.replace(/^[A-Z](?=[a-z])/, (m) => m.toLowerCase())
 const f2 = (x: number | null) => (x === null ? '–' : x.toFixed(2))
 const ratio = (num: number, den: number) => `${num} of ${den}`
-const ruleTone = (id: string) => (id === 'R6' ? 'needs_review' : id === 'R1' || id === 'R2' ? 'advisory' : 'violation')
+const SOURCE: Record<string, string> = { prefilter: 'phrase check', llm: 'language model', both: 'phrase check and language model', gate: 'rule check' }
 const dateOf = (iso: string) => new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 const seconds = (ms: number | null) => (ms === null ? '–' : `${(ms / 1000).toFixed(1)} s`)
 
@@ -90,7 +90,7 @@ export function Evaluation() {
         <div>
           <h1 className="text-[28px] font-bold tracking-[-0.025em]">Evaluation</h1>
           <p className="mt-0.5 max-w-[720px] text-sm text-[var(--mc-muted)]">
-            How well Maryada finds rule violations in the 30 labelled synthetic calls. Every number below is read from the saved results file; counts are shown next to each score.
+            How well Maryada finds rule violations in the labelled synthetic calls{results ? ` (${results.n_calls})` : ''}. Every number below is read from the saved results file; counts are shown next to each score.
           </p>
         </div>
         {results && (
@@ -222,6 +222,8 @@ function RunView({ run, results, rules, group, setGroup, eng, cond }: {
   const score: Score | null = run[group]
   const held = run.held_out
   const name = (id: string) => rules.find((r) => r.id === id)?.title ?? ''
+  // chip tone and the needs-review label come from the rulebook (/api/rules), not from this page
+  const kind = (id: string) => rules.find((r) => r.id === id)?.kind_default ?? 'violation'
   return (
     <>
       <section aria-label="Headline scores" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -255,10 +257,10 @@ function RunView({ run, results, rules, group, setGroup, eng, cond }: {
           </div>
         </div>
         <p className="border-b border-[var(--mc-line-soft)] px-6 py-2 text-[12.5px] text-[var(--mc-muted)]">{GROUPS.find((g) => g.id === group)?.note}</p>
-        {score ? <RuleTable score={score} name={name} /> : <p className="p-6 text-sm text-[var(--mc-muted)]">No calls from this group are in this run.</p>}
+        {score ? <RuleTable score={score} name={name} kind={kind} /> : <p className="p-6 text-sm text-[var(--mc-muted)]">No calls from this group are in this run.</p>}
       </section>
 
-      <Examples examples={run.examples} />
+      <Examples examples={run.examples ?? []} kind={kind} />
       <PerCall score={run.all} />
       <p className="text-[12px] text-[var(--mc-muted)]">
         Model: {results.model_info.llm} · speech: {results.model_info.stt} · thresholds {results.model_info.thresholds.violation} (violation) and {results.model_info.thresholds.needs_review} (needs review) · labels {results.labels_hash}
@@ -267,7 +269,7 @@ function RunView({ run, results, rules, group, setGroup, eng, cond }: {
   )
 }
 
-function RuleTable({ score, name }: { score: Score; name: (id: string) => string }) {
+function RuleTable({ score, name, kind }: { score: Score; name: (id: string) => string; kind: (id: string) => string }) {
   const rows: [string, ScoreBlock][] = [...Object.entries(score.per_rule), ['All', score.overall]]
   const th = 'th px-3 py-2.5 text-left'
   return (
@@ -291,9 +293,9 @@ function RuleTable({ score, name }: { score: Score; name: (id: string) => string
             <tr key={id} className={`border-t border-[var(--mc-line-soft)] ${id === 'All' ? 'bg-[#f9fafb] font-semibold' : ''}`}>
               <th scope="row" className="py-3 pl-6 pr-3 text-left font-medium">
                 <span className="flex flex-wrap items-center gap-2">
-                  {id === 'All' ? <span>All rules</span> : <span className={`chip chip-${ruleTone(id)} h-[22px] min-w-[34px] justify-center px-2 text-[11px] font-bold`}>{id}</span>}
+                  {id === 'All' ? <span>All rules</span> : <span className={`chip chip-${kind(id)} h-[22px] min-w-[34px] justify-center px-2 text-[11px] font-bold`}>{id}</span>}
                   {id !== 'All' && <span className="text-[13px]">{name(id)}</span>}
-                  {id === 'R6' && <span className="chip chip-needs_review h-5 text-[11px]">needs-review rule</span>}
+                  {kind(id) === 'needs_review' && <span className="chip chip-needs_review h-5 text-[11px]">needs-review rule</span>}
                 </span>
               </th>
               <Cells prf={b.strict} first />
@@ -304,7 +306,7 @@ function RuleTable({ score, name }: { score: Score; name: (id: string) => string
         </tbody>
       </table>
       <p className="px-6 py-3 text-[12px] text-[var(--mc-muted)]">
-        A dash means the score is undefined: there was nothing labelled, or nothing flagged, for that rule. R6 can only be needs review by design, so its strict recall is 0 by construction.
+        A dash means the score is undefined: there was nothing labelled, or nothing flagged, for that rule.
         Found / missed / extra = true positives / false negatives / false positives, in units.
       </p>
     </div>
@@ -325,7 +327,7 @@ function Cells({ prf, first }: { prf: Prf; first?: boolean }) {
 
 const unitText = (u: Unit) => `turn ${u[1]} ${u[2]}`
 
-function Examples({ examples }: { examples: EvalExample[] }) {
+function Examples({ examples, kind }: { examples: EvalExample[]; kind: (id: string) => string }) {
   if (!examples.length) return null
   return (
     <section className="card flex flex-col gap-4 p-6" aria-labelledby="ex-h">
@@ -336,7 +338,7 @@ function Examples({ examples }: { examples: EvalExample[] }) {
           <div key={`${e.call}-${e.turn}-${e.rule}`} className="flex flex-col gap-2 rounded-xl border border-[var(--mc-line)] p-4">
             <div className="flex flex-wrap items-center gap-2 text-[13px]">
               <b>{e.call.toUpperCase()}</b> <span className="text-[var(--mc-muted)]">agent turn {e.turn}</span>
-              <span className={`chip chip-${ruleTone(e.rule)} h-5 text-[11px]`}>{e.rule}</span>
+              <span className={`chip chip-${kind(e.rule)} h-5 text-[11px]`}>{e.rule}</span>
               <span className="chip h-5 text-[11px]">{e.type === 'miss' ? 'Missed' : 'Extra flag'}</span>
             </div>
             <p lang="hi" className="rounded-lg bg-[var(--mc-advisory-tint)] px-3 py-2 text-[14px] leading-relaxed">{e.text}</p>
@@ -344,7 +346,7 @@ function Examples({ examples }: { examples: EvalExample[] }) {
               {e.type === 'miss'
                 ? `The script labels ${e.rule} here (“${e.labelled_phrase ?? 'whole turn'}”), but the engine raised nothing for this rule on this turn.`
                 : e.detection
-                  ? `The engine raised ${e.rule} as ${e.detection.kind.replace('_', ' ')} at confidence ${e.detection.confidence.toFixed(2)} from “${e.detection.quote}” (${e.detection.source}), but the script labels nothing here.`
+                  ? `The engine raised ${e.rule} as ${e.detection.kind.replace('_', ' ')} at confidence ${e.detection.confidence.toFixed(2)} from “${e.detection.quote}” (${SOURCE[e.detection.source] ?? e.detection.source}), but the script labels nothing here.`
                   : 'The engine raised a flag the script does not label.'}
             </p>
           </div>
@@ -409,7 +411,10 @@ function Ablation({ results }: { results: EvalResults }) {
       <h2 id="abl-h" className="text-base font-semibold">With and without the language model</h2>
       {row('Rules only', off)}
       {row('Rules and language model', on)}
-      <p className="text-[12px] text-[var(--mc-muted)]">Strict recall on clean audio, all calls: labelled units found. The full engine has not been run, so there is nothing to compare yet.</p>
+      <p className="text-[12px] text-[var(--mc-muted)]">
+        Strict recall on clean audio, all calls: labelled units found.{' '}
+        {on && off ? `The language model changes the number found from ${off.all.overall.strict.tp} to ${on.all.overall.strict.tp} of ${on.all.overall.strict.tp + on.all.overall.strict.fn}.` : 'The full engine has not been run, so there is nothing to compare yet.'}
+      </p>
     </section>
   )
 }
