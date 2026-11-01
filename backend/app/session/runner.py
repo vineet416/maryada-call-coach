@@ -23,6 +23,7 @@ from ..stt.base import (
     SttGate,
     TranscriptSegment,
     load_profile,
+    rest_lock,
     retry_start_ms,
 )
 from . import assets
@@ -237,6 +238,7 @@ async def _segments(client: httpx.AsyncClient, wav, profile: dict, key: str, gat
     """Realtime first. If it fails (before or during the turn) the turn is retried ONCE over REST with the same profile,
     continuing after the segments already delivered. If REST fails too, SttError (the caller falls back to replay)."""
     got, covered = 0, 0
+    gen = None
     if settings.stt_mode == "realtime":
         try:
             gen = realtime.stream_turn(wav, profile, key, gate=gate)
@@ -255,16 +257,19 @@ async def _segments(client: httpx.AsyncClient, wav, profile: dict, key: str, gat
         except (SttError, TimeoutError) as e:
             log.warning("realtime stt failed after %d segments, retrying over REST: %s %s", got, type(e).__name__,
                         e.__cause__ or e)
+        finally:
+            if gen is not None:
+                await gen.aclose()  # closes the socket and frees its slot now, also when the turn is cancelled
     start = retry_start_ms(got, covered, rest_tried=False)
-    gate = gate or SttGate()
+    lock = rest_lock(key)
     try:
-        await asyncio.wait_for(gate.rest_lock.acquire(), REST_WAIT_S)
+        await asyncio.wait_for(lock.acquire(), REST_WAIT_S)
     except TimeoutError:
         raise SttError("rest slot timeout") from None
     try:
         segs = await stt_rest.transcribe_turn(client, wav, profile, key, start or 0, got)
     finally:
-        gate.rest_lock.release()
+        lock.release()
     for seg in segs:
         if seg.text or got == 0:  # nothing left to transcribe after the delivered segments is not an error
             yield seg

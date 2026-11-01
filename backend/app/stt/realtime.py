@@ -108,7 +108,7 @@ async def _stream_once(wav_path: Path, profile: dict, api_key: str, pace: float,
             code = e.response.status_code
             if code in (401, 403):
                 raise SttAuthError(f"realtime status {code}") from None
-            raise (SttRefused if crowded and (code == 429 or 400 <= code < 500) else SttError)(f"realtime status {code}") from None
+            raise (SttRefused if crowded and code in (409, 423, 429) else SttError)(f"realtime status {code}") from None
 
         committed_at: float | None = None
 
@@ -144,10 +144,13 @@ async def _stream_once(wav_path: Path, profile: dict, api_key: str, pace: float,
                 continue
             covered += int(m.get("audio_duration_ms", 0))
             saw_last = is_last_segment(covered, total_ms)
+            held = time.monotonic()
             yield TranscriptSegment(text=m.get("text", "").strip(), lang=m.get("detected_language_code", ""),
                                     latency_ms=int(m.get("latency", 0)), segment_idx=idx,
                                     audio_end_ms=covered, is_last=saw_last, stream_t0=t0)
             idx += 1
+            resumed = time.monotonic()  # the consumer may have held us (it waits for the previous turn): that is not silence
+            last_msg, hard_end = resumed, hard_end + (resumed - held)
     except SttError:
         raise
     except websockets.ConnectionClosed as e:

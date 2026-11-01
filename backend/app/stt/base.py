@@ -1,5 +1,6 @@
 """STT adapter contract. Each turn opens its own Prisma socket when its audio starts (see SttGate for the per-call limit)."""
 import asyncio
+import hashlib
 import io
 import logging
 import wave
@@ -18,6 +19,17 @@ FRAME_S = FRAME / BYTES_PER_MS / 1000
 LAST_SEGMENT_SLACK_MS = 400  # a segment ending this close to the audio end is the last one of the turn
 MAX_SOCKETS = 3  # simultaneous Prisma sockets per call
 SLOT_WAIT_S = 20.0  # longest wait for a free socket slot
+
+
+_rest_locks: dict[str, asyncio.Lock] = {}  # Prisma REST allows one request per key (429 otherwise): one REST call at a time per key
+
+
+def rest_lock(key: str) -> asyncio.Lock:
+    d = hashlib.sha256(key.encode()).hexdigest()[:16]  # the key itself is never stored
+    if len(_rest_locks) > 64:
+        for k in [k for k, v in _rest_locks.items() if not v.locked() and k != d]:
+            del _rest_locks[k]
+    return _rest_locks.setdefault(d, asyncio.Lock())
 
 
 class SttError(Exception):
@@ -39,7 +51,6 @@ class SttGate:
     def __init__(self, label: str = "", max_sockets: int = MAX_SOCKETS) -> None:
         self.label, self.max_sockets = label, max_sockets
         self.serial, self.active, self.refusals = False, 0, 0
-        self.rest_lock = asyncio.Lock()  # Prisma REST allows one request per key (429 otherwise): REST fallbacks run one at a time
         self._cv = asyncio.Condition()
 
     async def acquire(self) -> int:
