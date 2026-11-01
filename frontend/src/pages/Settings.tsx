@@ -178,7 +178,7 @@ export function Settings() {
             spellCheck={false}
           />
         )}
-        {modelsError && <p role="alert" className="mt-1 text-xs text-[var(--mc-violation)]">{modelsError} You can type a model name instead.</p>}
+        {modelsError && <p role="alert" className="mt-1 text-xs text-[var(--mc-violation)]">{modelsError.replace(/\.?\s*$/, '.')} You can type a model name instead.</p>}
         {models && models.length === 0 && <p className="mt-1 text-xs text-[var(--mc-muted)]">The provider listed no chat models. Type a model name.</p>}
         <p className="mt-1 text-xs text-[var(--mc-muted)]">Tuned on gpt-5.4-mini; results vary on other models.</p>
 
@@ -266,7 +266,7 @@ function Help({ label, children }: { label: string; children: ReactNode }) {
         <CircleHelp className="h-4 w-4" />
       </button>
       {open && (
-        <div role="dialog" aria-label={label} className="absolute left-0 top-6 z-20 w-72 rounded-lg border border-[var(--mc-line)] bg-[var(--mc-surface)] p-3 text-xs shadow-lg sm:w-96">
+        <div role="dialog" aria-label={label} className="fixed inset-x-4 z-20 mt-2 rounded-lg border border-[var(--mc-line)] bg-[var(--mc-surface)] p-3 text-xs shadow-lg sm:absolute sm:inset-x-auto sm:left-0 sm:top-6 sm:mt-0 sm:w-96">
           {children}
           <button className="mt-2 underline" onClick={() => setOpen(false)}>Close</button>
         </div>

@@ -6,6 +6,7 @@ import logging
 import time
 from collections.abc import Callable
 from pathlib import Path
+from urllib.parse import urlparse
 
 import httpx2 as httpx
 
@@ -99,9 +100,19 @@ def _cache_put(k: str, raw: str) -> None:
             f.write(json.dumps({"k": k, "raw": raw}, ensure_ascii=False) + "\n")
 
 
-def _body(model: str, messages: list[dict]) -> dict:
-    return {"model": model, "temperature": 0, "max_tokens": 250, "response_format": {"type": "json_object"},
-            "messages": messages}
+SERVER_MAX_TOKENS = 250
+VISITOR_MAX_TOKENS = 800  # a cap, not a cost: models that do not think stop far earlier; thinking models need room
+GEMINI_HOST = "generativelanguage.googleapis.com"  # its OpenAI-compatible docs allow reasoning_effort "low"
+
+
+def _body(model: str, messages: list[dict], creds: Creds | None = None) -> dict:
+    body = {"model": model, "temperature": 0, "max_tokens": SERVER_MAX_TOKENS,
+            "response_format": {"type": "json_object"}, "messages": messages}
+    if creds is not None:
+        body["max_tokens"] = VISITOR_MAX_TOKENS
+        if (urlparse(creds.base_url).hostname or "").lower() == GEMINI_HOST:
+            body["reasoning_effort"] = "low"
+    return body
 
 
 async def _post_server(client: httpx.AsyncClient, body: dict) -> dict:
@@ -123,7 +134,7 @@ async def _post_server(client: httpx.AsyncClient, body: dict) -> dict:
 async def _post_visitor(client: httpx.AsyncClient, creds: Creds, body: dict) -> dict:
     """The visitor's provider through the guarded call. Newer OpenAI models want max_completion_tokens and no
     temperature: the request settings are adapted once for each, driven by the provider's own error text."""
-    for _ in range(3):
+    for _ in range(4):
         try:
             return json.loads(await safe_http.request(client, creds.base_url, "/chat/completions", creds.llm_key,
                                                       json=body, timeout=LATE_TIMEOUT_S))
@@ -133,6 +144,8 @@ async def _post_visitor(client: httpx.AsyncClient, creds: Creds, body: dict) -> 
                 body = {**{k: v for k, v in body.items() if k != "max_tokens"}, "max_completion_tokens": body["max_tokens"]}
             elif e.status == 400 and "temperature" in d and "temperature" in body:
                 body = {k: v for k, v in body.items() if k != "temperature"}
+            elif e.status == 400 and "reasoning" in d and "reasoning_effort" in body:
+                body = {k: v for k, v in body.items() if k != "reasoning_effort"}
             else:
                 raise
     raise safe_http.ProviderError("The provider rejected the request settings.", 400)
@@ -140,7 +153,7 @@ async def _post_visitor(client: httpx.AsyncClient, creds: Creds, body: dict) -> 
 
 async def chat(client: httpx.AsyncClient, model: str, messages: list[dict], creds: Creds | None) -> tuple[str, int]:
     """One chat completion -> (reply text, total tokens as reported). Visitor creds use the guarded path."""
-    body = _body(model, messages)
+    body = _body(model, messages, creds)
     j = await (_post_visitor(client, creds, body) if creds else _post_server(client, body))
     u = j.get("usage") or {}
     total = int(u.get("total_tokens") or 0)
@@ -157,6 +170,8 @@ _ERRORS = (TimeoutError, httpx.HTTPError, KeyError, IndexError, ValueError, Type
 def plain_error(e: BaseException) -> str:
     """Short plain-language reason for the UI; never contains a key."""
     if isinstance(e, safe_http.ProviderError):
+        if e.status == 404:  # a chat request only: the model list already loaded, so the model is the problem
+            return "This model is not available. Pick another model."
         return e.message_user
     if isinstance(e, UnsafeUrl):
         return str(e)

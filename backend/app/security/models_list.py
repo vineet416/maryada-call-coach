@@ -5,6 +5,10 @@ NON_CHAT = ("embed", "whisper", "tts", "speech", "audio", "transcribe", "dall-e"
             "moderation", "rerank", "guard", "realtime", "vision-preview", "aqa", "babbage", "davinci", "playai",
             "orpheus", "sora", "video", "ocr", "diffusion")
 
+# Listed by the provider but answered "404" to a chat request when probed with a real key on 2026-11-01 (retired).
+# Keep this short; add an id only after a probe shows it fails.
+DENY_MODELS = frozenset({"gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.5-pro"})
+
 
 def _is_chat(model_id: str, entry: dict) -> bool:
     low = model_id.lower()
@@ -38,6 +42,6 @@ def clean_models(raw: bytes | str | dict) -> list[str]:
         if not isinstance(mid, str) or not mid:
             continue
         mid = mid.removeprefix("models/")
-        if _is_chat(mid, e):
+        if mid not in DENY_MODELS and _is_chat(mid, e):
             ids.add(mid)
     return sorted(ids, key=str.lower)

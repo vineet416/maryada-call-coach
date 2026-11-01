@@ -36,10 +36,16 @@ def has_lexicon_keyword(ctx: CallContext, history: list[Turn], text: str) -> boo
     return any(t.speaker == "B" and _any(t.text, occasion) for t in history)
 
 
+FIRST_AGENT_TURNS = 2  # the first agent turns carry the R2 identification and the G1 greeting: always reviewed
+
+
 def should_skip(ctx: CallContext, history: list[Turn], text: str, fast: list[Finding]) -> bool:
-    """Skip the LLM review of short agent text only when ALL hold: fewer words than SKIP_LLM_MAX_WORDS, the fast
-    prefilter and gates found nothing (good practice does not count), and no lexicon / sensitive-occasion keyword
-    (see has_lexicon_keyword). The caller logs a skip as skipped, never as a clean review."""
+    """Skip the LLM review of short agent text only when ALL hold: it is not one of the first FIRST_AGENT_TURNS agent
+    turns of the call, fewer words than SKIP_LLM_MAX_WORDS, the fast prefilter and gates found nothing (good practice
+    does not count), and no lexicon / sensitive-occasion keyword (see has_lexicon_keyword). The caller logs a skip as
+    skipped, never as a clean review."""
+    if sum(1 for t in history if t.speaker == "A") < FIRST_AGENT_TURNS:
+        return False
     return (len(text.split()) < settings.skip_llm_max_words
             and not any(f.kind != "good_practice" for f in fast)
             and not has_lexicon_keyword(ctx, history, text))
