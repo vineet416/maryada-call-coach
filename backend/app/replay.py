@@ -5,6 +5,7 @@ import json
 from collections.abc import Callable
 from pathlib import Path
 
+from . import schedule as clock_rules
 from .config import settings
 
 
@@ -55,42 +56,20 @@ def schedule(events: list[dict]) -> list[tuple[float, dict]]:
     return res
 
 
-COACH_GAP_MS = 300  # the pause after a coach clip when the call is held for it
-
-
-def retime(events: list[dict], turn_starts: dict[int, int], hold: bool = False) -> list[dict]:
-    """Put a recording on the natural call clock. A turn starts at its audio offset (`turn_starts`, ms), and every
-    event keeps its recorded lag after its own turn's start, so the transcript and checks arrive as late as they did
-    in the recorded run while the call audio never waits for them. With `hold` the call pauses while a coach clip
-    plays: everything after the clip moves later by its length. Envelopes are re-sequenced in time order."""
-    out: list[dict] = []
-    rec_start = nat_start = 0
-    in_turn = False
-    for e in copy.deepcopy(events):
-        if e["type"] == "turn.started":
-            idx = e["data"]["turn_idx"]
-            rec_start, nat_start, in_turn = e["t_ms"], turn_starts.get(idx, e["t_ms"]), True
-        e["t_ms"] = nat_start + e["t_ms"] - rec_start if in_turn else e["t_ms"]
-        out.append(e)
-    out.sort(key=lambda e: e["t_ms"])  # stable: equal times keep the recorded order
-    if hold:  # in call time order: everything after a coach clip moves later by the clip's length
-        shift = 0
-        for e in out:
-            e["t_ms"] += shift
-            if e["type"] == "coach.speak":
-                shift += e["data"].get("duration_ms", 0) + COACH_GAP_MS
-    for n, e in enumerate(out, 1):
-        e["seq"] = n
-    return out
+def retime(events: list[dict], turns: list[dict], hold: bool = False) -> list[dict]:
+    """The recorded stream on the call clock (rules in schedule.py): same envelopes, new times, re-sequenced in time order."""
+    return clock_rules.plan(events, turns, hold).events
 
 
 async def play(events: list[dict], emit: Callable[[dict], None], pace: float | None = None,
-               turn_starts: dict[int, int] | None = None, hold: bool = False) -> None:
-    """Re-emit the recorded envelopes on the natural call clock (see retime), scaled by PACE."""
+               turns: list[dict] | None = None, hold: bool = False) -> clock_rules.Plan | None:
+    """Re-emit the recorded envelopes on the call clock (see schedule.plan), scaled by PACE."""
     pace = settings.pace if pace is None else pace
     events = as_replay(events)
-    if turn_starts is not None:
-        events = retime(events, turn_starts, hold)
+    planned = None
+    if turns is not None:
+        planned = clock_rules.plan(events, turns, hold)
+        events = planned.events
         for e in events:
             e["t_ms"] = max(0, e["t_ms"])  # already due: send at once
     loop = asyncio.get_running_loop()
@@ -100,3 +79,4 @@ async def play(events: list[dict], emit: Callable[[dict], None], pace: float | N
         if (wait := t0 + due - loop.time()) > 0:
             await asyncio.sleep(wait)
         emit(e)
+    return planned

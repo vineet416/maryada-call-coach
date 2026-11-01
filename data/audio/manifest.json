@@ -6,7 +6,7 @@
     "speaker": "A",
     "wav8k": "c01/1.wav",
     "mp3": "c01/1.mp3",
-    "duration_ms": 2560,
+    "duration_ms": 2500,
     "offset_ms": 300
    },
    {
@@ -14,56 +14,56 @@
     "speaker": "B",
     "wav8k": "c01/2.wav",
     "mp3": "c01/2.mp3",
-    "duration_ms": 1600,
-    "offset_ms": 3500
+    "duration_ms": 950,
+    "offset_ms": 4115
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c01/3.wav",
     "mp3": "c01/3.mp3",
-    "duration_ms": 5760,
-    "offset_ms": 5558
+    "duration_ms": 5750,
+    "offset_ms": 6129
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c01/4.wav",
     "mp3": "c01/4.mp3",
-    "duration_ms": 2340,
-    "offset_ms": 11668
+    "duration_ms": 2220,
+    "offset_ms": 12779
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c01/5.wav",
     "mp3": "c01/5.mp3",
-    "duration_ms": 9200,
-    "offset_ms": 14464
+    "duration_ms": 9110,
+    "offset_ms": 16050
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c01/6.wav",
     "mp3": "c01/6.mp3",
-    "duration_ms": 7250,
-    "offset_ms": 24332
+    "duration_ms": 7080,
+    "offset_ms": 26513
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c01/7.wav",
     "mp3": "c01/7.mp3",
-    "duration_ms": 7600,
-    "offset_ms": 31932
+    "duration_ms": 7580,
+    "offset_ms": 34494
    },
    {
     "idx": 8,
     "speaker": "B",
     "wav8k": "c01/8.wav",
     "mp3": "c01/8.mp3",
-    "duration_ms": 5190,
-    "offset_ms": 39990
+    "duration_ms": 5100,
+    "offset_ms": 43169
    },
    {
     "idx": 9,
@@ -71,11 +71,11 @@
     "wav8k": "c01/9.wav",
     "mp3": "c01/9.mp3",
     "duration_ms": 7760,
-    "offset_ms": 45583
+    "offset_ms": 49255
    }
   ],
   "call_mp3": "c01/call.mp3",
-  "duration_ms": 53343
+  "duration_ms": 57015
  },
  "c02": {
   "turns": [
@@ -84,7 +84,7 @@
     "speaker": "A",
     "wav8k": "c02/1.wav",
     "mp3": "c02/1.mp3",
-    "duration_ms": 1230,
+    "duration_ms": 1140,
     "offset_ms": 300
    },
    {
@@ -92,84 +92,84 @@
     "speaker": "B",
     "wav8k": "c02/2.wav",
     "mp3": "c02/2.mp3",
-    "duration_ms": 1179,
-    "offset_ms": 2028
+    "duration_ms": 1090,
+    "offset_ms": 2551
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c02/3.wav",
     "mp3": "c02/3.mp3",
-    "duration_ms": 7360,
-    "offset_ms": 3696
+    "duration_ms": 7320,
+    "offset_ms": 4739
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c02/4.wav",
     "mp3": "c02/4.mp3",
-    "duration_ms": 1516,
-    "offset_ms": 11503
+    "duration_ms": 1370,
+    "offset_ms": 13097
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c02/5.wav",
     "mp3": "c02/5.mp3",
-    "duration_ms": 7580,
-    "offset_ms": 13702
+    "duration_ms": 7480,
+    "offset_ms": 15863
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c02/6.wav",
     "mp3": "c02/6.mp3",
-    "duration_ms": 6850,
-    "offset_ms": 21920
+    "duration_ms": 6760,
+    "offset_ms": 24674
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c02/7.wav",
     "mp3": "c02/7.mp3",
-    "duration_ms": 8970,
-    "offset_ms": 29224
+    "duration_ms": 8840,
+    "offset_ms": 32482
    },
    {
     "idx": 8,
     "speaker": "B",
     "wav8k": "c02/8.wav",
     "mp3": "c02/8.mp3",
-    "duration_ms": 3760,
-    "offset_ms": 38887
+    "duration_ms": 3670,
+    "offset_ms": 42712
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c02/9.wav",
     "mp3": "c02/9.mp3",
-    "duration_ms": 5530,
-    "offset_ms": 43230
+    "duration_ms": 5390,
+    "offset_ms": 47615
    },
    {
     "idx": 10,
     "speaker": "B",
     "wav8k": "c02/10.wav",
     "mp3": "c02/10.mp3",
-    "duration_ms": 2060,
-    "offset_ms": 49207
+    "duration_ms": 1870,
+    "offset_ms": 54044
    },
    {
     "idx": 11,
     "speaker": "A",
     "wav8k": "c02/11.wav",
     "mp3": "c02/11.mp3",
-    "duration_ms": 8560,
-    "offset_ms": 51870
+    "duration_ms": 8400,
+    "offset_ms": 57176
    }
   ],
   "call_mp3": "c02/call.mp3",
-  "duration_ms": 60430
+  "duration_ms": 65576
  },
  "c03": {
   "turns": [
@@ -178,7 +178,7 @@
     "speaker": "A",
     "wav8k": "c03/1.wav",
     "mp3": "c03/1.mp3",
-    "duration_ms": 2160,
+    "duration_ms": 2080,
     "offset_ms": 300
    },
    {
@@ -186,40 +186,40 @@
     "speaker": "B",
     "wav8k": "c03/2.wav",
     "mp3": "c03/2.mp3",
-    "duration_ms": 1263,
-    "offset_ms": 2887
+    "duration_ms": 1180,
+    "offset_ms": 3410
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c03/3.wav",
     "mp3": "c03/3.mp3",
-    "duration_ms": 5920,
-    "offset_ms": 4589
+    "duration_ms": 5890,
+    "offset_ms": 5627
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c03/4.wav",
     "mp3": "c03/4.mp3",
-    "duration_ms": 1680,
-    "offset_ms": 11011
+    "duration_ms": 1570,
+    "offset_ms": 12645
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c03/5.wav",
     "mp3": "c03/5.mp3",
-    "duration_ms": 8080,
-    "offset_ms": 13256
+    "duration_ms": 8040,
+    "offset_ms": 15432
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c03/6.wav",
     "mp3": "c03/6.mp3",
-    "duration_ms": 8000,
-    "offset_ms": 21912
+    "duration_ms": 7980,
+    "offset_ms": 24705
    },
    {
     "idx": 7,
@@ -227,15 +227,15 @@
     "wav8k": "c03/7.wav",
     "mp3": "c03/7.mp3",
     "duration_ms": 9440,
-    "offset_ms": 30586
+    "offset_ms": 34058
    },
    {
     "idx": 8,
     "speaker": "B",
     "wav8k": "c03/8.wav",
     "mp3": "c03/8.mp3",
-    "duration_ms": 5610,
-    "offset_ms": 40623
+    "duration_ms": 5530,
+    "offset_ms": 44791
    },
    {
     "idx": 9,
@@ -243,27 +243,27 @@
     "wav8k": "c03/9.wav",
     "mp3": "c03/9.mp3",
     "duration_ms": 9840,
-    "offset_ms": 46610
+    "offset_ms": 51270
    },
    {
     "idx": 10,
     "speaker": "B",
     "wav8k": "c03/10.wav",
     "mp3": "c03/10.mp3",
-    "duration_ms": 4020,
-    "offset_ms": 56851
+    "duration_ms": 3900,
+    "offset_ms": 62103
    },
    {
     "idx": 11,
     "speaker": "A",
     "wav8k": "c03/11.wav",
     "mp3": "c03/11.mp3",
-    "duration_ms": 2880,
-    "offset_ms": 61292
+    "duration_ms": 2730,
+    "offset_ms": 67005
    }
   ],
   "call_mp3": "c03/call.mp3",
-  "duration_ms": 64172
+  "duration_ms": 69735
  },
  "c04": {
   "turns": [
@@ -272,7 +272,7 @@
     "speaker": "A",
     "wav8k": "c04/1.wav",
     "mp3": "c04/1.mp3",
-    "duration_ms": 3760,
+    "duration_ms": 3640,
     "offset_ms": 300
    },
    {
@@ -280,68 +280,68 @@
     "speaker": "B",
     "wav8k": "c04/2.wav",
     "mp3": "c04/2.mp3",
-    "duration_ms": 790,
-    "offset_ms": 4440
+    "duration_ms": 620,
+    "offset_ms": 4883
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c04/3.wav",
     "mp3": "c04/3.mp3",
-    "duration_ms": 4560,
-    "offset_ms": 5781
+    "duration_ms": 4440,
+    "offset_ms": 6690
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c04/4.wav",
     "mp3": "c04/4.mp3",
-    "duration_ms": 2863,
-    "offset_ms": 10720
+    "duration_ms": 2820,
+    "offset_ms": 12072
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c04/5.wav",
     "mp3": "c04/5.mp3",
-    "duration_ms": 8790,
-    "offset_ms": 14105
+    "duration_ms": 8670,
+    "offset_ms": 16038
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c04/6.wav",
     "mp3": "c04/6.mp3",
-    "duration_ms": 5053,
-    "offset_ms": 23581
+    "duration_ms": 4930,
+    "offset_ms": 26087
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c04/7.wav",
     "mp3": "c04/7.mp3",
-    "duration_ms": 8870,
-    "offset_ms": 29289
+    "duration_ms": 8650,
+    "offset_ms": 32352
    },
    {
     "idx": 8,
     "speaker": "B",
     "wav8k": "c04/8.wav",
     "mp3": "c04/8.mp3",
-    "duration_ms": 3705,
-    "offset_ms": 38805
+    "duration_ms": 3610,
+    "offset_ms": 42324
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c04/9.wav",
     "mp3": "c04/9.mp3",
-    "duration_ms": 7840,
-    "offset_ms": 43179
+    "duration_ms": 7680,
+    "offset_ms": 47290
    }
   ],
   "call_mp3": "c04/call.mp3",
-  "duration_ms": 51019
+  "duration_ms": 54970
  },
  "c05": {
   "turns": [
@@ -350,7 +350,7 @@
     "speaker": "A",
     "wav8k": "c05/1.wav",
     "mp3": "c05/1.mp3",
-    "duration_ms": 1570,
+    "duration_ms": 1480,
     "offset_ms": 300
    },
    {
@@ -358,16 +358,16 @@
     "speaker": "B",
     "wav8k": "c05/2.wav",
     "mp3": "c05/2.mp3",
-    "duration_ms": 2947,
-    "offset_ms": 2314
+    "duration_ms": 2880,
+    "offset_ms": 2814
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c05/3.wav",
     "mp3": "c05/3.mp3",
-    "duration_ms": 7010,
-    "offset_ms": 5958
+    "duration_ms": 6800,
+    "offset_ms": 7090
    },
    {
     "idx": 4,
@@ -375,51 +375,51 @@
     "wav8k": "c05/4.wav",
     "mp3": "c05/4.mp3",
     "duration_ms": 610,
-    "offset_ms": 13592
+    "offset_ms": 15131
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c05/5.wav",
     "mp3": "c05/5.mp3",
-    "duration_ms": 9280,
-    "offset_ms": 14707
+    "duration_ms": 9160,
+    "offset_ms": 16812
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c05/6.wav",
     "mp3": "c05/6.mp3",
-    "duration_ms": 6316,
-    "offset_ms": 24474
+    "duration_ms": 6300,
+    "offset_ms": 27068
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c05/7.wav",
     "mp3": "c05/7.mp3",
-    "duration_ms": 11280,
-    "offset_ms": 31348
+    "duration_ms": 11190,
+    "offset_ms": 34565
    },
    {
     "idx": 8,
     "speaker": "B",
     "wav8k": "c05/8.wav",
     "mp3": "c05/8.mp3",
-    "duration_ms": 2700,
-    "offset_ms": 43096
+    "duration_ms": 2500,
+    "offset_ms": 46823
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c05/9.wav",
     "mp3": "c05/9.mp3",
-    "duration_ms": 5060,
-    "offset_ms": 46336
+    "duration_ms": 4930,
+    "offset_ms": 50494
    }
   ],
   "call_mp3": "c05/call.mp3",
-  "duration_ms": 51396
+  "duration_ms": 55424
  },
  "c06": {
   "turns": [
@@ -428,7 +428,7 @@
     "speaker": "A",
     "wav8k": "c06/1.wav",
     "mp3": "c06/1.mp3",
-    "duration_ms": 2080,
+    "duration_ms": 1960,
     "offset_ms": 300
    },
    {
@@ -436,84 +436,84 @@
     "speaker": "B",
     "wav8k": "c06/2.wav",
     "mp3": "c06/2.mp3",
-    "duration_ms": 2060,
-    "offset_ms": 3002
+    "duration_ms": 1880,
+    "offset_ms": 3548
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c06/3.wav",
     "mp3": "c06/3.mp3",
-    "duration_ms": 5740,
-    "offset_ms": 5476
+    "duration_ms": 5620,
+    "offset_ms": 6419
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c06/4.wav",
     "mp3": "c06/4.mp3",
-    "duration_ms": 1750,
-    "offset_ms": 11805
+    "duration_ms": 1670,
+    "offset_ms": 13280
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c06/5.wav",
     "mp3": "c06/5.mp3",
-    "duration_ms": 8640,
-    "offset_ms": 14068
+    "duration_ms": 8610,
+    "offset_ms": 16083
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c06/6.wav",
     "mp3": "c06/6.mp3",
-    "duration_ms": 9500,
-    "offset_ms": 23227
+    "duration_ms": 9380,
+    "offset_ms": 25844
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c06/7.wav",
     "mp3": "c06/7.mp3",
-    "duration_ms": 17120,
-    "offset_ms": 33405
+    "duration_ms": 17030,
+    "offset_ms": 36593
    },
    {
     "idx": 8,
     "speaker": "B",
     "wav8k": "c06/8.wav",
     "mp3": "c06/8.mp3",
-    "duration_ms": 7495,
-    "offset_ms": 51018
+    "duration_ms": 7390,
+    "offset_ms": 54728
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c06/9.wav",
     "mp3": "c06/9.mp3",
-    "duration_ms": 9440,
-    "offset_ms": 59118
+    "duration_ms": 9410,
+    "offset_ms": 63382
    },
    {
     "idx": 10,
     "speaker": "B",
     "wav8k": "c06/10.wav",
     "mp3": "c06/10.mp3",
-    "duration_ms": 6290,
-    "offset_ms": 69105
+    "duration_ms": 6180,
+    "offset_ms": 73973
    },
    {
     "idx": 11,
     "speaker": "A",
     "wav8k": "c06/11.wav",
     "mp3": "c06/11.mp3",
-    "duration_ms": 10720,
-    "offset_ms": 75999
+    "duration_ms": 10600,
+    "offset_ms": 81416
    }
   ],
   "call_mp3": "c06/call.mp3",
-  "duration_ms": 86719
+  "duration_ms": 92016
  },
  "c07": {
   "turns": [
@@ -522,7 +522,7 @@
     "speaker": "A",
     "wav8k": "c07/1.wav",
     "mp3": "c07/1.mp3",
-    "duration_ms": 2320,
+    "duration_ms": 2290,
     "offset_ms": 300
    },
    {
@@ -530,24 +530,24 @@
     "speaker": "B",
     "wav8k": "c07/2.wav",
     "mp3": "c07/2.mp3",
-    "duration_ms": 1684,
-    "offset_ms": 3069
+    "duration_ms": 1640,
+    "offset_ms": 3631
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c07/3.wav",
     "mp3": "c07/3.mp3",
-    "duration_ms": 5120,
-    "offset_ms": 5209
+    "duration_ms": 5110,
+    "offset_ms": 6333
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c07/4.wav",
     "mp3": "c07/4.mp3",
-    "duration_ms": 1250,
-    "offset_ms": 10939
+    "duration_ms": 1160,
+    "offset_ms": 12715
    },
    {
     "idx": 5,
@@ -555,23 +555,23 @@
     "wav8k": "c07/5.wav",
     "mp3": "c07/5.mp3",
     "duration_ms": 9520,
-    "offset_ms": 12882
+    "offset_ms": 15275
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c07/6.wav",
     "mp3": "c07/6.mp3",
-    "duration_ms": 5558,
-    "offset_ms": 22909
+    "duration_ms": 5480,
+    "offset_ms": 25929
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c07/7.wav",
     "mp3": "c07/7.mp3",
-    "duration_ms": 10800,
-    "offset_ms": 28996,
+    "duration_ms": 10790,
+    "offset_ms": 32575,
     "violation_gain_db": 3.4,
     "limiter_reduction_db": 3.36
    },
@@ -580,8 +580,8 @@
     "speaker": "B",
     "wav8k": "c07/8.wav",
     "mp3": "c07/8.mp3",
-    "duration_ms": 5137,
-    "offset_ms": 40161
+    "duration_ms": 5117,
+    "offset_ms": 44287
    },
    {
     "idx": 9,
@@ -589,7 +589,7 @@
     "wav8k": "c07/9.wav",
     "mp3": "c07/9.mp3",
     "duration_ms": 6080,
-    "offset_ms": 45970,
+    "offset_ms": 50777,
     "violation_gain_db": 3.5,
     "limiter_reduction_db": 0.0
    },
@@ -599,19 +599,19 @@
     "wav8k": "c07/10.wav",
     "mp3": "c07/10.mp3",
     "duration_ms": 6063,
-    "offset_ms": 52457
+    "offset_ms": 57858
    },
    {
     "idx": 11,
     "speaker": "A",
     "wav8k": "c07/11.wav",
     "mp3": "c07/11.mp3",
-    "duration_ms": 5520,
-    "offset_ms": 59103
+    "duration_ms": 5510,
+    "offset_ms": 65181
    }
   ],
   "call_mp3": "c07/call.mp3",
-  "duration_ms": 64623
+  "duration_ms": 70691
  },
  "c08": {
   "turns": [
@@ -620,7 +620,7 @@
     "speaker": "A",
     "wav8k": "c08/1.wav",
     "mp3": "c08/1.mp3",
-    "duration_ms": 3730,
+    "duration_ms": 3620,
     "offset_ms": 300
    },
    {
@@ -628,48 +628,48 @@
     "speaker": "B",
     "wav8k": "c08/2.wav",
     "mp3": "c08/2.mp3",
-    "duration_ms": 2274,
-    "offset_ms": 4662
+    "duration_ms": 2270,
+    "offset_ms": 5223
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c08/3.wav",
     "mp3": "c08/3.mp3",
-    "duration_ms": 4280,
-    "offset_ms": 7568
+    "duration_ms": 4120,
+    "offset_ms": 8806
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c08/4.wav",
     "mp3": "c08/4.mp3",
-    "duration_ms": 1080,
-    "offset_ms": 12384
+    "duration_ms": 1000,
+    "offset_ms": 14092
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c08/5.wav",
     "mp3": "c08/5.mp3",
-    "duration_ms": 7190,
-    "offset_ms": 14097
+    "duration_ms": 7060,
+    "offset_ms": 16396
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c08/6.wav",
     "mp3": "c08/6.mp3",
-    "duration_ms": 4960,
-    "offset_ms": 21742
+    "duration_ms": 4810,
+    "offset_ms": 24507
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c08/7.wav",
     "mp3": "c08/7.mp3",
-    "duration_ms": 7760,
-    "offset_ms": 27093,
+    "duration_ms": 7690,
+    "offset_ms": 30276,
     "violation_gain_db": 3.4,
     "limiter_reduction_db": 2.08
    },
@@ -678,16 +678,16 @@
     "speaker": "B",
     "wav8k": "c08/8.wav",
     "mp3": "c08/8.mp3",
-    "duration_ms": 3760,
-    "offset_ms": 35358
+    "duration_ms": 3610,
+    "offset_ms": 39108
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c08/9.wav",
     "mp3": "c08/9.mp3",
-    "duration_ms": 7360,
-    "offset_ms": 39683,
+    "duration_ms": 7340,
+    "offset_ms": 43925,
     "violation_gain_db": 3.5,
     "limiter_reduction_db": 0.0
    },
@@ -696,20 +696,20 @@
     "speaker": "B",
     "wav8k": "c08/10.wav",
     "mp3": "c08/10.mp3",
-    "duration_ms": 3450,
-    "offset_ms": 47739
+    "duration_ms": 3330,
+    "offset_ms": 52689
    },
    {
     "idx": 11,
     "speaker": "A",
     "wav8k": "c08/11.wav",
     "mp3": "c08/11.mp3",
-    "duration_ms": 4720,
-    "offset_ms": 51763
+    "duration_ms": 4680,
+    "offset_ms": 57249
    }
   ],
   "call_mp3": "c08/call.mp3",
-  "duration_ms": 56483
+  "duration_ms": 61929
  },
  "c09": {
   "turns": [
@@ -718,7 +718,7 @@
     "speaker": "A",
     "wav8k": "c09/1.wav",
     "mp3": "c09/1.mp3",
-    "duration_ms": 2160,
+    "duration_ms": 2090,
     "offset_ms": 300
    },
    {
@@ -726,48 +726,48 @@
     "speaker": "B",
     "wav8k": "c09/2.wav",
     "mp3": "c09/2.mp3",
-    "duration_ms": 1432,
-    "offset_ms": 2898
+    "duration_ms": 1360,
+    "offset_ms": 3416
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c09/3.wav",
     "mp3": "c09/3.mp3",
-    "duration_ms": 7200,
-    "offset_ms": 4779
+    "duration_ms": 7170,
+    "offset_ms": 5827
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c09/4.wav",
     "mp3": "c09/4.mp3",
-    "duration_ms": 1680,
-    "offset_ms": 12472
+    "duration_ms": 1570,
+    "offset_ms": 14111
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c09/5.wav",
     "mp3": "c09/5.mp3",
-    "duration_ms": 7360,
-    "offset_ms": 14661
+    "duration_ms": 7280,
+    "offset_ms": 16808
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c09/6.wav",
     "mp3": "c09/6.mp3",
-    "duration_ms": 4968,
-    "offset_ms": 22662
+    "duration_ms": 4880,
+    "offset_ms": 25404
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c09/7.wav",
     "mp3": "c09/7.mp3",
-    "duration_ms": 8640,
-    "offset_ms": 28001,
+    "duration_ms": 8590,
+    "offset_ms": 31224,
     "violation_gain_db": 3.5,
     "limiter_reduction_db": 0.0
    },
@@ -776,16 +776,16 @@
     "speaker": "B",
     "wav8k": "c09/8.wav",
     "mp3": "c09/8.mp3",
-    "duration_ms": 3770,
-    "offset_ms": 37195
+    "duration_ms": 3680,
+    "offset_ms": 41005
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c09/9.wav",
     "mp3": "c09/9.mp3",
-    "duration_ms": 3600,
-    "offset_ms": 41536,
+    "duration_ms": 3530,
+    "offset_ms": 45901,
     "violation_gain_db": 3.5,
     "limiter_reduction_db": 0.0
    },
@@ -794,20 +794,20 @@
     "speaker": "B",
     "wav8k": "c09/10.wav",
     "mp3": "c09/10.mp3",
-    "duration_ms": 4820,
-    "offset_ms": 45695
+    "duration_ms": 4700,
+    "offset_ms": 50659
    },
    {
     "idx": 11,
     "speaker": "A",
     "wav8k": "c09/11.wav",
     "mp3": "c09/11.mp3",
-    "duration_ms": 4160,
-    "offset_ms": 51121
+    "duration_ms": 4070,
+    "offset_ms": 56635
    }
   ],
   "call_mp3": "c09/call.mp3",
-  "duration_ms": 55281
+  "duration_ms": 60705
  },
  "c10": {
   "turns": [
@@ -816,7 +816,7 @@
     "speaker": "A",
     "wav8k": "c10/1.wav",
     "mp3": "c10/1.mp3",
-    "duration_ms": 1440,
+    "duration_ms": 1420,
     "offset_ms": 300
    },
    {
@@ -824,8 +824,8 @@
     "speaker": "B",
     "wav8k": "c10/2.wav",
     "mp3": "c10/2.mp3",
-    "duration_ms": 1179,
-    "offset_ms": 2241
+    "duration_ms": 1170,
+    "offset_ms": 2846
    },
    {
     "idx": 3,
@@ -833,31 +833,31 @@
     "wav8k": "c10/3.wav",
     "mp3": "c10/3.mp3",
     "duration_ms": 7120,
-    "offset_ms": 3854
+    "offset_ms": 5046
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c10/4.wav",
     "mp3": "c10/4.mp3",
-    "duration_ms": 1250,
-    "offset_ms": 11530
+    "duration_ms": 1160,
+    "offset_ms": 13410
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c10/5.wav",
     "mp3": "c10/5.mp3",
-    "duration_ms": 6880,
-    "offset_ms": 13263
+    "duration_ms": 6840,
+    "offset_ms": 15670
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c10/6.wav",
     "mp3": "c10/6.mp3",
-    "duration_ms": 5221,
-    "offset_ms": 20683
+    "duration_ms": 5180,
+    "offset_ms": 23681
    },
    {
     "idx": 7,
@@ -865,23 +865,23 @@
     "wav8k": "c10/7.wav",
     "mp3": "c10/7.mp3",
     "duration_ms": 8560,
-    "offset_ms": 26260
+    "offset_ms": 29779
    },
    {
     "idx": 8,
     "speaker": "B",
     "wav8k": "c10/8.wav",
     "mp3": "c10/8.mp3",
-    "duration_ms": 5979,
-    "offset_ms": 35376
+    "duration_ms": 5930,
+    "offset_ms": 39563
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c10/9.wav",
     "mp3": "c10/9.mp3",
-    "duration_ms": 5750,
-    "offset_ms": 41866,
+    "duration_ms": 5660,
+    "offset_ms": 46652,
     "violation_gain_db": 3.5,
     "limiter_reduction_db": 2.84
    },
@@ -891,19 +891,19 @@
     "wav8k": "c10/10.wav",
     "mp3": "c10/10.mp3",
     "duration_ms": 6400,
-    "offset_ms": 48224
+    "offset_ms": 53580
    },
    {
     "idx": 11,
     "speaker": "A",
     "wav8k": "c10/11.wav",
     "mp3": "c10/11.mp3",
-    "duration_ms": 4800,
-    "offset_ms": 55100
+    "duration_ms": 4790,
+    "offset_ms": 61080
    }
   ],
   "call_mp3": "c10/call.mp3",
-  "duration_ms": 59900
+  "duration_ms": 65870
  },
  "c11": {
   "turns": [
@@ -912,7 +912,7 @@
     "speaker": "A",
     "wav8k": "c11/1.wav",
     "mp3": "c11/1.mp3",
-    "duration_ms": 1890,
+    "duration_ms": 1750,
     "offset_ms": 300
    },
    {
@@ -920,48 +920,48 @@
     "speaker": "B",
     "wav8k": "c11/2.wav",
     "mp3": "c11/2.mp3",
-    "duration_ms": 2140,
-    "offset_ms": 2653
+    "duration_ms": 1980,
+    "offset_ms": 3112
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c11/3.wav",
     "mp3": "c11/3.mp3",
-    "duration_ms": 5680,
-    "offset_ms": 5338
+    "duration_ms": 5500,
+    "offset_ms": 6271
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c11/4.wav",
     "mp3": "c11/4.mp3",
-    "duration_ms": 1095,
-    "offset_ms": 11452
+    "duration_ms": 1050,
+    "offset_ms": 12792
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c11/5.wav",
     "mp3": "c11/5.mp3",
-    "duration_ms": 7660,
-    "offset_ms": 13120
+    "duration_ms": 7520,
+    "offset_ms": 15061
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c11/6.wav",
     "mp3": "c11/6.mp3",
-    "duration_ms": 6090,
-    "offset_ms": 21320
+    "duration_ms": 5960,
+    "offset_ms": 23753
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c11/7.wav",
     "mp3": "c11/7.mp3",
-    "duration_ms": 8080,
-    "offset_ms": 28053,
+    "duration_ms": 7930,
+    "offset_ms": 31032,
     "violation_gain_db": 3.3,
     "limiter_reduction_db": 0.0
    },
@@ -970,16 +970,16 @@
     "speaker": "B",
     "wav8k": "c11/8.wav",
     "mp3": "c11/8.mp3",
-    "duration_ms": 3500,
-    "offset_ms": 36819
+    "duration_ms": 3390,
+    "offset_ms": 40342
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c11/9.wav",
     "mp3": "c11/9.mp3",
-    "duration_ms": 4000,
-    "offset_ms": 40692,
+    "duration_ms": 3820,
+    "offset_ms": 44665,
     "violation_gain_db": 3.5,
     "limiter_reduction_db": 0.0
    },
@@ -988,20 +988,20 @@
     "speaker": "B",
     "wav8k": "c11/10.wav",
     "mp3": "c11/10.mp3",
-    "duration_ms": 7880,
-    "offset_ms": 45092
+    "duration_ms": 7780,
+    "offset_ms": 49456
    },
    {
     "idx": 11,
     "speaker": "A",
     "wav8k": "c11/11.wav",
     "mp3": "c11/11.mp3",
-    "duration_ms": 4560,
-    "offset_ms": 53325
+    "duration_ms": 4440,
+    "offset_ms": 58140
    }
   ],
   "call_mp3": "c11/call.mp3",
-  "duration_ms": 57885
+  "duration_ms": 62580
  },
  "c12": {
   "turns": [
@@ -1010,7 +1010,7 @@
     "speaker": "A",
     "wav8k": "c12/1.wav",
     "mp3": "c12/1.mp3",
-    "duration_ms": 2400,
+    "duration_ms": 2360,
     "offset_ms": 300
    },
    {
@@ -1018,40 +1018,40 @@
     "speaker": "B",
     "wav8k": "c12/2.wav",
     "mp3": "c12/2.mp3",
-    "duration_ms": 1170,
-    "offset_ms": 3180
+    "duration_ms": 1080,
+    "offset_ms": 3756
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c12/3.wav",
     "mp3": "c12/3.mp3",
-    "duration_ms": 5600,
-    "offset_ms": 4843
+    "duration_ms": 5520,
+    "offset_ms": 5941
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c12/4.wav",
     "mp3": "c12/4.mp3",
-    "duration_ms": 1080,
-    "offset_ms": 11108
+    "duration_ms": 950,
+    "offset_ms": 12830
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c12/5.wav",
     "mp3": "c12/5.mp3",
-    "duration_ms": 7840,
-    "offset_ms": 12540
+    "duration_ms": 7820,
+    "offset_ms": 14694
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c12/6.wav",
     "mp3": "c12/6.mp3",
-    "duration_ms": 5053,
-    "offset_ms": 20954
+    "duration_ms": 5000,
+    "offset_ms": 23743
    },
    {
     "idx": 7,
@@ -1059,7 +1059,7 @@
     "wav8k": "c12/7.wav",
     "mp3": "c12/7.mp3",
     "duration_ms": 12240,
-    "offset_ms": 26374,
+    "offset_ms": 29677,
     "violation_gain_db": 3.4,
     "limiter_reduction_db": 1.85
    },
@@ -1068,24 +1068,24 @@
     "speaker": "B",
     "wav8k": "c12/8.wav",
     "mp3": "c12/8.mp3",
-    "duration_ms": 4620,
-    "offset_ms": 39094
+    "duration_ms": 4510,
+    "offset_ms": 43053
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c12/9.wav",
     "mp3": "c12/9.mp3",
-    "duration_ms": 4280,
-    "offset_ms": 44211
+    "duration_ms": 4210,
+    "offset_ms": 48682
    },
    {
     "idx": 10,
     "speaker": "B",
     "wav8k": "c12/10.wav",
     "mp3": "c12/10.mp3",
-    "duration_ms": 4379,
-    "offset_ms": 48921
+    "duration_ms": 4360,
+    "offset_ms": 53907
    },
    {
     "idx": 11,
@@ -1093,11 +1093,11 @@
     "wav8k": "c12/11.wav",
     "mp3": "c12/11.mp3",
     "duration_ms": 3840,
-    "offset_ms": 53934
+    "offset_ms": 59572
    }
   ],
   "call_mp3": "c12/call.mp3",
-  "duration_ms": 57774
+  "duration_ms": 63412
  },
  "c13": {
   "turns": [
@@ -1106,7 +1106,7 @@
     "speaker": "A",
     "wav8k": "c13/1.wav",
     "mp3": "c13/1.mp3",
-    "duration_ms": 3520,
+    "duration_ms": 3370,
     "offset_ms": 300
    },
    {
@@ -1114,48 +1114,48 @@
     "speaker": "B",
     "wav8k": "c13/2.wav",
     "mp3": "c13/2.mp3",
-    "duration_ms": 1080,
-    "offset_ms": 4489
+    "duration_ms": 1000,
+    "offset_ms": 5026
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c13/3.wav",
     "mp3": "c13/3.mp3",
-    "duration_ms": 5760,
-    "offset_ms": 6091
+    "duration_ms": 5610,
+    "offset_ms": 7172
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c13/4.wav",
     "mp3": "c13/4.mp3",
-    "duration_ms": 1095,
-    "offset_ms": 12336
+    "duration_ms": 1050,
+    "offset_ms": 13874
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c13/5.wav",
     "mp3": "c13/5.mp3",
-    "duration_ms": 5810,
-    "offset_ms": 13813
+    "duration_ms": 5660,
+    "offset_ms": 15870
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c13/6.wav",
     "mp3": "c13/6.mp3",
-    "duration_ms": 3790,
-    "offset_ms": 20148
+    "duration_ms": 3700,
+    "offset_ms": 22690
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c13/7.wav",
     "mp3": "c13/7.mp3",
-    "duration_ms": 9910,
-    "offset_ms": 24334,
+    "duration_ms": 9810,
+    "offset_ms": 27358,
     "violation_gain_db": 3.5,
     "limiter_reduction_db": 2.8
    },
@@ -1164,36 +1164,36 @@
     "speaker": "B",
     "wav8k": "c13/8.wav",
     "mp3": "c13/8.mp3",
-    "duration_ms": 3110,
-    "offset_ms": 34720
+    "duration_ms": 2970,
+    "offset_ms": 38238
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c13/9.wav",
     "mp3": "c13/9.mp3",
-    "duration_ms": 7810,
-    "offset_ms": 38214
+    "duration_ms": 7580,
+    "offset_ms": 42157
    },
    {
     "idx": 10,
     "speaker": "B",
     "wav8k": "c13/10.wav",
     "mp3": "c13/10.mp3",
-    "duration_ms": 4800,
-    "offset_ms": 46436
+    "duration_ms": 4710,
+    "offset_ms": 50726
    },
    {
     "idx": 11,
     "speaker": "A",
     "wav8k": "c13/11.wav",
     "mp3": "c13/11.mp3",
-    "duration_ms": 5840,
-    "offset_ms": 51687
+    "duration_ms": 5660,
+    "offset_ms": 56480
    }
   ],
   "call_mp3": "c13/call.mp3",
-  "duration_ms": 57527
+  "duration_ms": 62140
  },
  "c14": {
   "turns": [
@@ -1202,7 +1202,7 @@
     "speaker": "A",
     "wav8k": "c14/1.wav",
     "mp3": "c14/1.mp3",
-    "duration_ms": 3660,
+    "duration_ms": 3590,
     "offset_ms": 300
    },
    {
@@ -1210,48 +1210,48 @@
     "speaker": "B",
     "wav8k": "c14/2.wav",
     "mp3": "c14/2.mp3",
-    "duration_ms": 2340,
-    "offset_ms": 4548
+    "duration_ms": 2210,
+    "offset_ms": 5130
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c14/3.wav",
     "mp3": "c14/3.mp3",
-    "duration_ms": 4700,
-    "offset_ms": 7361
+    "duration_ms": 4560,
+    "offset_ms": 8416
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c14/4.wav",
     "mp3": "c14/4.mp3",
-    "duration_ms": 1120,
-    "offset_ms": 12517
+    "duration_ms": 1030,
+    "offset_ms": 14028
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c14/5.wav",
     "mp3": "c14/5.mp3",
-    "duration_ms": 6990,
-    "offset_ms": 14294
+    "duration_ms": 6850,
+    "offset_ms": 16397
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c14/6.wav",
     "mp3": "c14/6.mp3",
-    "duration_ms": 4420,
-    "offset_ms": 21704
+    "duration_ms": 4290,
+    "offset_ms": 24248
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c14/7.wav",
     "mp3": "c14/7.mp3",
-    "duration_ms": 9600,
-    "offset_ms": 26813,
+    "duration_ms": 9550,
+    "offset_ms": 29922,
     "violation_gain_db": 3.5,
     "limiter_reduction_db": 0.0
    },
@@ -1260,16 +1260,16 @@
     "speaker": "B",
     "wav8k": "c14/8.wav",
     "mp3": "c14/8.mp3",
-    "duration_ms": 5305,
-    "offset_ms": 36929
+    "duration_ms": 5285,
+    "offset_ms": 40619
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c14/9.wav",
     "mp3": "c14/9.mp3",
-    "duration_ms": 5470,
-    "offset_ms": 42650,
+    "duration_ms": 5380,
+    "offset_ms": 46934,
     "violation_gain_db": 3.3,
     "limiter_reduction_db": 0.0
    },
@@ -1278,20 +1278,20 @@
     "speaker": "B",
     "wav8k": "c14/10.wav",
     "mp3": "c14/10.mp3",
-    "duration_ms": 3820,
-    "offset_ms": 48539
+    "duration_ms": 3670,
+    "offset_ms": 53313
    },
    {
     "idx": 11,
     "speaker": "A",
     "wav8k": "c14/11.wav",
     "mp3": "c14/11.mp3",
-    "duration_ms": 3720,
-    "offset_ms": 52829
+    "duration_ms": 3630,
+    "offset_ms": 58054
    }
   ],
   "call_mp3": "c14/call.mp3",
-  "duration_ms": 56549
+  "duration_ms": 61684
  },
  "c15": {
   "turns": [
@@ -1300,7 +1300,7 @@
     "speaker": "A",
     "wav8k": "c15/1.wav",
     "mp3": "c15/1.mp3",
-    "duration_ms": 2640,
+    "duration_ms": 2560,
     "offset_ms": 300
    },
    {
@@ -1308,32 +1308,32 @@
     "speaker": "T",
     "wav8k": "c15/2.wav",
     "mp3": "c15/2.mp3",
-    "duration_ms": 5053,
-    "offset_ms": 3441
+    "duration_ms": 4970,
+    "offset_ms": 3986
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c15/3.wav",
     "mp3": "c15/3.mp3",
-    "duration_ms": 9120,
-    "offset_ms": 9141
+    "duration_ms": 9040,
+    "offset_ms": 10290
    },
    {
     "idx": 4,
     "speaker": "T",
     "wav8k": "c15/4.wav",
     "mp3": "c15/4.mp3",
-    "duration_ms": 3730,
-    "offset_ms": 18919
+    "duration_ms": 3640,
+    "offset_ms": 20669
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c15/5.wav",
     "mp3": "c15/5.mp3",
-    "duration_ms": 15040,
-    "offset_ms": 23048,
+    "duration_ms": 15000,
+    "offset_ms": 25279,
     "violation_gain_db": 2.8,
     "limiter_reduction_db": 0.0
    },
@@ -1342,36 +1342,36 @@
     "speaker": "T",
     "wav8k": "c15/6.wav",
     "mp3": "c15/6.mp3",
-    "duration_ms": 5930,
-    "offset_ms": 38766
+    "duration_ms": 5830,
+    "offset_ms": 41647
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c15/7.wav",
     "mp3": "c15/7.mp3",
-    "duration_ms": 7480,
-    "offset_ms": 45288
+    "duration_ms": 7270,
+    "offset_ms": 48723
    },
    {
     "idx": 8,
     "speaker": "T",
     "wav8k": "c15/8.wav",
     "mp3": "c15/8.mp3",
-    "duration_ms": 5500,
-    "offset_ms": 53263
+    "duration_ms": 5400,
+    "offset_ms": 57121
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c15/9.wav",
     "mp3": "c15/9.mp3",
-    "duration_ms": 3070,
-    "offset_ms": 59198
+    "duration_ms": 2940,
+    "offset_ms": 63543
    }
   ],
   "call_mp3": "c15/call.mp3",
-  "duration_ms": 62268
+  "duration_ms": 66483
  },
  "c16": {
   "turns": [
@@ -1380,7 +1380,7 @@
     "speaker": "A",
     "wav8k": "c16/1.wav",
     "mp3": "c16/1.mp3",
-    "duration_ms": 2880,
+    "duration_ms": 2850,
     "offset_ms": 300
    },
    {
@@ -1388,8 +1388,8 @@
     "speaker": "T",
     "wav8k": "c16/2.wav",
     "mp3": "c16/2.mp3",
-    "duration_ms": 4126,
-    "offset_ms": 3641
+    "duration_ms": 3970,
+    "offset_ms": 4209
    },
    {
     "idx": 3,
@@ -1397,15 +1397,15 @@
     "wav8k": "c16/3.wav",
     "mp3": "c16/3.mp3",
     "duration_ms": 8640,
-    "offset_ms": 8388
+    "offset_ms": 9476
    },
    {
     "idx": 4,
     "speaker": "T",
     "wav8k": "c16/4.wav",
     "mp3": "c16/4.mp3",
-    "duration_ms": 5540,
-    "offset_ms": 17461
+    "duration_ms": 5380,
+    "offset_ms": 19164
    },
    {
     "idx": 5,
@@ -1413,7 +1413,7 @@
     "wav8k": "c16/5.wav",
     "mp3": "c16/5.mp3",
     "duration_ms": 10160,
-    "offset_ms": 23496,
+    "offset_ms": 25661,
     "violation_gain_db": 3.5,
     "limiter_reduction_db": 2.87
    },
@@ -1422,16 +1422,16 @@
     "speaker": "T",
     "wav8k": "c16/6.wav",
     "mp3": "c16/6.mp3",
-    "duration_ms": 5474,
-    "offset_ms": 34118
+    "duration_ms": 5360,
+    "offset_ms": 36912
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c16/7.wav",
     "mp3": "c16/7.mp3",
-    "duration_ms": 5520,
-    "offset_ms": 40136,
+    "duration_ms": 5430,
+    "offset_ms": 43449,
     "violation_gain_db": 3.4,
     "limiter_reduction_db": 3.04
    },
@@ -1440,20 +1440,20 @@
     "speaker": "T",
     "wav8k": "c16/8.wav",
     "mp3": "c16/8.mp3",
-    "duration_ms": 6300,
-    "offset_ms": 46145
+    "duration_ms": 6140,
+    "offset_ms": 49977
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c16/9.wav",
     "mp3": "c16/9.mp3",
-    "duration_ms": 2320,
-    "offset_ms": 53029
+    "duration_ms": 2250,
+    "offset_ms": 57362
    }
   ],
   "call_mp3": "c16/call.mp3",
-  "duration_ms": 55349
+  "duration_ms": 59612
  },
  "c17": {
   "turns": [
@@ -1462,7 +1462,7 @@
     "speaker": "A",
     "wav8k": "c17/1.wav",
     "mp3": "c17/1.mp3",
-    "duration_ms": 3280,
+    "duration_ms": 2230,
     "offset_ms": 300
    },
    {
@@ -1470,8 +1470,8 @@
     "speaker": "T",
     "wav8k": "c17/2.wav",
     "mp3": "c17/2.mp3",
-    "duration_ms": 4620,
-    "offset_ms": 4057
+    "duration_ms": 4520,
+    "offset_ms": 3612
    },
    {
     "idx": 3,
@@ -1479,23 +1479,23 @@
     "wav8k": "c17/3.wav",
     "mp3": "c17/3.mp3",
     "duration_ms": 7440,
-    "offset_ms": 9323
+    "offset_ms": 9465
    },
    {
     "idx": 4,
     "speaker": "T",
     "wav8k": "c17/4.wav",
     "mp3": "c17/4.mp3",
-    "duration_ms": 4180,
-    "offset_ms": 17323
+    "duration_ms": 4080,
+    "offset_ms": 18145
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c17/5.wav",
     "mp3": "c17/5.mp3",
-    "duration_ms": 10560,
-    "offset_ms": 22078,
+    "duration_ms": 10460,
+    "offset_ms": 23446,
     "violation_gain_db": 3.4,
     "limiter_reduction_db": 3.28
    },
@@ -1504,24 +1504,24 @@
     "speaker": "T",
     "wav8k": "c17/6.wav",
     "mp3": "c17/6.mp3",
-    "duration_ms": 5640,
-    "offset_ms": 33220
+    "duration_ms": 5430,
+    "offset_ms": 35137
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c17/7.wav",
     "mp3": "c17/7.mp3",
-    "duration_ms": 7120,
-    "offset_ms": 39390
+    "duration_ms": 7050,
+    "offset_ms": 41734
    },
    {
     "idx": 8,
     "speaker": "T",
     "wav8k": "c17/8.wav",
     "mp3": "c17/8.mp3",
-    "duration_ms": 3860,
-    "offset_ms": 46883
+    "duration_ms": 3780,
+    "offset_ms": 49718
    },
    {
     "idx": 9,
@@ -1529,11 +1529,11 @@
     "wav8k": "c17/9.wav",
     "mp3": "c17/9.mp3",
     "duration_ms": 2960,
-    "offset_ms": 51222
+    "offset_ms": 54592
    }
   ],
   "call_mp3": "c17/call.mp3",
-  "duration_ms": 54182
+  "duration_ms": 57552
  },
  "c18": {
   "turns": [
@@ -1542,7 +1542,7 @@
     "speaker": "A",
     "wav8k": "c18/1.wav",
     "mp3": "c18/1.mp3",
-    "duration_ms": 1730,
+    "duration_ms": 1630,
     "offset_ms": 300
    },
    {
@@ -1550,48 +1550,48 @@
     "speaker": "T",
     "wav8k": "c18/2.wav",
     "mp3": "c18/2.mp3",
-    "duration_ms": 4968,
-    "offset_ms": 2433
+    "duration_ms": 4910,
+    "offset_ms": 2916
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c18/3.wav",
     "mp3": "c18/3.mp3",
-    "duration_ms": 10960,
-    "offset_ms": 7992
+    "duration_ms": 10860,
+    "offset_ms": 9069
    },
    {
     "idx": 4,
     "speaker": "T",
     "wav8k": "c18/4.wav",
     "mp3": "c18/4.mp3",
-    "duration_ms": 4547,
-    "offset_ms": 19604
+    "duration_ms": 4530,
+    "offset_ms": 21271
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c18/5.wav",
     "mp3": "c18/5.mp3",
-    "duration_ms": 7430,
-    "offset_ms": 24770
+    "duration_ms": 7260,
+    "offset_ms": 27084
    },
    {
     "idx": 6,
     "speaker": "T",
     "wav8k": "c18/6.wav",
     "mp3": "c18/6.mp3",
-    "duration_ms": 4126,
-    "offset_ms": 32882
+    "duration_ms": 4016,
+    "offset_ms": 35718
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c18/7.wav",
     "mp3": "c18/7.mp3",
-    "duration_ms": 8000,
-    "offset_ms": 37515
+    "duration_ms": 7960,
+    "offset_ms": 40872
    },
    {
     "idx": 8,
@@ -1599,19 +1599,19 @@
     "wav8k": "c18/8.wav",
     "mp3": "c18/8.mp3",
     "duration_ms": 4968,
-    "offset_ms": 46203
+    "offset_ms": 50224
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c18/9.wav",
     "mp3": "c18/9.mp3",
-    "duration_ms": 4080,
-    "offset_ms": 51681
+    "duration_ms": 3980,
+    "offset_ms": 56331
    }
   ],
   "call_mp3": "c18/call.mp3",
-  "duration_ms": 55761
+  "duration_ms": 60311
  },
  "c19": {
   "turns": [
@@ -1620,7 +1620,7 @@
     "speaker": "A",
     "wav8k": "c19/1.wav",
     "mp3": "c19/1.mp3",
-    "duration_ms": 2200,
+    "duration_ms": 2040,
     "offset_ms": 300,
     "violation_gain_db": 3.5,
     "limiter_reduction_db": 0.0
@@ -1630,68 +1630,68 @@
     "speaker": "B",
     "wav8k": "c19/2.wav",
     "mp3": "c19/2.mp3",
-    "duration_ms": 2490,
-    "offset_ms": 3132
+    "duration_ms": 2380,
+    "offset_ms": 3642
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c19/3.wav",
     "mp3": "c19/3.mp3",
-    "duration_ms": 9200,
-    "offset_ms": 6046
+    "duration_ms": 9120,
+    "offset_ms": 7028
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c19/4.wav",
     "mp3": "c19/4.mp3",
-    "duration_ms": 3874,
-    "offset_ms": 15808
+    "duration_ms": 3830,
+    "offset_ms": 17350
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c19/5.wav",
     "mp3": "c19/5.mp3",
-    "duration_ms": 10400,
-    "offset_ms": 20180
+    "duration_ms": 10310,
+    "offset_ms": 22291
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c19/6.wav",
     "mp3": "c19/6.mp3",
-    "duration_ms": 4547,
-    "offset_ms": 31013
+    "duration_ms": 4470,
+    "offset_ms": 33620
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c19/7.wav",
     "mp3": "c19/7.mp3",
-    "duration_ms": 8400,
-    "offset_ms": 36004
+    "duration_ms": 8270,
+    "offset_ms": 39124
    },
    {
     "idx": 8,
     "speaker": "B",
     "wav8k": "c19/8.wav",
     "mp3": "c19/8.mp3",
-    "duration_ms": 4920,
-    "offset_ms": 44971
+    "duration_ms": 4830,
+    "offset_ms": 48604
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c19/9.wav",
     "mp3": "c19/9.mp3",
-    "duration_ms": 3760,
-    "offset_ms": 50544
+    "duration_ms": 3660,
+    "offset_ms": 54767
    }
   ],
   "call_mp3": "c19/call.mp3",
-  "duration_ms": 54304
+  "duration_ms": 58427
  },
  "c20": {
   "turns": [
@@ -1710,56 +1710,56 @@
     "speaker": "B",
     "wav8k": "c20/2.wav",
     "mp3": "c20/2.mp3",
-    "duration_ms": 3510,
-    "offset_ms": 2795
+    "duration_ms": 3430,
+    "offset_ms": 3495
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c20/3.wav",
     "mp3": "c20/3.mp3",
-    "duration_ms": 8000,
-    "offset_ms": 6930
+    "duration_ms": 7940,
+    "offset_ms": 8217
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c20/4.wav",
     "mp3": "c20/4.mp3",
-    "duration_ms": 3410,
-    "offset_ms": 15366
+    "duration_ms": 3290,
+    "offset_ms": 17180
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c20/5.wav",
     "mp3": "c20/5.mp3",
-    "duration_ms": 7960,
-    "offset_ms": 19307
+    "duration_ms": 7830,
+    "offset_ms": 21629
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c20/6.wav",
     "mp3": "c20/6.mp3",
-    "duration_ms": 4690,
-    "offset_ms": 27794
+    "duration_ms": 4630,
+    "offset_ms": 30612
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c20/7.wav",
     "mp3": "c20/7.mp3",
-    "duration_ms": 8240,
-    "offset_ms": 32991
+    "duration_ms": 8230,
+    "offset_ms": 36366
    },
    {
     "idx": 8,
     "speaker": "B",
     "wav8k": "c20/8.wav",
     "mp3": "c20/8.mp3",
-    "duration_ms": 5300,
-    "offset_ms": 41679
+    "duration_ms": 5230,
+    "offset_ms": 45636
    },
    {
     "idx": 9,
@@ -1767,11 +1767,11 @@
     "wav8k": "c20/9.wav",
     "mp3": "c20/9.mp3",
     "duration_ms": 6480,
-    "offset_ms": 47416
+    "offset_ms": 51901
    }
   ],
   "call_mp3": "c20/call.mp3",
-  "duration_ms": 53896
+  "duration_ms": 58381
  },
  "c21": {
   "turns": [
@@ -1780,7 +1780,7 @@
     "speaker": "A",
     "wav8k": "c21/1.wav",
     "mp3": "c21/1.mp3",
-    "duration_ms": 2000,
+    "duration_ms": 1930,
     "offset_ms": 300,
     "violation_gain_db": 3.5,
     "limiter_reduction_db": 0.0
@@ -1790,68 +1790,68 @@
     "speaker": "B",
     "wav8k": "c21/2.wav",
     "mp3": "c21/2.mp3",
-    "duration_ms": 2690,
-    "offset_ms": 2896
+    "duration_ms": 2600,
+    "offset_ms": 3512
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c21/3.wav",
     "mp3": "c21/3.mp3",
-    "duration_ms": 8960,
-    "offset_ms": 6169
+    "duration_ms": 8950,
+    "offset_ms": 7344
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c21/4.wav",
     "mp3": "c21/4.mp3",
-    "duration_ms": 4370,
-    "offset_ms": 15536
+    "duration_ms": 4260,
+    "offset_ms": 17296
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c21/5.wav",
     "mp3": "c21/5.mp3",
-    "duration_ms": 9520,
-    "offset_ms": 20394
+    "duration_ms": 9490,
+    "offset_ms": 22664
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c21/6.wav",
     "mp3": "c21/6.mp3",
-    "duration_ms": 6750,
-    "offset_ms": 30606
+    "duration_ms": 6580,
+    "offset_ms": 33543
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c21/7.wav",
     "mp3": "c21/7.mp3",
-    "duration_ms": 8400,
-    "offset_ms": 37790
+    "duration_ms": 8370,
+    "offset_ms": 41144
    },
    {
     "idx": 8,
     "speaker": "B",
     "wav8k": "c21/8.wav",
     "mp3": "c21/8.mp3",
-    "duration_ms": 4450,
-    "offset_ms": 46590
+    "duration_ms": 4360,
+    "offset_ms": 50486
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c21/9.wav",
     "mp3": "c21/9.mp3",
-    "duration_ms": 3570,
-    "offset_ms": 51602
+    "duration_ms": 3440,
+    "offset_ms": 56048
    }
   ],
   "call_mp3": "c21/call.mp3",
-  "duration_ms": 55172
+  "duration_ms": 59488
  },
  "c22": {
   "turns": [
@@ -1860,7 +1860,7 @@
     "speaker": "A",
     "wav8k": "c22/1.wav",
     "mp3": "c22/1.mp3",
-    "duration_ms": 1830,
+    "duration_ms": 1740,
     "offset_ms": 300
    },
    {
@@ -1868,8 +1868,8 @@
     "speaker": "B",
     "wav8k": "c22/2.wav",
     "mp3": "c22/2.mp3",
-    "duration_ms": 1920,
-    "offset_ms": 2726
+    "duration_ms": 1830,
+    "offset_ms": 3292
    },
    {
     "idx": 3,
@@ -1877,7 +1877,7 @@
     "wav8k": "c22/3.wav",
     "mp3": "c22/3.mp3",
     "duration_ms": 7200,
-    "offset_ms": 5275,
+    "offset_ms": 6430,
     "violation_gain_db": 3.3,
     "limiter_reduction_db": 3.01
    },
@@ -1886,16 +1886,16 @@
     "speaker": "B",
     "wav8k": "c22/4.wav",
     "mp3": "c22/4.mp3",
-    "duration_ms": 5895,
-    "offset_ms": 12974
+    "duration_ms": 5835,
+    "offset_ms": 14763
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c22/5.wav",
     "mp3": "c22/5.mp3",
-    "duration_ms": 10640,
-    "offset_ms": 19464
+    "duration_ms": 10530,
+    "offset_ms": 21864
    },
    {
     "idx": 6,
@@ -1903,7 +1903,7 @@
     "wav8k": "c22/6.wav",
     "mp3": "c22/6.mp3",
     "duration_ms": 6063,
-    "offset_ms": 30648
+    "offset_ms": 33571
    },
    {
     "idx": 7,
@@ -1911,15 +1911,15 @@
     "wav8k": "c22/7.wav",
     "mp3": "c22/7.mp3",
     "duration_ms": 6000,
-    "offset_ms": 37087
+    "offset_ms": 40629
    },
    {
     "idx": 8,
     "speaker": "B",
     "wav8k": "c22/8.wav",
     "mp3": "c22/8.mp3",
-    "duration_ms": 3032,
-    "offset_ms": 43569
+    "duration_ms": 2970,
+    "offset_ms": 47748
    },
    {
     "idx": 9,
@@ -1927,11 +1927,11 @@
     "wav8k": "c22/9.wav",
     "mp3": "c22/9.mp3",
     "duration_ms": 5680,
-    "offset_ms": 47067
+    "offset_ms": 51784
    }
   ],
   "call_mp3": "c22/call.mp3",
-  "duration_ms": 52747
+  "duration_ms": 57464
  },
  "c23": {
   "turns": [
@@ -1940,7 +1940,7 @@
     "speaker": "A",
     "wav8k": "c23/1.wav",
     "mp3": "c23/1.mp3",
-    "duration_ms": 2160,
+    "duration_ms": 2100,
     "offset_ms": 300
    },
    {
@@ -1948,16 +1948,16 @@
     "speaker": "B",
     "wav8k": "c23/2.wav",
     "mp3": "c23/2.mp3",
-    "duration_ms": 2190,
-    "offset_ms": 3078
+    "duration_ms": 2140,
+    "offset_ms": 3692
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c23/3.wav",
     "mp3": "c23/3.mp3",
-    "duration_ms": 8400,
-    "offset_ms": 5762,
+    "duration_ms": 8390,
+    "offset_ms": 6939,
     "violation_gain_db": 2.6,
     "limiter_reduction_db": 0.0
    },
@@ -1966,40 +1966,40 @@
     "speaker": "B",
     "wav8k": "c23/4.wav",
     "mp3": "c23/4.mp3",
-    "duration_ms": 6600,
-    "offset_ms": 14708
+    "duration_ms": 6410,
+    "offset_ms": 16518
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c23/5.wav",
     "mp3": "c23/5.mp3",
-    "duration_ms": 9140,
-    "offset_ms": 21874
+    "duration_ms": 9000,
+    "offset_ms": 24138
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c23/6.wav",
     "mp3": "c23/6.mp3",
-    "duration_ms": 6970,
-    "offset_ms": 31382
+    "duration_ms": 6850,
+    "offset_ms": 34064
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c23/7.wav",
     "mp3": "c23/7.mp3",
-    "duration_ms": 7020,
-    "offset_ms": 39042
+    "duration_ms": 6860,
+    "offset_ms": 42320
    },
    {
     "idx": 8,
     "speaker": "B",
     "wav8k": "c23/8.wav",
     "mp3": "c23/8.mp3",
-    "duration_ms": 4700,
-    "offset_ms": 46584
+    "duration_ms": 4580,
+    "offset_ms": 50325
    },
    {
     "idx": 9,
@@ -2007,11 +2007,11 @@
     "wav8k": "c23/9.wav",
     "mp3": "c23/9.mp3",
     "duration_ms": 6000,
-    "offset_ms": 51652
+    "offset_ms": 55832
    }
   ],
   "call_mp3": "c23/call.mp3",
-  "duration_ms": 57652
+  "duration_ms": 61832
  },
  "c24": {
   "turns": [
@@ -2020,7 +2020,7 @@
     "speaker": "A",
     "wav8k": "c24/1.wav",
     "mp3": "c24/1.mp3",
-    "duration_ms": 2400,
+    "duration_ms": 2300,
     "offset_ms": 300
    },
    {
@@ -2028,16 +2028,16 @@
     "speaker": "B",
     "wav8k": "c24/2.wav",
     "mp3": "c24/2.mp3",
-    "duration_ms": 2060,
-    "offset_ms": 3054
+    "duration_ms": 1880,
+    "offset_ms": 3506
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c24/3.wav",
     "mp3": "c24/3.mp3",
-    "duration_ms": 8800,
-    "offset_ms": 5782,
+    "duration_ms": 8760,
+    "offset_ms": 6740,
     "violation_gain_db": 3.5,
     "limiter_reduction_db": 3.3
    },
@@ -2046,8 +2046,8 @@
     "speaker": "B",
     "wav8k": "c24/4.wav",
     "mp3": "c24/4.mp3",
-    "duration_ms": 4720,
-    "offset_ms": 14934
+    "duration_ms": 4640,
+    "offset_ms": 16413
    },
    {
     "idx": 5,
@@ -2055,43 +2055,43 @@
     "wav8k": "c24/5.wav",
     "mp3": "c24/5.mp3",
     "duration_ms": 12080,
-    "offset_ms": 20190
+    "offset_ms": 22228
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c24/6.wav",
     "mp3": "c24/6.mp3",
-    "duration_ms": 7242,
-    "offset_ms": 32689
+    "duration_ms": 7160,
+    "offset_ms": 35366
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c24/7.wav",
     "mp3": "c24/7.mp3",
-    "duration_ms": 6960,
-    "offset_ms": 40622
+    "duration_ms": 6900,
+    "offset_ms": 43913
    },
    {
     "idx": 8,
     "speaker": "B",
     "wav8k": "c24/8.wav",
     "mp3": "c24/8.mp3",
-    "duration_ms": 4480,
-    "offset_ms": 48231
+    "duration_ms": 4330,
+    "offset_ms": 52160
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c24/9.wav",
     "mp3": "c24/9.mp3",
-    "duration_ms": 4160,
-    "offset_ms": 53348
+    "duration_ms": 4090,
+    "offset_ms": 57809
    }
   ],
   "call_mp3": "c24/call.mp3",
-  "duration_ms": 57508
+  "duration_ms": 61899
  },
  "c25": {
   "turns": [
@@ -2100,7 +2100,7 @@
     "speaker": "A",
     "wav8k": "c25/1.wav",
     "mp3": "c25/1.mp3",
-    "duration_ms": 2000,
+    "duration_ms": 1950,
     "offset_ms": 300
    },
    {
@@ -2108,32 +2108,32 @@
     "speaker": "B",
     "wav8k": "c25/2.wav",
     "mp3": "c25/2.mp3",
-    "duration_ms": 1516,
-    "offset_ms": 2907
+    "duration_ms": 1440,
+    "offset_ms": 3517
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c25/3.wav",
     "mp3": "c25/3.mp3",
-    "duration_ms": 5760,
-    "offset_ms": 4985
+    "duration_ms": 5690,
+    "offset_ms": 6159
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c25/4.wav",
     "mp3": "c25/4.mp3",
-    "duration_ms": 6590,
-    "offset_ms": 11182
+    "duration_ms": 6500,
+    "offset_ms": 12874
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c25/5.wav",
     "mp3": "c25/5.mp3",
-    "duration_ms": 9920,
-    "offset_ms": 18243,
+    "duration_ms": 9870,
+    "offset_ms": 20456,
     "violation_gain_db": 3.4,
     "limiter_reduction_db": 3.08
    },
@@ -2142,16 +2142,16 @@
     "speaker": "B",
     "wav8k": "c25/6.wav",
     "mp3": "c25/6.mp3",
-    "duration_ms": 6400,
-    "offset_ms": 28788
+    "duration_ms": 6250,
+    "offset_ms": 31619
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c25/7.wav",
     "mp3": "c25/7.mp3",
-    "duration_ms": 7590,
-    "offset_ms": 35827,
+    "duration_ms": 7520,
+    "offset_ms": 39182,
     "violation_gain_db": 2.5,
     "limiter_reduction_db": 0.0
    },
@@ -2160,36 +2160,36 @@
     "speaker": "B",
     "wav8k": "c25/8.wav",
     "mp3": "c25/8.mp3",
-    "duration_ms": 5726,
-    "offset_ms": 43978
+    "duration_ms": 5670,
+    "offset_ms": 47903
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c25/9.wav",
     "mp3": "c25/9.mp3",
-    "duration_ms": 3590,
-    "offset_ms": 50063
+    "duration_ms": 3510,
+    "offset_ms": 54496
    },
    {
     "idx": 10,
     "speaker": "B",
     "wav8k": "c25/10.wav",
     "mp3": "c25/10.mp3",
-    "duration_ms": 2990,
-    "offset_ms": 54242
+    "duration_ms": 2800,
+    "offset_ms": 59247
    },
    {
     "idx": 11,
     "speaker": "A",
     "wav8k": "c25/11.wav",
     "mp3": "c25/11.mp3",
-    "duration_ms": 4840,
-    "offset_ms": 57666
+    "duration_ms": 4730,
+    "offset_ms": 63067
    }
   ],
   "call_mp3": "c25/call.mp3",
-  "duration_ms": 62506
+  "duration_ms": 67797
  },
  "c26": {
   "turns": [
@@ -2198,7 +2198,7 @@
     "speaker": "A",
     "wav8k": "c26/1.wav",
     "mp3": "c26/1.mp3",
-    "duration_ms": 4400,
+    "duration_ms": 4320,
     "offset_ms": 300
    },
    {
@@ -2206,32 +2206,32 @@
     "speaker": "B",
     "wav8k": "c26/2.wav",
     "mp3": "c26/2.mp3",
-    "duration_ms": 2080,
-    "offset_ms": 5380
+    "duration_ms": 2050,
+    "offset_ms": 5991
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c26/3.wav",
     "mp3": "c26/3.mp3",
-    "duration_ms": 4950,
-    "offset_ms": 7858
+    "duration_ms": 4750,
+    "offset_ms": 9010
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c26/4.wav",
     "mp3": "c26/4.mp3",
-    "duration_ms": 6020,
-    "offset_ms": 13491
+    "duration_ms": 5850,
+    "offset_ms": 15135
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c26/5.wav",
     "mp3": "c26/5.mp3",
-    "duration_ms": 8560,
-    "offset_ms": 19894,
+    "duration_ms": 8490,
+    "offset_ms": 21933,
     "violation_gain_db": 3.3,
     "limiter_reduction_db": 3.49
    },
@@ -2240,16 +2240,16 @@
     "speaker": "B",
     "wav8k": "c26/6.wav",
     "mp3": "c26/6.mp3",
-    "duration_ms": 5053,
-    "offset_ms": 29037
+    "duration_ms": 4780,
+    "offset_ms": 31656
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c26/7.wav",
     "mp3": "c26/7.mp3",
-    "duration_ms": 7600,
-    "offset_ms": 34752,
+    "duration_ms": 7490,
+    "offset_ms": 37781,
     "violation_gain_db": 3.2,
     "limiter_reduction_db": 0.0
    },
@@ -2258,36 +2258,36 @@
     "speaker": "B",
     "wav8k": "c26/8.wav",
     "mp3": "c26/8.mp3",
-    "duration_ms": 4590,
-    "offset_ms": 43033
+    "duration_ms": 4500,
+    "offset_ms": 46644
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c26/9.wav",
     "mp3": "c26/9.mp3",
-    "duration_ms": 6070,
-    "offset_ms": 48273
+    "duration_ms": 5860,
+    "offset_ms": 52472
    },
    {
     "idx": 10,
     "speaker": "B",
     "wav8k": "c26/10.wav",
     "mp3": "c26/10.mp3",
-    "duration_ms": 3230,
-    "offset_ms": 54876
+    "duration_ms": 3030,
+    "offset_ms": 59494
    },
    {
     "idx": 11,
     "speaker": "A",
     "wav8k": "c26/11.wav",
     "mp3": "c26/11.mp3",
-    "duration_ms": 3660,
-    "offset_ms": 58612
+    "duration_ms": 3520,
+    "offset_ms": 63646
    }
   ],
   "call_mp3": "c26/call.mp3",
-  "duration_ms": 62272
+  "duration_ms": 67166
  },
  "c27": {
   "turns": [
@@ -2296,7 +2296,7 @@
     "speaker": "A",
     "wav8k": "c27/1.wav",
     "mp3": "c27/1.mp3",
-    "duration_ms": 1550,
+    "duration_ms": 1410,
     "offset_ms": 300
    },
    {
@@ -2304,84 +2304,84 @@
     "speaker": "B",
     "wav8k": "c27/2.wav",
     "mp3": "c27/2.mp3",
-    "duration_ms": 1520,
-    "offset_ms": 2280
+    "duration_ms": 1430,
+    "offset_ms": 2754
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c27/3.wav",
     "mp3": "c27/3.mp3",
-    "duration_ms": 5040,
-    "offset_ms": 4311
+    "duration_ms": 4840,
+    "offset_ms": 5314
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c27/4.wav",
     "mp3": "c27/4.mp3",
-    "duration_ms": 1280,
-    "offset_ms": 9706
+    "duration_ms": 1190,
+    "offset_ms": 11061
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c27/5.wav",
     "mp3": "c27/5.mp3",
-    "duration_ms": 7920,
-    "offset_ms": 11640
+    "duration_ms": 7810,
+    "offset_ms": 13575
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c27/6.wav",
     "mp3": "c27/6.mp3",
-    "duration_ms": 5530,
-    "offset_ms": 20237
+    "duration_ms": 5360,
+    "offset_ms": 22751
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c27/7.wav",
     "mp3": "c27/7.mp3",
-    "duration_ms": 7760,
-    "offset_ms": 26203
+    "duration_ms": 7530,
+    "offset_ms": 29134
    },
    {
     "idx": 8,
     "speaker": "B",
     "wav8k": "c27/8.wav",
     "mp3": "c27/8.mp3",
-    "duration_ms": 4530,
-    "offset_ms": 34660
+    "duration_ms": 4350,
+    "offset_ms": 38060
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c27/9.wav",
     "mp3": "c27/9.mp3",
-    "duration_ms": 8160,
-    "offset_ms": 39758
+    "duration_ms": 7950,
+    "offset_ms": 43621
    },
    {
     "idx": 10,
     "speaker": "B",
     "wav8k": "c27/10.wav",
     "mp3": "c27/10.mp3",
-    "duration_ms": 2820,
-    "offset_ms": 48307
+    "duration_ms": 2680,
+    "offset_ms": 52527
    },
    {
     "idx": 11,
     "speaker": "A",
     "wav8k": "c27/11.wav",
     "mp3": "c27/11.mp3",
-    "duration_ms": 4480,
-    "offset_ms": 51485
+    "duration_ms": 4380,
+    "offset_ms": 56119
    }
   ],
   "call_mp3": "c27/call.mp3",
-  "duration_ms": 55965
+  "duration_ms": 60499
  },
  "c28": {
   "turns": [
@@ -2390,7 +2390,7 @@
     "speaker": "A",
     "wav8k": "c28/1.wav",
     "mp3": "c28/1.mp3",
-    "duration_ms": 2100,
+    "duration_ms": 1920,
     "offset_ms": 300
    },
    {
@@ -2398,16 +2398,16 @@
     "speaker": "B",
     "wav8k": "c28/2.wav",
     "mp3": "c28/2.mp3",
-    "duration_ms": 1179,
-    "offset_ms": 3097
+    "duration_ms": 1090,
+    "offset_ms": 3615
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c28/3.wav",
     "mp3": "c28/3.mp3",
-    "duration_ms": 7280,
-    "offset_ms": 4890,
+    "duration_ms": 7110,
+    "offset_ms": 5982,
     "violation_gain_db": 3.5,
     "limiter_reduction_db": 0.0
    },
@@ -2416,16 +2416,16 @@
     "speaker": "B",
     "wav8k": "c28/4.wav",
     "mp3": "c28/4.mp3",
-    "duration_ms": 4090,
-    "offset_ms": 12587
+    "duration_ms": 4000,
+    "offset_ms": 14097
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c28/5.wav",
     "mp3": "c28/5.mp3",
-    "duration_ms": 7040,
-    "offset_ms": 17126,
+    "duration_ms": 7020,
+    "offset_ms": 19159,
     "violation_gain_db": 3.1,
     "limiter_reduction_db": 0.0
    },
@@ -2434,8 +2434,8 @@
     "speaker": "B",
     "wav8k": "c28/6.wav",
     "mp3": "c28/6.mp3",
-    "duration_ms": 3453,
-    "offset_ms": 24642
+    "duration_ms": 3443,
+    "offset_ms": 27259
    },
    {
     "idx": 7,
@@ -2443,27 +2443,27 @@
     "wav8k": "c28/7.wav",
     "mp3": "c28/7.mp3",
     "duration_ms": 6800,
-    "offset_ms": 28527
+    "offset_ms": 31736
    },
    {
     "idx": 8,
     "speaker": "B",
     "wav8k": "c28/8.wav",
     "mp3": "c28/8.mp3",
-    "duration_ms": 5860,
-    "offset_ms": 35822
+    "duration_ms": 5720,
+    "offset_ms": 39643
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c28/9.wav",
     "mp3": "c28/9.mp3",
-    "duration_ms": 9740,
-    "offset_ms": 42141
+    "duration_ms": 9600,
+    "offset_ms": 46419
    }
   ],
   "call_mp3": "c28/call.mp3",
-  "duration_ms": 51881
+  "duration_ms": 56019
  },
  "c29": {
   "turns": [
@@ -2472,7 +2472,7 @@
     "speaker": "A",
     "wav8k": "c29/1.wav",
     "mp3": "c29/1.mp3",
-    "duration_ms": 3200,
+    "duration_ms": 3140,
     "offset_ms": 300
    },
    {
@@ -2480,24 +2480,24 @@
     "speaker": "T",
     "wav8k": "c29/2.wav",
     "mp3": "c29/2.mp3",
-    "duration_ms": 3958,
-    "offset_ms": 3914
+    "duration_ms": 3840,
+    "offset_ms": 4431
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c29/3.wav",
     "mp3": "c29/3.mp3",
-    "duration_ms": 10560,
-    "offset_ms": 8560
+    "duration_ms": 10520,
+    "offset_ms": 9664
    },
    {
     "idx": 4,
     "speaker": "T",
     "wav8k": "c29/4.wav",
     "mp3": "c29/4.mp3",
-    "duration_ms": 3874,
-    "offset_ms": 19746
+    "duration_ms": 3850,
+    "offset_ms": 21478
    },
    {
     "idx": 5,
@@ -2505,7 +2505,7 @@
     "wav8k": "c29/5.wav",
     "mp3": "c29/5.mp3",
     "duration_ms": 9360,
-    "offset_ms": 24223,
+    "offset_ms": 26599,
     "violation_gain_db": 3.4,
     "limiter_reduction_db": 2.99
    },
@@ -2514,16 +2514,16 @@
     "speaker": "T",
     "wav8k": "c29/6.wav",
     "mp3": "c29/6.mp3",
-    "duration_ms": 5290,
-    "offset_ms": 34121
+    "duration_ms": 5050,
+    "offset_ms": 37167
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c29/7.wav",
     "mp3": "c29/7.mp3",
-    "duration_ms": 6880,
-    "offset_ms": 40067,
+    "duration_ms": 6810,
+    "offset_ms": 43554,
     "violation_gain_db": 3.3,
     "limiter_reduction_db": 3.51
    },
@@ -2532,20 +2532,20 @@
     "speaker": "T",
     "wav8k": "c29/8.wav",
     "mp3": "c29/8.mp3",
-    "duration_ms": 5474,
-    "offset_ms": 47515
+    "duration_ms": 5380,
+    "offset_ms": 51576
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c29/9.wav",
     "mp3": "c29/9.mp3",
-    "duration_ms": 3200,
-    "offset_ms": 53628
+    "duration_ms": 3170,
+    "offset_ms": 58279
    }
   ],
   "call_mp3": "c29/call.mp3",
-  "duration_ms": 56828
+  "duration_ms": 61449
  },
  "c30": {
   "turns": [
@@ -2554,7 +2554,7 @@
     "speaker": "A",
     "wav8k": "c30/1.wav",
     "mp3": "c30/1.mp3",
-    "duration_ms": 2160,
+    "duration_ms": 2120,
     "offset_ms": 300
    },
    {
@@ -2562,64 +2562,64 @@
     "speaker": "B",
     "wav8k": "c30/2.wav",
     "mp3": "c30/2.mp3",
-    "duration_ms": 2695,
-    "offset_ms": 3147
+    "duration_ms": 2600,
+    "offset_ms": 3802
    },
    {
     "idx": 3,
     "speaker": "A",
     "wav8k": "c30/3.wav",
     "mp3": "c30/3.mp3",
-    "duration_ms": 7600,
-    "offset_ms": 6359
+    "duration_ms": 7580,
+    "offset_ms": 7551
    },
    {
     "idx": 4,
     "speaker": "B",
     "wav8k": "c30/4.wav",
     "mp3": "c30/4.mp3",
-    "duration_ms": 4440,
-    "offset_ms": 14564
+    "duration_ms": 4300,
+    "offset_ms": 16396
    },
    {
     "idx": 5,
     "speaker": "A",
     "wav8k": "c30/5.wav",
     "mp3": "c30/5.mp3",
-    "duration_ms": 17280,
-    "offset_ms": 19372
+    "duration_ms": 17230,
+    "offset_ms": 21632
    },
    {
     "idx": 6,
     "speaker": "B",
     "wav8k": "c30/6.wav",
     "mp3": "c30/6.mp3",
-    "duration_ms": 2670,
-    "offset_ms": 37050
+    "duration_ms": 2540,
+    "offset_ms": 39831
    },
    {
     "idx": 7,
     "speaker": "A",
     "wav8k": "c30/7.wav",
     "mp3": "c30/7.mp3",
-    "duration_ms": 6400,
-    "offset_ms": 40228
+    "duration_ms": 6380,
+    "offset_ms": 43516
    },
    {
     "idx": 8,
     "speaker": "B",
     "wav8k": "c30/8.wav",
     "mp3": "c30/8.mp3",
-    "duration_ms": 2590,
-    "offset_ms": 47141
+    "duration_ms": 2450,
+    "offset_ms": 51028
    },
    {
     "idx": 9,
     "speaker": "A",
     "wav8k": "c30/9.wav",
     "mp3": "c30/9.mp3",
-    "duration_ms": 6080,
-    "offset_ms": 50360
+    "duration_ms": 6050,
+    "offset_ms": 54787
    },
    {
     "idx": 10,
@@ -2627,18 +2627,18 @@
     "wav8k": "c30/10.wav",
     "mp3": "c30/10.mp3",
     "duration_ms": 1179,
-    "offset_ms": 57125
+    "offset_ms": 62226
    },
    {
     "idx": 11,
     "speaker": "A",
     "wav8k": "c30/11.wav",
     "mp3": "c30/11.mp3",
-    "duration_ms": 3920,
-    "offset_ms": 58913
+    "duration_ms": 3890,
+    "offset_ms": 64696
    }
   ],
   "call_mp3": "c30/call.mp3",
-  "duration_ms": 62833
+  "duration_ms": 68586
  }
 }

@@ -8,6 +8,7 @@ from datetime import UTC, datetime
 import httpx2 as httpx
 
 from .. import db, replay
+from .. import schedule as rules_clock
 from ..config import settings
 from ..rules import llm, risk, skip
 from ..rules.engine import deep_findings, fast_findings
@@ -31,7 +32,7 @@ log = logging.getLogger("maryada.session")
 
 FIRST_ANSWER_S = 4.0  # docs/13 §4.5: wait this long for the LLM before closing a turn; later answers are "late" updates
 FIRST_SEGMENT_S = 15.0  # docs/01 §4: no transcript for this long -> fallback
-COACH_GAP_MS = replay.COACH_GAP_MS
+COACH_GAP_MS = rules_clock.COACH_HOLD_GAP_MS
 MAX_SPOKEN_PER_CALL = 3
 _RANK = {"good_practice": 0, "advisory": 1, "needs_review": 2, "violation": 3}
 
@@ -48,6 +49,7 @@ class Session:
         self.scenario_id, self.effective_mode, self.reason = scenario_id, mode, reason
         self.log = EventLog()
         self.task: asyncio.Task | None = None
+        self.voice_nudge = None  # set by the live run: called when a nudge should be spoken
         self.resume_ms = 0  # where the call clock stood when live transcription failed (natural time)
         self.pause_for_coach = pause_for_coach  # the user's option: the call waits while a coach clip plays
         self.creds = creds  # the visitor's keys (memory only; wiped when the session ends)
@@ -193,9 +195,9 @@ def _absorb(s: Session, events: list[dict]) -> None:
             s.risk_peak = max(s.risk_peak, e["data"]["score"])
 
 
-def _turn_starts(scenario_id: str, base_ms: int = 0) -> dict[int, int]:
-    """Natural start of each turn on the call clock (the audio schedule), in ms."""
-    return {t["idx"]: t["offset_ms"] - base_ms for t in assets.audio_manifest().get(scenario_id, {}).get("turns", [])}
+def _turns(scenario_id: str, base_ms: int = 0) -> list[dict]:
+    """The call's turns on the natural audio schedule (speaker, offset, duration), offsets counted from `base_ms`."""
+    return [{**t, "offset_ms": t["offset_ms"] - base_ms} for t in assets.audio_manifest().get(scenario_id, {}).get("turns", [])]
 
 
 async def _run_replay(s: Session) -> None:
@@ -204,7 +206,9 @@ async def _run_replay(s: Session) -> None:
         s.log.emit("error", {"code": "no_replay", "message_user": "No recorded run exists for this case.",
                              "retryable": False})
         return
-    await replay.play(events, s.log.push, turn_starts=_turn_starts(s.scenario_id), hold=s.pause_for_coach)
+    planned = await replay.play(events, s.log.push, turns=_turns(s.scenario_id), hold=s.pause_for_coach)
+    if planned:
+        log.info("session=%s replay: agent started without the nudge ready %d time(s)", s.id, planned.agent_started_anyway)
     _absorb(s, events)
 
 
@@ -222,7 +226,7 @@ async def _switch_to_replay(s: Session) -> None:
     # Time zero is now: turns the live clock has not reached yet start at their schedule minus where the call stands;
     # turns already started are re-sent at once (the screen does not restart their audio).
     await replay.play(rest, lambda e: s.log.emit(e["type"], e["data"]),
-                      turn_starts=_turn_starts(s.scenario_id, s.resume_ms), hold=s.pause_for_coach)
+                      turns=_turns(s.scenario_id, s.resume_ms), hold=s.pause_for_coach)
     _absorb(s, rest)
 
 
@@ -269,33 +273,112 @@ async def _run_live(s: Session) -> None:
                                    "simulated_start_time": ctx.simulated_start_time})
     s.log.emit("stage.status", {"stage": "connecting", "turn_idx": 0, "text": "Connecting"})
     history: list[Turn] = []
-    spoken = 0
-    shift_s = 0.0  # grows while the user's option holds the call for the coach
+    spoken = 0  # coach clips reserved so far (cap per call)
+    shift_s = 0.0  # how far the call clock runs from the natural schedule (agent waits for the coach, pause option)
     t0 = time.perf_counter()
-    started = {t["idx"]: asyncio.Event() for t in turns}
+    order = [t["idx"] for t in turns]
+    info = {t["idx"]: t for t in turns}
+    started = {i: asyncio.Event() for i in order}
+    settled = {i: asyncio.Event() for i in order}  # the turn's checks are closed
+    voiced = {i: asyncio.Event() for i in order}  # a spoken nudge exists for the turn
+    start_at: dict[int, float] = {}
+    coaching: dict[int, dict] = {}
+    last_coach_end = -1e9
+    agent_anyway = 0  # the agent started after the 2 s wait without the nudge being ready
     closing: list[asyncio.Task] = []
+    coach_tasks: list[asyncio.Task] = []
     llm_client = llm.make_client()
     warm = asyncio.create_task(llm.warm_up(llm_client, creds))
 
+    async def sleep_until(target) -> None:
+        while (left := (target() if callable(target) else target) - time.perf_counter()) > 0:
+            await asyncio.sleep(left)
+
+    def natural_target(nat: float):
+        return lambda: nat + shift_s  # shift_s can grow while we wait (pause option)
+
+    async def agent_due(k: int, m: int, nat_due: float) -> float:
+        """When agent turn `m` starts, given the earlier agent turn `k` (rules: schedule.py). Absolute time."""
+        nonlocal agent_anyway
+        clip = coaching.get(k)
+        deadline = nat_due + rules_clock.AGENT_WAIT_S
+        if clip is None:  # wait for the check of turn k to settle or a nudge to appear, at most 2 s past the natural start
+            waits = [asyncio.ensure_future(voiced[k].wait()), asyncio.ensure_future(settled[k].wait())]
+            done, pending = await asyncio.wait(waits, timeout=max(0.0, deadline - time.perf_counter()),
+                                               return_when=asyncio.FIRST_COMPLETED)
+            for p in pending:
+                p.cancel()
+            if not done:
+                agent_anyway += 1
+                return deadline
+            clip = coaching.get(k)
+            if clip is None:
+                return nat_due
+        try:
+            await asyncio.wait_for(clip["done"].wait(), 30)  # the clip plays under the next speaker, then the agent follows
+        except TimeoutError:
+            return nat_due
+        nxt = order[order.index(k) + 1]
+        floor = start_at[nxt] + info[nxt]["duration_ms"] / 1000 + rules_clock.MIN_FILE_GAP_S if nxt != m else 0.0
+        return max(clip["end"] + rules_clock.AGENT_AFTER_COACH_S, floor)
+
     async def clock() -> None:
-        """The call itself: each turn starts at its audio offset, whatever transcription and checking are doing."""
+        """The call itself: turns start on the natural audio schedule, whatever transcription and checking are doing.
+        Only a coach nudge moves the agent's next turn (it follows the clip); the audio never pauses."""
+        nonlocal shift_s
+        prev_agent = None
         for t in turns:
-            while (left := t0 + t["offset_ms"] / 1000 * settings.pace + shift_s - time.perf_counter()) > 0:
-                await asyncio.sleep(left)
-            s.log.emit("turn.started", {"turn_idx": t["idx"], "speaker": assets.SPEAKER[t["speaker"]],
+            idx = t["idx"]
+            nat = t0 + t["offset_ms"] / 1000 * settings.pace
+            if t["speaker"] == "A" and prev_agent is not None and not s.pause_for_coach:
+                due = await agent_due(prev_agent, idx, nat + shift_s)
+                await sleep_until(due)
+            else:
+                await sleep_until(natural_target(nat))
+            start_at[idx] = time.perf_counter()
+            shift_s = start_at[idx] - nat
+            s.log.emit("turn.started", {"turn_idx": idx, "speaker": assets.SPEAKER[t["speaker"]],
                                         "audio_url": "/audio/" + t["mp3"], "duration_ms": t["duration_ms"]})
-            started[t["idx"]].set()
+            started[idx].set()
+            if t["speaker"] == "A":
+                prev_agent = idx
+
+    async def run_coach(k: int, clip: dict) -> None:
+        """Play the nudge under the next speaker's turn (or when it is ready, if later). Rules: schedule.py."""
+        nonlocal last_coach_end, shift_s
+        i = order.index(k)
+        nxt = order[i + 1] if i + 1 < len(order) else None
+        if nxt is not None and info[nxt]["speaker"] != info[k]["speaker"]:
+            await started[nxt].wait()
+            at = start_at[nxt] + rules_clock.COACH_DELAY_S
+        else:  # last turn of the call, or the same speaker again: after the turn ended
+            at = start_at[k] + info[k]["duration_ms"] / 1000 + rules_clock.COACH_LAST_TURN_GAP_S
+        await sleep_until(lambda: max(at, clip["ready"], last_coach_end + rules_clock.COACH_QUEUE_GAP_S))
+        line = clip["line"]
+        s.log.emit("coach.speak", {"audio_url": line["audio_url"], "duration_ms": line["duration_ms"]})
+        clip["end"] = time.perf_counter() + line["duration_ms"] / 1000
+        last_coach_end = clip["end"]
+        clip["done"].set()
+        if s.pause_for_coach:  # the user's option: the call waits while the coach speaks
+            shift_s += (line["duration_ms"] + COACH_GAP_MS) / 1000
+
+    def voice_nudge(turn: "LiveTurn") -> None:
+        nonlocal spoken
+        if spoken >= MAX_SPOKEN_PER_CALL or turn.idx in coaching:
+            return
+        spoken += 1
+        clip = {"line": turn.nudge, "ready": time.perf_counter(), "done": asyncio.Event(), "end": 0.0}
+        coaching[turn.idx] = clip
+        voiced[turn.idx].set()
+        coach_tasks.append(asyncio.create_task(run_coach(turn.idx, clip)))
+
+    s.voice_nudge = voice_nudge
 
     async def close_turn(turn: LiveTurn, idx: int, prev: asyncio.Task | None) -> int:
         """Close one turn once the previous one is closed (risk follows the order of the call); never blocks the call."""
-        nonlocal spoken, shift_s
         score = await turn.finish(await prev if prev else 0)
         s.log.emit("turn.ended", {"turn_idx": idx})
-        if turn.nudge and not turn.nudge_late and spoken < MAX_SPOKEN_PER_CALL:
-            spoken += 1
-            s.log.emit("coach.speak", {"audio_url": turn.nudge["audio_url"], "duration_ms": turn.nudge["duration_ms"]})
-            if s.pause_for_coach:  # the user's option: the call waits while the coach speaks
-                shift_s += (turn.nudge["duration_ms"] + COACH_GAP_MS) / 1000
+        settled[idx].set()
         return score
 
     ticker = asyncio.create_task(clock())
@@ -315,18 +398,24 @@ async def _run_live(s: Session) -> None:
             await asyncio.gather(*closing)
             if s.late_tasks:  # late deep answers (up to the 8 s LLM budget) still update the call
                 await asyncio.gather(*s.late_tasks, return_exceptions=True)
-            end_s = t0 + (turns[-1]["offset_ms"] + turns[-1]["duration_ms"]) / 1000 * settings.pace + shift_s
-            if (left := end_s - time.perf_counter()) > 0:  # the call is not over until its last audio is
-                await asyncio.sleep(left)
+            await asyncio.gather(*coach_tasks)  # a nudge on the last turn plays before the call ends
+            last = turns[-1]
+            end_at = max([start_at[last["idx"]] + last["duration_ms"] / 1000, *(c["end"] for c in coaching.values())])
+            await sleep_until(end_at)  # the call is not over until its last audio is
+            if agent_anyway:
+                log.info("session=%s agent started without the nudge ready %d time(s)", s.id, agent_anyway)
     except SttError:  # let the turns already heard close properly before the recorded tail takes over
         s.resume_ms = int((time.perf_counter() - t0 - shift_s) * 1000)
         ticker.cancel()
+        for task in coach_tasks:
+            task.cancel()
         await asyncio.gather(*closing, return_exceptions=True)
         raise
     finally:
         warm.cancel()
         ticker.cancel()
-        for task in [*closing, *s.late_tasks]:  # stopped or timed out: nothing may arrive after the client is closed
+        s.voice_nudge = None
+        for task in [*closing, *coach_tasks, *s.late_tasks]:  # stopped or timed out: nothing may arrive after the client is closed
             task.cancel()
         await llm_client.aclose()
     log.info("session=%s llm_skipped=%d | process totals: llm_calls=%d llm_cache_hits=%d", s.id, s.llm_skipped,
@@ -433,6 +522,8 @@ class LiveTurn:
         self.s.log.emit("stage.status", {"stage": "coaching", "turn_idx": self.idx, "text": "Coach"})
         self.s.log.emit("coach.nudge", {"finding_id": f.id, "rule_id": f.rule_id, "text": line["text"],
                                         "audio_url": line["audio_url"], "latency": lat})
+        if not self.nudge_late and self.s.voice_nudge is not None:  # a card shown after the turn ended gets no voice
+            self.s.voice_nudge(self)
 
     def _risk(self, before: int) -> int:
         upd = risk.update(before, list(self.known.values()))

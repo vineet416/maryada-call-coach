@@ -12,6 +12,9 @@ const PAUSE_KEY = 'maryada.pauseForCoach'
  * alone keep the order.)
  */
 const GAIN = { agent: 1, borrower: 1, third_party: 1, coach: 0.8 }
+/** The call audio is lowered by this much while the coach clip plays (3-4 dB; 0 turns ducking off). */
+export const DUCK_DB = -3.5
+const FADE_MS = 150
 
 function readFlag(key: string, fallback: boolean): boolean {
   try {
@@ -34,6 +37,10 @@ class AudioEngine {
   private coach: HTMLAudioElement | null = null
   private cache = new Map<string, HTMLAudioElement>()
   private onCoachEnd: (() => void) | null = null
+  private turnGain = 1
+  private duckLevel = 1 // current multiplier on the call audio (1 = not ducked)
+  private duckTarget = 1
+  private duckTimer: number | undefined
   currentTurnIdx: number | null = null
   coachVoice = readFlag(COACH_KEY, true)
   muted = readFlag(MUTE_KEY, false)
@@ -66,7 +73,8 @@ class AudioEngine {
     const a = this.get(url)
     a.currentTime = 0
     a.muted = this.muted
-    a.volume = GAIN[speaker]
+    this.turnGain = GAIN[speaker]
+    a.volume = this.turnGain * this.duckLevel
     this.turn = a
     this.currentTurnIdx = idx
     void a.play().catch(() => undefined)
@@ -76,6 +84,19 @@ class AudioEngine {
     this.turn?.pause()
     this.turn = null
     this.currentTurnIdx = null
+  }
+
+  /** Lower (or restore) the call audio with a short fade. */
+  private setDuck(on: boolean) {
+    this.duckTarget = on ? 10 ** (DUCK_DB / 20) : 1
+    window.clearInterval(this.duckTimer)
+    const step = ((1 - 10 ** (DUCK_DB / 20)) * 20) / FADE_MS || 1
+    this.duckTimer = window.setInterval(() => {
+      const d = this.duckTarget - this.duckLevel
+      this.duckLevel = Math.abs(d) <= step ? this.duckTarget : this.duckLevel + Math.sign(d) * step
+      if (this.turn) this.turn.volume = this.turnGain * this.duckLevel
+      if (this.duckLevel === this.duckTarget) window.clearInterval(this.duckTimer)
+    }, 20)
   }
 
   /** Hold the call audio where it is (only used by the "pause while the coach speaks" option). */
@@ -92,7 +113,7 @@ class AudioEngine {
     return this.turn && !this.turn.paused ? this.turn.currentTime * 1000 : null
   }
 
-  playCoach(url: string, onEnd: () => void) {
+  playCoach(url: string, onEnd: () => void, duck = true) {
     this.stopCoach()
     if (!this.coachVoice || this.muted) {
       onEnd()
@@ -103,12 +124,14 @@ class AudioEngine {
     a.volume = GAIN.coach
     this.coach = a
     this.onCoachEnd = onEnd
+    if (duck) this.setDuck(true)
     a.onended = () => this.finishCoach()
     a.onerror = () => this.finishCoach()
     void a.play().catch(() => this.finishCoach())
   }
 
   private finishCoach() {
+    this.setDuck(false)
     const cb = this.onCoachEnd
     this.onCoachEnd = null
     if (this.coach) this.coach.onended = null

@@ -122,7 +122,8 @@ export class CallClient {
         audio.playTurn(env.data.audio_url, env.data.turn_idx, env.data.speaker)
         break
       case 'coach.speak': {
-        // The clip plays on top of the call at its event time; the call is never touched unless the user chose
+        // The clip plays on top of the call at its event time (the call is lowered a little while it plays; it is never
+        // paused) unless the user chose
         // "Pause the call while the coach speaks" (the server then also moves the later turns by the clip length).
         st.setNudgeSpeaking(true)
         if (this.hold) {
@@ -134,7 +135,7 @@ export class CallClient {
             audio.resumeTurn()
           }, (env.data.duration_ms ?? 0) + COACH_GAP_MS)
         }
-        audio.playCoach(env.data.audio_url, () => useSessionStore.getState().setNudgeSpeaking(false))
+        audio.playCoach(env.data.audio_url, () => useSessionStore.getState().setNudgeSpeaking(false), !this.hold)
         break
       }
       case 'coach.nudge':
