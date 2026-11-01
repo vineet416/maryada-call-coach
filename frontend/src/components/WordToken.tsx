@@ -13,7 +13,7 @@ interface Props {
   onOpen: (f: Finding) => void
 }
 
-/** One word. Coloured and keyboard-operable when a finding covers it. */
+/** One word. Coloured and keyboard-operable when a finding covers it; the last word of a flagged phrase carries its rule id. */
 export function WordToken({ turnIdx, token, finding, reveal, step, onOpen }: Props) {
   const lang = token.lang === 'mixed' ? 'hi' : token.lang
   const cls = `tok ${reveal ? 'reveal' : ''} ${finding ? `tok-${finding.kind}` : ''}`
@@ -25,6 +25,7 @@ export function WordToken({ turnIdx, token, finding, reveal, step, onOpen }: Pro
       </span>
     )
   }
+  const last = token.i === finding.token_range[1] - 1 && finding.kind !== 'good_practice'
   return (
     <span
       id={tokId(turnIdx, token.i)}
@@ -42,7 +43,8 @@ export function WordToken({ turnIdx, token, finding, reveal, step, onOpen }: Pro
         }
       }}
     >
-      {token.w}{' '}
+      {token.w}
+      {last && <sup className="rt">{finding.rule_id}</sup>}{' '}
     </span>
   )
 }

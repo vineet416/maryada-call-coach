@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Settings - bring your own keys</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F7F9;color:#0F172A;font-family:Inter,'Noto Sans Devanagari',system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#4338CA;text-decoration:none}a:hover{color:#3730A3}
+.nv{padding:8px 12px;border-radius:8px;font-size:14px;font-weight:500;color:#475467}
+.nv:hover{background:#F2F4F7;color:#0F172A}
+.nv.on{background:#EEF0FF;color:#3730A3}
+.card{background:#fff;border:1px solid #E5E7EB;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:500;border:1px solid #E5E7EB;background:#fff;color:#475467;white-space:nowrap}
+.lbl{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#5B6577}
+.fl{font-size:13px;font-weight:500;color:#344054}
+.inp{height:42px;border:1px solid #D0D5DD;border-radius:10px;padding:0 14px;font:inherit;font-size:14px;color:#0F172A;background:#fff;width:100%}
+.inp:focus{outline:2px solid #C7CCFA;border-color:#4338CA}
+.hlp{width:20px;height:20px;border-radius:50%;border:1px solid #D0D5DD;background:#fff;color:#475467;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.pv{display:flex;flex-direction:column;gap:2px;padding:10px 14px;border:1px solid #E5E7EB;border-radius:12px;background:#fff;min-width:128px;cursor:pointer}
+.pv.on{border-color:#4338CA;background:#EEF0FF;box-shadow:0 0 0 2px #C7CCFA}
+.pv b{font-size:14px;font-weight:600}.pv span{font-size:11.5px;color:#5B6577}
+.opt{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;font-size:13.5px;border-radius:8px}
+.opt:hover{background:#F2F4F7}
+.btn{height:40px;padding:0 16px;border-radius:10px;font:inherit;font-weight:600;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+</style>
+</helmet>
+<div style="min-height:1480px;background:#F6F7F9">
+  <header style="background:#fff;border-bottom:1px solid #E5E7EB">
+    <div style="max-width:1280px;margin:0 auto;padding:0 32px;min-height:64px;display:flex;align-items:center;gap:28px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:30px;height:30px;border-radius:8px;background:#4338CA;display:flex;align-items:center;justify-content:center">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <span style="font-size:17px;font-weight:700;letter-spacing:-0.01em">Maryada</span>
+      </div>
+      <nav style="display:flex;gap:4px;flex:1;flex-wrap:wrap">
+        <a class="nv" href="Cases.dc.html">Cases</a>
+        <a class="nv" href="Manager.dc.html">Manager</a>
+        <a class="nv" href="Evaluation.dc.html">Evaluation</a>
+        <a class="nv" href="HowItWorks.dc.html">How it works</a>
+        <a class="nv on" href="Settings.dc.html">Settings</a>
+      </nav>
+      <span class="chip" style="background:#F9FAFB">Synthetic demo &middot; not legal advice</span>
+    </div>
+  </header>
+
+  <main style="max-width:1280px;margin:0 auto;padding:32px 32px 56px;display:flex;flex-direction:column;gap:24px">
+    <div>
+      <h1 style="margin:0;font-size:28px;font-weight:700;letter-spacing:-0.025em">Settings</h1>
+      <div style="color:#5B6577;font-size:14px;margin-top:2px;max-width:700px">Live calls run on your own speech and language keys. Recorded runs need no keys at all.</div>
+    </div>
+
+    <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">
+      <div style="flex:999 1 620px;min-width:0;display:flex;flex-direction:column;gap:20px">
+
+        <section class="card" style="padding:24px;display:flex;flex-direction:column;gap:18px;position:relative;z-index:3">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
+            <div><div style="font-size:17px;font-weight:650;letter-spacing:-0.01em">Speech to text</div><div style="font-size:13px;color:#5B6577">Gnani Prisma transcribes the call as it happens. Your key, your account.</div></div>
+            <span class="chip" style="background:#ECFDF3;border-color:#ABEFC6;color:#067647;font-weight:600"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#067647" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"/></svg>Connected</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;position:relative">
+            <div style="display:flex;align-items:center;gap:8px"><label class="fl" for="g1">Gnani API key</label><span class="hlp" role="button" aria-label="How to get a Gnani API key" style="border-color:#4338CA;color:#4338CA;background:#EEF0FF">?</span></div>
+            <input class="inp" id="g1" type="password" value="sk_live_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+            <div style="position:absolute;left:0;top:30px;width:420px;max-width:100%;background:#fff;border:1px solid #D0D5DD;border-radius:12px;box-shadow:0 12px 32px rgba(16,24,40,.14);padding:16px 18px;z-index:5">
+              <div style="font-size:14px;font-weight:650;margin-bottom:8px">How to get a Gnani API key</div>
+              <ol style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:13px;line-height:1.55;color:#344054">
+                <li>Sign in to your Gnani developer account (create one if you do not have it).</li>
+                <li>Open the API keys section and create a new key for speech to text.</li>
+                <li>Copy the key and paste it here. It is shown only once.</li>
+              </ol>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:12.5px"><a href="#">Open Gnani developer page &#8599;</a><span style="color:#5B6577">Steps are confirmed from Gnani&#39;s docs at build time</span></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:150px"><span class="btn" style="background:#fff;color:#344054;border:1px solid #D0D5DD">Test connection</span><span style="font-size:12.5px;color:#067647;font-weight:500">Key accepted. Speech service reachable.</span></div>
+        </section>
+
+        <section class="card" style="padding:24px;display:flex;flex-direction:column;gap:18px;position:relative;z-index:2">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
+            <div><div style="font-size:17px;font-weight:650;letter-spacing:-0.01em">Language model</div><div style="font-size:13px;color:#5B6577">Any OpenAI-compatible service. It runs the deep rule check. Pick a provider to fill in the address for you.</div></div>
+            <span class="chip" style="background:#F9FAFB">Not tested yet</span>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px"><span class="fl">Provider</span><span class="hlp" role="button" aria-label="How to get a language model key">?</span></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <div class="pv on" role="button"><b>Groq</b><span style="color:#067647;font-weight:600">Free tier</span></div>
+              <div class="pv" role="button"><b>Google Gemini</b><span style="color:#067647;font-weight:600">Free tier</span></div>
+              <div class="pv" role="button"><b>OpenRouter</b><span style="color:#067647;font-weight:600">Free models</span></div>
+              <div class="pv" role="button"><b>OpenAI</b><span>Paid</span></div>
+              <div class="pv" role="button" style="border-style:dashed"><b>Custom</b><span>Your own URL</span></div>
+            </div>
+            <div style="font-size:12.5px;color:#5B6577;display:flex;gap:6px;flex-wrap:wrap;align-items:center">New to Groq? <a href="#">Create a free key at console.groq.com &#8599;</a><span>&middot; Free tiers have per-minute limits, so a long call may pause.</span></div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:6px"><label class="fl" for="l1">Base URL</label><div style="position:relative"><input class="inp" id="l1" type="text" value="https://api.groq.com/openai/v1" readonly style="background:#F9FAFB;padding-right:110px"><span class="chip" style="position:absolute;right:8px;top:8px;height:26px;background:#EEF0FF;border-color:#C7CCFA;color:#3730A3">Filled for you</span></div><div style="font-size:12.5px;color:#5B6577">Editable only when the provider is Custom. Must be a public https address.</div></div>
+
+          <div style="display:flex;flex-direction:column;gap:6px"><label class="fl" for="l2">API key</label><input class="inp" id="l2" type="password" value="gsk_xxxxxxxxxxxxxxxxxxxxxxxx" autocomplete="off"></div>
+
+          <div style="display:flex;flex-direction:column;gap:6px;position:relative;margin-bottom:232px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline"><label class="fl" for="l3">Model</label><span style="font-size:12px;color:#067647;font-weight:500">Loaded from your provider &middot; 14 models</span></div>
+            <div class="inp" id="l3" style="display:flex;align-items:center;justify-content:space-between;border-color:#4338CA;outline:2px solid #C7CCFA"><span>llama-3.3-70b-versatile</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#475467" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></div>
+            <div style="position:absolute;left:0;right:0;top:72px;background:#fff;border:1px solid #D0D5DD;border-radius:12px;box-shadow:0 12px 32px rgba(16,24,40,.14);padding:6px;z-index:6">
+              <div style="padding:6px 12px 4px"><span class="lbl">Available on this provider (example list)</span></div>
+              <div class="opt" style="background:#EEF0FF;color:#3730A3;font-weight:600"><span>llama-3.3-70b-versatile</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4338CA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"/></svg></div>
+              <div class="opt"><span>llama-3.1-8b-instant</span><span style="font-size:11.5px;color:#5B6577">faster, less accurate</span></div>
+              <div class="opt"><span>openai/gpt-oss-20b</span></div>
+              <div class="opt"><span>openai/gpt-oss-120b</span></div>
+              <div class="opt"><span>qwen/qwen3-32b</span></div>
+              <div style="padding:6px 12px 6px;font-size:12px;color:#5B6577;border-top:1px solid #F2F4F7;margin-top:4px">Maryada was tuned on gpt-5.4-mini. Other models work, but results vary, especially on Hindi and English mixed speech.</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="btn" style="background:#fff;color:#344054;border:1px solid #D0D5DD">Test connection</span><span style="font-size:12.5px;color:#5B6577">Sends one short sample and checks the reply format. Uses a few tokens.</span></div>
+        </section>
+
+        <section class="card" style="padding:24px;display:flex;flex-direction:column;gap:16px">
+          <div style="font-size:17px;font-weight:650;letter-spacing:-0.01em">Where keys are kept</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <label style="display:flex;gap:12px;align-items:flex-start;border:1px solid #C7CCFA;background:#F8F8FF;border-radius:12px;padding:14px 16px"><span style="width:18px;height:18px;border-radius:50%;border:5px solid #4338CA;background:#fff;flex:none;margin-top:2px"></span><span><span style="font-weight:600;font-size:14px">This browser tab only</span><br><span style="font-size:13px;color:#5B6577">Cleared when you close the tab. Recommended.</span></span></label>
+            <label style="display:flex;gap:12px;align-items:flex-start;border:1px solid #E5E7EB;border-radius:12px;padding:14px 16px"><span style="width:18px;height:18px;border-radius:50%;border:2px solid #D0D5DD;background:#fff;flex:none;margin-top:2px"></span><span><span style="font-weight:600;font-size:14px">Remember on this device</span><br><span style="font-size:13px;color:#5B6577">Keeps keys in this browser until you clear them. Not for shared computers.</span></span></label>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap"><span class="btn" style="background:#4338CA;color:#fff;border:1px solid #4338CA">Save settings</span><span class="btn" style="background:#fff;color:#B42318;border:1px solid #FDA29B">Clear all keys</span></div>
+        </section>
+      </div>
+
+      <aside style="flex:1 1 320px;min-width:300px;max-width:400px;display:flex;flex-direction:column;gap:20px">
+        <section class="card" style="padding:22px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;gap:10px"><div style="width:34px;height:34px;border-radius:10px;background:#EEF0FF;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4338CA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></div><div style="font-size:15px;font-weight:600">How your keys are handled</div></div>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px;line-height:1.6;color:#344054">
+            <div>Keys stay in your browser and are sent over HTTPS only when a call starts.</div>
+            <div>The server holds them in memory for that call, and never stores or logs them.</div>
+            <div>This site holds no keys of its own, so there is nothing to fall back to: if your key fails, you see the error.</div>
+          </div>
+        </section>
+        <section class="card" style="padding:22px;display:flex;flex-direction:column;gap:12px">
+          <div style="font-size:15px;font-weight:600">Live call limits</div>
+          <div style="display:flex;flex-direction:column;gap:0;border:1px solid #EAECF0;border-radius:12px;overflow:hidden">
+            <div style="display:flex;justify-content:space-between;padding:10px 14px;font-size:13px;border-bottom:1px solid #EAECF0"><span style="color:#5B6577">Who pays</span><b style="font-weight:600">Your own accounts</b></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 14px;font-size:13px;border-bottom:1px solid #EAECF0"><span style="color:#5B6577">Call length</span><b style="font-weight:600">200 s</b></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 14px;font-size:13px"><span style="color:#5B6577">Calls at once</span><b style="font-weight:600">3</b></div>
+          </div>
+        </section>
+        <section class="card" style="padding:22px;display:flex;flex-direction:column;gap:10px;background:#F8F8FF;border-color:#C7CCFA">
+          <div style="font-size:15px;font-weight:600;color:#3730A3">No keys? Use recorded runs</div>
+          <div style="font-size:13.5px;line-height:1.6;color:#344054">Every sample call has a recorded run with the real findings and coach nudges. They need no keys and are free to play as often as you like.</div>
+          <a href="Cases.dc.html" style="font-size:13.5px;font-weight:600">Browse recorded runs &rarr;</a>
+        </section>
+        <section class="card" style="padding:22px;display:flex;flex-direction:column;gap:12px">
+          <div style="font-size:15px;font-weight:600">Preferences</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:13.5px"><span>Play the coach voice</span><span style="width:36px;height:22px;border-radius:999px;background:#4338CA;position:relative;display:inline-block"><span style="position:absolute;right:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff"></span></span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:13.5px"><span>Pause the call while the coach speaks</span><span style="width:36px;height:22px;border-radius:999px;background:#4338CA;position:relative;display:inline-block"><span style="position:absolute;right:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff"></span></span></div>
+        </section>
+      </aside>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1480}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

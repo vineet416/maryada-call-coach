@@ -23,12 +23,10 @@ export function ReconnectBanner() {
 
   if (!visible || conn !== 'reconnecting') return null
   return (
-    <div
-      role="status"
-      className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3"
-    >
-      <div className="rounded-full border border-[var(--mc-advisory)]/50 bg-[var(--mc-surface)] px-4 py-1.5 text-sm text-[var(--mc-advisory)] shadow-lg">
-        Reconnecting… (attempt {attempt}/3)
+    <div role="status" className="fixed inset-x-0 top-0 z-50">
+      <div className="flex items-center gap-2.5 border-b border-[var(--mc-advisory-edge)] bg-[var(--mc-advisory-tint)] px-5 py-3 text-[13px] font-medium text-[#93370d]">
+        <span className="spinner h-4 w-4 flex-none !border-[2.5px] !border-[var(--mc-advisory-edge)] !border-t-[var(--mc-advisory-ink)]" aria-hidden />
+        Connection lost. Reconnecting, your call is safe… (attempt {attempt}/3)
       </div>
     </div>
   )

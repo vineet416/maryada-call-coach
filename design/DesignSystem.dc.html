@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Design system</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F7F9;color:#0F172A;font-family:Inter,'Noto Sans Devanagari',system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#4338CA;text-decoration:none}
+.card{background:#fff;border:1px solid #E5E7EB;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:500;border:1px solid #E5E7EB;background:#fff;color:#475467;white-space:nowrap}
+.lbl{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#5B6577}
+.btn{height:40px;padding:0 16px;border-radius:10px;font:inherit;font-weight:600;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.tv{background:#FEF3F2;text-decoration:underline;text-decoration-style:solid;text-decoration-color:#D92D20;text-decoration-thickness:2px;text-underline-offset:5px;border-radius:3px;padding:1px 2px}
+.tr{background:#FFFAEB;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:#F79009;text-decoration-thickness:2px;text-underline-offset:5px;border-radius:3px;padding:1px 2px}
+.tc{text-decoration:underline;text-decoration-style:dashed;text-decoration-color:#2E6BF0;text-decoration-thickness:2px;text-underline-offset:5px}
+.tg{background:#DCFAE6;border-radius:3px;padding:1px 2px}
+</style>
+</helmet>
+<div style="min-height:1500px;background:#F6F7F9;padding:48px 40px 64px">
+  <div style="max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:32px">
+
+    <div>
+      <div class="lbl">Maryada</div>
+      <h1 style="margin:4px 0 4px;font-size:32px;font-weight:700;letter-spacing:-0.025em">Design system</h1>
+      <div style="color:#5B6577;font-size:14px;max-width:720px">Light theme for a compliance product. Colour carries meaning only: red for violations, amber for needs review, blue for context, green for good practice. One indigo accent for actions.</div>
+    </div>
+
+    <section class="card" style="padding:24px;display:flex;flex-direction:column;gap:18px">
+      <div style="font-size:17px;font-weight:650">Colour</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px">
+        <sc-for list="{{swatches}}" as="s" hint-placeholder-count="14">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="{{s.style}}"></div>
+            <div><div style="font-size:13px;font-weight:600">{{s.name}}</div><div style="font-size:12px;color:#5B6577;font-variant-numeric:tabular-nums">{{s.hex}} &middot; {{s.use}}</div></div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:stretch">
+      <section class="card" style="flex:1.2 1 560px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:17px;font-weight:650">Type</div>
+        <div style="font-size:12px;color:#5B6577">Inter for Latin text, Noto Sans Devanagari for Hindi. Numbers use tabular figures.</div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;align-items:baseline;gap:16px"><span class="lbl" style="width:90px">Display</span><span style="font-size:34px;font-weight:700;letter-spacing:-0.025em;line-height:1.15">Compliance, live</span></div>
+          <div style="display:flex;align-items:baseline;gap:16px"><span class="lbl" style="width:90px">Heading</span><span style="font-size:22px;font-weight:650;letter-spacing:-0.015em">The threat that broke two RBI rules</span></div>
+          <div style="display:flex;align-items:baseline;gap:16px"><span class="lbl" style="width:90px">Title</span><span style="font-size:16px;font-weight:600">Agent leaderboard</span></div>
+          <div style="display:flex;align-items:baseline;gap:16px"><span class="lbl" style="width:90px">Body</span><span style="font-size:14px">Maryada checks every agent sentence against the rulebook.</span></div>
+          <div style="display:flex;align-items:baseline;gap:16px"><span class="lbl" style="width:90px">Transcript</span><span style="font-size:15px;line-height:1.8">मैडम, आज शाम तक payment चाहिए।</span></div>
+          <div style="display:flex;align-items:baseline;gap:16px"><span class="lbl" style="width:90px">Caption</span><span style="font-size:12px;color:#5B6577">Agent &middot; 00:33</span></div>
+          <div style="display:flex;align-items:baseline;gap:16px"><span class="lbl" style="width:90px">Metric</span><span style="font-size:34px;font-weight:700;letter-spacing:-0.03em;font-variant-numeric:tabular-nums">65</span></div>
+        </div>
+      </section>
+
+      <section class="card" style="flex:1 1 420px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:17px;font-weight:650">Transcript markers</div>
+        <div style="font-size:12px;color:#5B6577">Every status has its own underline, so colour is never the only signal.</div>
+        <div style="font-size:15px;line-height:2.3;background:#F6F7FB;border-radius:12px;padding:12px 16px">
+          <div><span class="tv">पुलिस को भेजूंगा</span> &nbsp; <span style="font-size:12px;color:#5B6577">Violation: solid red underline</span></div>
+          <div><span class="tr">तारंग Finserv से</span> &nbsp; <span style="font-size:12px;color:#5B6577">Needs review: dotted amber</span></div>
+          <div><span class="tc">2 EMI pending</span> &nbsp; <span style="font-size:12px;color:#5B6577">Context: dashed blue</span></div>
+          <div><span class="tg">स्मिता जी</span> &nbsp; <span style="font-size:12px;color:#5B6577">Good practice: green highlight</span></div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
+          <span class="chip" style="background:#FEF3F2;border-color:#FDA29B;color:#B42318;font-weight:700">R5</span>
+          <span class="chip" style="background:#FFFAEB;border-color:#FEC84B;color:#B54708;font-weight:700">R2</span>
+          <span class="chip" style="background:#EFF4FF;border-color:#B2CCFF;color:#1D4ED8;font-weight:700">R6</span>
+          <span class="chip" style="background:#ECFDF3;border-color:#ABEFC6;color:#067647;font-weight:700">G1</span>
+        </div>
+      </section>
+    </div>
+
+    <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:stretch">
+      <section class="card" style="flex:1 1 420px;padding:24px;display:flex;flex-direction:column;gap:16px">
+        <div style="font-size:17px;font-weight:650">Buttons</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+          <span class="btn" style="background:#4338CA;color:#fff;border:1px solid #4338CA;box-shadow:0 1px 2px rgba(16,24,40,.12)">Primary</span>
+          <span class="btn" style="background:#fff;color:#344054;border:1px solid #D0D5DD">Secondary</span>
+          <span class="btn" style="background:#fff;color:#B42318;border:1px solid #FDA29B">Danger</span>
+          <span class="btn" style="background:#F2F4F7;color:#98A2B3;border:1px solid #EAECF0">Disabled</span>
+        </div>
+        <div style="font-size:12px;color:#5B6577">Height 40 px, radius 10 px. The large call-to-action is 44 px. Focus ring: 2 px #C7CCFA.</div>
+        <div style="font-size:17px;font-weight:650;margin-top:6px">Inputs and toggles</div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+          <div style="height:42px;min-width:220px;border:1px solid #D0D5DD;border-radius:10px;padding:0 14px;display:flex;align-items:center;color:#98A2B3;font-size:14px">Paste your key</div>
+          <div style="height:42px;min-width:220px;border:1px solid #FDA29B;border-radius:10px;padding:0 14px;display:flex;align-items:center;color:#0F172A;font-size:14px">Invalid value</div>
+          <span style="width:36px;height:22px;border-radius:999px;background:#4338CA;position:relative;display:inline-block"><span style="position:absolute;right:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff"></span></span>
+          <span style="width:36px;height:22px;border-radius:999px;background:#D0D5DD;position:relative;display:inline-block"><span style="position:absolute;left:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff"></span></span>
+        </div>
+      </section>
+
+      <section class="card" style="flex:1 1 420px;padding:24px;display:flex;flex-direction:column;gap:16px">
+        <div style="font-size:17px;font-weight:650">Status and risk</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;background:#ECFDF3;color:#067647">Low risk</span>
+          <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;background:#FFFAEB;color:#B54708">Medium risk</span>
+          <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;background:#FEF3F2;color:#B42318">High risk</span>
+          <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;background:#ECFDF3;color:#067647">Excellent</span>
+          <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;background:#FFFAEB;color:#B54708">Watch</span>
+          <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;background:#FEF3F2;color:#B42318">Needs training</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;gap:12px"><span style="width:60px;font-size:12px;color:#5B6577">Low</span><div style="flex:1;height:8px;border-radius:999px;background:#EAECF0;overflow:hidden"><div style="width:12%;height:100%;background:#12B76A;border-radius:999px"></div></div></div>
+          <div style="display:flex;align-items:center;gap:12px"><span style="width:60px;font-size:12px;color:#5B6577">Medium</span><div style="flex:1;height:8px;border-radius:999px;background:#EAECF0;overflow:hidden"><div style="width:45%;height:100%;background:#F79009;border-radius:999px"></div></div></div>
+          <div style="display:flex;align-items:center;gap:12px"><span style="width:60px;font-size:12px;color:#5B6577">High</span><div style="flex:1;height:8px;border-radius:999px;background:#EAECF0;overflow:hidden"><div style="width:78%;height:100%;background:#D92D20;border-radius:999px"></div></div></div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div style="flex:1 1 180px;background:#EEF0FF;color:#3730A3;border-radius:10px;padding:10px 12px;font-size:12.5px;font-weight:500">Info banner</div>
+          <div style="flex:1 1 180px;background:#FFFAEB;border:1px solid #FEC84B;color:#93370D;border-radius:10px;padding:10px 12px;font-size:12.5px;font-weight:500">Warning banner</div>
+          <div style="flex:1 1 180px;background:#FEF3F2;border:1px solid #FDA29B;color:#B42318;border-radius:10px;padding:10px 12px;font-size:12.5px;font-weight:500">Error banner</div>
+        </div>
+      </section>
+    </div>
+
+    <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:stretch">
+      <section class="card" style="flex:1 1 420px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:17px;font-weight:650">Layout tokens</div>
+        <div style="display:flex;flex-direction:column;gap:0;border:1px solid #EAECF0;border-radius:12px;overflow:hidden;font-size:13px">
+          <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #EAECF0"><span style="color:#5B6577">Page width</span><b style="font-weight:600">1280 px, 32 px gutter</b></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #EAECF0"><span style="color:#5B6577">Spacing scale</span><b style="font-weight:600">4, 8, 12, 16, 20, 24, 32, 48</b></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #EAECF0"><span style="color:#5B6577">Card radius</span><b style="font-weight:600">14 px</b></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #EAECF0"><span style="color:#5B6577">Control radius</span><b style="font-weight:600">10 px</b></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #EAECF0"><span style="color:#5B6577">Pill radius</span><b style="font-weight:600">999 px</b></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #EAECF0"><span style="color:#5B6577">Card shadow</span><b style="font-weight:600">0 1 2 rgba(16,24,40,.04)</b></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 14px"><span style="color:#5B6577">Phone layout</span><b style="font-weight:600">390 px, 16 px gutter</b></div>
+        </div>
+      </section>
+
+      <section class="card" style="flex:1 1 420px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:17px;font-weight:650">Rules for handoff</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px;line-height:1.6;color:#344054">
+          <div>Keep all behaviour of the built app: word-by-word reveal, tappable underlined words, coach hold, silent reconnect.</div>
+          <div>Rule names, thresholds and text come from the backend. The screens here show example copy only.</div>
+          <div>Evaluation numbers on the design are examples. The real page reads the committed results file.</div>
+          <div>Text contrast is 4.5:1 or better. Targets are at least 40 px on touch screens.</div>
+          <div>No emoji. Icons are 2 px stroke, rounded, 16 to 20 px.</div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const sw = [
+      ['Accent', '#4338CA', 'actions, links'],
+      ['Accent dark', '#3730A3', 'hover, active text'],
+      ['Accent tint', '#EEF0FF', 'selected, coach'],
+      ['Ink', '#0F172A', 'primary text'],
+      ['Ink muted', '#5B6577', 'secondary text'],
+      ['Border', '#E5E7EB', 'cards, dividers'],
+      ['Page', '#F6F7F9', 'background'],
+      ['Surface', '#FFFFFF', 'cards'],
+      ['Violation', '#D92D20', 'underline, bars'],
+      ['Violation tint', '#FEF3F2', 'fill, text #B42318'],
+      ['Review', '#F79009', 'dotted underline'],
+      ['Review tint', '#FFFAEB', 'fill, text #B54708'],
+      ['Context', '#2E6BF0', 'dashed underline'],
+      ['Good practice', '#12B76A', 'fill #DCFAE6, text #067647']
+    ];
+    const swatches = sw.map(([name, hex, use]) => ({
+      name, hex, use,
+      style: 'height:56px;border-radius:10px;border:1px solid rgba(15,23,42,.08);background:' + hex
+    }));
+    return { swatches };
+  }
+}
+</script>
+</body>
+</html>

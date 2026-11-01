@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>How it works</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F7F9;color:#0F172A;font-family:Inter,'Noto Sans Devanagari',system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#4338CA;text-decoration:none}a:hover{color:#3730A3}
+.nv{padding:8px 12px;border-radius:8px;font-size:14px;font-weight:500;color:#475467}
+.nv:hover{background:#F2F4F7;color:#0F172A}
+.nv.on{background:#EEF0FF;color:#3730A3}
+.card{background:#fff;border:1px solid #E5E7EB;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:500;border:1px solid #E5E7EB;background:#fff;color:#475467;white-space:nowrap}
+.lbl{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#5B6577}
+.th{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#5B6577}
+.tv{background:#FEF3F2;text-decoration:underline;text-decoration-style:solid;text-decoration-color:#D92D20;text-decoration-thickness:2px;text-underline-offset:5px;border-radius:3px;padding:1px 2px}
+.tr{background:#FFFAEB;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:#F79009;text-decoration-thickness:2px;text-underline-offset:5px;border-radius:3px;padding:1px 2px}
+.tc{text-decoration:underline;text-decoration-style:dashed;text-decoration-color:#2E6BF0;text-decoration-thickness:2px;text-underline-offset:5px}
+.tg{background:#DCFAE6;border-radius:3px;padding:1px 2px}
+.step{flex:1 1 200px;min-width:190px;display:flex;flex-direction:column;gap:8px;padding:18px;background:#fff;border:1px solid #E5E7EB;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+</style>
+</helmet>
+<div style="min-height:1300px;background:#F6F7F9">
+  <header style="background:#fff;border-bottom:1px solid #E5E7EB">
+    <div style="max-width:1280px;margin:0 auto;padding:0 32px;min-height:64px;display:flex;align-items:center;gap:28px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:30px;height:30px;border-radius:8px;background:#4338CA;display:flex;align-items:center;justify-content:center">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <span style="font-size:17px;font-weight:700;letter-spacing:-0.01em">Maryada</span>
+      </div>
+      <nav style="display:flex;gap:4px;flex:1;flex-wrap:wrap">
+        <a class="nv" href="Cases.dc.html">Cases</a>
+        <a class="nv" href="Manager.dc.html">Manager</a>
+        <a class="nv" href="Evaluation.dc.html">Evaluation</a>
+        <a class="nv on" href="HowItWorks.dc.html">How it works</a>
+        <a class="nv" href="Settings.dc.html">Settings</a>
+      </nav>
+      <span class="chip" style="background:#F9FAFB">Synthetic demo &middot; not legal advice</span>
+    </div>
+  </header>
+
+  <main style="max-width:1280px;margin:0 auto;padding:40px 32px 56px;display:flex;flex-direction:column;gap:40px">
+
+    <div style="max-width:760px;display:flex;flex-direction:column;gap:10px">
+      <h1 style="margin:0;font-size:34px;line-height:1.15;font-weight:700;letter-spacing:-0.025em">A compliance coach that listens while the agent talks</h1>
+      <p style="margin:0;font-size:16px;line-height:1.65;color:#475467">Maryada listens to a recovery call, checks every agent sentence against RBI-style conduct rules, and whispers a short correction to the agent before the next sentence. The borrower never hears it.</p>
+    </div>
+
+    <section style="display:flex;flex-direction:column;gap:14px">
+      <div style="font-size:18px;font-weight:650;letter-spacing:-0.015em">From voice to coaching in about three seconds</div>
+      <div style="display:flex;align-items:stretch;gap:10px;flex-wrap:wrap">
+        <div class="step">
+          <div style="width:34px;height:34px;border-radius:10px;background:#EEF0FF;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4338CA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></div>
+          <div style="font-weight:600;font-size:15px">1. Call audio</div>
+          <div style="font-size:13px;color:#5B6577;line-height:1.55">The agent and borrower speak. Audio streams in turn by turn.</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#98A2B3" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="step">
+          <div style="width:34px;height:34px;border-radius:10px;background:#EEF0FF;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4338CA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h14"/></svg></div>
+          <div style="font-weight:600;font-size:15px">2. Speech to text</div>
+          <div style="font-size:13px;color:#5B6577;line-height:1.55">Gnani Prisma turns Indian-language speech, including Hindi and English mixed together, into a live transcript.</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#98A2B3" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="step">
+          <div style="width:34px;height:34px;border-radius:10px;background:#EEF0FF;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4338CA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <div style="font-weight:600;font-size:15px">3. Rule check</div>
+          <div style="font-size:13px;color:#5B6577;line-height:1.55">A fast phrase check flags in about 3 s. A deep language check confirms in about 5 s.</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#98A2B3" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="step">
+          <div style="width:34px;height:34px;border-radius:10px;background:#EEF0FF;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4338CA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18a8 8 0 1116 0"/><path d="M12 18l4-6"/></svg></div>
+          <div style="font-weight:600;font-size:15px">4. Risk score</div>
+          <div style="font-size:13px;color:#5B6577;line-height:1.55">Each finding adds to a 0 to 100 meter. Clean turns bring it down.</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#98A2B3" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="step" style="border-color:#C7CCFA;background:#F8F8FF">
+          <div style="width:34px;height:34px;border-radius:10px;background:#4338CA;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14v-2a8 8 0 0116 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg></div>
+          <div style="font-weight:600;font-size:15px">5. Coach voice</div>
+          <div style="font-size:13px;color:#5B6577;line-height:1.55">A short spoken nudge plays in the agent&#39;s headset at the next pause.</div>
+        </div>
+      </div>
+    </section>
+
+    <section style="display:flex;gap:20px;flex-wrap:wrap;align-items:stretch">
+      <div class="card" style="flex:1 1 520px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:18px;font-weight:650;letter-spacing:-0.015em">How to read the transcript</div>
+        <div style="font-size:15px;line-height:2;background:#F6F7FB;border-radius:12px;padding:14px 16px">
+          <span class="tv">पुलिस को भेजूंगा आपके घर</span> &middot; a clear violation<br>
+          <span class="tr">तारंग Finserv से</span> &middot; needs review<br>
+          <span class="tc">आपके personal loan की 2 EMI</span> &middot; context<br>
+          <span class="tg">स्मिता जी</span> &middot; good practice
+        </div>
+        <div style="font-size:13.5px;line-height:1.65;color:#475467">Tap any underlined phrase to see the rule, why it was flagged, and a better way to say it. Colour is never the only signal: each style also has its own underline.</div>
+      </div>
+      <div class="card" style="flex:1 1 420px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:18px;font-weight:650;letter-spacing:-0.015em">What the coach does and does not do</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px;line-height:1.6;color:#344054">
+          <div style="display:flex;gap:10px"><span style="color:#067647;font-weight:700">&#10003;</span>Speaks only to the agent, in a calm one-line nudge.</div>
+          <div style="display:flex;gap:10px"><span style="color:#067647;font-weight:700">&#10003;</span>Names the rule and offers a safer way to continue.</div>
+          <div style="display:flex;gap:10px"><span style="color:#B42318;font-weight:700">&#10005;</span>Does not give legal advice or decide who is at fault.</div>
+          <div style="display:flex;gap:10px"><span style="color:#B42318;font-weight:700">&#10005;</span>Does not store your keys, and the demo uses synthetic calls only.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="overflow:hidden">
+      <div style="padding:18px 24px;border-bottom:1px solid #EAECF0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div style="font-size:18px;font-weight:650;letter-spacing:-0.015em">Which model does what</div><span style="font-size:12px;color:#5B6577">Live calls use your keys. Recorded runs use none.</span></div>
+      <div style="overflow-x:auto"><div style="min-width:760px">
+        <div style="display:grid;grid-template-columns:1.6fr 2.2fr 3fr;gap:16px;padding:10px 24px;background:#F9FAFB;border-bottom:1px solid #EAECF0"><span class="th">Task</span><span class="th">Model or method</span><span class="th">Notes</span></div>
+        <div style="display:grid;grid-template-columns:1.6fr 2.2fr 3fr;gap:16px;padding:14px 24px;border-bottom:1px solid #F2F4F7;align-items:center"><span style="font-weight:600;font-size:14px">Speech to text</span><span style="font-size:13.5px">Gnani Prisma V3.0</span><span style="font-size:13.5px;color:#475467">Indian-language speech, language detected automatically. Tested here on Hindi and English calls. Your Gnani key.</span></div>
+        <div style="display:grid;grid-template-columns:1.6fr 2.2fr 3fr;gap:16px;padding:14px 24px;border-bottom:1px solid #F2F4F7;align-items:center"><span style="font-weight:600;font-size:14px">Fast phrase check</span><span style="font-size:13.5px">Rules and phrase lists, no model</span><span style="font-size:13.5px;color:#475467">Flags in about 3 s. Also decides calling hours (R1).</span></div>
+        <div style="display:grid;grid-template-columns:1.6fr 2.2fr 3fr;gap:16px;padding:14px 24px;border-bottom:1px solid #F2F4F7;align-items:center"><span style="font-weight:600;font-size:14px">Deep rule check</span><span style="font-size:13.5px">The language model you choose</span><span style="font-size:13.5px;color:#475467">Confirms in about 5 s. Tuned on gpt-5.4-mini; others vary.</span></div>
+        <div style="display:grid;grid-template-columns:1.6fr 2.2fr 3fr;gap:16px;padding:14px 24px;align-items:center"><span style="font-weight:600;font-size:14px">Coach voice and call audio</span><span style="font-size:13.5px">Gnani Timbre V3.0</span><span style="font-size:13.5px;color:#475467">Recorded in advance, so recorded runs play with no keys.</span></div>
+      </div></div>
+    </section>
+
+    <section class="card" style="overflow:hidden">
+      <div style="padding:18px 24px;border-bottom:1px solid #EAECF0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div style="font-size:18px;font-weight:650;letter-spacing:-0.015em">The rulebook</div><span style="font-size:12px;color:#5B6577">Illustrative rules for a synthetic demo. Not legal advice.</span></div>
+      <div style="overflow-x:auto">
+        <div style="min-width:760px">
+          <div style="display:grid;grid-template-columns:.6fr 2fr 4fr 1fr;gap:16px;padding:10px 24px;background:#F9FAFB;border-bottom:1px solid #EAECF0"><span class="th">Rule</span><span class="th">Name</span><span class="th">What it looks for</span><span class="th">Kind</span></div>
+          <sc-for list="{{rules}}" as="r" hint-placeholder-count="7">
+            <div style="display:grid;grid-template-columns:.6fr 2fr 4fr 1fr;gap:16px;padding:14px 24px;border-bottom:1px solid #F2F4F7;align-items:center">
+              <span style="{{r.idStyle}}">{{r.id}}</span>
+              <span style="font-weight:600;font-size:14px">{{r.name}}</span>
+              <span style="font-size:13.5px;color:#475467;line-height:1.55">{{r.text}}</span>
+              <span style="font-size:12.5px;color:#5B6577">{{r.kind}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="padding:24px;display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:#F8F8FF;border-color:#C7CCFA">
+      <div style="max-width:720px">
+        <div class="lbl" style="color:#3730A3">Next</div>
+        <div style="font-size:18px;font-weight:650;letter-spacing:-0.015em;margin-top:2px">Bring your own recordings</div>
+        <div style="font-size:13.5px;line-height:1.65;color:#475467;margin-top:4px">This demo runs on synthetic calls only. Uploading real recordings for batch review is the next step, and needs consent and privacy controls first.</div>
+      </div>
+      <a href="Cases.dc.html" style="height:44px;padding:0 20px;border-radius:10px;background:#4338CA;color:#fff;font-weight:600;font-size:14px;display:inline-flex;align-items:center">Try the hero call</a>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1700}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const base = 'display:inline-flex;align-items:center;justify-content:center;width:42px;height:24px;border-radius:999px;font-size:11.5px;font-weight:700;border:1px solid ';
+    const red = base + '#FDA29B;background:#FEF3F2;color:#B42318';
+    const amber = base + '#FEC84B;background:#FFFAEB;color:#B54708';
+    const blue = base + '#B2CCFF;background:#EFF4FF;color:#1D4ED8';
+    const green = base + '#ABEFC6;background:#ECFDF3;color:#067647';
+    const rules = [
+      { id: 'R1', idStyle: amber, name: 'Calling hours', text: 'The call is placed outside the permitted calling hours. Checked from the call time, with no language model needed.', kind: 'Violation' },
+      { id: 'R2', idStyle: amber, name: 'Identification and recording notice', text: 'In its first two turns, the agent says who they are, which company they call from, and that the call is recorded.', kind: 'Advisory' },
+      { id: 'R3', idStyle: red, name: 'Abuse, threats, humiliation', text: 'Abusive language, threats of harm, or shaming the borrower in front of others.', kind: 'Violation' },
+      { id: 'R4', idStyle: red, name: 'Third-party disclosure', text: 'Loan details are shared with someone who answered the phone and is not the borrower.', kind: 'Violation' },
+      { id: 'R5', idStyle: red, name: 'False or misleading legal threats', text: 'Threats of police, court or legal action that have not been started or cannot be taken.', kind: 'Violation' },
+      { id: 'R6', idStyle: blue, name: 'Sensitive occasions', text: 'Pushing for payment during a bereavement, an illness or another sensitive moment.', kind: 'Advisory' },
+      { id: 'G1', idStyle: green, name: 'Good practice', text: 'Polite address, a clear explanation of the dues, and an offer of a payment plan. Lowers the risk score.', kind: 'Positive' }
+    ];
+    return { rules };
+  }
+}
+</script>
+</body>
+</html>

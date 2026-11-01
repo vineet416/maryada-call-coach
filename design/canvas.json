@@ -1,0 +1,144 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-31T16:05:00Z"
+  },
+  "title": "Maryada UI Design",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 1000,
+      "expand": "fill",
+      "title": "Live call - coach hold"
+    },
+    "Cases.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 1100,
+      "expand": "fill",
+      "title": "Cases"
+    },
+    "Drawer.dc.html": {
+      "x": 0,
+      "y": 1440,
+      "w": 1440,
+      "h": 1000,
+      "expand": "fill",
+      "title": "Live call - finding detail"
+    },
+    "Summary.dc.html": {
+      "x": 1520,
+      "y": 1440,
+      "w": 1440,
+      "h": 1000,
+      "expand": "fill",
+      "title": "Call summary"
+    },
+    "LiveMobile.dc.html": {
+      "x": 3040,
+      "y": 1440,
+      "w": 390,
+      "h": 844,
+      "title": "Live call - mobile"
+    },
+    "States.dc.html": {
+      "x": 3510,
+      "y": 1440,
+      "w": 1440,
+      "h": 980,
+      "title": "States"
+    },
+    "Manager.dc.html": {
+      "x": 0,
+      "y": 2760,
+      "w": 1440,
+      "h": 1560,
+      "expand": "fill",
+      "title": "Manager - team compliance"
+    },
+    "Evaluation.dc.html": {
+      "x": 1520,
+      "y": 2760,
+      "w": 1440,
+      "h": 1500,
+      "expand": "fill",
+      "title": "Evaluation"
+    },
+    "HowItWorks.dc.html": {
+      "x": 3040,
+      "y": 2760,
+      "w": 1440,
+      "h": 1700,
+      "expand": "fill",
+      "title": "How it works"
+    },
+    "Settings.dc.html": {
+      "x": 0,
+      "y": 4640,
+      "w": 1440,
+      "h": 1480,
+      "expand": "fill",
+      "title": "Settings - bring your own keys"
+    },
+    "DesignSystem.dc.html": {
+      "x": 1520,
+      "y": 4640,
+      "w": 1440,
+      "h": 1500,
+      "expand": "fill",
+      "title": "Design system"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Cases.dc.html",
+    "Drawer.dc.html",
+    "Summary.dc.html",
+    "LiveMobile.dc.html",
+    "States.dc.html",
+    "Manager.dc.html",
+    "Evaluation.dc.html",
+    "HowItWorks.dc.html",
+    "Settings.dc.html",
+    "DesignSystem.dc.html"
+  ],
+  "notes": {
+    "t1": {
+      "x": 0,
+      "y": -260,
+      "text": "Cases and live call",
+      "kind": "title1",
+      "maxW": 2960
+    },
+    "t2": {
+      "x": 0,
+      "y": 1180,
+      "text": "Call detail, summary, mobile and states",
+      "kind": "title1",
+      "maxW": 4950
+    },
+    "t3": {
+      "x": 0,
+      "y": 2500,
+      "text": "Manager, evaluation and how it works",
+      "kind": "title1",
+      "maxW": 4480
+    },
+    "t4": {
+      "x": 0,
+      "y": 4380,
+      "text": "Settings and design system",
+      "kind": "title1",
+      "maxW": 2960
+    }
+  },
+  "designSystems": []
+}

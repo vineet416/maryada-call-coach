@@ -1,14 +1,13 @@
-import { CircleHelp, Eye, EyeOff, LoaderCircle } from 'lucide-react'
+import { ChevronDown, Eye, EyeOff, Lock, LoaderCircle } from 'lucide-react'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { Link } from 'react-router-dom'
+import { Switch } from '@/components/Switch'
 import { audio } from '@/lib/audioEngine'
 import { listModels, testGnani, testLlm, type TestResult } from '@/lib/api'
 import { GNANI_KEY_URL, PROVIDERS } from '@/lib/providers'
 import { useKeysStore } from '@/store/keysStore'
 
-const box = 'rounded-2xl border border-[var(--mc-line)] bg-[var(--mc-surface)] p-5'
-const input =
-  'w-full rounded-md border border-[var(--mc-line)] bg-[var(--mc-bg)] px-3 py-2 text-sm outline-none focus:border-[var(--mc-accent)] disabled:opacity-70'
-const btn = 'rounded-md border border-[var(--mc-line)] px-3 py-1.5 text-sm hover:bg-[var(--mc-line)] disabled:opacity-60'
+type Test = TestResult | 'busy' | null
 
 export function Settings() {
   const { keys, remember, set, setRemember, clear } = useKeysStore()
@@ -19,10 +18,11 @@ export function Settings() {
   const [models, setModels] = useState<string[] | null>(null)
   const [modelsBusy, setModelsBusy] = useState(false)
   const [modelsError, setModelsError] = useState<string | null>(null)
-  const [gnaniTest, setGnaniTest] = useState<TestResult | 'busy' | null>(null)
-  const [llmTest, setLlmTest] = useState<TestResult | 'busy' | null>(null)
+  const [gnaniTest, setGnaniTest] = useState<Test>(null)
+  const [llmTest, setLlmTest] = useState<Test>(null)
   const [cleared, setCleared] = useState(false)
   const [pauseCoach, setPauseCoach] = useState(audio.pauseForCoach)
+  const [voice, setVoice] = useState(audio.coachVoice)
   const seq = useRef(0)
 
   // The preset decides the stored base URL; Custom keeps what the visitor typed.
@@ -72,180 +72,317 @@ export function Settings() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-5">
-      <header>
-        <h1 className="text-2xl font-semibold">Settings</h1>
-        <p className="mt-1 text-sm text-[var(--mc-muted)]">
-          Live calls use <strong>your own</strong> Gnani key and <strong>your own</strong> language model. This site keeps no keys of
-          its own. Recorded runs need no keys.
+    <div className="flex flex-col gap-6">
+      <div>
+        <h1 className="text-[28px] font-bold tracking-[-0.025em]">Settings</h1>
+        <p className="mt-0.5 max-w-[700px] text-sm text-[var(--mc-muted)]">
+          Live calls run on your own speech and language keys. Recorded runs need no keys at all.
         </p>
-        <p className="mt-2 rounded-lg border border-[var(--mc-line)] px-3 py-2 text-xs text-[var(--mc-muted)]">
-          Your keys stay in your browser and are sent over HTTPS only when you start a call or test a connection. They are not stored or
-          logged on the server. Use a key with a spend limit and revoke it afterwards.
-        </p>
-      </header>
+      </div>
 
-      <section className={box} aria-labelledby="gnani-h">
-        <div className="mb-3 flex items-center gap-2">
-          <h2 id="gnani-h" className="font-semibold">Gnani speech key</h2>
-          <Help label="How to get a Gnani key">
-            <p>
-              Sign up on the Gnani API platform and generate a key from the dashboard:{' '}
-              <a className="underline" href={GNANI_KEY_URL} target="_blank" rel="noreferrer">app.gnani.ai/voice</a>. Paste it here.
+      <div className="flex flex-wrap items-start gap-6">
+        <div className="flex min-w-0 flex-[999_1_620px] flex-col gap-5">
+          {/* Speech to text */}
+          <section className="card relative z-[3] flex flex-col gap-4 p-5 sm:p-6" aria-labelledby="gnani-h">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h2 id="gnani-h" className="text-[17px] font-semibold tracking-tight">Speech to text</h2>
+                <p className="text-[13px] text-[var(--mc-muted)]">Gnani Prisma transcribes the call as it happens. Your key, your account.</p>
+              </div>
+              <StatusChip t={gnaniTest} />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center gap-2">
+                <label className="text-[13px] font-semibold text-[var(--mc-text-2)]" htmlFor="f-gnani-api-key">Gnani API key</label>
+                <Help label="How to get a Gnani key">
+                  <p className="mb-2 text-sm font-semibold">How to get a Gnani API key</p>
+                  <p>
+                    Sign up on the Gnani API platform and generate a key from the dashboard:{' '}
+                    <a className="link" href={GNANI_KEY_URL} target="_blank" rel="noreferrer">app.gnani.ai/voice</a>. Paste it here.
+                  </p>
+                  <p className="mt-2">
+                    The key is sent to Gnani as the <code>X-API-Key-ID</code> header. Gnani docs do not say whether a free tier exists.
+                  </p>
+                </Help>
+              </div>
+              <SecretField label="Gnani API key" value={keys.gnaniKey} onChange={(v) => { set({ gnaniKey: v }); setGnaniTest(null) }} />
+              <p className="text-[12.5px] text-[var(--mc-muted)]">
+                No key yet? Sign up at{' '}
+                <a className="link !font-medium" href={GNANI_KEY_URL} target="_blank" rel="noreferrer">app.gnani.ai/voice ↗</a>
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <button className="btn" disabled={!keys.gnaniKey.trim() || gnaniTest === 'busy'} onClick={() => void run('gnani')}>
+                Test connection
+              </button>
+              <Result r={gnaniTest} idle="Opens the speech connection and waits for the greeting. No audio is sent." />
+            </div>
+          </section>
+
+          {/* Language model */}
+          <section className="card relative z-[2] flex flex-col gap-4 p-5 sm:p-6" aria-labelledby="llm-h">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h2 id="llm-h" className="text-[17px] font-semibold tracking-tight">Language model</h2>
+                <p className="text-[13px] text-[var(--mc-muted)]">
+                  Any OpenAI-compatible service. It runs the deep rule check. Pick a provider to fill in the address for you.
+                </p>
+              </div>
+              <StatusChip t={llmTest} />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <span className="text-[13px] font-semibold text-[var(--mc-text-2)]" id="provider-l">Provider</span>
+                <Help label="How to get a language model key">
+                  <p className="mb-2 text-sm font-semibold">Getting a key</p>
+                  <p>Any OpenAI-compatible service works. Pick a provider and paste a key from its page:</p>
+                  <ul className="mt-2 space-y-1.5">
+                    {PROVIDERS.filter((p) => p.keyUrl).map((p) => (
+                      <li key={p.id}>
+                        <a className="link" href={p.keyUrl} target="_blank" rel="noreferrer">{p.keyLabel} ↗</a> · {p.tier}
+                      </li>
+                    ))}
+                  </ul>
+                </Help>
+              </div>
+              <div role="radiogroup" aria-labelledby="provider-l" className="flex flex-wrap gap-2.5">
+                {PROVIDERS.map((p) => {
+                  const on = p.id === provider.id
+                  return (
+                    <button
+                      key={p.id}
+                      role="radio"
+                      aria-checked={on}
+                      onClick={() => choose(p.id)}
+                      className={`flex min-h-[52px] flex-col items-start justify-center gap-0.5 rounded-xl border px-3.5 py-2 text-left ${
+                        on ? 'border-[var(--mc-accent)] bg-[var(--mc-accent-tint)]' : 'border-[var(--mc-field)] bg-white hover:bg-[var(--mc-line-soft)]'
+                      } ${p.id === 'custom' ? 'border-dashed' : ''}`}
+                    >
+                      <b className={`text-[13px] font-semibold ${on ? 'text-[var(--mc-accent-dark)]' : ''}`}>{p.label}</b>
+                      <span className={`text-xs ${p.noteTone === 'free' ? 'font-semibold text-[var(--mc-good-practice-ink)]' : 'text-[var(--mc-muted)]'}`}>{p.note}</span>
+                    </button>
+                  )
+                })}
+              </div>
+              <p className="flex flex-wrap items-center gap-x-1.5 text-[12.5px] text-[var(--mc-muted)]">
+                {provider.keyUrl ? (
+                  <>
+                    New to {provider.label}?{' '}
+                    <a className="link !font-medium" href={provider.keyUrl} target="_blank" rel="noreferrer">Get a key at {provider.keyLabel} ↗</a>
+                  </>
+                ) : null}
+                <span>{provider.keyUrl ? '· ' : ''}{provider.tier}</span>
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[13px] font-semibold text-[var(--mc-text-2)]" htmlFor="base-url">Base URL</label>
+              <div className="relative">
+                <input
+                  id="base-url"
+                  className="input"
+                  style={{ paddingRight: custom ? undefined : 124 }}
+                  value={baseUrl}
+                  readOnly={!custom}
+                  disabled={!custom}
+                  placeholder="https://api.example.com/v1"
+                  onChange={(e) => { set({ baseUrl: e.target.value }); setModels(null) }}
+                  autoComplete="off"
+                  spellCheck={false}
+                />
+                {!custom && <span className="chip chip-accent absolute right-2 top-2">Filled for you</span>}
+              </div>
+              <p className="text-[12.5px] text-[var(--mc-muted)]">Editable only when the provider is Custom. Must be a public https address.</p>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <SecretField
+                label="API key"
+                value={keys.llmKey}
+                onChange={(v) => { set({ llmKey: v }); setModels(null); setLlmTest(null) }}
+                onBlur={() => void loadModels()}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <label className="text-[13px] font-semibold text-[var(--mc-text-2)]" htmlFor="model">Model</label>
+                <span className="flex items-center gap-3 text-xs">
+                  {models && models.length > 0 && <span className="font-medium text-[var(--mc-good-practice-ink)]">Loaded from your provider · {models.length} models</span>}
+                  <button className="link !font-medium disabled:opacity-60" disabled={modelsBusy || !keys.llmKey.trim() || !baseUrl.trim()} onClick={() => void loadModels()}>
+                    {modelsBusy ? 'Loading…' : 'Load models'}
+                  </button>
+                </span>
+              </div>
+              {models && models.length > 0 ? (
+                <div className="relative">
+                  <select
+                    id="model"
+                    className="input appearance-none pr-10"
+                    value={keys.model}
+                    onChange={(e) => { set({ model: e.target.value }); setLlmTest(null) }}
+                  >
+                    <option value="" disabled>Choose a model</option>
+                    {models.map((m) => <option key={m} value={m}>{m}</option>)}
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#475467]" aria-hidden />
+                </div>
+              ) : (
+                <input
+                  id="model"
+                  className="input"
+                  value={keys.model}
+                  placeholder={modelsBusy ? 'Loading models…' : 'Model name, e.g. gpt-4o-mini'}
+                  onChange={(e) => { set({ model: e.target.value }); setLlmTest(null) }}
+                  autoComplete="off"
+                  spellCheck={false}
+                />
+              )}
+              {modelsError && (
+                <p role="alert" className="text-xs text-[var(--mc-violation-ink)]">
+                  {modelsError.replace(/\.?\s*$/, '.')} You can type a model name instead.
+                </p>
+              )}
+              {models && models.length === 0 && <p className="text-xs text-[var(--mc-muted)]">The provider listed no chat models. Type a model name.</p>}
+              <p className="text-xs text-[var(--mc-muted)]">
+                Maryada was tuned on gpt-5.4-mini. Other models work, but results vary, especially on Hindi and English mixed speech.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2.5">
+              <button className="btn" disabled={!keys.llmKey.trim() || !keys.model.trim() || !baseUrl.trim() || llmTest === 'busy'} onClick={() => void run('llm')}>
+                Test connection
+              </button>
+              <Result r={llmTest} idle="Sends one short sample and checks the reply format. Uses a few hundred tokens at most." />
+            </div>
+          </section>
+
+          {/* Where keys are kept */}
+          <section className="card flex flex-col gap-4 p-5 sm:p-6" aria-labelledby="keep-h">
+            <h2 id="keep-h" className="text-[17px] font-semibold tracking-tight">Where keys are kept</h2>
+            <div role="radiogroup" aria-labelledby="keep-h" className="flex flex-col gap-2.5">
+              <KeepOption on={!remember} onSelect={() => setRemember(false)} title="This browser tab only" text="Cleared when you close the tab. Recommended." />
+              <KeepOption on={remember} onSelect={() => setRemember(true)} title="Remember on this device" text="Keeps keys in this browser until you clear them. Not for shared computers." />
+            </div>
+            <p className="text-[12.5px] text-[var(--mc-muted)]">Changes here are saved as you make them.</p>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <button
+                className="btn btn-danger"
+                onClick={() => { clear(); setModels(null); setGnaniTest(null); setLlmTest(null); setCleared(true) }}
+              >
+                Clear all keys
+              </button>
+              {cleared && <span role="status" className="text-xs text-[var(--mc-muted)]">All keys removed from this browser.</span>}
+            </div>
+          </section>
+        </div>
+
+        <aside className="flex min-w-0 max-w-full flex-[1_1_320px] flex-col gap-5 lg:max-w-[400px]">
+          <section className="card flex flex-col gap-3 p-5">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-[34px] w-[34px] items-center justify-center rounded-[10px] bg-[var(--mc-accent-tint)]">
+                <Lock className="h-[18px] w-[18px] text-[var(--mc-accent)]" aria-hidden />
+              </span>
+              <h2 className="text-[15px] font-semibold">How your keys are handled</h2>
+            </div>
+            <div className="flex flex-col gap-2.5 text-[13.5px] leading-relaxed text-[var(--mc-text-2)]">
+              <p>Keys stay in your browser and are sent over HTTPS only when a call starts or a connection is tested.</p>
+              <p>The server holds them in memory for that call and never stores or logs them.</p>
+              <p>This site holds no keys of its own, so there is nothing to fall back to: if your key fails, you see the error. Use a key with a spend limit and revoke it afterwards.</p>
+            </div>
+          </section>
+
+          <section className="card flex flex-col gap-3 p-5">
+            <h2 className="text-[15px] font-semibold">Live call limits</h2>
+            <dl className="overflow-hidden rounded-xl border border-[#eaecf0] text-[13px]">
+              <Row k="Who pays" v="Your own accounts" />
+              <Row k="Call length" v="200 s" />
+              <Row k="Calls at once" v="3" last />
+            </dl>
+          </section>
+
+          <section className="card flex flex-col gap-2.5 border-[var(--mc-accent-ring)] bg-[#f8f8ff] p-5">
+            <h2 className="text-[15px] font-semibold text-[var(--mc-accent-dark)]">No keys? Use recorded runs</h2>
+            <p className="text-[13.5px] leading-relaxed text-[var(--mc-text-2)]">
+              Calls that have a recorded run play with the real findings and coach nudges. They need no keys and are free to play as often as you like.
             </p>
-            <p className="mt-1">The key is sent to Gnani as the <code>X-API-Key-ID</code> header. The docs do not say whether a free tier exists.</p>
-          </Help>
-        </div>
-        <SecretField label="Gnani API key" value={keys.gnaniKey} onChange={(v) => { set({ gnaniKey: v }); setGnaniTest(null) }} />
-        <div className="mt-3 flex flex-wrap items-center gap-3">
-          <button className={btn} disabled={!keys.gnaniKey.trim() || gnaniTest === 'busy'} onClick={() => void run('gnani')}>
-            Test connection
-          </button>
-          <Result r={gnaniTest} />
-        </div>
-        <p className="mt-2 text-xs text-[var(--mc-muted)]">The test opens the speech connection and waits for the greeting. No audio is sent.</p>
-      </section>
+            <Link to="/" className="link text-[13.5px]">Browse recorded runs →</Link>
+          </section>
 
-      <section className={box} aria-labelledby="llm-h">
-        <div className="mb-3 flex items-center gap-2">
-          <h2 id="llm-h" className="font-semibold">Language model</h2>
-          <Help label="Choosing a provider">
-            <p>Any OpenAI-compatible service works. Pick a provider and paste a key from its page:</p>
-            <ul className="mt-1 space-y-1">
-              {PROVIDERS.filter((p) => p.keyUrl).map((p) => (
-                <li key={p.id}>
-                  <a className="underline" href={p.keyUrl} target="_blank" rel="noreferrer">{p.keyLabel}</a> · {p.tier}
-                </li>
-              ))}
-            </ul>
-          </Help>
-        </div>
-
-        <div role="radiogroup" aria-label="Provider" className="mb-3 flex flex-wrap gap-2">
-          {PROVIDERS.map((p) => (
-            <button
-              key={p.id}
-              role="radio"
-              aria-checked={p.id === provider.id}
-              onClick={() => choose(p.id)}
-              className={`rounded-full border px-3 py-1 text-sm ${
-                p.id === provider.id ? 'border-[var(--mc-accent)] bg-[var(--mc-accent)] text-white' : 'border-[var(--mc-line)] hover:bg-[var(--mc-line)]'
-              }`}
-            >
-              {p.label}
-            </button>
-          ))}
-        </div>
-        <p className="mb-3 text-xs text-[var(--mc-muted)]">{provider.tier}</p>
-
-        <label className="mb-1 block text-sm" htmlFor="base-url">Base URL</label>
-        <input
-          id="base-url"
-          className={`${input} mb-3`}
-          value={baseUrl}
-          readOnly={!custom}
-          disabled={!custom}
-          placeholder="https://api.example.com/v1"
-          onChange={(e) => { set({ baseUrl: e.target.value }); setModels(null) }}
-          autoComplete="off"
-          spellCheck={false}
-        />
-
-        <SecretField
-          label="API key"
-          value={keys.llmKey}
-          onChange={(v) => { set({ llmKey: v }); setModels(null); setLlmTest(null) }}
-          onBlur={() => void loadModels()}
-        />
-
-        <div className="mb-1 mt-3 flex items-center justify-between">
-          <label className="text-sm" htmlFor="model">Model</label>
-          <button className="text-xs underline disabled:opacity-60" disabled={modelsBusy || !keys.llmKey.trim() || !baseUrl.trim()} onClick={() => void loadModels()}>
-            {modelsBusy ? 'Loading…' : 'Load models'}
-          </button>
-        </div>
-        {models && models.length > 0 ? (
-          <select id="model" className={input} value={keys.model} onChange={(e) => { set({ model: e.target.value }); setLlmTest(null) }}>
-            <option value="" disabled>Choose a model</option>
-            {models.map((m) => <option key={m} value={m}>{m}</option>)}
-          </select>
-        ) : (
-          <input
-            id="model"
-            className={input}
-            value={keys.model}
-            placeholder={modelsBusy ? 'Loading models…' : 'Model name, e.g. gpt-4o-mini'}
-            onChange={(e) => { set({ model: e.target.value }); setLlmTest(null) }}
-            autoComplete="off"
-            spellCheck={false}
-          />
-        )}
-        {modelsError && <p role="alert" className="mt-1 text-xs text-[var(--mc-violation)]">{modelsError.replace(/\.?\s*$/, '.')} You can type a model name instead.</p>}
-        {models && models.length === 0 && <p className="mt-1 text-xs text-[var(--mc-muted)]">The provider listed no chat models. Type a model name.</p>}
-        <p className="mt-1 text-xs text-[var(--mc-muted)]">Tuned on gpt-5.4-mini; results vary on other models.</p>
-
-        <div className="mt-3 flex flex-wrap items-center gap-3">
-          <button className={btn} disabled={!keys.llmKey.trim() || !keys.model.trim() || !baseUrl.trim() || llmTest === 'busy'} onClick={() => void run('llm')}>
-            Test connection
-          </button>
-          <Result r={llmTest} />
-        </div>
-        <p className="mt-2 text-xs text-[var(--mc-muted)]">The test sends one short sample line and checks the reply is valid JSON (a few hundred tokens at most).</p>
-      </section>
-
-      <section className={box} aria-labelledby="playback-h">
-        <h2 id="playback-h" className="mb-3 font-semibold">Playback</h2>
-        <label className="flex items-start gap-2 text-sm">
-          <input
-            type="checkbox"
-            className="mt-1"
-            checked={pauseCoach}
-            onChange={(e) => {
-              audio.setPauseForCoach(e.target.checked)
-              setPauseCoach(e.target.checked)
-            }}
-          />
-          <span>
-            Pause the call while the coach speaks
-            <span className="block text-xs text-[var(--mc-muted)]">
-              Off (default): the call plays on without stopping and the coach is heard quietly on top of it. On: the call
-              pauses only while the coach clip plays. Applies to the next call you start.
-            </span>
-          </span>
-        </label>
-      </section>
-
-      <section className={box}>
-        <label className="flex items-start gap-2 text-sm">
-          <input type="checkbox" className="mt-1" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
-          <span>
-            Remember on this device
-            <span className="block text-xs text-[var(--mc-muted)]">
-              Off: keys live in this browser tab only and disappear when it closes. On: they stay in this browser until you clear them.
-            </span>
-          </span>
-        </label>
-        <div className="mt-4 flex items-center gap-3">
-          <button className={btn} onClick={() => { clear(); setModels(null); setGnaniTest(null); setLlmTest(null); setCleared(true) }}>
-            Clear all keys
-          </button>
-          {cleared && <span role="status" className="text-xs text-[var(--mc-muted)]">All keys removed from this browser.</span>}
-        </div>
-      </section>
+          <section className="card flex flex-col gap-3 p-5" aria-labelledby="prefs-h">
+            <h2 id="prefs-h" className="text-[15px] font-semibold">Preferences</h2>
+            <div className="flex items-center justify-between gap-3 text-[13.5px]">
+              <span id="voice-l">Play the coach voice</span>
+              <Switch label="Play the coach voice" checked={voice} onChange={(v) => { audio.setCoachVoice(v); setVoice(v) }} />
+            </div>
+            <div className="flex items-start justify-between gap-3 text-[13.5px]">
+              <span>
+                <span id="pause-l">Pause the call while the coach speaks</span>
+                <span className="mt-0.5 block text-xs text-[var(--mc-muted)]">
+                  Off by default: the call plays on and the coach is heard quietly on top. Applies to the next call you start.
+                </span>
+              </span>
+              <Switch
+                label="Pause the call while the coach speaks"
+                checked={pauseCoach}
+                onChange={(v) => { audio.setPauseForCoach(v); setPauseCoach(v) }}
+              />
+            </div>
+          </section>
+        </aside>
+      </div>
     </div>
   )
+}
+
+function Row({ k, v, last = false }: { k: string; v: string; last?: boolean }) {
+  return (
+    <div className={`flex justify-between px-3.5 py-2.5 ${last ? '' : 'border-b border-[#eaecf0]'}`}>
+      <dt className="text-[var(--mc-muted)]">{k}</dt>
+      <dd className="font-semibold">{v}</dd>
+    </div>
+  )
+}
+
+function KeepOption({ on, onSelect, title, text }: { on: boolean; onSelect: () => void; title: string; text: string }) {
+  return (
+    <button
+      type="button"
+      role="radio"
+      aria-checked={on}
+      onClick={onSelect}
+      className={`flex items-start gap-3 rounded-xl border px-4 py-3.5 text-left ${on ? 'border-[var(--mc-accent-ring)] bg-[#f8f8ff]' : 'border-[var(--mc-line)] hover:bg-[var(--mc-line-soft)]'}`}
+    >
+      <span
+        className="mt-0.5 h-[18px] w-[18px] flex-none rounded-full bg-white"
+        style={{ border: on ? '5px solid var(--mc-accent)' : '2px solid #98a2b3' }}
+        aria-hidden
+      />
+      <span>
+        <span className="block text-sm font-semibold">{title}</span>
+        <span className="block text-[13px] text-[var(--mc-muted)]">{text}</span>
+      </span>
+    </button>
+  )
+}
+
+function StatusChip({ t }: { t: Test }) {
+  if (t === 'busy') return <span className="chip">Testing…</span>
+  if (t === null) return <span className="chip bg-[#f9fafb]">Not tested yet</span>
+  return t.ok ? <span className="chip chip-ok">Connected</span> : <span className="chip chip-violation">Check failed</span>
 }
 
 function SecretField({ label, value, onChange, onBlur }: { label: string; value: string; onChange: (v: string) => void; onBlur?: () => void }) {
   const [show, setShow] = useState(false)
   const id = `f-${label.replace(/\s+/g, '-').toLowerCase()}`
   return (
-    <div>
-      <label className="mb-1 block text-sm" htmlFor={id}>{label}</label>
+    <div className="flex flex-col gap-1.5">
+      {label !== 'Gnani API key' && <label className="text-[13px] font-semibold text-[var(--mc-text-2)]" htmlFor={id}>{label}</label>}
       <div className="relative">
         <input
           id={id}
-          className={`${input} pr-10`}
+          className="input pr-11"
           type={show ? 'text' : 'password'}
           value={value}
           onChange={(e) => onChange(e.target.value)}
@@ -257,7 +394,7 @@ function SecretField({ label, value, onChange, onBlur }: { label: string; value:
           type="button"
           onClick={() => setShow(!show)}
           aria-label={show ? `Hide ${label}` : `Show ${label}`}
-          className="absolute inset-y-0 right-0 px-3 text-[var(--mc-muted)]"
+          className="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-[10px] text-[var(--mc-muted)] hover:text-[var(--mc-text)]"
         >
           {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
         </button>
@@ -266,16 +403,16 @@ function SecretField({ label, value, onChange, onBlur }: { label: string; value:
   )
 }
 
-function Result({ r }: { r: TestResult | 'busy' | null }) {
-  if (r === null) return null
+function Result({ r, idle }: { r: Test; idle: string }) {
+  if (r === null) return <span className="text-[12.5px] text-[var(--mc-muted)]">{idle}</span>
   if (r === 'busy')
     return (
-      <span role="status" className="flex items-center gap-1.5 text-sm text-[var(--mc-muted)]">
+      <span role="status" className="flex items-center gap-1.5 text-[12.5px] text-[var(--mc-muted)]">
         <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden /> Testing…
       </span>
     )
   return (
-    <span role="status" className={`text-sm ${r.ok ? 'text-[var(--mc-good-practice)]' : 'text-[var(--mc-violation)]'}`}>
+    <span role="status" className={`text-[12.5px] font-medium ${r.ok ? 'text-[var(--mc-good-practice-ink)]' : 'text-[var(--mc-violation-ink)]'}`}>
       {r.ok ? '✓ ' : '✗ '}
       {r.message_user}
     </span>
@@ -284,15 +421,39 @@ function Result({ r }: { r: TestResult | 'busy' | null }) {
 
 function Help({ label, children }: { label: string; children: ReactNode }) {
   const [open, setOpen] = useState(false)
+  const box = useRef<HTMLSpanElement>(null)
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    const onDown = (e: MouseEvent) => {
+      if (box.current && !box.current.contains(e.target as Node)) setOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    window.addEventListener('mousedown', onDown)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('mousedown', onDown)
+    }
+  }, [open])
   return (
-    <span className="relative">
-      <button type="button" aria-label={label} aria-expanded={open} onClick={() => setOpen(!open)} className="text-[var(--mc-muted)] hover:text-[var(--mc-text)]">
-        <CircleHelp className="h-4 w-4" />
+    <span ref={box} className="relative inline-flex">
+      <button
+        type="button"
+        aria-label={label}
+        aria-expanded={open}
+        onClick={() => setOpen(!open)}
+        className="flex h-[22px] w-[22px] items-center justify-center rounded-full border border-[var(--mc-accent)] bg-[var(--mc-accent-tint)] text-xs font-bold text-[var(--mc-accent)]"
+      >
+        ?
       </button>
       {open && (
-        <div role="dialog" aria-label={label} className="fixed inset-x-4 z-20 mt-2 rounded-lg border border-[var(--mc-line)] bg-[var(--mc-surface)] p-3 text-xs shadow-lg sm:absolute sm:inset-x-auto sm:left-0 sm:top-6 sm:mt-0 sm:w-96">
+        <div
+          role="dialog"
+          aria-label={label}
+          className="fixed inset-x-4 z-20 mt-8 rounded-xl border border-[var(--mc-field)] bg-white p-4 text-[13px] leading-relaxed text-[var(--mc-text-2)] shadow-[0_12px_32px_rgb(16_24_40/0.14)] sm:absolute sm:inset-x-auto sm:left-0 sm:top-7 sm:mt-0 sm:w-[420px]"
+        >
           {children}
-          <button className="mt-2 underline" onClick={() => setOpen(false)}>Close</button>
+          <button className="link mt-3 text-xs" onClick={() => setOpen(false)}>Close</button>
         </div>
       )}
     </span>

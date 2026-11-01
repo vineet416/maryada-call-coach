@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Manager - team compliance</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F7F9;color:#0F172A;font-family:Inter,'Noto Sans Devanagari',system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#4338CA;text-decoration:none}a:hover{color:#3730A3}
+.nv{padding:8px 12px;border-radius:8px;font-size:14px;font-weight:500;color:#475467}
+.nv:hover{background:#F2F4F7;color:#0F172A}
+.nv.on{background:#EEF0FF;color:#3730A3}
+.card{background:#fff;border:1px solid #E5E7EB;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:500;border:1px solid #E5E7EB;background:#fff;color:#475467;white-space:nowrap}
+.lbl{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#5B6577}
+.th{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#5B6577}
+</style>
+</helmet>
+<div style="min-height:1560px;background:#F6F7F9">
+  <header style="background:#fff;border-bottom:1px solid #E5E7EB">
+    <div style="max-width:1280px;margin:0 auto;padding:0 32px;min-height:64px;display:flex;align-items:center;gap:28px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:30px;height:30px;border-radius:8px;background:#4338CA;display:flex;align-items:center;justify-content:center">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <span style="font-size:17px;font-weight:700;letter-spacing:-0.01em">Maryada</span>
+      </div>
+      <nav style="display:flex;gap:4px;flex:1;flex-wrap:wrap">
+        <a class="nv" href="Cases.dc.html">Cases</a>
+        <a class="nv on" href="Manager.dc.html">Manager</a>
+        <a class="nv" href="Evaluation.dc.html">Evaluation</a>
+        <a class="nv" href="HowItWorks.dc.html">How it works</a>
+        <a class="nv" href="Settings.dc.html">Settings</a>
+      </nav>
+      <span class="chip" style="background:#F9FAFB">Synthetic demo &middot; not legal advice</span>
+    </div>
+  </header>
+
+  <main style="max-width:1280px;margin:0 auto;padding:32px 32px 56px;display:flex;flex-direction:column;gap:24px">
+
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <div>
+        <h1 style="margin:0;font-size:28px;font-weight:700;letter-spacing:-0.025em">Team compliance</h1>
+        <div style="color:#5B6577;font-size:14px;margin-top:2px">Where coaching is needed across the team, from every call Maryada analysed.</div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <span style="height:38px;padding:0 14px;border:1px solid #D0D5DD;border-radius:10px;background:#fff;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:#344054">Last 14 days</span>
+        <span style="height:38px;padding:0 14px;border:1px solid #D0D5DD;border-radius:10px;background:#fff;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#344054">Export CSV</span>
+      </div>
+    </div>
+
+    <div style="background:#EEF0FF;border:1px solid #C7CCFA;border-radius:12px;padding:12px 16px;font-size:13px;color:#3730A3;font-weight:500">Sample data: 30 synthetic calls &middot; 8 fictional agents &middot; detections by Maryada on clean audio. Counts are small and not a performance assessment of real people.</div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <span class="chip" style="background:#4338CA;border-color:#4338CA;color:#fff;font-weight:600">All rules</span>
+      <span class="chip">R1 Calling hours</span><span class="chip">R2 Identification</span><span class="chip">R3 Threats</span><span class="chip">R4 Third party</span><span class="chip">R5 Legal threats</span><span class="chip">R6 Sensitive occasions</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px">
+      <div class="card" style="padding:18px 20px"><div class="lbl">Calls analysed</div><div style="font-size:30px;font-weight:700;letter-spacing:-0.03em;margin-top:4px">30</div><div style="font-size:12px;color:#5B6577">over 14 days</div></div>
+      <div class="card" style="padding:18px 20px"><div class="lbl">Agents</div><div style="font-size:30px;font-weight:700;letter-spacing:-0.03em;margin-top:4px">8</div><div style="font-size:12px;color:#5B6577">3 to 4 calls each</div></div>
+      <div class="card" style="padding:18px 20px"><div class="lbl">Violations</div><div style="font-size:30px;font-weight:700;letter-spacing:-0.03em;margin-top:4px;color:#B42318">19</div><div style="font-size:12px;color:#5B6577">across 6 rules</div></div>
+      <div class="card" style="padding:18px 20px"><div class="lbl">Violation rate</div><div style="font-size:30px;font-weight:700;letter-spacing:-0.03em;margin-top:4px">50%</div><div style="font-size:12px;color:#5B6577">15 of 30 calls</div></div>
+      <div class="card" style="padding:18px 20px"><div class="lbl">Average risk</div><div style="font-size:30px;font-weight:700;letter-spacing:-0.03em;margin-top:4px">24</div><div style="font-size:12px;color:#5B6577">out of 100</div></div>
+      <div class="card" style="padding:18px 20px"><div class="lbl">Good-practice rate</div><div style="font-size:30px;font-weight:700;letter-spacing:-0.03em;margin-top:4px;color:#067647">83%</div><div style="font-size:12px;color:#5B6577">25 of 30 calls</div></div>
+    </div>
+
+    <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+      <section class="card" style="flex:999 1 700px;min-width:0;overflow:hidden">
+        <div style="padding:18px 24px;border-bottom:1px solid #EAECF0;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="font-size:16px;font-weight:600">Agent leaderboard</div>
+          <span style="font-size:12px;color:#5B6577">Needs training = 2 or more R3/R4/R5 violations, or average risk of 40 or more</span>
+        </div>
+        <div style="overflow-x:auto">
+          <div style="min-width:700px">
+            <div style="display:grid;grid-template-columns:2.2fr .7fr 1fr .9fr .9fr 1.4fr 1fr;gap:12px;padding:10px 24px;background:#F9FAFB;border-bottom:1px solid #EAECF0">
+              <span class="th">Agent</span><span class="th">Calls</span><span class="th">Violations</span><span class="th">Avg risk</span><span class="th">Top rule</span><span class="th">Status</span><span class="th">Risk trend</span>
+            </div>
+            <sc-for list="{{agents}}" as="a" hint-placeholder-count="8">
+              <div style="display:grid;grid-template-columns:2.2fr .7fr 1fr .9fr .9fr 1.4fr 1fr;gap:12px;padding:14px 24px;border-bottom:1px solid #F2F4F7;align-items:center">
+                <div style="display:flex;align-items:center;gap:12px"><div style="{{a.avatarStyle}}">{{a.initials}}</div><div><div style="font-weight:600;font-size:14px">{{a.name}}</div><div style="font-size:12px;color:#5B6577">{{a.team}}</div></div></div>
+                <span style="font-variant-numeric:tabular-nums">{{a.calls}}</span>
+                <span style="font-variant-numeric:tabular-nums;font-weight:600">{{a.v}}</span>
+                <span style="font-variant-numeric:tabular-nums">{{a.risk}}</span>
+                <span style="{{a.topStyle}}">{{a.top}}</span>
+                <span style="{{a.statusStyle}}">{{a.status}}</span>
+                <svg width="84" height="26" viewBox="0 0 84 26" aria-hidden="true"><polyline points="{{a.points}}" fill="none" stroke="{{a.stroke}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" style="flex:1 1 340px;min-width:300px;padding:20px 24px;display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:16px;font-weight:600">Violations by rule</div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <sc-for list="{{rules}}" as="r" hint-placeholder-count="6">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span><b style="font-weight:600">{{r.id}}</b> <span style="color:#5B6577">{{r.name}}</span></span><b style="font-weight:600;font-variant-numeric:tabular-nums">{{r.count}}</b></div>
+              <div style="height:8px;border-radius:999px;background:#F2F4F7;overflow:hidden"><div style="{{r.barStyle}}"></div></div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </div>
+
+    <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+      <section class="card" style="flex:1.3 1 520px;padding:20px 24px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:16px;font-weight:600">Agent by rule</div><span style="font-size:12px;color:#5B6577">Violations per agent</span></div>
+        <div style="display:grid;grid-template-columns:150px repeat(6,minmax(0,1fr));gap:6px;align-items:center">
+          <span></span><span class="th" style="text-align:center">R1</span><span class="th" style="text-align:center">R2</span><span class="th" style="text-align:center">R3</span><span class="th" style="text-align:center">R4</span><span class="th" style="text-align:center">R5</span><span class="th" style="text-align:center">R6</span>
+        </div>
+        <sc-for list="{{heat}}" as="h" hint-placeholder-count="8">
+          <div style="display:grid;grid-template-columns:150px repeat(6,minmax(0,1fr));gap:6px;align-items:center">
+            <span style="font-size:13px;font-weight:500">{{h.name}}</span>
+            <sc-for list="{{h.cells}}" as="c" hint-placeholder-count="6">
+              <div style="{{c.style}}">{{c.label}}</div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </section>
+
+      <section class="card" style="flex:1 1 360px;padding:20px 24px;display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:16px;font-weight:600">Violations per day</div>
+        <div style="display:flex;align-items:flex-end;gap:8px;height:120px;border-bottom:1px solid #EAECF0">
+          <sc-for list="{{days}}" as="d" hint-placeholder-count="14">
+            <div style="{{d.style}}"></div>
+          </sc-for>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#5B6577"><span>14 days ago</span><span>Today</span></div>
+      </section>
+
+      <section class="card" style="flex:1 1 360px;padding:20px 24px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:16px;font-weight:600">Calls by hour</div><span class="chip" style="background:#FEF3F2;border-color:#FDA29B;color:#B42318;font-size:11px;font-weight:600">Outside permitted hours = R1</span></div>
+        <div style="display:flex;align-items:flex-end;gap:6px;height:120px;border-bottom:1px solid #EAECF0">
+          <sc-for list="{{hours}}" as="h" hint-placeholder-count="13">
+            <div style="{{h.style}}"></div>
+          </sc-for>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#5B6577"><span>9 am</span><span>3 pm</span><span>9 pm</span></div>
+      </section>
+    </div>
+
+    <section style="display:flex;flex-direction:column;gap:14px">
+      <div style="font-size:18px;font-weight:650;letter-spacing:-0.015em">Needs attention</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px">
+        <div class="card" style="padding:20px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-weight:600;font-size:15px">Rohit Mehta</b><span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;background:#FEF3F2;color:#B42318">Needs training</span></div>
+          <div style="font-size:13px;color:#5B6577">Top rule: R5 false or misleading statements, 3 times</div>
+          <div style="font-size:13.5px;line-height:1.6;background:#F9FAFB;border-radius:10px;padding:12px 14px">Practise explaining consequences without threats. Coach line: &ldquo;Rukiye &mdash; yahan dhamki mat dijiye. Shaanti se EMI ka option batayiye.&rdquo;</div>
+          <a href="Main.dc.html" style="font-size:13px;font-weight:600">Review example call &rarr;</a>
+        </div>
+        <div class="card" style="padding:20px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-weight:600;font-size:15px">Vikram Rane</b><span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;background:#FEF3F2;color:#B42318">Needs training</span></div>
+          <div style="font-size:13px;color:#5B6577">Top rule: R3 abuse, threats, humiliation, 2 times</div>
+          <div style="font-size:13.5px;line-height:1.6;background:#F9FAFB;border-radius:10px;padding:12px 14px">Stay calm when a promise is missed. Offer a payment plan before raising your voice.</div>
+          <a href="Main.dc.html" style="font-size:13px;font-weight:600">Review example call &rarr;</a>
+        </div>
+        <div class="card" style="padding:20px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-weight:600;font-size:15px">Imran Shaikh</b><span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;background:#FFFAEB;color:#B54708">Watch</span></div>
+          <div style="font-size:13px;color:#5B6577">Top rule: R4 third-party disclosure, 1 time</div>
+          <div style="font-size:13.5px;line-height:1.6;background:#F9FAFB;border-radius:10px;padding:12px 14px">Confirm who is on the line before mentioning the loan. If it is not the borrower, take a message only.</div>
+          <a href="Main.dc.html" style="font-size:13px;font-weight:600">Review example call &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <div style="font-size:12px;color:#5B6577">All data is synthetic. Counts are small. Flags are for coaching and are not grounds for disciplinary action.</div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const av = (bg, fg) => 'width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;background:' + bg + ';color:' + fg;
+    const pill = (bg, fg) => 'display:inline-flex;align-items:center;align-self:center;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;width:max-content;background:' + bg + ';color:' + fg;
+    const ruleStyle = 'display:inline-flex;align-items:center;justify-content:center;width:34px;height:22px;border-radius:999px;font-size:11px;font-weight:700;background:#F2F4F7;color:#344054';
+    const spark = (vals) => vals.map((v, i) => Math.round(i * (80 / (vals.length - 1)) + 2) + ',' + Math.round(24 - (v / 70) * 22)).join(' ');
+    const raw = [
+      ['Rohit Mehta', 'RM', 'Mumbai West', 4, 6, 52, 'R5', 'bad', [40, 65, 10, 55]],
+      ['Vikram Rane', 'VR', 'Pune', 4, 5, 47, 'R3', 'bad', [45, 50, 30, 60]],
+      ['Imran Shaikh', 'IS', 'Thane', 4, 2, 26, 'R4', 'watch', [30, 5, 35, 20]],
+      ['Anjali Deshpande', 'AD', 'Nashik', 4, 2, 22, 'R5', 'watch', [10, 35, 5, 25]],
+      ['Suresh Patil', 'SP', 'Pune', 3, 2, 19, 'R1', 'watch', [20, 0, 30]],
+      ['Kavita Joshi', 'KJ', 'Mumbai West', 4, 2, 18, 'R4', 'improving', [45, 30, 8, 0]],
+      ['Sneha Kulkarni', 'SK', 'Thane', 4, 0, 4, '-', 'good', [8, 0, 4, 6]],
+      ['Priya Nair', 'PN', 'Nashik', 3, 0, 2, '-', 'good', [4, 0, 6]]
+    ];
+    const status = {
+      bad: [pill('#FEF3F2', '#B42318'), 'Needs training', '#D92D20', av('#FEF3F2', '#B42318')],
+      watch: [pill('#FFFAEB', '#B54708'), 'Watch', '#F79009', av('#FFFAEB', '#B54708')],
+      improving: [pill('#FFFAEB', '#B54708'), 'Watch, improving', '#F79009', av('#FFFAEB', '#B54708')],
+      good: [pill('#ECFDF3', '#067647'), 'Excellent', '#12B76A', av('#ECFDF3', '#067647')]
+    };
+    const agents = raw.map((r) => ({
+      name: r[0], initials: r[1], team: r[2], calls: r[3], v: r[4], risk: r[5], top: r[6],
+      topStyle: ruleStyle, statusStyle: status[r[7]][0], status: status[r[7]][1], stroke: status[r[7]][2],
+      avatarStyle: status[r[7]][3], points: spark(r[8])
+    }));
+    const rl = [['R1', 'Calling hours', 2], ['R2', 'Identification', 3], ['R3', 'Abuse and threats', 4], ['R4', 'Third party', 3], ['R5', 'Legal threats', 6], ['R6', 'Sensitive occasions', 1]];
+    const rules = rl.map(([id, name, count]) => ({
+      id, name, count,
+      barStyle: 'height:100%;border-radius:999px;background:' + (count >= 4 ? '#D92D20' : '#F79009') + ';width:' + Math.round((count / 6) * 100) + '%'
+    }));
+    const hm = [
+      ['Rohit Mehta', [0, 1, 2, 0, 3, 0]], ['Vikram Rane', [0, 0, 2, 1, 2, 0]], ['Imran Shaikh', [0, 1, 0, 1, 0, 0]],
+      ['Anjali Deshpande', [0, 1, 0, 0, 1, 0]], ['Suresh Patil', [2, 0, 0, 0, 0, 0]], ['Kavita Joshi', [0, 0, 0, 1, 0, 1]],
+      ['Sneha Kulkarni', [0, 0, 0, 0, 0, 0]], ['Priya Nair', [0, 0, 0, 0, 0, 0]]
+    ];
+    const cellColor = (n) => n === 0 ? ['#F9FAFB', '#D0D5DD'] : n === 1 ? ['#FEE4E2', '#B42318'] : n === 2 ? ['#FDA29B', '#7A271A'] : ['#D92D20', '#FFFFFF'];
+    const heat = hm.map(([name, vals]) => ({
+      name,
+      cells: vals.map((n) => ({ label: n === 0 ? '0' : String(n), style: 'height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;background:' + cellColor(n)[0] + ';color:' + cellColor(n)[1] }))
+    }));
+    const dv = [1, 2, 0, 1, 2, 1, 0, 2, 1, 3, 1, 2, 1, 2];
+    const days = dv.map((n) => ({ style: 'flex:1;border-radius:6px 6px 0 0;min-height:3px;height:' + Math.max(3, n * 34) + 'px;background:' + (n >= 3 ? '#D92D20' : n > 0 ? '#F79009' : '#E5E7EB') }));
+    const hv = [2, 3, 4, 3, 2, 4, 4, 3, 2, 1, 0, 1, 1];
+    const hours = hv.map((n, i) => ({ style: 'flex:1;border-radius:6px 6px 0 0;min-height:3px;height:' + Math.max(3, n * 26) + 'px;background:' + (i >= 11 ? '#D92D20' : '#4338CA') }));
+    return { agents, rules, heat, days, hours };
+  }
+}
+</script>
+</body>
+</html>
