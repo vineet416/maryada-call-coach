@@ -25,6 +25,7 @@ import {
 import { audio } from '@/lib/audioEngine'
 import { CallClient } from '@/lib/callClient'
 import type { Finding } from '@/lib/events'
+import { keysComplete, useHasKeys, useKeysStore } from '@/store/keysStore'
 import { useServerStore } from '@/store/serverStore'
 import { useSessionStore, type Mode } from '@/store/sessionStore'
 
@@ -105,7 +106,15 @@ export function LiveCall() {
         return
       }
       try {
-        const s = await createSession(scenario.id, mode)
+        const k = useKeysStore.getState().keys
+        const creds =
+          mode === 'live' && keysComplete(k)
+            ? {
+                gnani: { api_key: k.gnaniKey.trim() },
+                llm: { base_url: k.baseUrl.trim(), api_key: k.llmKey.trim(), model: k.model.trim() },
+              }
+            : undefined
+        const s = await createSession(scenario.id, mode, creds)
         const store = useSessionStore.getState()
         store.setSessionId(s.session_id)
         store.setMode(s.effective_mode)
@@ -277,18 +286,45 @@ export function LiveCall() {
 }
 
 function StartCard({ scenario, busy, onStart }: { scenario: ScenarioDetail; busy: boolean; onStart: (m: Mode) => void }) {
+  const hasKeys = useHasKeys()
+  const [needKeys, setNeedKeys] = useState(false)
+  if (needKeys && !hasKeys)
+    return (
+      <section className="rise mx-auto mt-6 max-w-xl rounded-2xl border border-[var(--mc-line)] bg-[var(--mc-surface)] p-6 text-center sm:p-8">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--mc-accent)]">Needs your keys</p>
+        <h2 className="mb-2 text-xl font-semibold">Add your keys to start a live call</h2>
+        <p className="mb-6 text-sm text-[var(--mc-muted)]">
+          Live calls use your own Gnani key and your own language model. This site keeps no keys of its own. The recorded run needs none.
+        </p>
+        <div className="flex flex-wrap justify-center gap-3">
+          <Link to="/settings" className="rounded-full bg-[var(--mc-accent)] px-6 py-3 text-sm font-semibold text-white hover:brightness-110">
+            Open Settings
+          </Link>
+          <button
+            disabled={busy}
+            onClick={() => onStart('replay')}
+            className="rounded-full border border-[var(--mc-line)] px-5 py-3 text-sm hover:bg-[var(--mc-line)] disabled:opacity-60"
+          >
+            Play recorded run
+          </button>
+        </div>
+      </section>
+    )
   return (
     <section className="rise mx-auto mt-6 max-w-xl rounded-2xl border border-[var(--mc-line)] bg-[var(--mc-surface)] p-6 text-center sm:p-8">
       <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--mc-accent)]">Ready</p>
       <h2 className="mb-2 text-xl font-semibold">{scenario.title}</h2>
       <p className="mb-6 text-sm text-[var(--mc-muted)]">{scenario.summary.replace(/^HERO\.\s*/, '')}</p>
-      <div className="flex flex-wrap justify-center gap-3">
+      <div className="flex flex-wrap items-center justify-center gap-3">
         <button
           disabled={busy}
-          onClick={() => onStart('live')}
+          onClick={() => (hasKeys ? onStart('live') : setNeedKeys(true))}
           className="inline-flex items-center gap-2 rounded-full bg-[var(--mc-accent)] px-6 py-3 text-sm font-semibold text-white hover:brightness-110 disabled:opacity-60"
         >
-          <Play className="h-4 w-4 fill-current" aria-hidden /> {busy ? 'Starting…' : 'Start call'}
+          <Play className="h-4 w-4 fill-current" aria-hidden /> {busy ? 'Starting…' : 'Start live call'}
+          {!hasKeys && !busy && (
+            <span className="rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-medium">Needs your keys</span>
+          )}
         </button>
         <button
           disabled={busy}

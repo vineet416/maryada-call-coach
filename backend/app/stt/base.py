@@ -1,5 +1,6 @@
 """STT adapter contract. Prisma allows ONE active request per key, so every call goes through one lock."""
 import asyncio
+import hashlib
 import io
 import wave
 from dataclasses import dataclass
@@ -13,18 +14,23 @@ FRAME = 1024  # bytes = 64 ms of 8 kHz PCM16 mono
 BYTES_PER_MS = 16
 LAST_SEGMENT_SLACK_MS = 400  # a segment ending this close to the audio end is the last one of the turn
 
-_lock: asyncio.Lock | None = None
+_locks: dict[str, asyncio.Lock] = {}  # one per key (the key itself is never stored: a digest is the dict key)
 
 
-def gnani_lock() -> asyncio.Lock:
-    global _lock
-    if _lock is None:
-        _lock = asyncio.Lock()
-    return _lock
+def gnani_lock(key: str) -> asyncio.Lock:
+    d = hashlib.sha256(key.encode()).hexdigest()[:16]
+    if len(_locks) > 64:  # drop idle locks
+        for k in [k for k, v in _locks.items() if not v.locked() and k != d]:
+            del _locks[k]
+    return _locks.setdefault(d, asyncio.Lock())
 
 
 class SttError(Exception):
     """Transport or protocol failure; the caller falls back (REST, then replay)."""
+
+
+class SttAuthError(SttError):
+    """Gnani refused the key (401/403). Not retried and never replaced by another key."""
 
 
 @dataclass

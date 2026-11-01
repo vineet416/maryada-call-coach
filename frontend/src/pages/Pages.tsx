@@ -9,7 +9,7 @@ export const Manager = () => (
 )
 export const Evaluation = () => <PageStub title="Evaluation" note="Evaluation results will appear here." />
 export const HowItWorks = () => <PageStub title="How it works" note="The pipeline and rulebook will appear here." />
-export const Settings = () => <PageStub title="Settings" note="Bring-your-own-key settings will appear here." />
+export { Settings } from '@/pages/Settings'
 
 export const NotFound = () => (
   <section>

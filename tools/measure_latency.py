@@ -62,6 +62,7 @@ def merge_out(key: str, value: dict) -> None:
 
 
 async def llm_stage(n: int) -> None:
+    settings.server_keys_enabled = True  # evaluation tool: uses the local env keys
     """n calls per setting, alternating on/off call by call so network drift hits both equally."""
     turns = agent_turns(n)
     res: dict[str, list[float]] = {"http2_on": [], "http2_off": []}

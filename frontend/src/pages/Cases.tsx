@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ErrorCard } from '@/components/ErrorCard'
 import { getScenarios, type ScenarioSummary } from '@/lib/api'
+import { useHasKeys } from '@/store/keysStore'
 
 export function Cases() {
   const [cases, setCases] = useState<ScenarioSummary[] | null>(null)
@@ -55,6 +56,7 @@ export function Cases() {
 }
 
 function Hero({ c }: { c: ScenarioSummary }) {
+  const hasKeys = useHasKeys()
   return (
     <section
       className="rise relative overflow-hidden rounded-3xl border border-[var(--mc-line)] bg-[var(--mc-surface)] p-6 sm:p-9"
@@ -75,6 +77,11 @@ function Hero({ c }: { c: ScenarioSummary }) {
         >
           <Play className="h-4 w-4 fill-current" aria-hidden /> Watch the demo call
         </Link>
+        {!hasKeys && (
+          <span className="rounded-full border border-[var(--mc-line)] px-2.5 py-0.5 text-xs text-[var(--mc-muted)]">
+            Live calls: needs your keys · recorded run needs none
+          </span>
+        )}
         {c.duration_s && (
           <span className="mono flex items-center gap-1.5 text-sm text-[var(--mc-muted)]">
             <Clock className="h-4 w-4" aria-hidden /> about {Math.round(c.duration_s / 60 * 10) / 10 || 1} min

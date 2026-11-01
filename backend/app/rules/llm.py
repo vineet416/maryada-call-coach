@@ -4,11 +4,15 @@ import hashlib
 import json
 import logging
 import time
+from collections.abc import Callable
 from pathlib import Path
 
 import httpx2 as httpx
 
 from ..config import settings
+from ..security import safe_http
+from ..security.credentials import Creds
+from ..security.url_guard import UnsafeUrl
 from .engine import parse_llm
 from .loader import load_rules
 from .schemas import CallContext, LlmOut, Turn
@@ -95,10 +99,15 @@ def _cache_put(k: str, raw: str) -> None:
             f.write(json.dumps({"k": k, "raw": raw}, ensure_ascii=False) + "\n")
 
 
-async def _ask(client: httpx.AsyncClient, model: str, messages: list[dict], api_key: str, base_url: str) -> str:
-    body = {"model": model, "temperature": 0, "max_tokens": 250, "response_format": {"type": "json_object"},
+def _body(model: str, messages: list[dict]) -> dict:
+    return {"model": model, "temperature": 0, "max_tokens": 250, "response_format": {"type": "json_object"},
             "messages": messages}
-    url, headers = base_url.rstrip("/") + "/chat/completions", {"Authorization": f"Bearer {api_key}"}
+
+
+async def _post_server(client: httpx.AsyncClient, body: dict) -> dict:
+    """The server's own key (development and evaluation tools only; the caller checks the setting)."""
+    url = settings.euri_base_url.rstrip("/") + "/chat/completions"
+    headers = {"Authorization": f"Bearer {settings.euri_api_key}"}
     try:
         r = await client.post(url, json=body, headers=headers)
     except (httpx.RemoteProtocolError, httpx.LocalProtocolError):
@@ -108,25 +117,74 @@ async def _ask(client: httpx.AsyncClient, model: str, messages: list[dict], api_
         async with httpx.AsyncClient(timeout=LATE_TIMEOUT_S, http2=False) as h1:
             r = await h1.post(url, json=body, headers=headers)
     r.raise_for_status()
-    j = r.json()
+    return r.json()
+
+
+async def _post_visitor(client: httpx.AsyncClient, creds: Creds, body: dict) -> dict:
+    """The visitor's provider through the guarded call. Newer OpenAI models want max_completion_tokens and no
+    temperature: the request settings are adapted once for each, driven by the provider's own error text."""
+    for _ in range(3):
+        try:
+            return json.loads(await safe_http.request(client, creds.base_url, "/chat/completions", creds.llm_key,
+                                                      json=body, timeout=LATE_TIMEOUT_S))
+        except safe_http.ProviderError as e:
+            d = e.detail.lower()
+            if e.status == 400 and "max_completion_tokens" in d and "max_tokens" in body:
+                body = {**{k: v for k, v in body.items() if k != "max_tokens"}, "max_completion_tokens": body["max_tokens"]}
+            elif e.status == 400 and "temperature" in d and "temperature" in body:
+                body = {k: v for k, v in body.items() if k != "temperature"}
+            else:
+                raise
+    raise safe_http.ProviderError("The provider rejected the request settings.", 400)
+
+
+async def chat(client: httpx.AsyncClient, model: str, messages: list[dict], creds: Creds | None) -> tuple[str, int]:
+    """One chat completion -> (reply text, total tokens as reported). Visitor creds use the guarded path."""
+    body = _body(model, messages)
+    j = await (_post_visitor(client, creds, body) if creds else _post_server(client, body))
     u = j.get("usage") or {}
+    total = int(u.get("total_tokens") or 0)
     STATS["calls"] += 1
-    STATS["tokens"] += u.get("total_tokens") or 0
+    STATS["tokens"] += total
     log.info("llm tokens model=%s prompt=%s completion=%s total=%s", model, u.get("prompt_tokens"),
-             u.get("completion_tokens"), u.get("total_tokens"))
-    return j["choices"][0]["message"]["content"]
+             u.get("completion_tokens"), total)
+    return j["choices"][0]["message"]["content"] or "", total
+
+
+_ERRORS = (TimeoutError, httpx.HTTPError, KeyError, IndexError, ValueError, TypeError, safe_http.ProviderError)
+
+
+def plain_error(e: BaseException) -> str:
+    """Short plain-language reason for the UI; never contains a key."""
+    if isinstance(e, safe_http.ProviderError):
+        return e.message_user
+    if isinstance(e, UnsafeUrl):
+        return str(e)
+    if isinstance(e, (TimeoutError, httpx.TimeoutException)):
+        return "The language model did not answer in time."
+    if isinstance(e, httpx.HTTPStatusError):
+        return safe_http.explain_status(e.response.status_code)
+    if isinstance(e, (KeyError, IndexError, TypeError, ValueError)):
+        return "The language model sent a reply in an unexpected format."
+    return "The language model could not be reached."
 
 
 async def review(client: httpx.AsyncClient, ctx: CallContext, history: list[Turn], text: str,
-                 api_key: str | None = None, base_url: str | None = None) -> tuple[LlmOut | None, int]:
-    """Returns (validated result or None when degraded, llm_ms). Invalid/failed -> one retry with the fallback model."""
+                 creds: Creds | None = None, on_error: Callable[[str], None] | None = None) -> tuple[LlmOut | None, int]:
+    """Returns (validated result or None when degraded, llm_ms). Server key: retry once with the fallback model.
+    Visitor key: their one model only, no fallback to ours, and the shared cache is never read or written."""
     if not text.strip():
         return LlmOut(), 0
-    use_cache = api_key is None  # a visitor's own key never reads or writes the shared cache
-    key, url = api_key or settings.euri_api_key, base_url or settings.euri_base_url
+    if creds is None and not settings.server_keys:
+        if on_error:
+            on_error("No language model key is set.")
+        return None, 0
+    use_cache = creds is None
+    url = settings.euri_base_url if creds is None else creds.base_url
+    models = (settings.llm_model, settings.llm_fallback_model) if creds is None else (creds.model,)
     messages = _messages(ctx, history, text)
     t0 = time.perf_counter()
-    for model in (settings.llm_model, settings.llm_fallback_model):
+    for model in models:
         ck = cache_key(model, url, messages)
         if use_cache and ck in _CACHE:
             out = parse_llm(_CACHE[ck])
@@ -137,9 +195,11 @@ async def review(client: httpx.AsyncClient, ctx: CallContext, history: list[Turn
             left = LATE_TIMEOUT_S - (time.perf_counter() - t0)
             if left <= 0:
                 break
-            raw = await asyncio.wait_for(_ask(client, model, messages, key, url), left)
-        except (TimeoutError, httpx.HTTPError, KeyError, IndexError, ValueError) as e:
+            raw, _ = await asyncio.wait_for(chat(client, model, messages, creds), left)
+        except _ERRORS as e:
             log.warning("llm call failed model=%s err=%s", model, type(e).__name__)
+            if on_error:
+                on_error(plain_error(e))
             continue
         out = parse_llm(raw)
         if out is not None:
@@ -147,14 +207,32 @@ async def review(client: httpx.AsyncClient, ctx: CallContext, history: list[Turn
                 _cache_put(ck, raw)
             return out, int((time.perf_counter() - t0) * 1000)
         log.warning("llm json invalid model=%s", model)
+        if on_error:
+            on_error("The language model did not reply with valid JSON.")
     return None, int((time.perf_counter() - t0) * 1000)  # caller: prefilter only + banner llm_degraded
 
 
-async def warm_up(client: httpx.AsyncClient, api_key: str | None = None, base_url: str | None = None) -> bool:
+async def warm_up(client: httpx.AsyncClient, creds: Creds | None = None) -> bool:
     """Tiny request at session start: opens the connection and validates the key."""
-    try:
-        await _ask(client, settings.llm_model, _messages(CallContext(), [], "Namaste, main Rohit bol raha hoon."),
-                   api_key or settings.euri_api_key, base_url or settings.euri_base_url)
-        return True
-    except (httpx.HTTPError, KeyError, IndexError, ValueError):
+    if creds is None and not settings.server_keys:
         return False
+    try:
+        await chat(client, creds.model if creds else settings.llm_model,
+                   _messages(CallContext(), [], "Namaste, main Rohit bol raha hoon."), creds)
+        return True
+    except _ERRORS:
+        return False
+
+
+async def test_call(client: httpx.AsyncClient, creds: Creds) -> dict:
+    """Connection test: one short sample classification with the visitor's model; the reply must be valid JSON."""
+    text = "Aapko sharam nahi aati, padosiyon ko pata chalega to samajh aayega."
+    try:
+        raw, tokens = await chat(client, creds.model, _messages(CallContext(), [], text), creds)
+    except _ERRORS as e:
+        return {"ok": False, "message_user": plain_error(e), "tokens": 0}
+    if parse_llm(raw) is None:
+        return {"ok": False, "tokens": tokens, "message_user": "The model answered, but not with the JSON format the "
+                "rule check needs. Try another model (results vary on models other than gpt-5.4-mini)."}
+    return {"ok": True, "tokens": tokens,
+            "message_user": f"Connected. The model replied with valid JSON ({tokens} tokens used)."}

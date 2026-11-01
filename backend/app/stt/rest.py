@@ -5,7 +5,7 @@ from pathlib import Path
 import httpx2 as httpx
 
 from ..config import settings
-from .base import SttError, TranscriptSegment, slice_wav
+from .base import SttAuthError, SttError, TranscriptSegment, slice_wav
 
 
 async def transcribe_turn(client: httpx.AsyncClient, wav_path: Path, profile: dict, api_key: str,
@@ -18,6 +18,8 @@ async def transcribe_turn(client: httpx.AsyncClient, wav_path: Path, profile: di
                               data={"model": profile["model"], "language_code": profile["language_code"]})
     except httpx.HTTPError as e:
         raise SttError(f"rest {type(e).__name__}") from e
+    if r.status_code in (401, 403):
+        raise SttAuthError(f"rest status {r.status_code}")
     if r.status_code != 200:
         raise SttError(f"rest status {r.status_code}")
     j = r.json()
