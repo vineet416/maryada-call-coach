@@ -146,11 +146,15 @@ export function LiveCall() {
             if (!scenario) load()
             else void begin(wanted)
           }}
-          onRecorded={() => {
-            useServerStore.setState({ status: 'ready' })
-            if (!scenario) load()
-            else void begin('replay')
-          }}
+          onRecorded={
+            scenario && !scenario.has_replay
+              ? undefined
+              : () => {
+                  useServerStore.setState({ status: 'ready' })
+                  if (!scenario) load()
+                  else void begin('replay')
+                }
+          }
         />
       </>
     )
@@ -237,15 +241,17 @@ export function LiveCall() {
       {failed && (
         <div className="mb-4">
           <ErrorCard title="The connection was lost" message={st.error ?? 'The live connection could not be restored.'} onRetry={load}>
-            <button
-              onClick={() => {
-                teardown()
-                void begin('replay')
-              }}
-              className="rounded-md border border-[var(--mc-line)] px-4 py-2 text-sm hover:bg-[var(--mc-line)]"
-            >
-              Try recorded run
-            </button>
+            {scenario?.has_replay && (
+              <button
+                onClick={() => {
+                  teardown()
+                  void begin('replay')
+                }}
+                className="rounded-md border border-[var(--mc-line)] px-4 py-2 text-sm hover:bg-[var(--mc-line)]"
+              >
+                Try recorded run
+              </button>
+            )}
           </ErrorCard>
         </div>
       )}
@@ -295,19 +301,22 @@ function StartCard({ scenario, busy, onStart }: { scenario: ScenarioDetail; busy
         <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--mc-accent)]">Needs your keys</p>
         <h2 className="mb-2 text-xl font-semibold">Add your keys to start a live call</h2>
         <p className="mb-6 text-sm text-[var(--mc-muted)]">
-          Live calls use your own Gnani key and your own language model. This site keeps no keys of its own. The recorded run needs none.
+          Live calls use your own Gnani key and your own language model. This site keeps no keys of its own.
+          {scenario.has_replay ? ' The recorded run needs none.' : ' This call has no recorded run.'}
         </p>
         <div className="flex flex-wrap justify-center gap-3">
           <Link to="/settings" className="rounded-full bg-[var(--mc-accent)] px-6 py-3 text-sm font-semibold text-white hover:brightness-110">
             Open Settings
           </Link>
-          <button
-            disabled={busy}
-            onClick={() => onStart('replay')}
-            className="rounded-full border border-[var(--mc-line)] px-5 py-3 text-sm hover:bg-[var(--mc-line)] disabled:opacity-60"
-          >
-            Play recorded run
-          </button>
+          {scenario.has_replay && (
+            <button
+              disabled={busy}
+              onClick={() => onStart('replay')}
+              className="rounded-full border border-[var(--mc-line)] px-5 py-3 text-sm hover:bg-[var(--mc-line)] disabled:opacity-60"
+            >
+              Play recorded run
+            </button>
+          )}
         </div>
       </section>
     )
@@ -327,13 +336,15 @@ function StartCard({ scenario, busy, onStart }: { scenario: ScenarioDetail; busy
             <span className="rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-medium">Needs your keys</span>
           )}
         </button>
-        <button
-          disabled={busy}
-          onClick={() => onStart('replay')}
-          className="rounded-full border border-[var(--mc-line)] px-5 py-3 text-sm hover:bg-[var(--mc-line)] disabled:opacity-60"
-        >
-          Play recorded run
-        </button>
+        {scenario.has_replay && (
+          <button
+            disabled={busy}
+            onClick={() => onStart('replay')}
+            className="rounded-full border border-[var(--mc-line)] px-5 py-3 text-sm hover:bg-[var(--mc-line)] disabled:opacity-60"
+          >
+            Play recorded run
+          </button>
+        )}
       </div>
       <p className="mt-4 text-xs text-[var(--mc-muted)]">
         Press start to allow sound. The coach card shows on screen; its voice is optional.

@@ -12,6 +12,7 @@ export interface ScenarioSummary {
   summary: string
   hero: boolean
   duration_s: number | null
+  has_replay: boolean
   tags: string[]
 }
 
@@ -28,6 +29,7 @@ export interface ScenarioDetail {
   title: string
   summary: string
   hero: boolean
+  has_replay: boolean
   simulated_start_time: string | null
   turns: ScenarioTurn[]
   call_audio_url: string | null

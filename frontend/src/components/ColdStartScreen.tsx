@@ -6,7 +6,7 @@ const GIVE_UP_HINT_S = 75
 
 interface Props {
   onReady: () => void
-  onRecorded: () => void
+  onRecorded?: () => void
 }
 
 /** Full-screen "waking the server" state: polls /health every 2 s, continues by itself when it answers. */
@@ -59,7 +59,7 @@ export function ColdStartScreen({ onReady, onRecorded }: Props) {
       </p>
       <p className="mono mb-1 text-3xl text-[var(--mc-text)]">{seconds}s</p>
       <p className="text-xs text-[var(--mc-muted)]">Checking every 2 seconds. The call starts by itself.</p>
-      {seconds >= GIVE_UP_HINT_S && (
+      {seconds >= GIVE_UP_HINT_S && onRecorded && (
         <div className="mt-5 border-t border-[var(--mc-line)] pt-4">
           <p className="mb-3 text-sm">Still waking… you can keep waiting or play the recorded run.</p>
           <button

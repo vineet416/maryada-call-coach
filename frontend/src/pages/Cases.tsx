@@ -103,8 +103,9 @@ function CaseCard({ c }: { c: ScenarioSummary }) {
       <p className="mb-3 line-clamp-3 flex-1 text-sm text-[var(--mc-muted)]">{c.summary}</p>
       <div className="flex items-center justify-between text-xs text-[var(--mc-muted)]">
         <span className="mono">{c.duration_s ? `${c.duration_s}s` : ''}</span>
-        <span className="flex items-center gap-1 text-[var(--mc-accent)] opacity-0 transition group-hover:opacity-100">
-          <Play className="h-3 w-3 fill-current" aria-hidden /> Open
+        <span className="flex items-center gap-1 text-[var(--mc-accent)]">
+          {c.has_replay && <Play className="h-3 w-3 fill-current" aria-hidden />}
+          {c.has_replay ? 'Play recorded run' : 'Live with your keys'}
         </span>
       </div>
     </Link>
