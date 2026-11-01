@@ -61,7 +61,7 @@ export function Phrase({
             </span>
           </Fragment>
         ))}
-        {showRule && <sup className="rt">{finding.rule_id}</sup>}
+        {showRule && <sup className="rt"> {finding.rule_id}</sup>}
       </span>{' '}
     </>
   )

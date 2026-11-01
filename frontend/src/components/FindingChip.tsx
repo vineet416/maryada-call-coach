@@ -43,8 +43,8 @@ export function FindingList({ findings: all, rules, onOpen }: Props) {
                     onOpen(f)
                   }}
                   className="flex w-full items-start gap-2.5 rounded-lg py-2.5 text-left hover:bg-[var(--mc-bg)]"
-                  aria-label={`${KIND_LABEL[f.kind]} ${f.rule_id}: ${title}. Open details`}
                 >
+                  <span className="sr-only">{KIND_LABEL[f.kind]}</span>
                   <span className={`chip chip-${f.kind} h-[22px]`}>{f.rule_id}</span>
                   <span className="min-w-0 flex-1">
                     <span className="block text-[13px] font-medium">{title}</span>
