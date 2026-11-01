@@ -173,11 +173,11 @@ def test_groq_models():
 
 
 def test_gemini_openai_models_strip_prefix():
-    assert _models("models_gemini_openai.json") == ["gemini-2.0-flash-lite", "gemini-2.5-flash", "gemini-2.5-pro"]
+    assert _models("models_gemini_openai.json") == ["gemini-2.0-flash-lite"]  # 2.5 ids are on the deny list
 
 
 def test_gemini_native_listing():
-    assert _models("models_gemini_native.json") == ["gemini-2.0-flash", "gemini-2.5-flash"]
+    assert _models("models_gemini_native.json") == ["gemini-2.0-flash"]
 
 
 def test_openrouter_models_drop_non_text_output():
@@ -473,3 +473,27 @@ def test_visitor_session_never_uses_server_keys_after_wipe(monkeypatch):
     s.creds = None  # what an expired or finished visitor session looks like
     run(runner._run_live(s))
     assert s.log.events[-1]["data"]["code"] == "keys_required"  # stopped; the server's keys were not used
+
+
+def test_visitor_request_has_larger_reply_budget_and_gemini_gets_low_reasoning():
+    msgs = [{"role": "user", "content": "x"}]
+    server = llm._body("m", msgs)
+    assert server["max_tokens"] == 250 and "reasoning_effort" not in server
+    visitor = llm._body("m", msgs, _creds())
+    assert visitor["max_tokens"] == 800 and "reasoning_effort" not in visitor
+    gem = Creds(GKEY, "https://generativelanguage.googleapis.com/v1beta/openai", KEY, "gemini-3.5-flash")
+    assert llm._body("gemini-3.5-flash", msgs, gem)["reasoning_effort"] == "low"
+    gem.wipe()
+    visitor_creds = _creds()
+    visitor_creds.wipe()
+
+
+def test_chat_404_says_the_model_is_not_available():
+    from app.security import safe_http
+    msg = llm.plain_error(safe_http.ProviderError("x", 404))
+    assert "not available" in msg and "pick another" in msg.lower()
+
+
+def test_retired_models_are_hidden_from_the_list():
+    ids = clean_models({"data": [{"id": "models/gemini-2.5-flash"}, {"id": "models/gemini-3.5-flash"}]})
+    assert ids == ["gemini-3.5-flash"]
