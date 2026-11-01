@@ -47,7 +47,7 @@ def agent_turns(n: int) -> list[tuple[CallContext, list[Turn], str]]:
             ctx = CallContext(answered_by=sc.get("answered_by", "borrower"), simulated_start_time=sc.get("time", "12:00"))
             hist: list[Turn] = []
             for t in sc["turns"]:
-                if t["s"] == "A" and len(t["t"].split()) >= llm.MIN_WORDS:
+                if t["s"] == "A" and len(t["t"].split()) >= 4:
                     items.append((sc["id"] != "c06", ctx, list(hist), t["t"]))
                 hist.append(Turn(speaker=t["s"], text=t["t"]))
     items.sort(key=lambda x: x[0])  # c06 turns first, stable otherwise

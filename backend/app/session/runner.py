@@ -9,7 +9,7 @@ import httpx2 as httpx
 
 from .. import db, replay
 from ..config import settings
-from ..rules import llm, risk
+from ..rules import llm, risk, skip
 from ..rules.engine import deep_findings, fast_findings
 from ..rules.schemas import Finding, Turn
 from ..rules.text import tokenize
@@ -49,6 +49,7 @@ class Session:
         self.risk_peak = 0
         self.late_tasks: list[asyncio.Task] = []
         self.coach_used: dict[str, int] = {}
+        self.llm_skipped = 0  # LLM reviews skipped by the short-segment guard (not the same as a clean review)
 
 
 def new_session(scenario_id: str, requested: str) -> Session:
@@ -251,6 +252,8 @@ async def _run_live(s: Session) -> None:
         for task in s.late_tasks:  # stopped or timed out: no LLM answer may arrive after the client is closed
             task.cancel()
         await llm_client.aclose()
+    log.info("session=%s llm_skipped=%d | process totals: llm_calls=%d llm_cache_hits=%d", s.id, s.llm_skipped,
+             llm.STATS["calls"], llm.STATS["cache_hits"])
     s.log.emit("session.ended", {"summary": summary(s)})
 
 
@@ -308,6 +311,11 @@ class LiveTurn:
         self._handle(fast, "fast", {"stt_ms": seg.latency_ms, "prefilter_ms": prefilter_ms, "llm_ms": 0}, seg_end)
 
     async def _deep(self, box: dict, text: str, seg: TranscriptSegment, seg_end: float, arrived: float) -> None:
+        if skip.should_skip(self.ctx, self.history, text, box["fast"]):
+            self.s.llm_skipped += 1
+            log.info("llm skipped session=%s turn=%s words=%d (short, no prefilter hit, no keyword)",
+                     self.s.id, self.idx, len(text.split()))
+            return
         out, llm_ms = await llm.review(self.llm_client, self.ctx, self.history[-2:], text, self.s.api_key, self.s.base_url)
         if out is None:
             self.s.log.emit("banner", {"kind": "llm_degraded",
