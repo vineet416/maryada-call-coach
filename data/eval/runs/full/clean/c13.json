@@ -20,11 +20,11 @@
   "path": "rest"
  },
  "llm": {
-  "requests": 6,
-  "cache_hits": 0,
+  "requests": 0,
+  "cache_hits": 6,
   "skipped": 0,
   "degraded": 0,
-  "tokens": 5232
+  "tokens": 0
  },
  "turns": [
   {
@@ -154,15 +154,6 @@
   {
    "call": "c13",
    "turn": 9,
-   "rule": "R5",
-   "kind": "needs_review",
-   "confidence": 0.74,
-   "source": "llm",
-   "quote": "अगर Friday तक नहीं दिया तो हर दिन 5,000 रुपये penalty लगेगी और यह RBI का rule है।"
-  },
-  {
-   "call": "c13",
-   "turn": 9,
    "rule": "G1",
    "kind": "good_practice",
    "confidence": 1.0,
@@ -179,5 +170,5 @@
    "quote": "payment link अभी WhatsApp पर भेज रहा हूँ"
   }
  ],
- "completed_at": "2026-11-02T04:33:52+00:00"
+ "completed_at": "2026-11-02T05:51:35+00:00"
 }

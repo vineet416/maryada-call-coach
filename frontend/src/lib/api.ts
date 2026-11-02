@@ -149,9 +149,20 @@ export interface EvalReview {
   items: { call: string; turn: number; rule: string; verdict: string; note: string }[]
   adjusted: Record<string, { all?: ReviewGroup; held_out?: ReviewGroup }>
 }
+export interface EngineChange {
+  id: string
+  date: string
+  what: string
+  why: string
+  after_seeing_results: boolean
+  uses_labels: boolean
+  condition: string
+  removed_flags: [string, number, string][]
+}
 export interface EvalPayload {
   results: EvalResults | null
   review: EvalReview | null
+  engine_changes: EngineChange[]
   latency: { calls: string[]; rows: LatencyRow[]; method: string }
 }
 

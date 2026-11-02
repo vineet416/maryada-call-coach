@@ -20,11 +20,11 @@
   "path": "rest"
  },
  "llm": {
-  "requests": 6,
-  "cache_hits": 0,
+  "requests": 0,
+  "cache_hits": 6,
   "skipped": 0,
   "degraded": 0,
-  "tokens": 5035
+  "tokens": 0
  },
  "turns": [
   {
@@ -188,5 +188,5 @@
    "quote": "ओके sir कल तक 2,300 मैं SMS भेज देता हूँ।"
   }
  ],
- "completed_at": "2026-11-02T04:35:22+00:00"
+ "completed_at": "2026-11-02T05:51:35+00:00"
 }

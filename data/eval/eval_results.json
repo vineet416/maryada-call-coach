@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-02T04:36:06+00:00",
+ "generated_at": "2026-11-02T05:51:35+00:00",
  "labels_hash": "21caa31f45898ae6",
  "n_calls": 30,
  "conditions": [
@@ -139,15 +139,15 @@
       },
       "with_review": {
        "tp": 9,
-       "fp": 8,
+       "fp": 7,
        "fn": 0,
-       "p": 0.5294117647058824,
+       "p": 0.5625,
        "r": 1.0,
-       "f1": 0.6923076923076924
+       "f1": 0.72
       },
       "needs_review": {
        "on_label": 1,
-       "off_label": 1
+       "off_label": 0
       }
      },
      "R4": {
@@ -183,15 +183,15 @@
       },
       "with_review": {
        "tp": 9,
-       "fp": 3,
+       "fp": 1,
        "fn": 0,
-       "p": 0.75,
+       "p": 0.9,
        "r": 1.0,
-       "f1": 0.8571428571428571
+       "f1": 0.9473684210526316
       },
       "needs_review": {
        "on_label": 0,
-       "off_label": 2
+       "off_label": 0
       }
      },
      "R6": {
@@ -228,15 +228,15 @@
      },
      "with_review": {
       "tp": 35,
-      "fp": 13,
+      "fp": 10,
       "fn": 0,
-      "p": 0.7291666666666666,
+      "p": 0.7777777777777778,
       "r": 1.0,
-      "f1": 0.8433734939759037
+      "f1": 0.8750000000000001
      },
      "needs_review": {
       "on_label": 5,
-      "off_label": 3
+      "off_label": 0
      }
     },
     "per_call": [
@@ -408,13 +408,7 @@
       "missed": [],
       "missed_with_review": [],
       "false_alarms": [],
-      "false_alarms_with_review": [
-       [
-        "c07",
-        11,
-        "R3"
-       ]
-      ],
+      "false_alarms_with_review": [],
       "expected_rules": [
        "R3"
       ],
@@ -674,13 +668,7 @@
       "missed": [],
       "missed_with_review": [],
       "false_alarms": [],
-      "false_alarms_with_review": [
-       [
-        "c12",
-        9,
-        "R5"
-       ]
-      ],
+      "false_alarms_with_review": [],
       "expected_rules": [
        "R5"
       ],
@@ -718,13 +706,7 @@
       "missed": [],
       "missed_with_review": [],
       "false_alarms": [],
-      "false_alarms_with_review": [
-       [
-        "c13",
-        9,
-        "R5"
-       ]
-      ],
+      "false_alarms_with_review": [],
       "expected_rules": [
        "R5"
       ],
@@ -1541,20 +1523,6 @@
    "examples": [
     {
      "type": "false_alarm",
-     "call": "c07",
-     "turn": 11,
-     "rule": "R3",
-     "text": "ठीक है Friday को 5,000 पक्का मैं नोट कर लेती हूँ UPI से कर देना।",
-     "labelled_phrase": null,
-     "detection": {
-      "kind": "needs_review",
-      "confidence": 0.74,
-      "source": "llm",
-      "quote": "वरना मुझसे बुरा कोई नहीं होगा"
-     }
-    },
-    {
-     "type": "false_alarm",
      "call": "c08",
      "turn": 11,
      "rule": "R3",
@@ -1565,6 +1533,20 @@
       "confidence": 0.98,
       "source": "llm",
       "quote": "जो करना है करो"
+     }
+    },
+    {
+     "type": "false_alarm",
+     "call": "c11",
+     "turn": 11,
+     "rule": "R5",
+     "text": "ठीक है आज ही करो 2,300 भी चलेगा बस आज हो जाए।",
+     "labelled_phrase": null,
+     "detection": {
+      "kind": "violation",
+      "confidence": 0.84,
+      "source": "llm",
+      "quote": "ठीक है आज ही करो 2,300 भी चलेगा बस आज हो जाए।"
      }
     }
    ],
@@ -1626,15 +1608,15 @@
       },
       "with_review": {
        "tp": 5,
-       "fp": 2,
+       "fp": 1,
        "fn": 0,
-       "p": 0.7142857142857143,
+       "p": 0.8333333333333334,
        "r": 1.0,
-       "f1": 0.8333333333333333
+       "f1": 0.9090909090909091
       },
       "needs_review": {
        "on_label": 1,
-       "off_label": 1
+       "off_label": 0
       }
      },
      "R4": {
@@ -1670,15 +1652,15 @@
       },
       "with_review": {
        "tp": 6,
-       "fp": 2,
+       "fp": 1,
        "fn": 0,
-       "p": 0.75,
+       "p": 0.8571428571428571,
        "r": 1.0,
-       "f1": 0.8571428571428571
+       "f1": 0.923076923076923
       },
       "needs_review": {
        "on_label": 0,
-       "off_label": 1
+       "off_label": 0
       }
      },
      "R6": {
@@ -1715,15 +1697,15 @@
      },
      "with_review": {
       "tp": 21,
-      "fp": 6,
+      "fp": 4,
       "fn": 0,
-      "p": 0.7777777777777778,
+      "p": 0.84,
       "r": 1.0,
-      "f1": 0.8750000000000001
+      "f1": 0.9130434782608696
      },
      "needs_review": {
       "on_label": 3,
-      "off_label": 2
+      "off_label": 0
      }
     },
     "per_call": [
@@ -1867,13 +1849,7 @@
       "missed": [],
       "missed_with_review": [],
       "false_alarms": [],
-      "false_alarms_with_review": [
-       [
-        "c07",
-        11,
-        "R3"
-       ]
-      ],
+      "false_alarms_with_review": [],
       "expected_rules": [
        "R3"
       ],
@@ -2030,13 +2006,7 @@
       "missed": [],
       "missed_with_review": [],
       "false_alarms": [],
-      "false_alarms_with_review": [
-       [
-        "c13",
-        9,
-        "R5"
-       ]
-      ],
+      "false_alarms_with_review": [],
       "expected_rules": [
        "R5"
       ],
@@ -2579,15 +2549,15 @@
       },
       "with_review": {
        "tp": 3,
-       "fp": 1,
+       "fp": 0,
        "fn": 0,
-       "p": 0.75,
+       "p": 1.0,
        "r": 1.0,
-       "f1": 0.8571428571428571
+       "f1": 1.0
       },
       "needs_review": {
        "on_label": 0,
-       "off_label": 1
+       "off_label": 0
       }
      },
      "R6": {
@@ -2624,15 +2594,15 @@
      },
      "with_review": {
       "tp": 11,
-      "fp": 5,
+      "fp": 4,
       "fn": 0,
-      "p": 0.6875,
+      "p": 0.7333333333333333,
       "r": 1.0,
-      "f1": 0.8148148148148148
+      "f1": 0.846153846153846
      },
      "needs_review": {
       "on_label": 2,
-      "off_label": 1
+      "off_label": 0
      }
     },
     "per_call": [
@@ -2794,13 +2764,7 @@
       "missed": [],
       "missed_with_review": [],
       "false_alarms": [],
-      "false_alarms_with_review": [
-       [
-        "c12",
-        9,
-        "R5"
-       ]
-      ],
+      "false_alarms_with_review": [],
       "expected_rules": [
        "R5"
       ],
@@ -3383,11 +3347,11 @@
     "avg_latency_ms": 0
    },
    "llm": {
-    "requests": 164,
-    "cache_hits": 0,
+    "requests": 0,
+    "cache_hits": 164,
     "skipped": 1,
     "degraded": 0,
-    "tokens": 141961
+    "tokens": 0
    }
   }
  },
