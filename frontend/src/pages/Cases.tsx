@@ -284,10 +284,7 @@ function Peek({ icon, title, text }: { icon: React.ReactNode; title: string; tex
 function CaseCard({ c }: { c: ScenarioSummary }) {
   return (
     <Link to={`/call/${c.id}`} className="card flex flex-col gap-3 p-5 transition hover:border-[var(--mc-accent-ring)] hover:shadow-md">
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-xs font-semibold tracking-wide text-[var(--mc-muted)]">{c.id.toUpperCase()}</span>
-        <span className="text-xs text-[var(--mc-muted)]">Recorded run</span>
-      </div>
+      <span className="text-xs font-semibold tracking-wide text-[var(--mc-muted)]">{c.id.toUpperCase()}</span>
       <h3 className="text-base font-semibold leading-snug tracking-tight">{c.title}</h3>
       <p className="line-clamp-3 text-[13px] leading-normal text-[var(--mc-muted)]">{plain(c.summary)}</p>
       {c.tags.length > 0 && (

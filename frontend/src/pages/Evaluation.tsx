@@ -19,7 +19,6 @@ const condLabel = (id: string) => (id === 'clean' ? 'Clean audio' : /^snr\d+$/.t
 const f2 = (x: number | null) => (x === null ? '–' : x.toFixed(2))
 const ratio = (num: number, den: number) => `${num} of ${den}`
 const NOTES_URL = 'https://github.com/vineet416/maryada-call-coach/blob/main/docs/EVAL-NOTES.md'
-const dateOf = (iso: string) => new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 const seconds = (ms: number | null | undefined) => (ms == null ? null : `${(ms / 1000).toFixed(1)} s`)
 const found = (p: Prf) => ratio(p.tp, p.tp + p.fn)
 
@@ -74,11 +73,6 @@ export function Evaluation() {
             How well Maryada finds rule violations in {results ? results.n_calls : 'the'} labelled synthetic calls. Numbers are read from the saved results.
           </p>
         </div>
-        {results && (
-          <span className="chip chip-warn" title="Saved results, not a live run">
-            Results saved {dateOf(results.generated_at)}
-          </span>
-        )}
       </div>
 
       {!results || !run || !all ? (

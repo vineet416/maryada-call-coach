@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { ErrorCard } from '@/components/ErrorCard'
-import { Initials, RecordedChip, Spark, StatusChip } from '@/components/manager/Shared'
+import { Initials, Spark, StatusChip } from '@/components/manager/Shared'
 import { ApiError, getManager, type ManagerAgent, type ManagerPayload } from '@/lib/api'
 import {
   agentsCsv, downloadCsv, exampleCall, isReviewOnly, num, pct, plural, reviewNote, ruleCount, ruleIds, ruleTitle, shortDate,
@@ -109,7 +109,6 @@ function Dashboard({ data, range, setRange, busy, error, retry }: {
         <span>
           Sample data: {data.batch_label ?? 'synthetic calls'}. {source.note} Counts are small and not a performance assessment of real people.
         </span>
-        <RecordedChip note="Results come from a saved evaluation run, not a live one" savedOn={data.generated_at} />
       </div>
 
       <RuleChips data={data} picked={picked} setPicked={setPicked} />

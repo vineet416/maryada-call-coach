@@ -3,13 +3,12 @@ import { Link, useLocation, useParams } from 'react-router-dom'
 import { Bubble } from '@/components/Bubble'
 import { DetailDrawer } from '@/components/DetailDrawer'
 import { ErrorCard } from '@/components/ErrorCard'
-import { ModeBadge } from '@/components/ModeBadge'
 import { RiskChart } from '@/components/report/RiskChart'
 import { ApiError, getReport, getRules, getSessionReport, type CallReport as Report, type Rule } from '@/lib/api'
 import type { Finding } from '@/lib/events'
 import { KIND_LABEL } from '@/lib/events'
 import { absenceLine } from '@/lib/findings'
-import { clock, shortDate, spoken } from '@/lib/format'
+import { clock, spoken } from '@/lib/format'
 import { usePageTitle } from '@/lib/usePageTitle'
 import { useNextRecorded } from '@/lib/useNextRecorded'
 import type { TurnView } from '@/store/sessionStore'
@@ -115,14 +114,9 @@ export function CallReport({ live = false }: { live?: boolean }) {
 
   const { report, rules } = state
   const { scenario, kpis, by_rule: byRule, coaching, good } = report
-  const recorded = report.source === 'replay'
   const turnAt = (n: number) => report.turns.find((t) => t.idx === n)?.offset_ms ?? 0
   const rule = (f: Finding | null) => rules.find((r) => r.id === f?.rule_id)
-  const subline = [
-    recorded ? 'Recorded run' : 'Live call',
-    scenario.duration_ms ? spoken(scenario.duration_ms) : null,
-    scenario.call_date && !live ? `call dated ${shortDate(scenario.call_date)}` : null,
-  ].filter(Boolean)
+  const subline = [live ? 'Live call' : null, scenario.duration_ms ? spoken(scenario.duration_ms) : null].filter(Boolean)
   const jumpToTranscript = () => {
     const el = document.getElementById('report-transcript')
     el?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })
@@ -146,10 +140,7 @@ export function CallReport({ live = false }: { live?: boolean }) {
               <span aria-current="page">Call report</span>
             </nav>
             <h1 ref={heading} tabIndex={-1} className="text-xl font-semibold leading-tight tracking-tight sm:text-2xl">{scenario.title}</h1>
-            <p className="flex flex-wrap items-center gap-2 text-[13px] text-[var(--mc-muted)]">
-              {recorded && <ModeBadge mode="replay" status="ended" />}
-              <span>{subline.join(' · ')}</span>
-            </p>
+            {subline.length > 0 && <p className="text-[13px] text-[var(--mc-muted)]">{subline.join(' · ')}</p>}
           </div>
           <div className="flex flex-wrap gap-2.5">
             <button type="button" onClick={jumpToTranscript} className="btn">Review transcript</button>
