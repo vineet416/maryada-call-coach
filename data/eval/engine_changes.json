@@ -10,6 +10,7 @@
       "why": "Three needs-review flags (c07 turn 11, c12 turn 9, c13 turn 9) quoted a line from an earlier turn, so the flagged turn itself contained no violation.",
       "scope": "engine.llm_to_findings and deep_findings only; no prompt, threshold, label or phrase-list change. Re-scored from the saved model answers (0 tokens).",
       "condition": "full/clean",
+      "llm_cost_note": "The first run used 164 requests and 141,961 reported tokens. The saved results now show 0 tokens because they come from replaying those saved model answers.",
       "removed_flags": [["c07", 11, "R3"], ["c12", 9, "R5"], ["c13", 9, "R5"]],
       "before": {
         "strict": {"tp": 30, "fp": 10, "fn": 5},
