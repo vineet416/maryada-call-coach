@@ -1,0 +1,1950 @@
+{
+ "scenario_id": "c22",
+ "events": [
+  {
+   "seq": 1,
+   "type": "session.started",
+   "t_ms": 21,
+   "data": {
+    "scenario_id": "c22",
+    "effective_mode": "live",
+    "turns_total": 9,
+    "simulated_start_time": "11:50"
+   }
+  },
+  {
+   "seq": 2,
+   "type": "stage.status",
+   "t_ms": 21,
+   "data": {
+    "stage": "connecting",
+    "turn_idx": 0,
+    "text": "Connecting"
+   }
+  },
+  {
+   "seq": 3,
+   "type": "turn.started",
+   "t_ms": 333,
+   "data": {
+    "turn_idx": 1,
+    "speaker": "agent",
+    "audio_url": "/audio/c22/1.mp3",
+    "duration_ms": 1740
+   }
+  },
+  {
+   "seq": 4,
+   "type": "stage.status",
+   "t_ms": 334,
+   "data": {
+    "stage": "transcribing",
+    "turn_idx": 1,
+    "text": "Transcribing"
+   }
+  },
+  {
+   "seq": 5,
+   "type": "transcript.final",
+   "t_ms": 2150,
+   "data": {
+    "turn_idx": 1,
+    "segment_idx": 0,
+    "speaker": "agent",
+    "text": "Hello",
+    "lang_detected": "en-IN",
+    "tokens": [
+     {
+      "i": 0,
+      "w": "Hello",
+      "lang": "en"
+     }
+    ],
+    "is_last_segment_of_turn": false,
+    "stt_latency_ms": 224,
+    "source": "live",
+    "stt_path": "realtime"
+   }
+  },
+  {
+   "seq": 6,
+   "type": "finding.pending",
+   "t_ms": 2150,
+   "data": {
+    "turn_idx": 1,
+    "segment_idx": 0
+   }
+  },
+  {
+   "seq": 7,
+   "type": "stage.status",
+   "t_ms": 2150,
+   "data": {
+    "stage": "checking",
+    "turn_idx": 1,
+    "text": "Checking against the rulebook"
+   }
+  },
+  {
+   "seq": 8,
+   "type": "transcript.final",
+   "t_ms": 2889,
+   "data": {
+    "turn_idx": 1,
+    "segment_idx": 1,
+    "speaker": "agent",
+    "text": "राहुल कांबले जी।",
+    "lang_detected": "hi-IN",
+    "tokens": [
+     {
+      "i": 1,
+      "w": "राहुल",
+      "lang": "hi"
+     },
+     {
+      "i": 2,
+      "w": "कांबले",
+      "lang": "hi"
+     },
+     {
+      "i": 3,
+      "w": "जी।",
+      "lang": "hi"
+     }
+    ],
+    "is_last_segment_of_turn": true,
+    "stt_latency_ms": 149,
+    "source": "live",
+    "stt_path": "realtime"
+   }
+  },
+  {
+   "seq": 9,
+   "type": "finding.pending",
+   "t_ms": 2889,
+   "data": {
+    "turn_idx": 1,
+    "segment_idx": 1
+   }
+  },
+  {
+   "seq": 10,
+   "type": "stage.status",
+   "t_ms": 2889,
+   "data": {
+    "stage": "checking",
+    "turn_idx": 1,
+    "text": "Checking against the rulebook"
+   }
+  },
+  {
+   "seq": 11,
+   "type": "finding.detected",
+   "t_ms": 3254,
+   "data": {
+    "id": "6dd10298b92a",
+    "turn_idx": 1,
+    "rule_id": "G1",
+    "kind": "good_practice",
+    "confidence": 1.0,
+    "quote": "Hello",
+    "token_range": [
+     0,
+     1
+    ],
+    "reason": "Polite greeting, but no identification or recording notice yet.",
+    "rewrite": "",
+    "source": "llm",
+    "phase": "deep",
+    "weak_alignment": false,
+    "rbi_ref": "",
+    "late": false,
+    "latency": {
+     "stt_ms": 224,
+     "prefilter_ms": 0,
+     "llm_ms": 1102,
+     "total_ms": 1388
+    }
+   }
+  },
+  {
+   "seq": 12,
+   "type": "turn.started",
+   "t_ms": 3334,
+   "data": {
+    "turn_idx": 2,
+    "speaker": "borrower",
+    "audio_url": "/audio/c22/2.mp3",
+    "duration_ms": 1830
+   }
+  },
+  {
+   "seq": 13,
+   "type": "stage.status",
+   "t_ms": 3335,
+   "data": {
+    "stage": "transcribing",
+    "turn_idx": 2,
+    "text": "Transcribing"
+   }
+  },
+  {
+   "seq": 14,
+   "type": "finding.detected",
+   "t_ms": 4392,
+   "data": {
+    "id": "4e5800fd8c96",
+    "turn_idx": 1,
+    "rule_id": "G1",
+    "kind": "good_practice",
+    "confidence": 1.0,
+    "quote": "Hello राहुल कांबले जी।",
+    "token_range": [
+     0,
+     4
+    ],
+    "reason": "Uses a respectful greeting and addresses the borrower directly.",
+    "rewrite": "",
+    "source": "llm",
+    "phase": "deep",
+    "weak_alignment": false,
+    "rbi_ref": "",
+    "late": false,
+    "latency": {
+     "stt_ms": 149,
+     "prefilter_ms": 0,
+     "llm_ms": 1490,
+     "total_ms": 1746
+    }
+   }
+  },
+  {
+   "seq": 15,
+   "type": "risk.update",
+   "t_ms": 4401,
+   "data": {
+    "score": 0,
+    "delta": 0,
+    "band": "low",
+    "reason_rule_id": null
+   }
+  },
+  {
+   "seq": 16,
+   "type": "turn.ended",
+   "t_ms": 4401,
+   "data": {
+    "turn_idx": 1
+   }
+  },
+  {
+   "seq": 17,
+   "type": "transcript.final",
+   "t_ms": 5812,
+   "data": {
+    "turn_idx": 2,
+    "segment_idx": 0,
+    "speaker": "borrower",
+    "text": "हाँ बोलिए, आप कौन?",
+    "lang_detected": "hi-IN",
+    "tokens": [
+     {
+      "i": 0,
+      "w": "हाँ",
+      "lang": "hi"
+     },
+     {
+      "i": 1,
+      "w": "बोलिए,",
+      "lang": "hi"
+     },
+     {
+      "i": 2,
+      "w": "आप",
+      "lang": "hi"
+     },
+     {
+      "i": 3,
+      "w": "कौन?",
+      "lang": "hi"
+     }
+    ],
+    "is_last_segment_of_turn": true,
+    "stt_latency_ms": 234,
+    "source": "live",
+    "stt_path": "realtime"
+   }
+  },
+  {
+   "seq": 18,
+   "type": "turn.ended",
+   "t_ms": 5819,
+   "data": {
+    "turn_idx": 2
+   }
+  },
+  {
+   "seq": 19,
+   "type": "turn.started",
+   "t_ms": 6484,
+   "data": {
+    "turn_idx": 3,
+    "speaker": "agent",
+    "audio_url": "/audio/c22/3.mp3",
+    "duration_ms": 7200
+   }
+  },
+  {
+   "seq": 20,
+   "type": "stage.status",
+   "t_ms": 6484,
+   "data": {
+    "stage": "transcribing",
+    "turn_idx": 3,
+    "text": "Transcribing"
+   }
+  },
+  {
+   "seq": 21,
+   "type": "transcript.final",
+   "t_ms": 8298,
+   "data": {
+    "turn_idx": 3,
+    "segment_idx": 0,
+    "speaker": "agent",
+    "text": "राहुल जी",
+    "lang_detected": "hi-IN",
+    "tokens": [
+     {
+      "i": 0,
+      "w": "राहुल",
+      "lang": "hi"
+     },
+     {
+      "i": 1,
+      "w": "जी",
+      "lang": "hi"
+     }
+    ],
+    "is_last_segment_of_turn": false,
+    "stt_latency_ms": 255,
+    "source": "live",
+    "stt_path": "realtime"
+   }
+  },
+  {
+   "seq": 22,
+   "type": "finding.pending",
+   "t_ms": 8298,
+   "data": {
+    "turn_idx": 3,
+    "segment_idx": 0
+   }
+  },
+  {
+   "seq": 23,
+   "type": "stage.status",
+   "t_ms": 8298,
+   "data": {
+    "stage": "checking",
+    "turn_idx": 3,
+    "text": "Checking against the rulebook"
+   }
+  },
+  {
+   "seq": 24,
+   "type": "transcript.final",
+   "t_ms": 14635,
+   "data": {
+    "turn_idx": 3,
+    "segment_idx": 1,
+    "speaker": "agent",
+    "text": "आपकी 6,000 की EMI अभी भी pending है, penalty भी लग रही है, payment कब कर रहे हैं?",
+    "lang_detected": "hi-IN",
+    "tokens": [
+     {
+      "i": 2,
+      "w": "आपकी",
+      "lang": "hi"
+     },
+     {
+      "i": 3,
+      "w": "6,000",
+      "lang": "en"
+     },
+     {
+      "i": 4,
+      "w": "की",
+      "lang": "hi"
+     },
+     {
+      "i": 5,
+      "w": "EMI",
+      "lang": "en"
+     },
+     {
+      "i": 6,
+      "w": "अभी",
+      "lang": "hi"
+     },
+     {
+      "i": 7,
+      "w": "भी",
+      "lang": "hi"
+     },
+     {
+      "i": 8,
+      "w": "pending",
+      "lang": "en"
+     },
+     {
+      "i": 9,
+      "w": "है,",
+      "lang": "hi"
+     },
+     {
+      "i": 10,
+      "w": "penalty",
+      "lang": "en"
+     },
+     {
+      "i": 11,
+      "w": "भी",
+      "lang": "hi"
+     },
+     {
+      "i": 12,
+      "w": "लग",
+      "lang": "hi"
+     },
+     {
+      "i": 13,
+      "w": "रही",
+      "lang": "hi"
+     },
+     {
+      "i": 14,
+      "w": "है,",
+      "lang": "hi"
+     },
+     {
+      "i": 15,
+      "w": "payment",
+      "lang": "en"
+     },
+     {
+      "i": 16,
+      "w": "कब",
+      "lang": "hi"
+     },
+     {
+      "i": 17,
+      "w": "कर",
+      "lang": "hi"
+     },
+     {
+      "i": 18,
+      "w": "रहे",
+      "lang": "hi"
+     },
+     {
+      "i": 19,
+      "w": "हैं?",
+      "lang": "hi"
+     }
+    ],
+    "is_last_segment_of_turn": true,
+    "stt_latency_ms": 492,
+    "source": "live",
+    "stt_path": "realtime"
+   }
+  },
+  {
+   "seq": 25,
+   "type": "finding.pending",
+   "t_ms": 14635,
+   "data": {
+    "turn_idx": 3,
+    "segment_idx": 1
+   }
+  },
+  {
+   "seq": 26,
+   "type": "stage.status",
+   "t_ms": 14635,
+   "data": {
+    "stage": "checking",
+    "turn_idx": 3,
+    "text": "Checking against the rulebook"
+   }
+  },
+  {
+   "seq": 27,
+   "type": "finding.detected",
+   "t_ms": 14638,
+   "data": {
+    "id": "4fd215023b4e",
+    "turn_idx": 3,
+    "rule_id": "R2",
+    "kind": "advisory",
+    "confidence": 1.0,
+    "quote": "",
+    "token_range": [
+     0,
+     20
+    ],
+    "reason": "",
+    "rewrite": "",
+    "source": "prefilter",
+    "phase": "fast",
+    "weak_alignment": false,
+    "rbi_ref": "454P",
+    "late": false,
+    "latency": {
+     "stt_ms": 492,
+     "prefilter_ms": 2,
+     "llm_ms": 0,
+     "total_ms": 586
+    }
+   }
+  },
+  {
+   "seq": 28,
+   "type": "turn.started",
+   "t_ms": 14831,
+   "data": {
+    "turn_idx": 4,
+    "speaker": "borrower",
+    "audio_url": "/audio/c22/4.mp3",
+    "duration_ms": 5835
+   }
+  },
+  {
+   "seq": 29,
+   "type": "stage.status",
+   "t_ms": 14831,
+   "data": {
+    "stage": "transcribing",
+    "turn_idx": 4,
+    "text": "Transcribing"
+   }
+  },
+  {
+   "seq": 30,
+   "type": "finding.detected",
+   "t_ms": 16487,
+   "data": {
+    "id": "7d024be45921",
+    "turn_idx": 3,
+    "rule_id": "G1",
+    "kind": "good_practice",
+    "confidence": 1.0,
+    "quote": "राहुल जी आपकी 6,000 की EMI अभी भी pending है, penalty भी लग रही है, payment कब कर रहे हैं?",
+    "token_range": [
+     0,
+     20
+    ],
+    "reason": "Polite reminder about dues and possible penalty is allowed.",
+    "rewrite": "",
+    "source": "llm",
+    "phase": "deep",
+    "weak_alignment": false,
+    "rbi_ref": "",
+    "late": false,
+    "latency": {
+     "stt_ms": 492,
+     "prefilter_ms": 0,
+     "llm_ms": 1828,
+     "total_ms": 2436
+    }
+   }
+  },
+  {
+   "seq": 31,
+   "type": "risk.update",
+   "t_ms": 16498,
+   "data": {
+    "score": 8,
+    "delta": 8,
+    "band": "low",
+    "reason_rule_id": "R2"
+   }
+  },
+  {
+   "seq": 32,
+   "type": "turn.ended",
+   "t_ms": 16498,
+   "data": {
+    "turn_idx": 3
+   }
+  },
+  {
+   "seq": 33,
+   "type": "transcript.final",
+   "t_ms": 17583,
+   "data": {
+    "turn_idx": 4,
+    "segment_idx": 0,
+    "speaker": "borrower",
+    "text": "पहले बताइए आप कौन बोल रही हो?",
+    "lang_detected": "hi-IN",
+    "tokens": [
+     {
+      "i": 0,
+      "w": "पहले",
+      "lang": "hi"
+     },
+     {
+      "i": 1,
+      "w": "बताइए",
+      "lang": "hi"
+     },
+     {
+      "i": 2,
+      "w": "आप",
+      "lang": "hi"
+     },
+     {
+      "i": 3,
+      "w": "कौन",
+      "lang": "hi"
+     },
+     {
+      "i": 4,
+      "w": "बोल",
+      "lang": "hi"
+     },
+     {
+      "i": 5,
+      "w": "रही",
+      "lang": "hi"
+     },
+     {
+      "i": 6,
+      "w": "हो?",
+      "lang": "hi"
+     }
+    ],
+    "is_last_segment_of_turn": false,
+    "stt_latency_ms": 285,
+    "source": "live",
+    "stt_path": "realtime"
+   }
+  },
+  {
+   "seq": 34,
+   "type": "transcript.final",
+   "t_ms": 18949,
+   "data": {
+    "turn_idx": 4,
+    "segment_idx": 1,
+    "speaker": "borrower",
+    "text": "कौनसी company से?",
+    "lang_detected": "hi-IN",
+    "tokens": [
+     {
+      "i": 7,
+      "w": "कौनसी",
+      "lang": "hi"
+     },
+     {
+      "i": 8,
+      "w": "company",
+      "lang": "en"
+     },
+     {
+      "i": 9,
+      "w": "से?",
+      "lang": "hi"
+     }
+    ],
+    "is_last_segment_of_turn": false,
+    "stt_latency_ms": 173,
+    "source": "live",
+    "stt_path": "realtime"
+   }
+  },
+  {
+   "seq": 35,
+   "type": "transcript.final",
+   "t_ms": 21400,
+   "data": {
+    "turn_idx": 4,
+    "segment_idx": 2,
+    "speaker": "borrower",
+    "text": "ऐसे कोई भी फोन करके पैसा मांगता है क्या?",
+    "lang_detected": "hi-IN",
+    "tokens": [
+     {
+      "i": 10,
+      "w": "ऐसे",
+      "lang": "hi"
+     },
+     {
+      "i": 11,
+      "w": "कोई",
+      "lang": "hi"
+     },
+     {
+      "i": 12,
+      "w": "भी",
+      "lang": "hi"
+     },
+     {
+      "i": 13,
+      "w": "फोन",
+      "lang": "hi"
+     },
+     {
+      "i": 14,
+      "w": "करके",
+      "lang": "hi"
+     },
+     {
+      "i": 15,
+      "w": "पैसा",
+      "lang": "hi"
+     },
+     {
+      "i": 16,
+      "w": "मांगता",
+      "lang": "hi"
+     },
+     {
+      "i": 17,
+      "w": "है",
+      "lang": "hi"
+     },
+     {
+      "i": 18,
+      "w": "क्या?",
+      "lang": "hi"
+     }
+    ],
+    "is_last_segment_of_turn": true,
+    "stt_latency_ms": 269,
+    "source": "live",
+    "stt_path": "realtime"
+   }
+  },
+  {
+   "seq": 36,
+   "type": "turn.ended",
+   "t_ms": 21414,
+   "data": {
+    "turn_idx": 4
+   }
+  },
+  {
+   "seq": 37,
+   "type": "turn.started",
+   "t_ms": 21937,
+   "data": {
+    "turn_idx": 5,
+    "speaker": "agent",
+    "audio_url": "/audio/c22/5.mp3",
+    "duration_ms": 10530
+   }
+  },
+  {
+   "seq": 38,
+   "type": "stage.status",
+   "t_ms": 21937,
+   "data": {
+    "stage": "transcribing",
+    "turn_idx": 5,
+    "text": "Transcribing"
+   }
+  },
+  {
+   "seq": 39,
+   "type": "transcript.final",
+   "t_ms": 25515,
+   "data": {
+    "turn_idx": 5,
+    "segment_idx": 0,
+    "speaker": "agent",
+    "text": "Sorry sir, मैं प्रिया बोल रही हूँ।",
+    "lang_detected": "hi-IN",
+    "tokens": [
+     {
+      "i": 0,
+      "w": "Sorry",
+      "lang": "en"
+     },
+     {
+      "i": 1,
+      "w": "sir,",
+      "lang": "en"
+     },
+     {
+      "i": 2,
+      "w": "मैं",
+      "lang": "hi"
+     },
+     {
+      "i": 3,
+      "w": "प्रिया",
+      "lang": "hi"
+     },
+     {
+      "i": 4,
+      "w": "बोल",
+      "lang": "hi"
+     },
+     {
+      "i": 5,
+      "w": "रही",
+      "lang": "hi"
+     },
+     {
+      "i": 6,
+      "w": "हूँ।",
+      "lang": "hi"
+     }
+    ],
+    "is_last_segment_of_turn": false,
+    "stt_latency_ms": 424,
+    "source": "live",
+    "stt_path": "realtime"
+   }
+  },
+  {
+   "seq": 40,
+   "type": "finding.pending",
+   "t_ms": 25515,
+   "data": {
+    "turn_idx": 5,
+    "segment_idx": 0
+   }
+  },
+  {
+   "seq": 41,
+   "type": "stage.status",
+   "t_ms": 25515,
+   "data": {
+    "stage": "checking",
+    "turn_idx": 5,
+    "text": "Checking against the rulebook"
+   }
+  },
+  {
+   "seq": 42,
+   "type": "finding.detected",
+   "t_ms": 25516,
+   "data": {
+    "id": "e431fb1cf997",
+    "turn_idx": 5,
+    "rule_id": "G1",
+    "kind": "good_practice",
+    "confidence": 1.0,
+    "quote": "Sorry sir,",
+    "token_range": [
+     0,
+     2
+    ],
+    "reason": "",
+    "rewrite": "",
+    "source": "prefilter",
+    "phase": "fast",
+    "weak_alignment": false,
+    "rbi_ref": "",
+    "late": false,
+    "latency": {
+     "stt_ms": 424,
+     "prefilter_ms": 1,
+     "llm_ms": 0,
+     "total_ms": 512
+    }
+   }
+  },
+  {
+   "seq": 43,
+   "type": "transcript.final",
+   "t_ms": 26896,
+   "data": {
+    "turn_idx": 5,
+    "segment_idx": 1,
+    "speaker": "agent",
+    "text": "तारंग Finserv से।",
+    "lang_detected": "hi-IN",
+    "tokens": [
+     {
+      "i": 7,
+      "w": "तारंग",
+      "lang": "hi"
+     },
+     {
+      "i": 8,
+      "w": "Finserv",
+      "lang": "en"
+     },
+     {
+      "i": 9,
+      "w": "से।",
+      "lang": "hi"
+     }
+    ],
+    "is_last_segment_of_turn": false,
+    "stt_latency_ms": 213,
+    "source": "live",
+    "stt_path": "realtime"
+   }
+  },
+  {
+   "seq": 44,
+   "type": "finding.pending",
+   "t_ms": 26896,
+   "data": {
+    "turn_idx": 5,
+    "segment_idx": 1
+   }
+  },
+  {
+   "seq": 45,
+   "type": "stage.status",
+   "t_ms": 26896,
+   "data": {
+    "stage": "checking",
+    "turn_idx": 5,
+    "text": "Checking against the rulebook"
+   }
+  },
+  {
+   "seq": 46,
+   "type": "finding.detected",
+   "t_ms": 28782,
+   "data": {
+    "id": "6b5e5604b7c6",
+    "turn_idx": 5,
+    "rule_id": "G1",
+    "kind": "good_practice",
+    "confidence": 1.0,
+    "quote": "मैं प्रिया बोल रही हूँ। तारंग Finserv से।",
+    "token_range": [
+     2,
+     10
+    ],
+    "reason": "Gives identity and lender clearly.",
+    "rewrite": "",
+    "source": "llm",
+    "phase": "deep",
+    "weak_alignment": false,
+    "rbi_ref": "",
+    "late": false,
+    "latency": {
+     "stt_ms": 213,
+     "prefilter_ms": 0,
+     "llm_ms": 1881,
+     "total_ms": 2178
+    }
+   }
+  },
+  {
+   "seq": 47,
+   "type": "transcript.final",
+   "t_ms": 30808,
+   "data": {
+    "turn_idx": 5,
+    "segment_idx": 2,
+    "speaker": "agent",
+    "text": "आपका personal loan हमारे पास है। EMI pending है।",
+    "lang_detected": "hi-IN",
+    "tokens": [
+     {
+      "i": 10,
+      "w": "आपका",
+      "lang": "hi"
+     },
+     {
+      "i": 11,
+      "w": "personal",
+      "lang": "en"
+     },
+     {
+      "i": 12,
+      "w": "loan",
+      "lang": "en"
+     },
+     {
+      "i": 13,
+      "w": "हमारे",
+      "lang": "hi"
+     },
+     {
+      "i": 14,
+      "w": "पास",
+      "lang": "hi"
+     },
+     {
+      "i": 15,
+      "w": "है।",
+      "lang": "hi"
+     },
+     {
+      "i": 16,
+      "w": "EMI",
+      "lang": "en"
+     },
+     {
+      "i": 17,
+      "w": "pending",
+      "lang": "en"
+     },
+     {
+      "i": 18,
+      "w": "है।",
+      "lang": "hi"
+     }
+    ],
+    "is_last_segment_of_turn": false,
+    "stt_latency_ms": 281,
+    "source": "live",
+    "stt_path": "realtime"
+   }
+  },
+  {
+   "seq": 48,
+   "type": "finding.pending",
+   "t_ms": 30808,
+   "data": {
+    "turn_idx": 5,
+    "segment_idx": 2
+   }
+  },
+  {
+   "seq": 49,
+   "type": "stage.status",
+   "t_ms": 30808,
+   "data": {
+    "stage": "checking",
+    "turn_idx": 5,
+    "text": "Checking against the rulebook"
+   }
+  },
+  {
+   "seq": 50,
+   "type": "finding.detected",
+   "t_ms": 32487,
+   "data": {
+    "id": "86abf1febf1d",
+    "turn_idx": 5,
+    "rule_id": "G1",
+    "kind": "good_practice",
+    "confidence": 1.0,
+    "quote": "तारंग Finserv से।",
+    "token_range": [
+     7,
+     10
+    ],
+    "reason": "Clearly identifies the lender.",
+    "rewrite": "",
+    "source": "llm",
+    "phase": "deep",
+    "weak_alignment": false,
+    "rbi_ref": "",
+    "late": false,
+    "latency": {
+     "stt_ms": 281,
+     "prefilter_ms": 0,
+     "llm_ms": 1676,
+     "total_ms": 2043
+    }
+   }
+  },
+  {
+   "seq": 51,
+   "type": "finding.detected",
+   "t_ms": 32497,
+   "data": {
+    "id": "6e38692481c7",
+    "turn_idx": 5,
+    "rule_id": "G1",
+    "kind": "good_practice",
+    "confidence": 1.0,
+    "quote": "EMI pending है।",
+    "token_range": [
+     16,
+     19
+    ],
+    "reason": "States the payment status directly and politely.",
+    "rewrite": "",
+    "source": "llm",
+    "phase": "deep",
+    "weak_alignment": false,
+    "rbi_ref": "",
+    "late": false,
+    "latency": {
+     "stt_ms": 281,
+     "prefilter_ms": 0,
+     "llm_ms": 1676,
+     "total_ms": 2053
+    }
+   }
+  },
+  {
+   "seq": 52,
+   "type": "transcript.final",
+   "t_ms": 33254,
+   "data": {
+    "turn_idx": 5,
+    "segment_idx": 3,
+    "speaker": "agent",
+    "text": "इसलिए call किया। payment कब तक होगा?",
+    "lang_detected": "hi-IN",
+    "tokens": [
+     {
+      "i": 19,
+      "w": "इसलिए",
+      "lang": "hi"
+     },
+     {
+      "i": 20,
+      "w": "call",
+      "lang": "en"
+     },
+     {
+      "i": 21,
+      "w": "किया।",
+      "lang": "hi"
+     },
+     {
+      "i": 22,
+      "w": "payment",
+      "lang": "en"
+     },
+     {
+      "i": 23,
+      "w": "कब",
+      "lang": "hi"
+     },
+     {
+      "i": 24,
+      "w": "तक",
+      "lang": "hi"
+     },
+     {
+      "i": 25,
+      "w": "होगा?",
+      "lang": "hi"
+     }
+    ],
+    "is_last_segment_of_turn": true,
+    "stt_latency_ms": 310,
+    "source": "live",
+    "stt_path": "realtime"
+   }
+  },
+  {
+   "seq": 53,
+   "type": "finding.pending",
+   "t_ms": 33254,
+   "data": {
+    "turn_idx": 5,
+    "segment_idx": 3
+   }
+  },
+  {
+   "seq": 54,
+   "type": "stage.status",
+   "t_ms": 33254,
+   "data": {
+    "stage": "checking",
+    "turn_idx": 5,
+    "text": "Checking against the rulebook"
+   }
+  },
+  {
+   "seq": 55,
+   "type": "turn.started",
+   "t_ms": 33658,
+   "data": {
+    "turn_idx": 6,
+    "speaker": "borrower",
+    "audio_url": "/audio/c22/6.mp3",
+    "duration_ms": 6063
+   }
+  },
+  {
+   "seq": 56,
+   "type": "stage.status",
+   "t_ms": 33659,
+   "data": {
+    "stage": "transcribing",
+    "turn_idx": 6,
+    "text": "Transcribing"
+   }
+  },
+  {
+   "seq": 57,
+   "type": "finding.detected",
+   "t_ms": 34592,
+   "data": {
+    "id": "d21ee815f8c0",
+    "turn_idx": 5,
+    "rule_id": "G1",
+    "kind": "good_practice",
+    "confidence": 1.0,
+    "quote": "Sorry sir, मैं प्रिया बोल रही हूँ। तारंग Finserv से।",
+    "token_range": [
+     0,
+     10
+    ],
+    "reason": "Identifies herself and the lender clearly.",
+    "rewrite": "",
+    "source": "llm",
+    "phase": "deep",
+    "weak_alignment": false,
+    "rbi_ref": "",
+    "late": false,
+    "latency": {
+     "stt_ms": 310,
+     "prefilter_ms": 0,
+     "llm_ms": 1327,
+     "total_ms": 1746
+    }
+   }
+  },
+  {
+   "seq": 58,
+   "type": "risk.update",
+   "t_ms": 34598,
+   "data": {
+    "score": 0,
+    "delta": -8,
+    "band": "low",
+    "reason_rule_id": null
+   }
+  },
+  {
+   "seq": 59,
+   "type": "turn.ended",
+   "t_ms": 34598,
+   "data": {
+    "turn_idx": 5
+   }
+  },
+  {
+   "seq": 60,
+   "type": "transcript.final",
+   "t_ms": 40634,
+   "data": {
+    "turn_idx": 6,
+    "segment_idx": 0,
+    "speaker": "borrower",
+    "text": "अच्छा, तारंग से पहले बोलना चाहिए था ना, आप लोग पहले बताया करो, next week तक कर दूंगा।",
+    "lang_detected": "hi-IN",
+    "tokens": [
+     {
+      "i": 0,
+      "w": "अच्छा,",
+      "lang": "hi"
+     },
+     {
+      "i": 1,
+      "w": "तारंग",
+      "lang": "hi"
+     },
+     {
+      "i": 2,
+      "w": "से",
+      "lang": "hi"
+     },
+     {
+      "i": 3,
+      "w": "पहले",
+      "lang": "hi"
+     },
+     {
+      "i": 4,
+      "w": "बोलना",
+      "lang": "hi"
+     },
+     {
+      "i": 5,
+      "w": "चाहिए",
+      "lang": "hi"
+     },
+     {
+      "i": 6,
+      "w": "था",
+      "lang": "hi"
+     },
+     {
+      "i": 7,
+      "w": "ना,",
+      "lang": "hi"
+     },
+     {
+      "i": 8,
+      "w": "आप",
+      "lang": "hi"
+     },
+     {
+      "i": 9,
+      "w": "लोग",
+      "lang": "hi"
+     },
+     {
+      "i": 10,
+      "w": "पहले",
+      "lang": "hi"
+     },
+     {
+      "i": 11,
+      "w": "बताया",
+      "lang": "hi"
+     },
+     {
+      "i": 12,
+      "w": "करो,",
+      "lang": "hi"
+     },
+     {
+      "i": 13,
+      "w": "next",
+      "lang": "en"
+     },
+     {
+      "i": 14,
+      "w": "week",
+      "lang": "en"
+     },
+     {
+      "i": 15,
+      "w": "तक",
+      "lang": "hi"
+     },
+     {
+      "i": 16,
+      "w": "कर",
+      "lang": "hi"
+     },
+     {
+      "i": 17,
+      "w": "दूंगा।",
+      "lang": "hi"
+     }
+    ],
+    "is_last_segment_of_turn": true,
+    "stt_latency_ms": 438,
+    "source": "live",
+    "stt_path": "realtime"
+   }
+  },
+  {
+   "seq": 61,
+   "type": "turn.ended",
+   "t_ms": 40646,
+   "data": {
+    "turn_idx": 6
+   }
+  },
+  {
+   "seq": 62,
+   "type": "turn.started",
+   "t_ms": 40720,
+   "data": {
+    "turn_idx": 7,
+    "speaker": "agent",
+    "audio_url": "/audio/c22/7.mp3",
+    "duration_ms": 6000
+   }
+  },
+  {
+   "seq": 63,
+   "type": "stage.status",
+   "t_ms": 40721,
+   "data": {
+    "stage": "transcribing",
+    "turn_idx": 7,
+    "text": "Transcribing"
+   }
+  },
+  {
+   "seq": 64,
+   "type": "transcript.final",
+   "t_ms": 43686,
+   "data": {
+    "turn_idx": 7,
+    "segment_idx": 0,
+    "speaker": "agent",
+    "text": "Next week में कौन सी date sir?",
+    "lang_detected": "hi-IN",
+    "tokens": [
+     {
+      "i": 0,
+      "w": "Next",
+      "lang": "en"
+     },
+     {
+      "i": 1,
+      "w": "week",
+      "lang": "en"
+     },
+     {
+      "i": 2,
+      "w": "में",
+      "lang": "hi"
+     },
+     {
+      "i": 3,
+      "w": "कौन",
+      "lang": "hi"
+     },
+     {
+      "i": 4,
+      "w": "सी",
+      "lang": "hi"
+     },
+     {
+      "i": 5,
+      "w": "date",
+      "lang": "en"
+     },
+     {
+      "i": 6,
+      "w": "sir?",
+      "lang": "en"
+     }
+    ],
+    "is_last_segment_of_turn": false,
+    "stt_latency_ms": 298,
+    "source": "live",
+    "stt_path": "realtime"
+   }
+  },
+  {
+   "seq": 65,
+   "type": "finding.pending",
+   "t_ms": 43686,
+   "data": {
+    "turn_idx": 7,
+    "segment_idx": 0
+   }
+  },
+  {
+   "seq": 66,
+   "type": "stage.status",
+   "t_ms": 43686,
+   "data": {
+    "stage": "checking",
+    "turn_idx": 7,
+    "text": "Checking against the rulebook"
+   }
+  },
+  {
+   "seq": 67,
+   "type": "transcript.final",
+   "t_ms": 47510,
+   "data": {
+    "turn_idx": 7,
+    "segment_idx": 1,
+    "speaker": "agent",
+    "text": "मुझे एक पक्की date चाहिए, पूरा नहीं हो पाए तो थोड़ा अभी कर दीजिए।",
+    "lang_detected": "hi-IN",
+    "tokens": [
+     {
+      "i": 7,
+      "w": "मुझे",
+      "lang": "hi"
+     },
+     {
+      "i": 8,
+      "w": "एक",
+      "lang": "hi"
+     },
+     {
+      "i": 9,
+      "w": "पक्की",
+      "lang": "hi"
+     },
+     {
+      "i": 10,
+      "w": "date",
+      "lang": "en"
+     },
+     {
+      "i": 11,
+      "w": "चाहिए,",
+      "lang": "hi"
+     },
+     {
+      "i": 12,
+      "w": "पूरा",
+      "lang": "hi"
+     },
+     {
+      "i": 13,
+      "w": "नहीं",
+      "lang": "hi"
+     },
+     {
+      "i": 14,
+      "w": "हो",
+      "lang": "hi"
+     },
+     {
+      "i": 15,
+      "w": "पाए",
+      "lang": "hi"
+     },
+     {
+      "i": 16,
+      "w": "तो",
+      "lang": "hi"
+     },
+     {
+      "i": 17,
+      "w": "थोड़ा",
+      "lang": "hi"
+     },
+     {
+      "i": 18,
+      "w": "अभी",
+      "lang": "hi"
+     },
+     {
+      "i": 19,
+      "w": "कर",
+      "lang": "hi"
+     },
+     {
+      "i": 20,
+      "w": "दीजिए।",
+      "lang": "hi"
+     }
+    ],
+    "is_last_segment_of_turn": true,
+    "stt_latency_ms": 277,
+    "source": "live",
+    "stt_path": "realtime"
+   }
+  },
+  {
+   "seq": 68,
+   "type": "finding.pending",
+   "t_ms": 47510,
+   "data": {
+    "turn_idx": 7,
+    "segment_idx": 1
+   }
+  },
+  {
+   "seq": 69,
+   "type": "stage.status",
+   "t_ms": 47510,
+   "data": {
+    "stage": "checking",
+    "turn_idx": 7,
+    "text": "Checking against the rulebook"
+   }
+  },
+  {
+   "seq": 70,
+   "type": "turn.started",
+   "t_ms": 47856,
+   "data": {
+    "turn_idx": 8,
+    "speaker": "borrower",
+    "audio_url": "/audio/c22/8.mp3",
+    "duration_ms": 2970
+   }
+  },
+  {
+   "seq": 71,
+   "type": "stage.status",
+   "t_ms": 47857,
+   "data": {
+    "stage": "transcribing",
+    "turn_idx": 8,
+    "text": "Transcribing"
+   }
+  },
+  {
+   "seq": 72,
+   "type": "finding.detected",
+   "t_ms": 48961,
+   "data": {
+    "id": "e5fa3bde1b3a",
+    "turn_idx": 7,
+    "rule_id": "G1",
+    "kind": "good_practice",
+    "confidence": 1.0,
+    "quote": "मुझे एक पक्की date चाहिए, पूरा नहीं हो पाए तो थोड़ा अभी कर दीजिए",
+    "token_range": [
+     7,
+     21
+    ],
+    "reason": "Firm but polite payment follow-up without abuse or false threats.",
+    "rewrite": "",
+    "source": "llm",
+    "phase": "deep",
+    "weak_alignment": false,
+    "rbi_ref": "",
+    "late": false,
+    "latency": {
+     "stt_ms": 277,
+     "prefilter_ms": 0,
+     "llm_ms": 1434,
+     "total_ms": 1809
+    }
+   }
+  },
+  {
+   "seq": 73,
+   "type": "risk.update",
+   "t_ms": 48971,
+   "data": {
+    "score": 0,
+    "delta": 0,
+    "band": "low",
+    "reason_rule_id": null
+   }
+  },
+  {
+   "seq": 74,
+   "type": "turn.ended",
+   "t_ms": 48971,
+   "data": {
+    "turn_idx": 7
+   }
+  },
+  {
+   "seq": 75,
+   "type": "transcript.final",
+   "t_ms": 51739,
+   "data": {
+    "turn_idx": 8,
+    "segment_idx": 0,
+    "speaker": "borrower",
+    "text": "19 तारीख 19 को पक्का पूरा कर दूंगा।",
+    "lang_detected": "hi-IN",
+    "tokens": [
+     {
+      "i": 0,
+      "w": "19",
+      "lang": "en"
+     },
+     {
+      "i": 1,
+      "w": "तारीख",
+      "lang": "hi"
+     },
+     {
+      "i": 2,
+      "w": "19",
+      "lang": "en"
+     },
+     {
+      "i": 3,
+      "w": "को",
+      "lang": "hi"
+     },
+     {
+      "i": 4,
+      "w": "पक्का",
+      "lang": "hi"
+     },
+     {
+      "i": 5,
+      "w": "पूरा",
+      "lang": "hi"
+     },
+     {
+      "i": 6,
+      "w": "कर",
+      "lang": "hi"
+     },
+     {
+      "i": 7,
+      "w": "दूंगा।",
+      "lang": "hi"
+     }
+    ],
+    "is_last_segment_of_turn": true,
+    "stt_latency_ms": 399,
+    "source": "live",
+    "stt_path": "realtime"
+   }
+  },
+  {
+   "seq": 76,
+   "type": "turn.ended",
+   "t_ms": 51751,
+   "data": {
+    "turn_idx": 8
+   }
+  },
+  {
+   "seq": 77,
+   "type": "turn.started",
+   "t_ms": 51893,
+   "data": {
+    "turn_idx": 9,
+    "speaker": "agent",
+    "audio_url": "/audio/c22/9.mp3",
+    "duration_ms": 5680
+   }
+  },
+  {
+   "seq": 78,
+   "type": "stage.status",
+   "t_ms": 51893,
+   "data": {
+    "stage": "transcribing",
+    "turn_idx": 9,
+    "text": "Transcribing"
+   }
+  },
+  {
+   "seq": 79,
+   "type": "transcript.final",
+   "t_ms": 55054,
+   "data": {
+    "turn_idx": 9,
+    "segment_idx": 0,
+    "speaker": "agent",
+    "text": "ठीक है, 19 तारीख पक्का।",
+    "lang_detected": "hi-IN",
+    "tokens": [
+     {
+      "i": 0,
+      "w": "ठीक",
+      "lang": "hi"
+     },
+     {
+      "i": 1,
+      "w": "है,",
+      "lang": "hi"
+     },
+     {
+      "i": 2,
+      "w": "19",
+      "lang": "en"
+     },
+     {
+      "i": 3,
+      "w": "तारीख",
+      "lang": "hi"
+     },
+     {
+      "i": 4,
+      "w": "पक्का।",
+      "lang": "hi"
+     }
+    ],
+    "is_last_segment_of_turn": false,
+    "stt_latency_ms": 408,
+    "source": "live",
+    "stt_path": "realtime_retry"
+   }
+  },
+  {
+   "seq": 80,
+   "type": "finding.pending",
+   "t_ms": 55054,
+   "data": {
+    "turn_idx": 9,
+    "segment_idx": 0
+   }
+  },
+  {
+   "seq": 81,
+   "type": "stage.status",
+   "t_ms": 55054,
+   "data": {
+    "stage": "checking",
+    "turn_idx": 9,
+    "text": "Checking against the rulebook"
+   }
+  },
+  {
+   "seq": 82,
+   "type": "transcript.final",
+   "t_ms": 57945,
+   "data": {
+    "turn_idx": 9,
+    "segment_idx": 1,
+    "speaker": "agent",
+    "text": "Payment link अभी WhatsApp पर भेज रही हूँ। Thank you.",
+    "lang_detected": "hi-IN",
+    "tokens": [
+     {
+      "i": 5,
+      "w": "Payment",
+      "lang": "en"
+     },
+     {
+      "i": 6,
+      "w": "link",
+      "lang": "en"
+     },
+     {
+      "i": 7,
+      "w": "अभी",
+      "lang": "hi"
+     },
+     {
+      "i": 8,
+      "w": "WhatsApp",
+      "lang": "en"
+     },
+     {
+      "i": 9,
+      "w": "पर",
+      "lang": "hi"
+     },
+     {
+      "i": 10,
+      "w": "भेज",
+      "lang": "hi"
+     },
+     {
+      "i": 11,
+      "w": "रही",
+      "lang": "hi"
+     },
+     {
+      "i": 12,
+      "w": "हूँ।",
+      "lang": "hi"
+     },
+     {
+      "i": 13,
+      "w": "Thank",
+      "lang": "en"
+     },
+     {
+      "i": 14,
+      "w": "you.",
+      "lang": "en"
+     }
+    ],
+    "is_last_segment_of_turn": true,
+    "stt_latency_ms": 291,
+    "source": "live",
+    "stt_path": "realtime_retry"
+   }
+  },
+  {
+   "seq": 83,
+   "type": "finding.pending",
+   "t_ms": 57945,
+   "data": {
+    "turn_idx": 9,
+    "segment_idx": 1
+   }
+  },
+  {
+   "seq": 84,
+   "type": "stage.status",
+   "t_ms": 57945,
+   "data": {
+    "stage": "checking",
+    "turn_idx": 9,
+    "text": "Checking against the rulebook"
+   }
+  },
+  {
+   "seq": 85,
+   "type": "finding.detected",
+   "t_ms": 59601,
+   "data": {
+    "id": "0c0f132ac2ca",
+    "turn_idx": 9,
+    "rule_id": "G1",
+    "kind": "good_practice",
+    "confidence": 1.0,
+    "quote": "ठीक है, 19 तारीख पक्का।",
+    "token_range": [
+     0,
+     5
+    ],
+    "reason": "Confirms the borrower’s commitment politely.",
+    "rewrite": "",
+    "source": "llm",
+    "phase": "deep",
+    "weak_alignment": false,
+    "rbi_ref": "",
+    "late": false,
+    "latency": {
+     "stt_ms": 291,
+     "prefilter_ms": 0,
+     "llm_ms": 1638,
+     "total_ms": 2028
+    }
+   }
+  },
+  {
+   "seq": 86,
+   "type": "finding.detected",
+   "t_ms": 59616,
+   "data": {
+    "id": "7c728aa75e19",
+    "turn_idx": 9,
+    "rule_id": "G1",
+    "kind": "good_practice",
+    "confidence": 1.0,
+    "quote": "Payment link अभी WhatsApp पर भेज रही हूँ।",
+    "token_range": [
+     5,
+     13
+    ],
+    "reason": "Provides a clear next step to make payment easier.",
+    "rewrite": "",
+    "source": "llm",
+    "phase": "deep",
+    "weak_alignment": false,
+    "rbi_ref": "",
+    "late": false,
+    "latency": {
+     "stt_ms": 291,
+     "prefilter_ms": 0,
+     "llm_ms": 1638,
+     "total_ms": 2042
+    }
+   }
+  },
+  {
+   "seq": 87,
+   "type": "risk.update",
+   "t_ms": 59620,
+   "data": {
+    "score": 0,
+    "delta": 0,
+    "band": "low",
+    "reason_rule_id": null
+   }
+  },
+  {
+   "seq": 88,
+   "type": "turn.ended",
+   "t_ms": 59620,
+   "data": {
+    "turn_idx": 9
+   }
+  },
+  {
+   "seq": 89,
+   "type": "session.ended",
+   "t_ms": 59621,
+   "data": {
+    "summary": {
+     "risk_peak": 8,
+     "findings_count": 1,
+     "by_rule": {
+      "R2": 1
+     },
+     "stopped": false,
+     "stt": {
+      "early_closes": 1,
+      "retries": 1,
+      "retry_ok": 1,
+      "rest_turns": 0
+     }
+    }
+   }
+  }
+ ]
+}
