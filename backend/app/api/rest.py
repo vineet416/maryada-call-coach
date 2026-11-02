@@ -81,7 +81,7 @@ def get_report(sid: str) -> dict:
 @router.get("/api/rules")
 def list_rules() -> list[dict]:
     keys = ("id", "title", "kind_default", "rbi_ref", "summary", "why", "examples_bad", "examples_good")
-    clips = {ln["rule"]: f"/audio/coach/{ln['file']}" for ln in assets.coach_manifest()["lines"] if ln["n"] == 1}
+    clips = {ln.get("rule"): f"/audio/coach/{ln['file']}" for ln in assets.coach_manifest()["lines"] if ln.get("n") == 1 and ln.get("file")}
     return [{**{k: r.get(k) for k in keys}, "coach_clip": clips.get(r["id"])} for r in load_rules()["rules"]]
 
 
