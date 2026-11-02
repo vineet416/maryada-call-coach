@@ -13,18 +13,18 @@
   "rules_prompt_hash": "1d00a71c99b73ca1"
  },
  "stt": {
-  "requests": 9,
-  "cached": 0,
-  "latency_ms": 6102,
+  "requests": 0,
+  "cached": 9,
+  "latency_ms": 0,
   "model": "prisma-v3.0",
   "path": "rest"
  },
  "llm": {
-  "requests": 4,
-  "cache_hits": 1,
+  "requests": 0,
+  "cache_hits": 5,
   "skipped": 0,
   "degraded": 0,
-  "tokens": 3466
+  "tokens": 0
  },
  "turns": [
   {
@@ -165,5 +165,5 @@
    "quote": "अगर salary पहले आ जाए तो पहले भी कर सकते हैं"
   }
  ],
- "completed_at": "2026-11-02T05:31:48+00:00"
+ "completed_at": "2026-11-02T05:55:24+00:00"
 }

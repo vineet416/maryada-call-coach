@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-02T05:51:35+00:00",
+ "generated_at": "2026-11-02T05:55:25+00:00",
  "labels_hash": "21caa31f45898ae6",
  "n_calls": 30,
  "conditions": [
@@ -3353,6 +3353,1243 @@
     "degraded": 0,
     "tokens": 0
    }
+  },
+  "snr10": {
+   "calls_run": 9,
+   "complete": false,
+   "all": {
+    "n_calls": 9,
+    "per_rule": {
+     "R1": {
+      "strict": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R2": {
+      "strict": {
+       "tp": 0,
+       "fp": 3,
+       "fn": 0,
+       "p": 0.0,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 3,
+       "fn": 0,
+       "p": 0.0,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R3": {
+      "strict": {
+       "tp": 7,
+       "fp": 1,
+       "fn": 0,
+       "p": 0.875,
+       "r": 1.0,
+       "f1": 0.9333333333333333
+      },
+      "with_review": {
+       "tp": 7,
+       "fp": 1,
+       "fn": 0,
+       "p": 0.875,
+       "r": 1.0,
+       "f1": 0.9333333333333333
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R4": {
+      "strict": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R5": {
+      "strict": {
+       "tp": 1,
+       "fp": 0,
+       "fn": 0,
+       "p": 1.0,
+       "r": 1.0,
+       "f1": 1.0
+      },
+      "with_review": {
+       "tp": 1,
+       "fp": 0,
+       "fn": 0,
+       "p": 1.0,
+       "r": 1.0,
+       "f1": 1.0
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R6": {
+      "strict": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     }
+    },
+    "overall": {
+     "strict": {
+      "tp": 8,
+      "fp": 4,
+      "fn": 0,
+      "p": 0.6666666666666666,
+      "r": 1.0,
+      "f1": 0.8
+     },
+     "with_review": {
+      "tp": 8,
+      "fp": 4,
+      "fn": 0,
+      "p": 0.6666666666666666,
+      "r": 1.0,
+      "f1": 0.8
+     },
+     "needs_review": {
+      "on_label": 0,
+      "off_label": 0
+     }
+    },
+    "per_call": [
+     {
+      "call_id": "c01",
+      "hard_negative": false,
+      "expected": [],
+      "hit": [],
+      "hit_with_review": [],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [],
+      "false_alarms_with_review": [],
+      "expected_rules": [],
+      "caught_rules": [],
+      "caught_rules_with_review": []
+     },
+     {
+      "call_id": "c02",
+      "hard_negative": true,
+      "expected": [],
+      "hit": [],
+      "hit_with_review": [],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [],
+      "false_alarms_with_review": [],
+      "expected_rules": [],
+      "caught_rules": [],
+      "caught_rules_with_review": []
+     },
+     {
+      "call_id": "c03",
+      "hard_negative": false,
+      "expected": [],
+      "hit": [],
+      "hit_with_review": [],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [],
+      "false_alarms_with_review": [],
+      "expected_rules": [],
+      "caught_rules": [],
+      "caught_rules_with_review": []
+     },
+     {
+      "call_id": "c04",
+      "hard_negative": true,
+      "expected": [],
+      "hit": [],
+      "hit_with_review": [],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [
+       [
+        "c04",
+        3,
+        "R2"
+       ]
+      ],
+      "false_alarms_with_review": [
+       [
+        "c04",
+        3,
+        "R2"
+       ]
+      ],
+      "expected_rules": [],
+      "caught_rules": [],
+      "caught_rules_with_review": []
+     },
+     {
+      "call_id": "c05",
+      "hard_negative": true,
+      "expected": [],
+      "hit": [],
+      "hit_with_review": [],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [
+       [
+        "c05",
+        3,
+        "R2"
+       ]
+      ],
+      "false_alarms_with_review": [
+       [
+        "c05",
+        3,
+        "R2"
+       ]
+      ],
+      "expected_rules": [],
+      "caught_rules": [],
+      "caught_rules_with_review": []
+     },
+     {
+      "call_id": "c06",
+      "hard_negative": false,
+      "expected": [
+       [
+        "c06",
+        7,
+        "R3"
+       ],
+       [
+        "c06",
+        7,
+        "R5"
+       ]
+      ],
+      "hit": [
+       [
+        "c06",
+        7,
+        "R3"
+       ],
+       [
+        "c06",
+        7,
+        "R5"
+       ]
+      ],
+      "hit_with_review": [
+       [
+        "c06",
+        7,
+        "R3"
+       ],
+       [
+        "c06",
+        7,
+        "R5"
+       ]
+      ],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [],
+      "false_alarms_with_review": [],
+      "expected_rules": [
+       "R3",
+       "R5"
+      ],
+      "caught_rules": [
+       "R3",
+       "R5"
+      ],
+      "caught_rules_with_review": [
+       "R3",
+       "R5"
+      ]
+     },
+     {
+      "call_id": "c07",
+      "hard_negative": false,
+      "expected": [
+       [
+        "c07",
+        7,
+        "R3"
+       ],
+       [
+        "c07",
+        9,
+        "R3"
+       ]
+      ],
+      "hit": [
+       [
+        "c07",
+        7,
+        "R3"
+       ],
+       [
+        "c07",
+        9,
+        "R3"
+       ]
+      ],
+      "hit_with_review": [
+       [
+        "c07",
+        7,
+        "R3"
+       ],
+       [
+        "c07",
+        9,
+        "R3"
+       ]
+      ],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [],
+      "false_alarms_with_review": [],
+      "expected_rules": [
+       "R3"
+      ],
+      "caught_rules": [
+       "R3"
+      ],
+      "caught_rules_with_review": [
+       "R3"
+      ]
+     },
+     {
+      "call_id": "c08",
+      "hard_negative": false,
+      "expected": [
+       [
+        "c08",
+        7,
+        "R3"
+       ],
+       [
+        "c08",
+        9,
+        "R3"
+       ]
+      ],
+      "hit": [
+       [
+        "c08",
+        7,
+        "R3"
+       ],
+       [
+        "c08",
+        9,
+        "R3"
+       ]
+      ],
+      "hit_with_review": [
+       [
+        "c08",
+        7,
+        "R3"
+       ],
+       [
+        "c08",
+        9,
+        "R3"
+       ]
+      ],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [
+       [
+        "c08",
+        3,
+        "R2"
+       ],
+       [
+        "c08",
+        11,
+        "R3"
+       ]
+      ],
+      "false_alarms_with_review": [
+       [
+        "c08",
+        3,
+        "R2"
+       ],
+       [
+        "c08",
+        11,
+        "R3"
+       ]
+      ],
+      "expected_rules": [
+       "R3"
+      ],
+      "caught_rules": [
+       "R3"
+      ],
+      "caught_rules_with_review": [
+       "R3"
+      ]
+     },
+     {
+      "call_id": "c09",
+      "hard_negative": false,
+      "expected": [
+       [
+        "c09",
+        7,
+        "R3"
+       ],
+       [
+        "c09",
+        9,
+        "R3"
+       ]
+      ],
+      "hit": [
+       [
+        "c09",
+        7,
+        "R3"
+       ],
+       [
+        "c09",
+        9,
+        "R3"
+       ]
+      ],
+      "hit_with_review": [
+       [
+        "c09",
+        7,
+        "R3"
+       ],
+       [
+        "c09",
+        9,
+        "R3"
+       ]
+      ],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [],
+      "false_alarms_with_review": [],
+      "expected_rules": [
+       "R3"
+      ],
+      "caught_rules": [
+       "R3"
+      ],
+      "caught_rules_with_review": [
+       "R3"
+      ]
+     }
+    ],
+    "negatives": {
+     "calls": 5,
+     "calls_with_false_alarm": 2,
+     "false_alarm_units": 2,
+     "calls_with_false_alarm_with_review": 2
+    },
+    "call_level": {
+     "expected": 5,
+     "caught": 5,
+     "caught_with_review": 5
+    },
+    "g1": {
+     "findings": 53,
+     "agent_turns_with_g1": 38
+    }
+   },
+   "examples": [
+    {
+     "type": "false_alarm",
+     "call": "c04",
+     "turn": 3,
+     "rule": "R2",
+     "text": "एक minute, यह line recorded है। दिनेश माने जी से ही बात हो रही है ना?",
+     "labelled_phrase": null,
+     "detection": {
+      "kind": "advisory",
+      "confidence": 1.0,
+      "source": "gate",
+      "quote": ""
+     }
+    },
+    {
+     "type": "false_alarm",
+     "call": "c05",
+     "turn": 3,
+     "rule": "R2",
+     "text": "संतोष वाघ जी, विक्रम बोल रहा हूँ, तारंग sensor। ध्यान रहे, यह call record की जा रही है।",
+     "labelled_phrase": null,
+     "detection": {
+      "kind": "advisory",
+      "confidence": 1.0,
+      "source": "gate",
+      "quote": ""
+     }
+    }
+   ],
+   "tune": {
+    "n_calls": 6,
+    "per_rule": {
+     "R1": {
+      "strict": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R2": {
+      "strict": {
+       "tp": 0,
+       "fp": 1,
+       "fn": 0,
+       "p": 0.0,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 1,
+       "fn": 0,
+       "p": 0.0,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R3": {
+      "strict": {
+       "tp": 5,
+       "fp": 0,
+       "fn": 0,
+       "p": 1.0,
+       "r": 1.0,
+       "f1": 1.0
+      },
+      "with_review": {
+       "tp": 5,
+       "fp": 0,
+       "fn": 0,
+       "p": 1.0,
+       "r": 1.0,
+       "f1": 1.0
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R4": {
+      "strict": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R5": {
+      "strict": {
+       "tp": 1,
+       "fp": 0,
+       "fn": 0,
+       "p": 1.0,
+       "r": 1.0,
+       "f1": 1.0
+      },
+      "with_review": {
+       "tp": 1,
+       "fp": 0,
+       "fn": 0,
+       "p": 1.0,
+       "r": 1.0,
+       "f1": 1.0
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R6": {
+      "strict": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     }
+    },
+    "overall": {
+     "strict": {
+      "tp": 6,
+      "fp": 1,
+      "fn": 0,
+      "p": 0.8571428571428571,
+      "r": 1.0,
+      "f1": 0.923076923076923
+     },
+     "with_review": {
+      "tp": 6,
+      "fp": 1,
+      "fn": 0,
+      "p": 0.8571428571428571,
+      "r": 1.0,
+      "f1": 0.923076923076923
+     },
+     "needs_review": {
+      "on_label": 0,
+      "off_label": 0
+     }
+    },
+    "per_call": [
+     {
+      "call_id": "c01",
+      "hard_negative": false,
+      "expected": [],
+      "hit": [],
+      "hit_with_review": [],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [],
+      "false_alarms_with_review": [],
+      "expected_rules": [],
+      "caught_rules": [],
+      "caught_rules_with_review": []
+     },
+     {
+      "call_id": "c03",
+      "hard_negative": false,
+      "expected": [],
+      "hit": [],
+      "hit_with_review": [],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [],
+      "false_alarms_with_review": [],
+      "expected_rules": [],
+      "caught_rules": [],
+      "caught_rules_with_review": []
+     },
+     {
+      "call_id": "c04",
+      "hard_negative": true,
+      "expected": [],
+      "hit": [],
+      "hit_with_review": [],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [
+       [
+        "c04",
+        3,
+        "R2"
+       ]
+      ],
+      "false_alarms_with_review": [
+       [
+        "c04",
+        3,
+        "R2"
+       ]
+      ],
+      "expected_rules": [],
+      "caught_rules": [],
+      "caught_rules_with_review": []
+     },
+     {
+      "call_id": "c06",
+      "hard_negative": false,
+      "expected": [
+       [
+        "c06",
+        7,
+        "R3"
+       ],
+       [
+        "c06",
+        7,
+        "R5"
+       ]
+      ],
+      "hit": [
+       [
+        "c06",
+        7,
+        "R3"
+       ],
+       [
+        "c06",
+        7,
+        "R5"
+       ]
+      ],
+      "hit_with_review": [
+       [
+        "c06",
+        7,
+        "R3"
+       ],
+       [
+        "c06",
+        7,
+        "R5"
+       ]
+      ],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [],
+      "false_alarms_with_review": [],
+      "expected_rules": [
+       "R3",
+       "R5"
+      ],
+      "caught_rules": [
+       "R3",
+       "R5"
+      ],
+      "caught_rules_with_review": [
+       "R3",
+       "R5"
+      ]
+     },
+     {
+      "call_id": "c07",
+      "hard_negative": false,
+      "expected": [
+       [
+        "c07",
+        7,
+        "R3"
+       ],
+       [
+        "c07",
+        9,
+        "R3"
+       ]
+      ],
+      "hit": [
+       [
+        "c07",
+        7,
+        "R3"
+       ],
+       [
+        "c07",
+        9,
+        "R3"
+       ]
+      ],
+      "hit_with_review": [
+       [
+        "c07",
+        7,
+        "R3"
+       ],
+       [
+        "c07",
+        9,
+        "R3"
+       ]
+      ],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [],
+      "false_alarms_with_review": [],
+      "expected_rules": [
+       "R3"
+      ],
+      "caught_rules": [
+       "R3"
+      ],
+      "caught_rules_with_review": [
+       "R3"
+      ]
+     },
+     {
+      "call_id": "c09",
+      "hard_negative": false,
+      "expected": [
+       [
+        "c09",
+        7,
+        "R3"
+       ],
+       [
+        "c09",
+        9,
+        "R3"
+       ]
+      ],
+      "hit": [
+       [
+        "c09",
+        7,
+        "R3"
+       ],
+       [
+        "c09",
+        9,
+        "R3"
+       ]
+      ],
+      "hit_with_review": [
+       [
+        "c09",
+        7,
+        "R3"
+       ],
+       [
+        "c09",
+        9,
+        "R3"
+       ]
+      ],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [],
+      "false_alarms_with_review": [],
+      "expected_rules": [
+       "R3"
+      ],
+      "caught_rules": [
+       "R3"
+      ],
+      "caught_rules_with_review": [
+       "R3"
+      ]
+     }
+    ],
+    "negatives": {
+     "calls": 3,
+     "calls_with_false_alarm": 1,
+     "false_alarm_units": 1,
+     "calls_with_false_alarm_with_review": 1
+    },
+    "call_level": {
+     "expected": 4,
+     "caught": 4,
+     "caught_with_review": 4
+    },
+    "g1": {
+     "findings": 38,
+     "agent_turns_with_g1": 25
+    }
+   },
+   "held_out": {
+    "n_calls": 3,
+    "per_rule": {
+     "R1": {
+      "strict": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R2": {
+      "strict": {
+       "tp": 0,
+       "fp": 2,
+       "fn": 0,
+       "p": 0.0,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 2,
+       "fn": 0,
+       "p": 0.0,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R3": {
+      "strict": {
+       "tp": 2,
+       "fp": 1,
+       "fn": 0,
+       "p": 0.6666666666666666,
+       "r": 1.0,
+       "f1": 0.8
+      },
+      "with_review": {
+       "tp": 2,
+       "fp": 1,
+       "fn": 0,
+       "p": 0.6666666666666666,
+       "r": 1.0,
+       "f1": 0.8
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R4": {
+      "strict": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R5": {
+      "strict": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     },
+     "R6": {
+      "strict": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "with_review": {
+       "tp": 0,
+       "fp": 0,
+       "fn": 0,
+       "p": null,
+       "r": null,
+       "f1": null
+      },
+      "needs_review": {
+       "on_label": 0,
+       "off_label": 0
+      }
+     }
+    },
+    "overall": {
+     "strict": {
+      "tp": 2,
+      "fp": 3,
+      "fn": 0,
+      "p": 0.4,
+      "r": 1.0,
+      "f1": 0.5714285714285715
+     },
+     "with_review": {
+      "tp": 2,
+      "fp": 3,
+      "fn": 0,
+      "p": 0.4,
+      "r": 1.0,
+      "f1": 0.5714285714285715
+     },
+     "needs_review": {
+      "on_label": 0,
+      "off_label": 0
+     }
+    },
+    "per_call": [
+     {
+      "call_id": "c02",
+      "hard_negative": true,
+      "expected": [],
+      "hit": [],
+      "hit_with_review": [],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [],
+      "false_alarms_with_review": [],
+      "expected_rules": [],
+      "caught_rules": [],
+      "caught_rules_with_review": []
+     },
+     {
+      "call_id": "c05",
+      "hard_negative": true,
+      "expected": [],
+      "hit": [],
+      "hit_with_review": [],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [
+       [
+        "c05",
+        3,
+        "R2"
+       ]
+      ],
+      "false_alarms_with_review": [
+       [
+        "c05",
+        3,
+        "R2"
+       ]
+      ],
+      "expected_rules": [],
+      "caught_rules": [],
+      "caught_rules_with_review": []
+     },
+     {
+      "call_id": "c08",
+      "hard_negative": false,
+      "expected": [
+       [
+        "c08",
+        7,
+        "R3"
+       ],
+       [
+        "c08",
+        9,
+        "R3"
+       ]
+      ],
+      "hit": [
+       [
+        "c08",
+        7,
+        "R3"
+       ],
+       [
+        "c08",
+        9,
+        "R3"
+       ]
+      ],
+      "hit_with_review": [
+       [
+        "c08",
+        7,
+        "R3"
+       ],
+       [
+        "c08",
+        9,
+        "R3"
+       ]
+      ],
+      "missed": [],
+      "missed_with_review": [],
+      "false_alarms": [
+       [
+        "c08",
+        3,
+        "R2"
+       ],
+       [
+        "c08",
+        11,
+        "R3"
+       ]
+      ],
+      "false_alarms_with_review": [
+       [
+        "c08",
+        3,
+        "R2"
+       ],
+       [
+        "c08",
+        11,
+        "R3"
+       ]
+      ],
+      "expected_rules": [
+       "R3"
+      ],
+      "caught_rules": [
+       "R3"
+      ],
+      "caught_rules_with_review": [
+       "R3"
+      ]
+     }
+    ],
+    "negatives": {
+     "calls": 2,
+     "calls_with_false_alarm": 1,
+     "false_alarm_units": 1,
+     "calls_with_false_alarm_with_review": 1
+    },
+    "call_level": {
+     "expected": 1,
+     "caught": 1,
+     "caught_with_review": 1
+    },
+    "g1": {
+     "findings": 15,
+     "agent_turns_with_g1": 13
+    }
+   },
+   "seen_in_development": null,
+   "stt": {
+    "turns": 93,
+    "requests_made": 0,
+    "avg_latency_ms": 0
+   },
+   "llm": {
+    "requests": 0,
+    "cache_hits": 50,
+    "skipped": 1,
+    "degraded": 0,
+    "tokens": 0
+   }
   }
  },
  "ablation_llm_off": {
@@ -6383,5 +7620,5 @@
    }
   }
  },
- "status": "complete"
+ "status": "partial"
 }

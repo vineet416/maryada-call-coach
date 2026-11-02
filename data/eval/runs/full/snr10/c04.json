@@ -13,18 +13,18 @@
   "rules_prompt_hash": "1d00a71c99b73ca1"
  },
  "stt": {
-  "requests": 9,
-  "cached": 0,
-  "latency_ms": 4366,
+  "requests": 0,
+  "cached": 9,
+  "latency_ms": 0,
   "model": "prisma-v3.0",
   "path": "rest"
  },
  "llm": {
-  "requests": 5,
-  "cache_hits": 0,
+  "requests": 0,
+  "cache_hits": 5,
   "skipped": 0,
   "degraded": 0,
-  "tokens": 4238
+  "tokens": 0
  },
  "turns": [
   {
@@ -174,5 +174,5 @@
    "quote": "महीने के end तक आधा amount और बाकी next month"
   }
  ],
- "completed_at": "2026-11-02T05:32:23+00:00"
+ "completed_at": "2026-11-02T05:55:25+00:00"
 }

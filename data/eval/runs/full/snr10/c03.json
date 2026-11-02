@@ -13,18 +13,18 @@
   "rules_prompt_hash": "1d00a71c99b73ca1"
  },
  "stt": {
-  "requests": 11,
-  "cached": 0,
-  "latency_ms": 5138,
+  "requests": 0,
+  "cached": 11,
+  "latency_ms": 0,
   "model": "prisma-v3.0",
   "path": "rest"
  },
  "llm": {
-  "requests": 5,
-  "cache_hits": 0,
+  "requests": 0,
+  "cache_hits": 5,
   "skipped": 1,
   "degraded": 0,
-  "tokens": 4362
+  "tokens": 0
  },
  "turns": [
   {
@@ -170,5 +170,5 @@
    "quote": "disturb करने के लिए sorry।"
   }
  ],
- "completed_at": "2026-11-02T05:32:13+00:00"
+ "completed_at": "2026-11-02T05:55:24+00:00"
 }

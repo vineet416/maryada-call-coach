@@ -13,18 +13,18 @@
   "rules_prompt_hash": "1d00a71c99b73ca1"
  },
  "stt": {
-  "requests": 11,
-  "cached": 0,
-  "latency_ms": 4948,
+  "requests": 0,
+  "cached": 11,
+  "latency_ms": 0,
   "model": "prisma-v3.0",
   "path": "rest"
  },
  "llm": {
-  "requests": 5,
-  "cache_hits": 1,
+  "requests": 0,
+  "cache_hits": 6,
   "skipped": 0,
   "degraded": 0,
-  "tokens": 4309
+  "tokens": 0
  },
  "turns": [
   {
@@ -161,5 +161,5 @@
    "quote": "Thank you."
   }
  ],
- "completed_at": "2026-11-02T05:32:00+00:00"
+ "completed_at": "2026-11-02T05:55:24+00:00"
 }
