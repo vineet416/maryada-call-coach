@@ -100,13 +100,13 @@ def _times(out):
     return {(e["type"], e["data"].get("turn_idx")): e["t_ms"] for e in out}
 
 
-def test_coach_plays_under_the_next_speaker_and_the_agent_follows_it():
+def test_coach_plays_half_a_second_after_the_agent_turn_and_the_agent_never_starts_early():
     out = replay.retime(_recorded(), TURNS)
     t = _times(out)
-    assert t[("coach.speak", None)] == 3500 + 3500  # 3.5 s after the borrower's turn starts
-    # clip ends at 11000; the agent follows 1.0 s later (12000) but not before the borrower's turn plus the minimum gap
-    assert t[("turn.started", 3)] == 12400
-    assert t[("turn.started", 4)] == 16000 - 600  # later turns keep their natural spacing from the agent
+    assert t[("coach.speak", None)] == 300 + 2000 + 500  # 0.5 s after the agent's turn ends (the card, at 2800, is shown by then)
+    # the clip ends at 6800; the agent would follow 1.0 s later (7800) but never starts before its natural start (13000)
+    assert t[("turn.started", 3)] == 13000
+    assert t[("turn.started", 4)] == 16000  # later turns keep the natural schedule
     assert t[("transcript.final", 2)] == 3500 + 500  # events keep their lag after their own turn
     assert [e["seq"] for e in out] == list(range(1, len(out) + 1))
 
@@ -116,7 +116,8 @@ def test_agent_waits_two_seconds_for_a_nudge_that_is_not_ready_then_starts():
     t = _times(plan.events)
     assert plan.agent_started_anyway == 1
     assert t[("turn.started", 3)] == 13000 + 2000
-    assert t[("coach.speak", None)] == 300 + 30000  # plays when ready
+    assert plan.skipped == [1] and ("coach.speak", None) not in t  # stale: the agent's turn began first, so no voice (the card stays)
+    assert ("coach.nudge", None) in t
 
 
 def test_no_nudge_keeps_the_natural_gaps():
@@ -124,18 +125,19 @@ def test_no_nudge_keeps_the_natural_gaps():
     assert [t[("turn.started", i)] for i in (1, 2, 3, 4)] == [300, 3500, 13000, 16000]
 
 
-def test_nudge_on_the_last_agent_turn_plays_after_it_ends():
+def test_nudge_on_the_last_agent_turn_plays_half_a_second_after_it_ends():
     turns = TURNS[:1]
     evs = [e for e in _recorded() if e["data"].get("turn_idx") in (1, None)]
     t = _times(replay.retime(evs, turns))
-    assert t[("coach.speak", None)] == 300 + 2000 + 1000
+    assert t[("coach.speak", None)] == 300 + 2000 + 500
 
 
 def test_pause_option_moves_what_happens_after_the_clip():
     out = replay.retime(_recorded(), TURNS, hold=True)
     t = _times(out)
-    assert t[("coach.speak", None)] == 7000 and t[("turn.started", 2)] == 3500  # started before the clip: untouched
-    assert t[("turn.started", 3)] == 13000 + 4000 + 300  # natural start plus the clip and the pause gap
+    assert t[("coach.speak", None)] == 2800
+    assert t[("turn.started", 2)] == 3500 + 4000 + 300  # the clip plays before turn 2 starts: the call waits for it and the pause gap
+    assert t[("turn.started", 3)] == 13000 + 4000 + 300  # and so does everything later
 
 
 def test_two_nudges_close_together_never_overlap():
