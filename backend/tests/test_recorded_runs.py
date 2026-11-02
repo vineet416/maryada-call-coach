@@ -18,7 +18,7 @@ def load(p):
 
 
 def test_there_are_recorded_runs():
-    assert {"c06", "c01", "c30", "c17", "c25"} <= {p.stem for p in FILES}
+    assert {"c06", "c01", "c30", "c17", "c25", "c20", "c24", "c07", "c13", "c22", "c26"} <= {p.stem for p in FILES}
 
 
 @pytest.mark.parametrize("p", FILES, ids=lambda p: p.stem)
