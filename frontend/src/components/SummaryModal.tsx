@@ -1,9 +1,10 @@
 import { X } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { getScenarios, type Rule, type ScenarioDetail } from '@/lib/api'
+import type { Rule, ScenarioDetail } from '@/lib/api'
 import type { Finding } from '@/lib/events'
 import { useFocusTrap } from '@/lib/useFocusTrap'
+import { useNextRecorded } from '@/lib/useNextRecorded'
 import type { Mode, Summary } from '@/store/sessionStore'
 
 interface Props {
@@ -24,7 +25,6 @@ const len = (ms: number | null) => {
 
 export function SummaryModal({ scenario, summary, findings, rules, mode, onRunAgain, onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null)
-  const [next, setNext] = useState<string | null>(null)
   const good = findings.filter((f) => f.kind === 'good_practice').length
   const flagged = findings.filter((f) => f.kind !== 'good_practice')
   const violations = flagged.filter((f) => f.kind === 'violation').length
@@ -37,20 +37,7 @@ export function SummaryModal({ scenario, summary, findings, rules, mode, onRunAg
     return () => window.removeEventListener('keydown', onKey)
   }, [onClose])
 
-  // The next recorded run after this one in the list (wrapping round); no suggestion if there is none
-  useEffect(() => {
-    const ctl = new AbortController()
-    getScenarios(ctl.signal)
-      .then((list) => {
-        // same order as the Cases page: recorded runs first
-        const all = [...list].sort((a, b) => Number(b.has_replay) - Number(a.has_replay))
-        const at = all.findIndex((c) => c.id === scenario.id)
-        const after = [...all.slice(at + 1), ...all.slice(0, Math.max(at, 0))]
-        setNext(after.find((c) => c.has_replay && c.id !== scenario.id)?.id ?? null)
-      })
-      .catch(() => undefined) // the suggestion is optional
-    return () => ctl.abort()
-  }, [scenario.id])
+  const next = useNextRecorded(scenario.id)
 
   const rows = Object.entries(summary.by_rule)
 

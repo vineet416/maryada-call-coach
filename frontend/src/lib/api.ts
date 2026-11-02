@@ -1,3 +1,5 @@
+import type { Band, Finding, Kind, Speaker, Token } from '@/lib/events'
+
 export const API_BASE: string = import.meta.env.VITE_API_BASE ?? 'http://localhost:8000'
 
 export interface Health {
@@ -220,6 +222,29 @@ export const getHealth = (signal?: AbortSignal) => getJson<Health>('/health', si
 export const getScenarios = (signal?: AbortSignal) => getJson<ScenarioSummary[]>('/api/scenarios', signal)
 export const getScenario = (id: string, signal?: AbortSignal) =>
   getJson<ScenarioDetail>(`/api/scenarios/${encodeURIComponent(id)}`, signal)
+export interface ReportCoaching {
+  finding: Finding
+  rule_title: string
+  why: string | null
+  coach_line: string | null
+  rewrite: string | null
+}
+export interface CallReport {
+  scenario: { id: string; title: string; call_date: string | null; call_time: string | null; duration_ms: number | null }
+  source: 'replay' | 'live'
+  bands: { medium_from: number; high_from: number }
+  kpis: { peak_risk: number; peak_band: Band; findings_count: number; good_count: number; first_flag_ms: number | null }
+  risk: { t_ms: number; score: number; band: Band; delta: number; reason_rule_id: string | null }[]
+  flags: { finding_id: string; rule_id: string; kind: Kind; turn_idx: number; t_ms: number }[]
+  by_rule: { rule_id: string; title: string; count: number; kind: Kind }[]
+  turns: { idx: number; speaker: Speaker; offset_ms: number; duration_ms: number; tokens: Token[] }[]
+  findings: Finding[]
+  coaching: ReportCoaching[]
+  good: { finding: Finding; t_ms: number }[]
+}
+/** The report of a recorded run, rebuilt from its saved events (404 when the case has no recording). */
+export const getReport = (id: string, signal?: AbortSignal) =>
+  getJson<CallReport>(`/api/scenarios/${encodeURIComponent(id)}/report`, signal)
 export const getEval = (signal?: AbortSignal) => getJson<EvalPayload>('/api/eval', signal)
 
 export type ManagerStatus = 'needs_training' | 'watch' | 'excellent' | 'too_few_calls' | 'no_calls'

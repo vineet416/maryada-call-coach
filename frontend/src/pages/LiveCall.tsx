@@ -1,6 +1,6 @@
 import { Clock, KeyRound, Play, Square, Volume2, VolumeX } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { CoachCard } from '@/components/CoachCard'
 import { ColdStartScreen } from '@/components/ColdStartScreen'
 import { DetailDrawer } from '@/components/DetailDrawer'
@@ -50,6 +50,7 @@ export function LiveCall() {
   const [voiceOn, setVoiceOn] = useState(audio.coachVoice)
   const [muted, setMuted] = useState(audio.muted)
   const client = useRef<CallClient | null>(null)
+  const navigate = useNavigate()
 
   const st = useSessionStore()
   usePageTitle(scenario ? `${scenario.id.toUpperCase()} ${scenario.title} · Maryada` : `${id.toUpperCase() || 'Call'} · Maryada`)
@@ -133,6 +134,13 @@ export function LiveCall() {
     },
     [scenario],
   )
+
+  // A recorded run that played to its end opens its call report. A stopped call, a live call and a live call that
+  // fell back to the recording keep the summary here: their events differ from the saved recording.
+  const toReport = st.status === 'ended' && st.mode === 'replay' && st.banner?.kind !== 'replay' && !st.summary?.stopped
+  useEffect(() => {
+    if (toReport && scenario) navigate(`/call/${scenario.id}/report`)
+  }, [toReport, scenario, navigate])
 
   const stop = () => client.current?.stop()
   const closeDrawer = useCallback(() => setOpen(null), [])
