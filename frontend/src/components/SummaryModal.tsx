@@ -57,7 +57,7 @@ export function SummaryModal({ scenario, summary, findings, rules, mode, onRunAg
             <div className="lbl">Call summary · {scenario.id.toUpperCase()}</div>
             <h2 className="mb-0.5 mt-1 text-xl font-semibold tracking-tight sm:text-[22px]">{summary.stopped ? 'Call stopped' : 'Call complete'}</h2>
             <p className="text-[13px] text-[var(--mc-muted)]">
-              {scenario.title} · {mode === 'replay' ? 'Recorded run' : 'Live call'}
+              {scenario.title}{mode === 'replay' ? '' : ' · Live call'}
               {scenario.duration_ms ? ` · ${len(scenario.duration_ms)}` : ''}
             </p>
           </div>

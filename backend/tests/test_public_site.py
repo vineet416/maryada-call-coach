@@ -134,3 +134,11 @@ def test_status_and_provenance_chips_are_gone():
 def test_report_subline_is_the_duration_and_a_live_report_stays_marked():
     s = source("CallReport.tsx")
     assert "[live ? 'Live call' : null, scenario.duration_ms ? spoken(scenario.duration_ms) : null]" in s
+
+
+def test_home_cards_and_the_summary_dialog_carry_no_recorded_run_label():
+    cases = source("Cases.tsx")
+    card = cases[cases.index("function CaseCard"):]
+    assert ">Recorded run<" not in card and "Play recorded run" in card  # the button label stays
+    modal = (SRC / "components" / "SummaryModal.tsx").read_text(encoding="utf-8")
+    assert "'Recorded run'" not in modal and "' · Live call'" in modal  # a live call keeps its mark
