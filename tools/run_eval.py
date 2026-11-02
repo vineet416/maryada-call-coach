@@ -371,8 +371,8 @@ async def main() -> int:
     ap.add_argument("--conditions", default="clean", help="comma list from: " + ",".join(CONDITIONS))
     ap.add_argument("--calls", default="", help="comma list of call ids (default: all 30)")
     ap.add_argument("--limit", type=int, default=0, help="only the first N calls")
-    ap.add_argument("--token-budget", "--max-tokens", dest="token_budget", type=int, default=0,
-                    help="stop by itself once the language model has used this many reported tokens in this run; rerun to resume")
+    ap.add_argument("--token-budget", "--max-tokens", dest="token_budget", type=int, default=None,
+                    help="stop by itself once the language model has used this many reported tokens on the first key (0 = go straight to the second key); rerun to resume")
     ap.add_argument("--report", action="store_true", help="no run: print the report from the results on disk")
     ap.add_argument("--estimate", action="store_true", help="no run: estimate a full-mode run from the clean ablation transcripts")
     ap.add_argument("--rerun", action="store_true", help="ignore existing results for the selected calls (STT and LLM caches still apply)")
@@ -407,7 +407,7 @@ async def main() -> int:
             POOL = KeyPool(settings.euri_api_key, second_key(settings.model_config["env_file"]))
             say(f"Euri keys available: {len(POOL.keys)}")
             say(f"language model answers cached on disk: {llm.enable_disk_cache(LLM_CACHE)} entries")
-        budget = args.token_budget or None
+        budget = args.token_budget
         stopped = ""
         async with httpx.AsyncClient(timeout=STT_TIMEOUT_S) as stt_client, \
                 httpx.AsyncClient(timeout=LLM_TIMEOUT_S, http2=settings.llm_http2) as llm_client:

@@ -1,0 +1,183 @@
+{
+ "schema": 1,
+ "call_id": "c06",
+ "condition": "snr20",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "1d00a71c99b73ca1"
+ },
+ "stt": {
+  "requests": 11,
+  "cached": 0,
+  "latency_ms": 6008,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 4,
+  "cache_hits": 2,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 3763
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Hello, स्मिता पाटिल बोल रही हैं।",
+   "stt_ms": 346,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ, बोल रही हूँ। आप कौन?",
+   "stt_ms": 326,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "मैं रोहित बोल रहा हूँ। तारंग Finserve से। यह call quality और training के लिए record हो रही है।",
+   "stt_ms": 645,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ बोलो, क्या हुआ?",
+   "stt_ms": 322,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "स्मिता जी, आपके personal loan की 2 EMI pending हैं, दोनों बार bounce हो गई, ऊपर से penalty भी लग रही है, आप payment कब कर रही हैं?",
+   "stt_ms": 682,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Sir, please थोड़ा समझो ना, मेरी job चली गई है, 2 महीने हो गए, next week तक थोड़ा पैसा आ जाएगा पर एक साथ पूरा नहीं दे पाऊँगी।",
+   "stt_ms": 559,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "Madam, ये सब तो हर कोई बोलता है। Next week, next week। मेरे को आज ही payment चाहिए। देखो, आज शाम तक payment नहीं आया ना तो पुलिस को भेजूंगा आपके घर। आपके मोहल्ले में सबको बता दूंगा कि आप defaulter हो। Court का notice भी कल सुबह आ जाएगा। समझी?",
+   "stt_ms": 776,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "अरे sir, धमकी क्यों दे रहे हो? मैंने कब बोला कि पैसा नहीं दूँगी, बस थोड़ा time चाहिए, समझो ना।",
+   "stt_ms": 579,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "Sorry madam आप गलत मत समझिए। देखिए पूरा एक साथ नहीं हो रहा तो थोड़ा अभी कर दो। बाकी की installment बना देते हैं। Friday तक कितना कर सकती हैं?",
+   "stt_ms": 610,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "ओके ठीक है Friday तक 3,000 दे सकती हूँ बाकी next month से थोड़ा थोड़ा करके दूँगी।",
+   "stt_ms": 468,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "ठीक है madam Friday तक 3,000 पक्का। बाकी का plan next month से मैं system में note कर देता हूँ। Payment link अभी WhatsApp पर भेज रहा हूँ। Thank you। आपका दिन अच्छा रहे।",
+   "stt_ms": 695,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c06",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मैं रोहित बोल रहा हूँ। तारंग Finserve से। यह call quality और training के लिए record हो रही है।"
+  },
+  {
+   "call": "c06",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "स्मिता जी, आपके personal loan की 2 EMI pending हैं, दोनों बार bounce हो गई, ऊपर से penalty भी लग रही है, आप payment कब कर रही हैं?"
+  },
+  {
+   "call": "c06",
+   "turn": 7,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.99,
+   "source": "llm",
+   "quote": "पुलिस को भेजूंगा आपके घर"
+  },
+  {
+   "call": "c06",
+   "turn": 7,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 1.0,
+   "source": "both",
+   "quote": "मोहल्ले में सबको बता"
+  },
+  {
+   "call": "c06",
+   "turn": 7,
+   "rule": "R5",
+   "kind": "violation",
+   "confidence": 0.94,
+   "source": "llm",
+   "quote": "Court का notice भी कल सुबह आ जाएगा"
+  },
+  {
+   "call": "c06",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Friday tak कितना कर सकती हैं?"
+  },
+  {
+   "call": "c06",
+   "turn": 11,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "बाकी का plan next month से मैं system में note कर देता हूँ"
+  },
+  {
+   "call": "c06",
+   "turn": 11,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Payment link अभी WhatsApp पर भेज रहा हूँ"
+  }
+ ],
+ "completed_at": "2026-11-02T10:46:43+00:00"
+}
