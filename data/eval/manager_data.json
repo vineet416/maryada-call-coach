@@ -1,0 +1,1324 @@
+{
+ "generated_at": "2026-11-02T04:21:03+00:00",
+ "batch_label": "30 synthetic calls, 8 fictional agents, clean audio",
+ "source": {
+  "mode": "rules_only",
+  "condition": "clean",
+  "note": "Rules-only detections, full engine not run yet."
+ },
+ "n_calls": 30,
+ "roster": [
+  {
+   "id": "A1",
+   "name": "Amit Kulkarni",
+   "team": "Pune Collections"
+  },
+  {
+   "id": "A2",
+   "name": "Neha Deshmukh",
+   "team": "Pune Collections"
+  },
+  {
+   "id": "A3",
+   "name": "Rohit Jadhav",
+   "team": "Mumbai Collections"
+  },
+  {
+   "id": "A4",
+   "name": "Priya Shinde",
+   "team": "Mumbai Collections"
+  },
+  {
+   "id": "A5",
+   "name": "Sandeep More",
+   "team": "Nashik Collections"
+  },
+  {
+   "id": "A6",
+   "name": "Kavita Pawar",
+   "team": "Nashik Collections"
+  },
+  {
+   "id": "A7",
+   "name": "Vikram Salunke",
+   "team": "Pune Collections"
+  },
+  {
+   "id": "A8",
+   "name": "Pooja Gaikwad",
+   "team": "Mumbai Collections"
+  }
+ ],
+ "calls": [
+  {
+   "call_id": "c01",
+   "title": "Salary delay, polite follow-up",
+   "agent_id": "A2",
+   "call_date": "2026-10-12",
+   "call_time": "10:30",
+   "hour": 10,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": []
+  },
+  {
+   "call_id": "c02",
+   "title": "Late fee explained, politely",
+   "agent_id": "A7",
+   "call_date": "2026-10-13",
+   "call_time": "11:05",
+   "hour": 11,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 11,
+     "quote": "option"
+    }
+   ]
+  },
+  {
+   "call_id": "c03",
+   "title": "Borrower already paid",
+   "agent_id": "A2",
+   "call_date": "2026-10-20",
+   "call_time": "16:10",
+   "hour": 16,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": []
+  },
+  {
+   "call_id": "c04",
+   "title": "Honest mention of a possible notice",
+   "agent_id": "A7",
+   "call_date": "2026-10-22",
+   "call_time": "12:40",
+   "hour": 12,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "option"
+    }
+   ]
+  },
+  {
+   "call_id": "c05",
+   "title": "Firm early-morning reminder",
+   "agent_id": "A7",
+   "call_date": "2026-10-24",
+   "call_time": "09:15",
+   "hour": 9,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": []
+  },
+  {
+   "call_id": "c06",
+   "title": "The threat that broke two RBI rules",
+   "agent_id": "A3",
+   "call_date": "2026-10-14",
+   "call_time": "11:20",
+   "hour": 11,
+   "risk_peak": 30,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    30,
+    20,
+    10
+   ],
+   "findings": [
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "मोहल्ले में सबको बता"
+    }
+   ]
+  },
+  {
+   "call_id": "c07",
+   "title": "Insult over a late payment",
+   "agent_id": "A6",
+   "call_date": "2026-10-15",
+   "call_time": "15:00",
+   "hour": 15,
+   "risk_peak": 60,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    30,
+    60,
+    50
+   ],
+   "findings": [
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "आपको शर्म नहीं आती,"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 9,
+     "quote": "भागने का सोचना भी मत,"
+    }
+   ]
+  },
+  {
+   "call_id": "c08",
+   "title": "Name-calling and a family threat",
+   "agent_id": "A3",
+   "call_date": "2026-10-16",
+   "call_time": "14:30",
+   "hour": 14,
+   "risk_peak": 60,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    30,
+    60,
+    50
+   ],
+   "findings": [
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "आप बेवकूफ हो क्या?"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 9,
+     "quote": "निकम्मे"
+    }
+   ]
+  },
+  {
+   "call_id": "c09",
+   "title": "Shaming a borrower in front of neighbours",
+   "agent_id": "A6",
+   "call_date": "2026-10-18",
+   "call_time": "17:20",
+   "hour": 17,
+   "risk_peak": 36,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    30,
+    36,
+    26
+   ],
+   "findings": [
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "हिम्मत नहीं है क्या?"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "needs_review",
+     "turn_idx": 9,
+     "quote": "कल सुबह तक चाहिए"
+    }
+   ]
+  },
+  {
+   "call_id": "c10",
+   "title": "Mild sarcasm (early-career slip)",
+   "agent_id": "A4",
+   "call_date": "2026-10-13",
+   "call_time": "13:10",
+   "hour": 13,
+   "risk_peak": 30,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    30,
+    20
+   ],
+   "findings": [
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 9,
+     "quote": "कैसे इंसान हैं आप,"
+    }
+   ]
+  },
+  {
+   "call_id": "c11",
+   "title": "Fake arrest warrant",
+   "agent_id": "A3",
+   "call_date": "2026-10-19",
+   "call_time": "12:00",
+   "hour": 12,
+   "risk_peak": 70,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    35,
+    70,
+    60
+   ],
+   "findings": [
+    {
+     "rule_id": "R5",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "arrest warrant"
+    },
+    {
+     "rule_id": "R5",
+     "kind": "violation",
+     "turn_idx": 9,
+     "quote": "वारंट रुक सकता"
+    }
+   ]
+  },
+  {
+   "call_id": "c12",
+   "title": "Pretending to speak for the RBI",
+   "agent_id": "A6",
+   "call_date": "2026-10-21",
+   "call_time": "10:45",
+   "hour": 10,
+   "risk_peak": 35,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    35,
+    25,
+    15
+   ],
+   "findings": [
+    {
+     "rule_id": "R5",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "loan account block"
+    }
+   ]
+  },
+  {
+   "call_id": "c13",
+   "title": "Invented daily penalty",
+   "agent_id": "A1",
+   "call_date": "2026-10-17",
+   "call_time": "15:40",
+   "hour": 15,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": []
+  },
+  {
+   "call_id": "c14",
+   "title": "Threat to seize house and car tomorrow",
+   "agent_id": "A5",
+   "call_date": "2026-10-23",
+   "call_time": "16:55",
+   "hour": 16,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": []
+  },
+  {
+   "call_id": "c15",
+   "title": "Debt disclosed to the borrower's wife",
+   "agent_id": "A3",
+   "call_date": "2026-10-25",
+   "call_time": "11:30",
+   "hour": 11,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": []
+  },
+  {
+   "call_id": "c16",
+   "title": "Shaming through the neighbour",
+   "agent_id": "A6",
+   "call_date": "2026-10-24",
+   "call_time": "13:20",
+   "hour": 13,
+   "risk_peak": 70,
+   "risk_by_turn": [
+    0,
+    0,
+    35,
+    70,
+    60
+   ],
+   "findings": [
+    {
+     "rule_id": "R4",
+     "kind": "violation",
+     "turn_idx": 5,
+     "quote": "धोखा दे रहा"
+    },
+    {
+     "rule_id": "R4",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "सबको पता चलना चाहिए।"
+    }
+   ]
+  },
+  {
+   "call_id": "c17",
+   "title": "Amount revealed to the spouse",
+   "agent_id": "A8",
+   "call_date": "2026-10-19",
+   "call_time": "14:00",
+   "hour": 14,
+   "risk_peak": 6,
+   "risk_by_turn": [
+    0,
+    0,
+    6,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "R4",
+     "kind": "needs_review",
+     "turn_idx": 5,
+     "quote": "overdue"
+    }
+   ]
+  },
+  {
+   "call_id": "c18",
+   "title": "Asks for the borrower, says nothing about the loan",
+   "agent_id": "A1",
+   "call_date": "2026-10-16",
+   "call_time": "12:15",
+   "hour": 12,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": []
+  },
+  {
+   "call_id": "c19",
+   "title": "Call at 07:40",
+   "agent_id": "A1",
+   "call_date": "2026-10-14",
+   "call_time": "07:40",
+   "hour": 7,
+   "risk_peak": 20,
+   "risk_by_turn": [
+    20,
+    10,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "R1",
+     "kind": "violation",
+     "turn_idx": 1,
+     "quote": ""
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "sorry sir।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "Sorry sir,"
+    }
+   ]
+  },
+  {
+   "call_id": "c20",
+   "title": "Call at 19:25",
+   "agent_id": "A8",
+   "call_date": "2026-10-22",
+   "call_time": "19:25",
+   "hour": 19,
+   "risk_peak": 20,
+   "risk_by_turn": [
+    20,
+    10,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "R1",
+     "kind": "violation",
+     "turn_idx": 1,
+     "quote": ""
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "sorry sir।"
+    }
+   ]
+  },
+  {
+   "call_id": "c21",
+   "title": "Call at 21:10",
+   "agent_id": "A5",
+   "call_date": "2026-10-25",
+   "call_time": "21:10",
+   "hour": 21,
+   "risk_peak": 20,
+   "risk_by_turn": [
+    20,
+    10,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "R1",
+     "kind": "violation",
+     "turn_idx": 1,
+     "quote": ""
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "Sorry sir"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "sorry sir"
+    }
+   ]
+  },
+  {
+   "call_id": "c22",
+   "title": "No introduction, no recording notice",
+   "agent_id": "A4",
+   "call_date": "2026-10-12",
+   "call_time": "11:50",
+   "hour": 11,
+   "risk_peak": 8,
+   "risk_by_turn": [
+    0,
+    8,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "R2",
+     "kind": "advisory",
+     "turn_idx": 3,
+     "quote": ""
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "Sorry sir,"
+    }
+   ]
+  },
+  {
+   "call_id": "c23",
+   "title": "Casual opening, no company name",
+   "agent_id": "A5",
+   "call_date": "2026-10-21",
+   "call_time": "10:10",
+   "hour": 10,
+   "risk_peak": 8,
+   "risk_by_turn": [
+    0,
+    8,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "R2",
+     "kind": "advisory",
+     "turn_idx": 3,
+     "quote": ""
+    }
+   ]
+  },
+  {
+   "call_id": "c24",
+   "title": "Introduction missing with a woman borrower",
+   "agent_id": "A8",
+   "call_date": "2026-10-24",
+   "call_time": "15:25",
+   "hour": 15,
+   "risk_peak": 8,
+   "risk_by_turn": [
+    0,
+    8,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "R2",
+     "kind": "advisory",
+     "turn_idx": 3,
+     "quote": ""
+    }
+   ]
+  },
+  {
+   "call_id": "c25",
+   "title": "Pressing after a death in the family",
+   "agent_id": "A4",
+   "call_date": "2026-10-15",
+   "call_time": "12:30",
+   "hour": 12,
+   "risk_peak": 20,
+   "risk_by_turn": [
+    0,
+    0,
+    10,
+    20,
+    10,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "R6",
+     "kind": "needs_review",
+     "turn_idx": 5,
+     "quote": "आज ही कुछ भेज"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "समझ सकती हूँ"
+    },
+    {
+     "rule_id": "R6",
+     "kind": "needs_review",
+     "turn_idx": 7,
+     "quote": "due date निकल चुकी"
+    }
+   ]
+  },
+  {
+   "call_id": "c26",
+   "title": "Pressing while the wife is in hospital",
+   "agent_id": "A1",
+   "call_date": "2026-10-23",
+   "call_time": "17:00",
+   "hour": 17,
+   "risk_peak": 20,
+   "risk_by_turn": [
+    0,
+    0,
+    10,
+    20,
+    10,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "R6",
+     "kind": "needs_review",
+     "turn_idx": 5,
+     "quote": "आज ही online कर"
+    },
+    {
+     "rule_id": "R6",
+     "kind": "needs_review",
+     "turn_idx": 7,
+     "quote": "इस हफ्ते कुछ तो भेजना"
+    }
+   ]
+  },
+  {
+   "call_id": "c27",
+   "title": "Empathy first",
+   "agent_id": "A5",
+   "call_date": "2026-10-25",
+   "call_time": "11:15",
+   "hour": 11,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "option"
+    }
+   ]
+  },
+  {
+   "call_id": "c28",
+   "title": "Rude, no introduction, personal threat",
+   "agent_id": "A3",
+   "call_date": "2026-10-22",
+   "call_time": "14:10",
+   "hour": 14,
+   "risk_peak": 44,
+   "risk_by_turn": [
+    0,
+    14,
+    44,
+    34,
+    24
+   ],
+   "findings": [
+    {
+     "rule_id": "R2",
+     "kind": "advisory",
+     "turn_idx": 3,
+     "quote": ""
+    },
+    {
+     "rule_id": "R3",
+     "kind": "needs_review",
+     "turn_idx": 3,
+     "quote": "तू सुनता ही नहीं"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 5,
+     "quote": "होशियारी मत दिखा,"
+    }
+   ]
+  },
+  {
+   "call_id": "c29",
+   "title": "Telling the neighbour about a court case",
+   "agent_id": "A6",
+   "call_date": "2026-10-25",
+   "call_time": "16:30",
+   "hour": 16,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": []
+  },
+  {
+   "call_id": "c30",
+   "title": "Firm but respectful",
+   "agent_id": "A2",
+   "call_date": "2026-10-24",
+   "call_time": "14:50",
+   "hour": 14,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "समझ सकती हूँ"
+    }
+   ]
+  }
+ ],
+ "agents": [
+  {
+   "id": "A3",
+   "name": "Rohit Jadhav",
+   "team": "Mumbai Collections",
+   "calls": 5,
+   "violations": 7,
+   "serious_violations": 6,
+   "calls_with_violation": 4,
+   "advisories": 1,
+   "needs_review": 1,
+   "good_practice": 0,
+   "avg_risk": 40.8,
+   "peak_risk": 70,
+   "by_rule": {
+    "R1": 0,
+    "R2": 1,
+    "R3": 4,
+    "R4": 0,
+    "R5": 2,
+    "R6": 0
+   },
+   "top_rule": "R3",
+   "status": "needs_training",
+   "risk_trend": [
+    30,
+    60,
+    70,
+    44,
+    0
+   ],
+   "first_half_vs_second_half": {
+    "first": 3,
+    "second": 4,
+    "calls_first": 2,
+    "calls_second": 3
+   },
+   "training_flag": true,
+   "training_topics": [
+    "R3",
+    "R5",
+    "R2"
+   ]
+  },
+  {
+   "id": "A6",
+   "name": "Kavita Pawar",
+   "team": "Nashik Collections",
+   "calls": 5,
+   "violations": 6,
+   "serious_violations": 6,
+   "calls_with_violation": 4,
+   "advisories": 0,
+   "needs_review": 1,
+   "good_practice": 0,
+   "avg_risk": 40.2,
+   "peak_risk": 70,
+   "by_rule": {
+    "R1": 0,
+    "R2": 0,
+    "R3": 3,
+    "R4": 2,
+    "R5": 1,
+    "R6": 0
+   },
+   "top_rule": "R3",
+   "status": "needs_training",
+   "risk_trend": [
+    60,
+    36,
+    35,
+    70,
+    0
+   ],
+   "first_half_vs_second_half": {
+    "first": 3,
+    "second": 3,
+    "calls_first": 2,
+    "calls_second": 3
+   },
+   "training_flag": true,
+   "training_topics": [
+    "R3",
+    "R4",
+    "R5"
+   ]
+  },
+  {
+   "id": "A4",
+   "name": "Priya Shinde",
+   "team": "Mumbai Collections",
+   "calls": 3,
+   "violations": 2,
+   "serious_violations": 1,
+   "calls_with_violation": 2,
+   "advisories": 1,
+   "needs_review": 2,
+   "good_practice": 2,
+   "avg_risk": 19.3,
+   "peak_risk": 30,
+   "by_rule": {
+    "R1": 0,
+    "R2": 1,
+    "R3": 1,
+    "R4": 0,
+    "R5": 0,
+    "R6": 0
+   },
+   "top_rule": "R3",
+   "status": "watch",
+   "risk_trend": [
+    8,
+    30,
+    20
+   ],
+   "first_half_vs_second_half": {
+    "first": 1,
+    "second": 1,
+    "calls_first": 1,
+    "calls_second": 2
+   },
+   "training_flag": false,
+   "training_topics": [
+    "R3",
+    "R2"
+   ]
+  },
+  {
+   "id": "A8",
+   "name": "Pooja Gaikwad",
+   "team": "Mumbai Collections",
+   "calls": 3,
+   "violations": 2,
+   "serious_violations": 0,
+   "calls_with_violation": 2,
+   "advisories": 1,
+   "needs_review": 1,
+   "good_practice": 1,
+   "avg_risk": 11.3,
+   "peak_risk": 20,
+   "by_rule": {
+    "R1": 1,
+    "R2": 1,
+    "R3": 0,
+    "R4": 0,
+    "R5": 0,
+    "R6": 0
+   },
+   "top_rule": "R1",
+   "status": "watch",
+   "risk_trend": [
+    6,
+    20,
+    8
+   ],
+   "first_half_vs_second_half": {
+    "first": 0,
+    "second": 2,
+    "calls_first": 1,
+    "calls_second": 2
+   },
+   "training_flag": false,
+   "training_topics": [
+    "R1",
+    "R2"
+   ]
+  },
+  {
+   "id": "A5",
+   "name": "Sandeep More",
+   "team": "Nashik Collections",
+   "calls": 4,
+   "violations": 2,
+   "serious_violations": 0,
+   "calls_with_violation": 2,
+   "advisories": 1,
+   "needs_review": 0,
+   "good_practice": 2,
+   "avg_risk": 7.0,
+   "peak_risk": 20,
+   "by_rule": {
+    "R1": 1,
+    "R2": 1,
+    "R3": 0,
+    "R4": 0,
+    "R5": 0,
+    "R6": 0
+   },
+   "top_rule": "R1",
+   "status": "watch",
+   "risk_trend": [
+    8,
+    0,
+    0,
+    20
+   ],
+   "first_half_vs_second_half": {
+    "first": 1,
+    "second": 1,
+    "calls_first": 2,
+    "calls_second": 2
+   },
+   "training_flag": false,
+   "training_topics": [
+    "R1",
+    "R2"
+   ]
+  },
+  {
+   "id": "A1",
+   "name": "Amit Kulkarni",
+   "team": "Pune Collections",
+   "calls": 4,
+   "violations": 1,
+   "serious_violations": 0,
+   "calls_with_violation": 1,
+   "advisories": 0,
+   "needs_review": 2,
+   "good_practice": 1,
+   "avg_risk": 10.0,
+   "peak_risk": 20,
+   "by_rule": {
+    "R1": 1,
+    "R2": 0,
+    "R3": 0,
+    "R4": 0,
+    "R5": 0,
+    "R6": 0
+   },
+   "top_rule": "R1",
+   "status": "watch",
+   "risk_trend": [
+    20,
+    0,
+    0,
+    20
+   ],
+   "first_half_vs_second_half": {
+    "first": 1,
+    "second": 0,
+    "calls_first": 2,
+    "calls_second": 2
+   },
+   "training_flag": false,
+   "training_topics": [
+    "R1"
+   ]
+  },
+  {
+   "id": "A2",
+   "name": "Neha Deshmukh",
+   "team": "Pune Collections",
+   "calls": 3,
+   "violations": 0,
+   "serious_violations": 0,
+   "calls_with_violation": 0,
+   "advisories": 0,
+   "needs_review": 0,
+   "good_practice": 1,
+   "avg_risk": 0.0,
+   "peak_risk": 0,
+   "by_rule": {
+    "R1": 0,
+    "R2": 0,
+    "R3": 0,
+    "R4": 0,
+    "R5": 0,
+    "R6": 0
+   },
+   "top_rule": null,
+   "status": "excellent",
+   "risk_trend": [
+    0,
+    0,
+    0
+   ],
+   "first_half_vs_second_half": {
+    "first": 0,
+    "second": 0,
+    "calls_first": 1,
+    "calls_second": 2
+   },
+   "training_flag": false,
+   "training_topics": []
+  },
+  {
+   "id": "A7",
+   "name": "Vikram Salunke",
+   "team": "Pune Collections",
+   "calls": 3,
+   "violations": 0,
+   "serious_violations": 0,
+   "calls_with_violation": 0,
+   "advisories": 0,
+   "needs_review": 0,
+   "good_practice": 2,
+   "avg_risk": 0.0,
+   "peak_risk": 0,
+   "by_rule": {
+    "R1": 0,
+    "R2": 0,
+    "R3": 0,
+    "R4": 0,
+    "R5": 0,
+    "R6": 0
+   },
+   "top_rule": null,
+   "status": "excellent",
+   "risk_trend": [
+    0,
+    0,
+    0
+   ],
+   "first_half_vs_second_half": {
+    "first": 0,
+    "second": 0,
+    "calls_first": 1,
+    "calls_second": 2
+   },
+   "training_flag": false,
+   "training_topics": []
+  }
+ ],
+ "by_day": [
+  {
+   "date": "2026-10-12",
+   "calls": 2,
+   "violations": 1
+  },
+  {
+   "date": "2026-10-13",
+   "calls": 2,
+   "violations": 1
+  },
+  {
+   "date": "2026-10-14",
+   "calls": 2,
+   "violations": 2
+  },
+  {
+   "date": "2026-10-15",
+   "calls": 2,
+   "violations": 2
+  },
+  {
+   "date": "2026-10-16",
+   "calls": 2,
+   "violations": 2
+  },
+  {
+   "date": "2026-10-17",
+   "calls": 1,
+   "violations": 0
+  },
+  {
+   "date": "2026-10-18",
+   "calls": 1,
+   "violations": 1
+  },
+  {
+   "date": "2026-10-19",
+   "calls": 2,
+   "violations": 2
+  },
+  {
+   "date": "2026-10-20",
+   "calls": 1,
+   "violations": 0
+  },
+  {
+   "date": "2026-10-21",
+   "calls": 2,
+   "violations": 2
+  },
+  {
+   "date": "2026-10-22",
+   "calls": 3,
+   "violations": 3
+  },
+  {
+   "date": "2026-10-23",
+   "calls": 2,
+   "violations": 0
+  },
+  {
+   "date": "2026-10-24",
+   "calls": 4,
+   "violations": 3
+  },
+  {
+   "date": "2026-10-25",
+   "calls": 4,
+   "violations": 1
+  }
+ ],
+ "by_hour": [
+  {
+   "hour": 7,
+   "calls": 1,
+   "violations": 1,
+   "r1_calls": 1
+  },
+  {
+   "hour": 8,
+   "calls": 0,
+   "violations": 0,
+   "r1_calls": 0
+  },
+  {
+   "hour": 9,
+   "calls": 1,
+   "violations": 0,
+   "r1_calls": 0
+  },
+  {
+   "hour": 10,
+   "calls": 3,
+   "violations": 2,
+   "r1_calls": 0
+  },
+  {
+   "hour": 11,
+   "calls": 5,
+   "violations": 2,
+   "r1_calls": 0
+  },
+  {
+   "hour": 12,
+   "calls": 4,
+   "violations": 2,
+   "r1_calls": 0
+  },
+  {
+   "hour": 13,
+   "calls": 2,
+   "violations": 3,
+   "r1_calls": 0
+  },
+  {
+   "hour": 14,
+   "calls": 4,
+   "violations": 4,
+   "r1_calls": 0
+  },
+  {
+   "hour": 15,
+   "calls": 3,
+   "violations": 3,
+   "r1_calls": 0
+  },
+  {
+   "hour": 16,
+   "calls": 3,
+   "violations": 0,
+   "r1_calls": 0
+  },
+  {
+   "hour": 17,
+   "calls": 2,
+   "violations": 1,
+   "r1_calls": 0
+  },
+  {
+   "hour": 18,
+   "calls": 0,
+   "violations": 0,
+   "r1_calls": 0
+  },
+  {
+   "hour": 19,
+   "calls": 1,
+   "violations": 1,
+   "r1_calls": 1
+  },
+  {
+   "hour": 20,
+   "calls": 0,
+   "violations": 0,
+   "r1_calls": 0
+  },
+  {
+   "hour": 21,
+   "calls": 1,
+   "violations": 1,
+   "r1_calls": 1
+  }
+ ],
+ "rule_totals": {
+  "R1": 3,
+  "R2": 4,
+  "R3": 8,
+  "R4": 2,
+  "R5": 3,
+  "R6": 0
+ }
+}
