@@ -16,8 +16,8 @@ def ev(t, typ, **data):
 
 
 def finding(fid, rule, kind="violation", turn=1, rewrite="Say it kindly.", source="llm", rng=(0, 3), quote="q"):
-    return dict(id=fid, turn_idx=turn, rule_id=rule, kind=kind, confidence=0.9, quote=quote, token_range=list(rng), reason="r",
-                rewrite=rewrite, source=source, rbi_ref="")
+    return {"id": fid, "turn_idx": turn, "rule_id": rule, "kind": kind, "confidence": 0.9, "quote": quote, "token_range": list(rng), "reason": "r",
+                "rewrite": rewrite, "source": source, "rbi_ref": ""}
 
 
 def build(events):

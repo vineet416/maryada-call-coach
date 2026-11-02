@@ -10,7 +10,7 @@ NO_REWRITE_RULES = ("R1", "R2")  # nothing to reword: they flag something missin
 
 def _band_edges() -> dict:
     """First score of the medium and the high band, read from the risk module so no threshold is copied here."""
-    scores = range(0, 101)
+    scores = range(101)
     return {"medium_from": next(s for s in scores if band(s) != "low"), "high_from": next(s for s in scores if band(s) == "high")}
 
 
