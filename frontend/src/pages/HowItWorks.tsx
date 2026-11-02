@@ -174,12 +174,9 @@ export function HowItWorks() {
       <section className="card flex flex-wrap items-center justify-between gap-6 !border-[var(--mc-accent-ring)] !bg-[#f8f8ff] p-6">
         <div className="max-w-[720px]">
           <div className="lbl text-[var(--mc-accent-dark)]">Next</div>
-          <h2 className="mt-0.5 text-lg font-semibold tracking-tight">Bring your own recordings</h2>
-          <p className="mt-1 text-[13.5px] leading-[1.65] text-[#475467]">
-            This demo runs on synthetic calls only. Uploading real recordings for batch review is the next step, and needs consent and privacy controls first.
-          </p>
+          <p className="mt-1 text-[15px] font-medium text-[var(--mc-text-2)]">Upload is coming soon.</p>
         </div>
-        <Link to="/" className="btn btn-lg btn-primary">Try the hero call</Link>
+        <Link to="/" className="btn btn-lg btn-primary">Try the featured call</Link>
       </section>
     </div>
   )

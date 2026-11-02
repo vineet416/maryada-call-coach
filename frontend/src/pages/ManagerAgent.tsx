@@ -168,9 +168,11 @@ function CallRow({ c }: { c: ManagerCall }) {
         ))}
         {good > 0 && <span className="chip chip-good_practice">Good practice ×{good}</span>}
       </div>
-      <Link to={`/call/${c.call_id}`} className="btn btn-sm self-start md:self-center">
-        {c.has_replay ? 'Open recorded run' : 'Open call'}
-      </Link>
+      {c.has_replay && (
+        <Link to={`/call/${c.call_id}`} className="btn btn-sm self-start md:self-center">
+          Open recorded run
+        </Link>
+      )}
     </li>
   )
 }

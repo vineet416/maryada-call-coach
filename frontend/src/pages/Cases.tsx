@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ErrorCard } from '@/components/ErrorCard'
 import { getEval, getRules, getScenarios, type LatencyRow, type Rule, type ScenarioSummary } from '@/lib/api'
-import { LIVE_CALLS_ENABLED, SPEAK_LIVE_ENABLED } from '@/lib/features'
+import { SPEAK_LIVE_ENABLED } from '@/lib/features'
 import { usePageTitle } from '@/lib/usePageTitle'
 
 const lengthLabel = (s: number | null) => {
@@ -45,18 +45,17 @@ export function Cases() {
   const hero = cases?.find((c) => c.hero)
   // Recorded runs first (they play with no keys); the original order is kept inside each group
   const all = useMemo(() => [...(cases ?? [])].sort((a, b) => Number(b.has_replay) - Number(a.has_replay)), [cases])
-  const recorded = all.filter((c) => c.has_replay).length
+  const listed = useMemo(() => all.filter((c) => c.has_replay), [all]) // the list shows only calls that can be played
   const families = rules.filter((r) => r.id.startsWith('R')).length
   const ruleTags = useMemo(
-    () => [...new Set(all.flatMap((c) => c.tags))].filter((t) => t.startsWith('R')).sort(),
-    [all],
+    () => [...new Set(listed.flatMap((c) => c.tags))].filter((t) => t.startsWith('R')).sort(),
+    [listed],
   )
   const name = (id: string) => rules.find((r) => r.id === id)?.title
-  const shown = all.filter((c) => {
+  const shown = listed.filter((c) => {
     const q = query.trim().toLowerCase()
     if (q && !`${c.id} ${c.title} ${c.summary}`.toLowerCase().includes(q)) return false
     if (filter === 'all') return true
-    if (filter === 'recorded') return c.has_replay
     if (filter === 'clean') return !c.tags.some((t) => t.startsWith('R'))
     return c.tags.includes(filter)
   })
@@ -84,7 +83,7 @@ export function Cases() {
               <div>
                 <h2 id="samples-h" tabIndex={-1} className="text-xl font-semibold tracking-tight">Sample calls</h2>
                 <p className="mt-0.5 text-[13px] text-[var(--mc-muted)]">
-                  {all.length} synthetic recovery calls with known rule labels. Pick one to run it through Maryada.
+                  {listed.length} recorded runs of synthetic calls. Pick one to watch the flags, risk and coaching as it plays.
                 </p>
               </div>
               <label className="relative block w-full sm:w-auto">
@@ -100,15 +99,13 @@ export function Cases() {
               </label>
             </div>
             <div role="group" aria-label="Filter calls" className="flex flex-wrap gap-2">
-              <FilterChip on={filter === 'all'} onClick={() => setFilter('all')}>All {all.length}</FilterChip>
-              <FilterChip on={filter === 'recorded'} onClick={() => setFilter('recorded')}>Recorded runs {recorded}</FilterChip>
               {ruleTags.map((t) => (
-                <FilterChip key={t} on={filter === t} onClick={() => setFilter(t)}>
+                <FilterChip key={t} on={filter === t} onClick={() => setFilter(filter === t ? 'all' : t)}>
                   {t}
                   {name(t) ? ` ${name(t)}` : ''}
                 </FilterChip>
               ))}
-              <FilterChip on={filter === 'clean'} onClick={() => setFilter('clean')}>Clean calls</FilterChip>
+              <FilterChip on={filter === 'clean'} onClick={() => setFilter(filter === 'clean' ? 'all' : 'clean')}>Clean calls</FilterChip>
             </div>
             {shown.length === 0 ? (
               <p role="status" className="card p-8 text-center text-sm text-[var(--mc-muted)]">
@@ -256,7 +253,7 @@ function Hero({ c, name }: { c: ScenarioSummary; name: (id: string) => string | 
         </div>
         <div className="mt-1.5 flex flex-wrap gap-3">
           <Link to={`/call/${c.id}`} className="btn btn-lg btn-primary">
-            <Play className="h-3.5 w-3.5 fill-current" aria-hidden /> {c.has_replay ? 'Play recorded run' : 'Open the call'}
+            <Play className="h-3.5 w-3.5 fill-current" aria-hidden /> Play recorded run
           </Link>
         </div>
       </div>
@@ -289,11 +286,7 @@ function CaseCard({ c }: { c: ScenarioSummary }) {
     <Link to={`/call/${c.id}`} className="card flex flex-col gap-3 p-5 transition hover:border-[var(--mc-accent-ring)] hover:shadow-md">
       <div className="flex items-center justify-between gap-2">
         <span className="text-xs font-semibold tracking-wide text-[var(--mc-muted)]">{c.id.toUpperCase()}</span>
-        {c.has_replay ? (
-          <span className="text-xs text-[var(--mc-muted)]">Recorded run</span>
-        ) : (
-          <span className="chip h-5 text-[11px]" title="This call has no recorded run yet">{LIVE_CALLS_ENABLED ? 'Live only' : 'No recorded run yet'}</span>
-        )}
+        <span className="text-xs text-[var(--mc-muted)]">Recorded run</span>
       </div>
       <h3 className="text-base font-semibold leading-snug tracking-tight">{c.title}</h3>
       <p className="line-clamp-3 text-[13px] leading-normal text-[var(--mc-muted)]">{plain(c.summary)}</p>
@@ -307,8 +300,8 @@ function CaseCard({ c }: { c: ScenarioSummary }) {
       <div className="mt-auto flex items-center justify-between border-t border-[var(--mc-line-soft)] pt-3 text-xs text-[var(--mc-muted)]">
         <span>{lengthLabel(c.duration_s)}</span>
         <span className="flex items-center gap-1 font-semibold text-[var(--mc-accent)]">
-          {c.has_replay && <Play className="h-3 w-3 fill-current" aria-hidden />}
-          {c.has_replay ? 'Play recorded run' : LIVE_CALLS_ENABLED ? 'Live with your keys' : 'View call'}
+          <Play className="h-3 w-3 fill-current" aria-hidden />
+          Play recorded run
         </span>
       </div>
     </Link>

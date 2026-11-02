@@ -192,6 +192,17 @@ export function LiveCall() {
       </div>
     )
 
+  if (!scenario.has_replay && !LIVE_CALLS_ENABLED)
+    return (
+      <section className="card rise mx-auto flex w-full max-w-xl flex-col gap-3 p-6 sm:p-7" aria-labelledby="norun-h">
+        <h1 id="norun-h" className="text-xl font-semibold tracking-tight">{scenario.title}</h1>
+        <p role="status" className="text-[13.5px] text-[var(--mc-text-2)]">This call has no recorded run</p>
+        <div>
+          <Link to="/" className="btn btn-primary">See the recorded runs</Link>
+        </div>
+      </section>
+    )
+
   const idle = phase === 'ready' || phase === 'starting'
   const running = st.status === 'live' || st.status === 'connecting'
   const failed = st.status === 'error' || st.conn === 'failed'
@@ -340,7 +351,7 @@ function StartCard({ scenario, busy, onStart }: { scenario: ScenarioDetail; busy
     <section className="card rise mx-auto flex w-full max-w-xl flex-col gap-3.5 p-6 sm:p-7" aria-labelledby="ready-h">
       <span className="lbl">Ready</span>
       <h2 id="ready-h" className="text-xl font-semibold tracking-tight">{scenario.title}</h2>
-      <p className="text-[13.5px] leading-relaxed text-[var(--mc-muted)]">{scenario.summary.replace(/^HERO\.\s*/, '')}</p>
+      <p className="text-[13.5px] leading-relaxed text-[var(--mc-muted)]">{scenario.summary}</p>
       <div className="flex flex-wrap items-center gap-3">
         {scenario.has_replay && (
           <button disabled={busy} onClick={() => onStart('replay')} className="btn btn-lg btn-primary">

@@ -1,5 +1,6 @@
 """Scenarios, the audio manifest and coach lines (all authored files; nothing is hard-coded here)."""
 import json
+import re
 from functools import lru_cache
 from pathlib import Path
 
@@ -10,6 +11,16 @@ from ..rules.loader import load_rules
 from ..rules.schemas import CallContext
 
 SPEAKER = {"A": "agent", "B": "borrower", "T": "third_party"}
+
+
+_NOTE_PREFIX = re.compile(r"^(?:HERO\.\s*|(?:CONTROL\s*/\s*)?hard negative:\s*)", re.IGNORECASE)
+_NOTE_SUFFIX = re.compile(r"[;.]?\s*must not be flagged\.?$", re.IGNORECASE)
+
+
+def public_summary(text: str) -> str:
+    """The case summary without the authors' notes (hero marker, "hard negative", "must NOT be flagged"): what a visitor may read."""
+    s = _NOTE_SUFFIX.sub(".", _NOTE_PREFIX.sub("", text.strip())).strip()
+    return s[:1].upper() + s[1:]
 
 
 def audio_dir() -> Path:

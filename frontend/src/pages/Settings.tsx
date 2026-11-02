@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom'
 import { Switch } from '@/components/Switch'
 import { audio } from '@/lib/audioEngine'
 import { listModels, testGnani, testLlm, type TestResult } from '@/lib/api'
-import { CALL_LIMIT_S, CONCURRENT_CALLS } from '@/lib/limits'
+import { SPEAK_LIVE_ENABLED } from '@/lib/features'
+import { CONCURRENT_CALLS, MIC_CALL_LIMIT_S } from '@/lib/limits'
 import { GNANI_KEY_URL, PROVIDERS } from '@/lib/providers'
 import { useKeysStore } from '@/store/keysStore'
 
@@ -79,11 +80,12 @@ export function Settings() {
       <div>
         <h1 className="text-[28px] font-bold tracking-[-0.025em]">Settings</h1>
         <p className="mt-0.5 max-w-[700px] text-sm text-[var(--mc-muted)]">
-          Live calls run on your own speech and language keys. Recorded runs need no keys at all.
+          {SPEAK_LIVE_ENABLED ? 'Live calls run on your own speech and language keys. Recorded runs need no keys at all.' : 'Recorded runs need no keys at all.'}
         </p>
       </div>
 
       <div className="flex flex-wrap items-start gap-6">
+        {SPEAK_LIVE_ENABLED && (
         <div className="flex min-w-0 flex-[999_1_620px] flex-col gap-5">
           {/* Speech to text */}
           <section className="card relative z-[3] flex flex-col gap-4 p-5 sm:p-6" aria-labelledby="gnani-h">
@@ -280,8 +282,10 @@ export function Settings() {
             </div>
           </section>
         </div>
+        )}
 
         <aside className="flex min-w-0 max-w-full flex-[1_1_320px] flex-col gap-5 lg:max-w-[400px]">
+          {SPEAK_LIVE_ENABLED && (
           <section className="card flex flex-col gap-3 p-5">
             <div className="flex items-center gap-2.5">
               <span className="flex h-[34px] w-[34px] items-center justify-center rounded-[10px] bg-[var(--mc-accent-tint)]">
@@ -296,14 +300,18 @@ export function Settings() {
             </div>
           </section>
 
+          )}
+
+          {SPEAK_LIVE_ENABLED && (
           <section className="card flex flex-col gap-3 p-5">
             <h2 className="text-[15px] font-semibold">Live call limits</h2>
             <dl className="overflow-hidden rounded-xl border border-[#eaecf0] text-[13px]">
               <Row k="Who pays" v="Your own accounts" />
-              <Row k="Call length" v={`${CALL_LIMIT_S} s`} />
+              <Row k="Call length" v={`${MIC_CALL_LIMIT_S} s`} />
               <Row k="Calls at once" v={String(CONCURRENT_CALLS)} last />
             </dl>
           </section>
+          )}
 
           <section className="card flex flex-col gap-2.5 border-[var(--mc-accent-ring)] bg-[#f8f8ff] p-5">
             <h2 className="text-[15px] font-semibold text-[var(--mc-accent-dark)]">No keys? Use recorded runs</h2>

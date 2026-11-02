@@ -42,7 +42,7 @@ def health() -> Health:
 @router.get("/api/scenarios")
 def list_scenarios() -> list[dict]:
     man = assets.audio_manifest()
-    return [{"id": sc["id"], "title": sc["title"], "summary": sc["summary"], "hero": sc.get("hero", False),
+    return [{"id": sc["id"], "title": sc["title"], "summary": assets.public_summary(sc["summary"]), "hero": sc.get("hero", False),
              "duration_s": round(man[sid]["duration_ms"] / 1000) if sid in man else None,
              "has_replay": replay.replay_path(sid).exists(),
              "tags": sorted({lab[0] for t in sc["turns"] for lab in t.get("L", [])})}
@@ -58,7 +58,7 @@ def get_scenario(sid: str) -> dict:
     entry = assets.audio_manifest().get(sid)
     turns = [{"idx": t["idx"], "speaker": assets.SPEAKER.get(t["speaker"], t["speaker"]),
               "offset_ms": t["offset_ms"], "duration_ms": t["duration_ms"], "audio_url": f"/audio/{t['mp3']}"} for t in entry["turns"]] if entry else []
-    return {"id": sid, "title": sc["title"], "summary": sc["summary"], "hero": sc.get("hero", False),
+    return {"id": sid, "title": sc["title"], "summary": assets.public_summary(sc["summary"]), "hero": sc.get("hero", False),
             "has_replay": replay.replay_path(sid).exists(), "simulated_start_time": sc.get("time"), "turns": turns,
             "call_audio_url": f"/audio/{entry['call_mp3']}" if entry else None,
             "duration_ms": entry["duration_ms"] if entry else None}
