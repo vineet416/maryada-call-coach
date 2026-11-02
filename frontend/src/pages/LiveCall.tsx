@@ -1,6 +1,6 @@
 import { KeyRound, Play, Square, Volume2, VolumeX } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { CoachCard } from '@/components/CoachCard'
 import { ColdStartScreen } from '@/components/ColdStartScreen'
 import { DetailDrawer } from '@/components/DetailDrawer'
@@ -22,6 +22,7 @@ import {
   type ScenarioDetail,
 } from '@/lib/api'
 import { audio } from '@/lib/audioEngine'
+import { isAutostart, soundAllowed } from '@/lib/autostart'
 import { LIVE_CALLS_ENABLED } from '@/lib/features'
 import { CallClient } from '@/lib/callClient'
 import { usePageTitle } from '@/lib/usePageTitle'
@@ -49,8 +50,12 @@ export function LiveCall() {
   const [timeMs, setTimeMs] = useState(0)
   const [voiceOn, setVoiceOn] = useState(audio.coachVoice)
   const [muted, setMuted] = useState(audio.muted)
+  const [auto, setAuto] = useState(false) // a recorded run is starting by itself: the Ready card stays hidden
   const client = useRef<CallClient | null>(null)
+  const autoDone = useRef(false) // the autostart signal of this page has been used
   const navigate = useNavigate()
+  const location = useLocation()
+  const autostart = isAutostart(location.state)
 
   const st = useSessionStore()
   usePageTitle(scenario ? `${scenario.id.toUpperCase()} ${scenario.title} · Maryada` : `${id.toUpperCase() || 'Call'} · Maryada`)
@@ -63,6 +68,8 @@ export function LiveCall() {
   const load = useCallback(() => {
     setPhase('loading')
     setError(null)
+    setAuto(false)
+    autoDone.current = false
     teardown()
     useSessionStore.getState().reset('live')
     setTimeMs(0)
@@ -136,6 +143,18 @@ export function LiveCall() {
     [scenario],
   )
 
+  // An in-app click asked for the recorded run to start at once. The signal is used once and removed from the history
+  // entry, so a refresh or Back shows the Ready card. Without a past user gesture (or the browser API) the card stays.
+  useEffect(() => {
+    if (!autostart || phase !== 'ready' || !scenario || autoDone.current) return
+    autoDone.current = true
+    navigate(`${location.pathname}${location.search}`, { replace: true, state: null })
+    if (scenario.has_replay && soundAllowed()) {
+      setAuto(true)
+      void begin('replay')
+    }
+  }, [autostart, phase, scenario, begin, navigate, location.pathname, location.search])
+
   // A recorded run that played to its end opens its call report. A stopped call, a live call and a live call that
   // fell back to the recording keep the summary here: their events differ from the saved recording.
   const toReport = st.status === 'ended' && st.mode === 'replay' && st.banner?.kind !== 'replay' && !st.summary?.stopped
@@ -179,10 +198,14 @@ export function LiveCall() {
       </ErrorCard>
     )
 
-  if (phase === 'loading' || !scenario)
+  // While a recorded run is about to start by itself, the page shows the loading state, never the Ready card.
+  const starting = (autostart && phase === 'ready') || (auto && (phase === 'ready' || phase === 'starting'))
+  if (phase === 'loading' || !scenario || starting)
     return (
       <div aria-busy="true" aria-label="Loading call" className="space-y-5">
-        <p role="status" className="text-sm font-medium text-[var(--mc-muted)]">Loading call… the server may take a few seconds to wake up.</p>
+        <p role="status" className="text-sm font-medium text-[var(--mc-muted)]">
+          {starting ? 'Starting the recorded run… the server may take a few seconds to wake up.' : 'Loading call… the server may take a few seconds to wake up.'}
+        </p>
         <div className="skeleton h-40" />
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_380px]">
           <div className="skeleton h-96" />
