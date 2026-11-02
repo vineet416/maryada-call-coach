@@ -15,6 +15,7 @@ from .base import (
     BYTES_PER_MS,
     FRAME,
     FRAME_S,
+    LiveAudio,
     SttAuthError,
     SttError,
     SttGate,
@@ -30,6 +31,7 @@ CATCHUP_X = 4.0  # a retried turn is sent at most this much faster than real tim
 COMMIT_TIMEOUT_S = 5.0  # after the commit, no message for this long ends the turn (REST is used if no text arrived)
 POLL_S = 0.5  # the receive loop never waits longer than this without checking its exits
 HARD_EXTRA_S = 10.0  # hard cap past the end of the turn's audio
+LIVE_HARD_S = 60.0  # a microphone turn is cut at 25 s by the splitter; this is only the safety cap for its socket
 CONNECT_S = 8.0
 CLOSE_S = 3.0
 _REFUSED_TEXT = re.compile(r"already|active|concurren|in use|too many|limit|busy", re.IGNORECASE)
@@ -89,7 +91,7 @@ def _error_for(msg: dict, crowded: bool) -> SttError:
     return SttError(f"realtime error: {text[:80]}")
 
 
-async def stream_turn(wav_path: Path, profile: dict, api_key: str, pace: float | None = None,
+async def stream_turn(wav_path: Path | LiveAudio, profile: dict, api_key: str, pace: float | None = None,
                       gate: SttGate | None = None, start_ms: int = 0, first_idx: int = 0, turn_started_at: float | None = None,
                       via: str = "realtime") -> AsyncIterator[TranscriptSegment]:
     """Yield each final segment as it arrives (not at the end of the turn). If Gnani refuses a second simultaneous socket
@@ -111,9 +113,10 @@ async def stream_turn(wav_path: Path, profile: dict, api_key: str, pace: float |
             gate.go_serial(str(e))  # the retry waits for the other sockets to close
 
 
-async def _stream_once(wav_path: Path, profile: dict, api_key: str, pace: float, gate: SttGate, start_ms: int, first_idx: int,
+async def _stream_once(wav_path: Path | LiveAudio, profile: dict, api_key: str, pace: float, gate: SttGate, start_ms: int, first_idx: int,
                        turn_started_at: float | None, via: str) -> AsyncIterator[TranscriptSegment]:
-    pcm_all, total_ms = read_pcm(wav_path)
+    live = wav_path if isinstance(wav_path, LiveAudio) else None  # a microphone turn: the audio is still arriving
+    pcm_all, total_ms = (b"", 0) if live else read_pcm(wav_path)
     pcm = pcm_all[start_ms * BYTES_PER_MS:]
     crowded = await gate.acquire() > 1  # another socket of this call is open: a refusal means "no second socket"
     ws = None
@@ -133,6 +136,24 @@ async def _stream_once(wav_path: Path, profile: dict, api_key: str, pace: float,
 
         committed_at: float | None = None
 
+        async def send_live() -> None:
+            """Send what has been spoken so far (frames that arrived while connecting go out at CATCHUP_X, then in step with the
+            speaker), wait for more, and commit once the turn's audio is complete."""
+            nonlocal committed_at
+            pos = start_ms * BYTES_PER_MS
+            while True:
+                if pos < len(live.buf):
+                    await ws.send(bytes(live.buf[pos:pos + FRAME]))
+                    pos += FRAME
+                    if pos < len(live.buf):
+                        await asyncio.sleep(FRAME_S / CATCHUP_X)
+                elif live.closed:
+                    break
+                else:
+                    await live.wait_more()
+            await ws.send(json.dumps({"type": "commit"}))
+            committed_at = time.monotonic()
+
         async def send_all() -> None:
             nonlocal committed_at
             chunks = (pcm[i:i + FRAME] for i in range(0, len(pcm), FRAME))
@@ -147,8 +168,8 @@ async def _stream_once(wav_path: Path, profile: dict, api_key: str, pace: float,
 
         t0 = turn_started_at if turn_started_at is not None else time.perf_counter()  # segment end = t0 + audio_end x pace
         started = time.monotonic()
-        hard_end = started + (total_ms - start_ms) / 1000 * pace + COMMIT_TIMEOUT_S + HARD_EXTRA_S
-        sender = asyncio.create_task(send_all())
+        hard_end = started + ((LIVE_HARD_S if live else (total_ms - start_ms) / 1000 * pace) + COMMIT_TIMEOUT_S + HARD_EXTRA_S)
+        sender = asyncio.create_task(send_live() if live else send_all())
         covered, idx, last_msg, saw_last = start_ms, 0, started, False
         while True:
             if saw_last and sender.done():
@@ -169,7 +190,7 @@ async def _stream_once(wav_path: Path, profile: dict, api_key: str, pace: float,
             if m.get("type") != "transcript" or not m.get("is_final"):
                 continue
             covered += int(m.get("audio_duration_ms", 0))
-            saw_last = is_last_segment(covered, total_ms)
+            saw_last = (live is None or live.closed) and is_last_segment(covered, live.total_ms if live else total_ms)
             held = time.monotonic()
             yield TranscriptSegment(text=m.get("text", "").strip(), lang=m.get("detected_language_code", ""),
                                     latency_ms=int(m.get("latency", 0)), segment_idx=first_idx + idx,

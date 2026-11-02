@@ -22,4 +22,5 @@ def load_rules() -> dict[str, Any]:
         rid = rule["id"]
         rule["prefilter"] = phrases["rules"].get(rid, {})
         rule["coach_lines"] = phrases["coach_lines"].get(rid, [])
+    book["reminder_lines"] = phrases.get("reminder_lines", {})  # Speak live: the "choose who answered" reminder
     return book

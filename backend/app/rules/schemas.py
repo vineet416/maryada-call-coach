@@ -7,8 +7,11 @@ Kind = Literal["violation", "advisory", "needs_review", "good_practice"]
 Source = Literal["prefilter", "llm", "both", "gate"]
 
 
+R4_JUDGED = ("spouse", "neighbour")  # R4 is judged only when someone other than the borrower answered ("unknown" = not chosen yet)
+
+
 class CallContext(BaseModel):
-    """Scenario facts the engine needs (docs/03 §3)."""
+    """Scenario facts the engine needs (docs/03 §3). `answered_by`: borrower | spouse | neighbour | unknown (Speak live, until chosen)."""
     answered_by: str = "borrower"
     simulated_start_time: str = "12:00"  # HH:MM, IST
     borrower_context: str = ""

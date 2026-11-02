@@ -226,3 +226,11 @@ coach_lines_td:    # the same lines in Devanagari, spoken by TTS (text mode deva
   G1:
     - "बहुत बढ़िया — आपने तमीज़ से बात की।"
     - "अच्छा किया! ऐसे ही ऑप्शन देकर बात कीजिए।"
+
+reminder_lines:    # Speak live: the reminder to choose who answered (clip coach/SELECT_1, generated later); same order as reminder_lines_td
+  SELECT:
+    - "Rukiye — screen par select karo ki aap kis se baat kar rahe hain."
+
+reminder_lines_td:
+  SELECT:
+    - "रुकिए — स्क्रीन पर select करो कि आप किससे बात कर रहे हैं।"

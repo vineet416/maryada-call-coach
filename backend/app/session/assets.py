@@ -58,5 +58,17 @@ def coach_line(rule_id: str, used: int) -> dict | None:
             "duration_ms": ln["duration_ms"]}
 
 
+def reminder(key: str) -> dict | None:
+    """A Speak live reminder (rulebook text `reminder_lines`): the card text, and the voice clip coach/<key>_1.mp3 only when both
+    the file and its coach_manifest entry exist (audio_url is empty otherwise: the card is shown without a voice)."""
+    texts = load_rules()["reminder_lines"].get(key, [])
+    if not texts:
+        return None
+    entry = next((ln for ln in coach_manifest()["lines"] if ln["rule"] == key and ln["n"] == 1), None)
+    voiced = entry is not None and (audio_dir() / "coach" / f"{key}_1.mp3").is_file()
+    return {"text": texts[0], "audio_url": f"/audio/coach/{key}_1.mp3" if voiced else "",
+            "duration_ms": entry["duration_ms"] if voiced else 0}
+
+
 def rbi_ref(rule_id: str) -> str:
     return next((r.get("rbi_ref", "") for r in load_rules()["rules"] if r["id"] == rule_id), "")

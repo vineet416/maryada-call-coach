@@ -27,6 +27,9 @@ class Settings(BaseSettings):
     allowed_origins: str = "http://localhost:5173"
     pace: float = 1.0
     session_max_s: float = 200.0  # per-session limit (docs/01 §8; raised from 150 s on 2026-10-31)
+    speak_live_enabled: bool = False  # Speak live (mode "mic") is switched off until the frontend ships
+    mic_session_max_s: float = 180.0  # Speak live call length; the call then ends gracefully (commit, checks, session.ended)
+    mic_events_ttl_s: float = 1800.0  # a finished Speak live call stays in memory this long, for its report only
     record_runs: bool = False  # save each live run to data/replay/_runs/ (for picking the demo recording)
     check_granularity: str = "segment"  # segment | turn (docs/13 §4.1)
 
