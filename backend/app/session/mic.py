@@ -251,7 +251,7 @@ class _MicCall:
             except SttError as e:
                 failed = True
                 log.warning("session=%s turn %d: speech recognition failed (%s)", s.id, idx, e)
-            except Exception:  # noqa: BLE001 - one bad turn must not stop the next turn from being processed
+            except Exception:  # one bad turn must not stop the next turn from being processed
                 failed = True
                 log.exception("session=%s turn %d: unexpected failure", s.id, idx)
             turn = await current()
