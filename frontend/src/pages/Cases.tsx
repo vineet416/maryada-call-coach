@@ -42,10 +42,10 @@ export function Cases() {
   }, [])
   useEffect(() => load(), [load])
 
-  const hero = cases?.find((c) => c.hero)
   // Recorded runs first (they play with no keys); the original order is kept inside each group
   const all = useMemo(() => [...(cases ?? [])].sort((a, b) => Number(b.has_replay) - Number(a.has_replay)), [cases])
   const listed = useMemo(() => all.filter((c) => c.has_replay), [all]) // the list shows only calls that can be played
+  const hero = listed.find((c) => c.hero) // the featured call is shown only when it can be played
   const families = rules.filter((r) => r.id.startsWith('R')).length
   const ruleTags = useMemo(
     () => [...new Set(listed.flatMap((c) => c.tags))].filter((t) => t.startsWith('R')).sort(),
@@ -109,7 +109,7 @@ export function Cases() {
             </div>
             {shown.length === 0 ? (
               <p role="status" className="card p-8 text-center text-sm text-[var(--mc-muted)]">
-                No calls match. Clear the search or pick another filter.
+                {listed.length === 0 ? 'No recorded runs are available yet.' : 'No calls match. Clear the search or pick another filter.'}
               </p>
             ) : (
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

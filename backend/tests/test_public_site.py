@@ -61,6 +61,7 @@ def test_manager_example_links_point_to_recorded_runs():
     payload = manager_payload(None, None)
     assert payload is not None
     calls = {c["call_id"]: c for c in payload["calls"]}
+    assert any(c["has_replay"] for c in calls.values()) and any(not c["has_replay"] for c in calls.values())  # the saved data has both kinds, so the check below is not empty
     linked = [calls[a["example_call_id"]] for a in payload["agents"] if a.get("example_call_id") in calls and calls[a["example_call_id"]]["has_replay"]]
     for c in linked:  # a link is drawn only for these, and each has a saved run
         assert replay.replay_path(c["call_id"]).exists(), c["call_id"]
