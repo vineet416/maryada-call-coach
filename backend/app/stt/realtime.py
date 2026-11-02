@@ -136,11 +136,12 @@ async def _stream_once(wav_path: Path, profile: dict, api_key: str, pace: float,
         async def send_all() -> None:
             nonlocal committed_at
             chunks = (pcm[i:i + FRAME] for i in range(0, len(pcm), FRAME))
-            due = None
+            due, clock = None, time.monotonic
             if turn_started_at is not None:  # a retry: the call is already this far into the turn's audio
-                begin = time.monotonic()
-                due = catch_up_deadline(begin - (time.perf_counter() - turn_started_at), begin, start_ms / 1000, FRAME_S, pace, CATCHUP_X)
-            await paced_send(ws.send, chunks, FRAME_S * pace, deadline=due)
+                # turn_started_at is a perf_counter value: the whole catch-up runs on that clock (monotonic ticks every 15.6 ms on Windows)
+                clock = time.perf_counter
+                due = catch_up_deadline(turn_started_at, clock(), start_ms / 1000, FRAME_S, pace, CATCHUP_X)
+            await paced_send(ws.send, chunks, FRAME_S * pace, clock=clock, deadline=due)
             await ws.send(json.dumps({"type": "commit"}))
             committed_at = time.monotonic()
 

@@ -175,3 +175,31 @@ def test_a_rejected_key_is_never_retried(monkeypatch, wav):
             return gate
     gate = asyncio.run(asyncio.wait_for(go(), 15))
     assert calls["n"] == 1 and gate.stats() == {"early_closes": 0, "retries": 0, "retry_ok": 0, "rest_turns": 0}
+
+
+def test_catch_up_deadline_and_paced_send_on_a_fake_clock():
+    """Retry catch-up on one fake clock: frames go out at the later of 4x real time from `begin` and the live position,
+    so the stream never gets ahead of the audio that has played (no real time, no sockets)."""
+    frame, pace, speedup = 0.02, 0.2, 4.0
+    turn_start, begin, start_s = 100.0, 100.5, 0.0  # the call is already 0.5 s into the turn when the retry begins
+    due = realtime.catch_up_deadline(turn_start, begin, start_s, frame, pace, speedup)
+    for n in range(5):
+        live = turn_start + (start_s + (n + 1) * frame) * pace
+        fast = begin + (n + 1) * frame * pace / speedup
+        assert due(n) == max(live, fast) and due(n) >= live  # never ahead of the live position
+    assert due(0) == pytest.approx(begin + frame * pace / speedup)  # behind live: catches up 4x faster than real time
+
+    now, sent, slept = [begin], [], []
+
+    async def send(chunk):
+        sent.append((chunk, now[0]))
+
+    async def sleep(d):
+        slept.append(d)
+        now[0] += d
+
+    asyncio.run(realtime.paced_send(send, [b"a", b"b", b"c"], frame * pace, clock=lambda: now[0], sleep=sleep, deadline=due))
+    assert [c for c, _ in sent] == [b"a", b"b", b"c"]
+    for n, (_, at) in enumerate(sent):  # frame n goes out at the previous frame's deadline (the clock is exact)
+        assert at == pytest.approx(begin if n == 0 else due(n - 1))
+    assert now[0] == pytest.approx(due(2))
