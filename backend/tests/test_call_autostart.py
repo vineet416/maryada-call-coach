@@ -54,7 +54,7 @@ def test_call_page_uses_the_signal_once_and_removes_it():
 
 def test_call_page_starts_a_recorded_run_only_when_sound_is_allowed():
     s = text("pages", "LiveCall.tsx")
-    gate = re.search(r"if \(scenario\.has_replay && soundAllowed\(\)\) \{(.*?)\n    \}", s, re.S)
+    gate = re.search(r"if \(scenario\.has_replay && soundAllowed\(\)\) \{(.*?)\n    \}", s, re.DOTALL)
     assert gate and "begin('replay')" in gate.group(1)
     assert s.count("begin('replay')") >= 2  # the other calls are the existing fallback buttons, not the autostart
     assert not re.search(r"soundAllowed\(\)[^\n]*\n[^\n]*begin\('live'", s)
