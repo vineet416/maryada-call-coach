@@ -268,8 +268,8 @@ export interface ManagerPayload {
     calls_with_violation: number
     violation_rate: number | null
     avg_risk: number | null
-    good_practice_calls: number
-    good_practice_rate: number | null
+    clean_calls: number
+    clean_rate: number | null
   }
   agents: ManagerAgent[]
   rule_totals: Record<string, number>
@@ -277,7 +277,7 @@ export interface ManagerPayload {
   kpi_deltas: {
     violation_rate: number
     avg_risk: number
-    good_practice_rate: number
+    clean_rate: number
     first_calls: number
     second_calls: number
   } | null

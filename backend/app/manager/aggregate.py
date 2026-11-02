@@ -137,7 +137,7 @@ def _rates(calls: list[dict]) -> dict:
     n = len(calls)
     return {"violation_rate": sum(1 for c in calls if _violations(c)) / n,
             "avg_risk": sum(c["risk_peak"] for c in calls) / n,
-            "good_practice_rate": sum(1 for c in calls if _has_good(c)) / n}
+            "clean_rate": sum(1 for c in calls if not _violations(c)) / n}
 
 
 def _deltas(calls: list[dict]) -> dict | None:
@@ -163,13 +163,12 @@ def aggregate(calls: list[dict], agents: list[dict], start: str | None = None, e
             totals[k] += r["by_rule"][k]
     n = len(chosen)
     with_v = sum(1 for c in chosen if _violations(c))
-    good = sum(1 for c in chosen if _has_good(c))
     risks = [c["risk_peak"] for c in chosen]
     kpis = {
         "calls": n, "agents": sum(1 for r in rows if r["calls"]), "violations": sum(totals.values()),
         "calls_with_violation": with_v, "violation_rate": with_v / n if n else None,
         "avg_risk": round(sum(risks) / n, 1) if n else None,
-        "good_practice_calls": good, "good_practice_rate": good / n if n else None,
+        "clean_calls": n - with_v, "clean_rate": (n - with_v) / n if n else None,
     }
     review_totals = dict.fromkeys(RULES, 0)
     for r in rows:

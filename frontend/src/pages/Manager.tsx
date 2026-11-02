@@ -11,6 +11,8 @@ import {
 } from '@/lib/manager'
 import { usePageTitle } from '@/lib/usePageTitle'
 
+/** Where violation counts appear: what they include and what is counted apart. */
+const COUNT_NOTE = 'Includes R2 advisory flags. R6 is reviewed separately.'
 const AXIS = { fontSize: 11, fill: '#5b6577' }
 const barColor = (n: number) => (n >= 4 ? 'var(--mc-violation)' : n > 0 ? 'var(--mc-advisory)' : '#e5e7eb')
 
@@ -123,7 +125,10 @@ function Dashboard({ data, range, setRange, busy, error, retry }: {
         </section>
       ) : (
         <>
-          <Kpis data={data} dayCount={dayCount} />
+          <div className="flex flex-col gap-2">
+            <Kpis data={data} dayCount={dayCount} />
+            <p className="text-xs text-[var(--mc-muted)]">{COUNT_NOTE}</p>
+          </div>
           <div className="flex flex-wrap items-start gap-5">
             <Leaderboard data={data} search={search} rules={shownRules} filtered={picked.length > 0} />
             <ByRule data={data} rules={shownRules} />
@@ -196,7 +201,7 @@ function Kpis({ data, dayCount }: { data: ManagerPayload; dayCount: number }) {
       <Kpi label="Violations" value={String(k.violations)} sub={`across ${plural(rulesHit, 'rule')}`} tone="text-[var(--mc-violation-ink)]" />
       <Kpi label="Violation rate" value={pct(k.violation_rate)} sub={`${k.calls_with_violation} of ${k.calls} calls`} delta={delta(dl?.violation_rate, 'pts', true)} />
       <Kpi label="Average risk" value={num(k.avg_risk)} sub="out of 100, peak of each call" delta={delta(dl?.avg_risk, 'risk', true)} />
-      <Kpi label="Good-practice rate" value={pct(k.good_practice_rate)} sub={`${k.good_practice_calls} of ${k.calls} calls`} tone="text-[var(--mc-good-practice-ink)]" delta={delta(dl?.good_practice_rate, 'pts', false)} />
+      <Kpi label="Clean calls" value={pct(k.clean_rate)} sub={`${k.clean_calls} of ${k.calls} calls, no violations`} tone="text-[var(--mc-good-practice-ink)]" delta={delta(dl?.clean_rate, 'pts', false)} />
     </section>
   )
 }
@@ -327,6 +332,7 @@ function ByRule({ data, rules }: { data: ManagerPayload; rules: string[] }) {
       <ul className="grid gap-x-4 gap-y-0.5 text-xs text-[var(--mc-muted)] sm:grid-cols-2">
         {rows.map((r) => <li key={r.id}><b className="font-semibold text-[var(--mc-text-2)]">{r.id}</b> {r.name}: {unit(r)}</li>)}
       </ul>
+      <p className="text-xs text-[var(--mc-muted)]">{COUNT_NOTE}</p>
       {note && rows.some((r) => r.review) && <p className="text-xs text-[var(--mc-muted)]">{note}</p>}
     </section>
   )
