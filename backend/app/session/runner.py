@@ -585,7 +585,7 @@ class LiveTurn:
                                        "message": f"Language model unavailable, showing fast checks only. {why}"})
             return
         late = time.perf_counter() - arrived > FIRST_ANSWER_S
-        deep = deep_findings(self.ctx, box["fast"], out, self.idx, text)
+        deep = deep_findings(self.ctx, box["fast"], out, self.idx, text, self.history[-2:])
         self._handle(deep, "deep", {"stt_ms": seg.latency_ms, "prefilter_ms": 0, "llm_ms": llm_ms}, seg_end, late=late)
         if self.closed:  # the answer came after the turn closed: correct the risk meter
             self._risk(self.score_before)

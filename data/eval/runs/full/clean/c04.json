@@ -20,11 +20,11 @@
   "path": "rest"
  },
  "llm": {
-  "requests": 5,
-  "cache_hits": 0,
+  "requests": 0,
+  "cache_hits": 5,
   "skipped": 0,
   "degraded": 0,
-  "tokens": 4302
+  "tokens": 0
  },
  "turns": [
   {
@@ -147,5 +147,5 @@
    "quote": "ठीक है sir, महीने के end तक आधा amount और बाकी next month, यह मैं note कर लेता हूँ, मैं reminder भेज दूंगा, thank you।"
   }
  ],
- "completed_at": "2026-11-02T04:32:40+00:00"
+ "completed_at": "2026-11-02T05:51:34+00:00"
 }

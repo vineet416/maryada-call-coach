@@ -6,6 +6,7 @@ import {
   getRules,
   type EvalExample,
   type EvalPayload,
+  type EngineChange,
   type EvalReview,
   type EvalResults,
   type LatencyRow,
@@ -117,7 +118,7 @@ export function Evaluation() {
           <Coverage results={results} />
           <RunPicker results={results} eng={eng} cond={cd} setEngine={setEngine} setCond={setCond} />
           {run ? (
-            <RunView run={run} results={results} rules={rules} group={group} setGroup={setGroup} eng={eng} cond={cd} review={data.review} />
+            <RunView run={run} results={results} rules={rules} group={group} setGroup={setGroup} eng={eng} cond={cd} review={data.review} changes={data.engine_changes} />
           ) : (
             <section className="card p-6" role="status">
               <h2 className="text-[17px] font-semibold tracking-tight">Not run yet</h2>
@@ -216,7 +217,7 @@ function Stat({ label, prf, kind, note }: { label: string; prf: Prf; kind: 'r' |
   )
 }
 
-function RunView({ run, results, rules, group, setGroup, eng, cond, review }: {
+function RunView({ run, results, rules, group, setGroup, eng, cond, review, changes }: {
   run: RunResult
   results: EvalResults
   rules: Rule[]
@@ -225,8 +226,11 @@ function RunView({ run, results, rules, group, setGroup, eng, cond, review }: {
   eng: Engine
   cond: string
   review: EvalReview | null
+  changes: EngineChange[]
 }) {
   const adj = review?.adjusted[`${eng}/${cond}`]?.all?.strict ?? null
+  const wr = review?.adjusted[`${eng}/${cond}`]?.all?.with_review ?? null
+  const gone = wr ? (review?.items.length ?? 0) - (wr.extras_real + wr.extras_unsure + wr.extras_not_a_violation) : 0
   const score: Score | null = run[group] ?? null
   const held = run.held_out ?? null
   const all = run.all ?? null
@@ -264,10 +268,16 @@ function RunView({ run, results, rules, group, setGroup, eng, cond, review }: {
             All headline cards: {ENGINES.find((e) => e.id === eng)?.label.toLowerCase()}, {lc(CONDITIONS.find((c) => c.id === cond)?.label ?? '')}, {all.n_calls} calls.
             Strict counts violations and advisories only. A unit is one agent turn and one rule.
           </p>
+          {eng === 'full' && changes.filter((c) => c.condition === `full/${cond}`).map((c) => (
+            <p key={c.id} className="-mt-3 text-[12.5px] text-[var(--mc-muted)]">
+              Engine change made after seeing results ({dateOf(c.date)}): it does not use the labels. It removes {c.removed_flags.length} flags
+              whose quote is not in the flagged turn but in an earlier one the model was shown. Scores above are after this change; the before and after counts are saved with the results.
+            </p>
+          ))}
           {adj && (
             <p className="-mt-3 text-[12.5px] text-[var(--mc-muted)]">
               After human review of extras: the project author reviewed only the {review?.items.length ?? 0} extra flags
-              the labels do not have ({adj.flags - adj.correct_original} of them are in the strict count above), and is the only reviewer. {adj.extras_real} were judged real (counted as correct flags), {adj.extras_unsure} unsure, and the rest not violations (still false flags). Unsure makes the second number a range: all unsure counted false, then all counted correct. The first number above is still scored against the original labels.
+              the labels do not have ({adj.flags - adj.correct_original} of them are in the strict count above{gone > 0 ? `; ${gone} are no longer flagged after the engine change above` : ''}), and is the only reviewer. {adj.extras_real} were judged real (counted as correct flags), {adj.extras_unsure} unsure, and the rest not violations (still false flags). Unsure makes the second number a range: all unsure counted false, then all counted correct. The first number above is still scored against the original labels.
             </p>
           )}
         </>

@@ -20,11 +20,11 @@
   "path": "rest"
  },
  "llm": {
-  "requests": 6,
-  "cache_hits": 0,
+  "requests": 0,
+  "cache_hits": 6,
   "skipped": 0,
   "degraded": 0,
-  "tokens": 5390
+  "tokens": 0
  },
  "turns": [
   {
@@ -190,15 +190,6 @@
   {
    "call": "c07",
    "turn": 11,
-   "rule": "R3",
-   "kind": "needs_review",
-   "confidence": 0.74,
-   "source": "llm",
-   "quote": "वरना मुझसे बुरा कोई नहीं होगा"
-  },
-  {
-   "call": "c07",
-   "turn": 11,
    "rule": "G1",
    "kind": "good_practice",
    "confidence": 1.0,
@@ -206,5 +197,5 @@
    "quote": "ठीक है Friday को 5,000 पक्का मैं नोट कर लेती हूँ UPI से कर देना।"
   }
  ],
- "completed_at": "2026-11-02T04:33:03+00:00"
+ "completed_at": "2026-11-02T05:51:34+00:00"
 }

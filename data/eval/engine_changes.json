@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "changes": [
+    {
+      "id": "earlier-turn-quote",
+      "date": "2026-11-02",
+      "after_seeing_results": true,
+      "uses_labels": false,
+      "what": "A finding from the language model is dropped when its quote matches this turn only by the whole-sentence fallback AND the same (normalised) quote appears in one of the earlier turns the model was shown as context.",
+      "why": "Three needs-review flags (c07 turn 11, c12 turn 9, c13 turn 9) quoted a line from an earlier turn, so the flagged turn itself contained no violation.",
+      "scope": "engine.llm_to_findings and deep_findings only; no prompt, threshold, label or phrase-list change. Re-scored from the saved model answers (0 tokens).",
+      "condition": "full/clean",
+      "removed_flags": [["c07", 11, "R3"], ["c12", 9, "R5"], ["c13", 9, "R5"]],
+      "before": {
+        "strict": {"tp": 30, "fp": 10, "fn": 5},
+        "with_review": {"tp": 35, "fp": 13, "fn": 0},
+        "held_out_strict": {"tp": 9, "fp": 4, "fn": 2},
+        "held_out_with_review": {"tp": 11, "fp": 5, "fn": 0},
+        "needs_review": {"on_label": 5, "off_label": 3}
+      },
+      "after": {
+        "strict": {"tp": 30, "fp": 10, "fn": 5},
+        "with_review": {"tp": 35, "fp": 10, "fn": 0},
+        "held_out_strict": {"tp": 9, "fp": 4, "fn": 2},
+        "held_out_with_review": {"tp": 11, "fp": 4, "fn": 0},
+        "needs_review": {"on_label": 5, "off_label": 0}
+      }
+    }
+  ]
+}

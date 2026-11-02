@@ -128,6 +128,14 @@ def _review(results: dict | None, root: Path) -> dict | None:
             "items": items, "adjusted": adjusted}
 
 
+def _engine_changes(root: Path) -> list:
+    try:
+        changes = json.loads((root / "engine_changes.json").read_text(encoding="utf-8"))["changes"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return []
+    return changes if isinstance(changes, list) else []
+
+
 def _replays(root: Path) -> dict[str, list[dict]]:
     out = {}
     for p in sorted(root.glob("c*.json")):  # committed recordings only (not the private _runs folder)
@@ -151,4 +159,5 @@ def eval_payload() -> dict:
             and isinstance(results.get("ablation_llm_off"), dict)):
         results = None  # not a results file: the page shows "no results published"
     return {"results": results, "review": _review(results, settings.data_dir / "eval"),
+            "engine_changes": _engine_changes(settings.data_dir / "eval"),
             "latency": latency_stats(_replays(settings.data_dir / "replay"))}

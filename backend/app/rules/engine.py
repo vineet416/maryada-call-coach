@@ -7,6 +7,7 @@ from .align import align_quote
 from .loader import load_rules
 from .prefilter import gate_findings, good_practice, prefilter
 from .schemas import CallContext, Finding, LlmOut, Turn
+from .text import normalize
 
 VIOLATION_MIN, REVIEW_MIN = 0.75, 0.45
 WEAK_CAP = 0.74  # weak alignment (whole-sentence fallback) must stay needs_review
@@ -34,10 +35,20 @@ def parse_llm(raw: str) -> LlmOut | None:
         return None
 
 
-def llm_to_findings(out: LlmOut, turn_idx: int, text: str) -> list[Finding]:
+def _in_earlier_turn(quote: str, seen: list[str]) -> bool:
+    """The (normalised) quote sits inside one of the turns the model was shown as context."""
+    q = normalize(quote)
+    return bool(q) and any(f" {q} " in f" {normalize(t)} " for t in seen)
+
+
+def llm_to_findings(out: LlmOut, turn_idx: int, text: str, seen: list[str] | None = None) -> list[Finding]:
+    """`seen`: texts of the earlier turns shown to the model. A quote that only aligns by the whole-sentence fallback
+    and is found in one of them belongs to that earlier turn, not to this one: the finding is dropped."""
     res = []
     for lf in out.findings:
         rng, _ratio, sentence = align_quote(text, lf.quote)
+        if sentence and _in_earlier_turn(lf.quote, seen or []):
+            continue
         conf = lf.confidence if not sentence else min(lf.confidence, WEAK_CAP)  # weak alignment -> needs_review
         res.append(Finding(turn_idx=turn_idx, rule_id=lf.rule_id, confidence=conf, quote=lf.quote,
                            token_range=rng, reason=lf.reason, rewrite=lf.rewrite, source="llm", phase="deep",
@@ -109,11 +120,13 @@ def fast_findings(ctx: CallContext, history: list[Turn], turn_idx: int, text: st
     return finalize(items, turn_idx, text)
 
 
-def deep_findings(ctx: CallContext, fast: list[Finding], llm: LlmOut | None, turn_idx: int, text: str) -> list[Finding]:
+def deep_findings(ctx: CallContext, fast: list[Finding], llm: LlmOut | None, turn_idx: int, text: str,
+                  history: list[Turn] | None = None) -> list[Finding]:
     """Deep phase: merge the LLM result into the fast findings. llm=None -> fast findings unchanged."""
     if llm is None:
         return fast
-    from_llm = [f for f in llm_to_findings(llm, turn_idx, text) if f.rule_id != "R2"]  # R2 is rule-based only, like R1
+    seen = [t.text for t in history or []]  # pass the same turns the model was shown
+    from_llm = [f for f in llm_to_findings(llm, turn_idx, text, seen) if f.rule_id != "R2"]  # R2 is rule-based only, like R1
     if ctx.answered_by == "borrower":  # R4 gate applies to the LLM too
         from_llm = [f for f in from_llm if f.rule_id != "R4"]
     items = [f for f in fast if f.kind != "good_practice"] + from_llm

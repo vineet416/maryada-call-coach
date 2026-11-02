@@ -20,11 +20,11 @@
   "path": "rest"
  },
  "llm": {
-  "requests": 5,
-  "cache_hits": 0,
+  "requests": 0,
+  "cache_hits": 5,
   "skipped": 0,
   "degraded": 0,
-  "tokens": 4261
+  "tokens": 0
  },
  "turns": [
   {
@@ -138,5 +138,5 @@
    "quote": "अच्छा अच्छा, परसों सुबह मैं परसों एक reminder भेज दूंगा, okay sir।"
   }
  ],
- "completed_at": "2026-11-02T04:32:46+00:00"
+ "completed_at": "2026-11-02T05:51:34+00:00"
 }

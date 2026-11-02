@@ -169,7 +169,7 @@ async def run_call(sc: dict, cond: str, mode: str, labels_h: str, clients: dict,
                     lm["skipped"] += 1
                 else:
                     out = await review(clients["llm"], ctx, history[-2:], text, lm, budget)
-                    found = deep_findings(ctx, fast, out, i, text)
+                    found = deep_findings(ctx, fast, out, i, text, history[-2:])
             dets += [finding_row(cid, f) for f in found]
         history.append(Turn(speaker=t["s"], text=text))
     lm["tokens"] = llm.STATS["tokens"] - tok0

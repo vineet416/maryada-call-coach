@@ -58,7 +58,7 @@ async def run(label: str, ctx: CallContext, limit: int) -> dict:
             if out is None:
                 rows.append((idx, seg, len(text.split()), "LLM-FAILED", []))
                 continue
-            fs = deep_findings(ctx, fast, out, idx, text)
+            fs = deep_findings(ctx, fast, out, idx, text, hist[-2:])
             rows.append((idx, seg, len(text.split()), f"{ms} ms", [(f.rule_id, f.kind, round(f.confidence, 2)) for f in fs]))
     finally:
         await client.aclose()
