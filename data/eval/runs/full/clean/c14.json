@@ -1,0 +1,192 @@
+{
+ "schema": 1,
+ "call_id": "c14",
+ "condition": "clean",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "1d00a71c99b73ca1"
+ },
+ "stt": {
+  "requests": 0,
+  "cached": 11,
+  "latency_ms": 0,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 6,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 5371
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Hello निलेश जी, संदीप बोल रहा हूँ तारंग Finserv से।",
+   "stt_ms": 317,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "कौन अच्छा बोलिए?",
+   "stt_ms": 278,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "यह call record की जा रही है। ध्यान रहे, आपके personal loan की बात करनी है।",
+   "stt_ms": 486,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ, बोल दो।",
+   "stt_ms": 243,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "नीलेश जी, 9,000 की EMI पिछले महीने से अटकी हुई है, दो reminder भेज चुका हूँ, कब तक हो जाएगी?",
+   "stt_ms": 631,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Sir, थोड़ा time चाहिए, धंधा slow है, अगले हफ्ते पक्का।",
+   "stt_ms": 461,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "निलेश जी, मेरे को रोज यही सुनना पड़ता है, अगले हफ्ते नहीं चलेगा, अगर कल तक payment नहीं आया तो कल ही हमारी team आपका घर और गाड़ी seize कर लेगी।",
+   "stt_ms": 553,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "क्या? इतनी जल्दी? मेरे को तो notice भी नहीं मिला, ऐसे कैसे हो सकता है?",
+   "stt_ms": 580,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "notice की जरूरत नहीं है अब, जल्दी payment कीजिए, आज शाम तक जितना हो सके उतना।",
+   "stt_ms": 468,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "ठीक है sir, कल सुबह बैंक जाता हूँ, पहले थोड़ा भर देता हूँ।",
+   "stt_ms": 371,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "Okay, कल सुबह दोबारा call करूंगा, तब तक कुछ आ जाना चाहिए।",
+   "stt_ms": 500,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c14",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Hello निलेश जी, संदीप बोल रहा हूँ तारंग Finserv से।"
+  },
+  {
+   "call": "c14",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "यह call record की जा रही है।"
+  },
+  {
+   "call": "c14",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "ध्यान रहे, आपके personal loan की बात करनी है।"
+  },
+  {
+   "call": "c14",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "दो reminder भेज चुका हूँ, कब तक हो जाएगी?"
+  },
+  {
+   "call": "c14",
+   "turn": 7,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.87,
+   "source": "llm",
+   "quote": "मेरे को रोज यही सुनना पड़ता है"
+  },
+  {
+   "call": "c14",
+   "turn": 7,
+   "rule": "R5",
+   "kind": "violation",
+   "confidence": 0.98,
+   "source": "llm",
+   "quote": "अगर कल तक payment नहीं आया तो कल ही हमारी team आपका घर और गाड़ी seize कर लेगी"
+  },
+  {
+   "call": "c14",
+   "turn": 9,
+   "rule": "R5",
+   "kind": "violation",
+   "confidence": 0.88,
+   "source": "llm",
+   "quote": "notice की जरूरत नहीं है अब"
+  },
+  {
+   "call": "c14",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "जल्दी payment कीजिए, आज शाम तक जितना हो सके उतना"
+  },
+  {
+   "call": "c14",
+   "turn": 11,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Okay, कल सुबह दोबारा call करूंगा, तब तक कुछ आ जाना चाहिए।"
+  }
+ ],
+ "completed_at": "2026-11-02T04:34:01+00:00"
+}
