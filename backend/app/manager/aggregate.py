@@ -14,11 +14,13 @@ TRAINING_MIN_SERIOUS = 2
 TRAINING_AVG_RISK = 40
 # Rule weight for breaking ties between equally frequent rules (same numbers as the risk meter).
 _WEIGHT = {"R3": 30, "R5": 35, "R4": 35, "R1": 20, "R2": 8, "R6": 10}
-STATUS_ORDER = {"needs_training": 0, "watch": 1, "excellent": 2, "no_calls": 3}
+STATUS_ORDER = {"needs_training": 0, "watch": 1, "excellent": 2, "too_few_calls": 3, "no_calls": 4}
+DELTA_MIN_CALLS = 8  # each half of the period needs this many calls before a KPI delta is shown
 
 
 STATUS_RULE = (f"Excellent: no violations in at least {EXCELLENT_MIN_CALLS} calls. Needs training: {TRAINING_MIN_SERIOUS} or more "
-               f"violations of {', '.join(SERIOUS[:-1])} or {SERIOUS[-1]}, or an average risk of {TRAINING_AVG_RISK} or more. Otherwise: Watch.")
+               f"violations of {', '.join(SERIOUS[:-1])} or {SERIOUS[-1]}, or an average risk of {TRAINING_AVG_RISK} or more. Watch: at least one violation otherwise. "
+               f"Too few calls: no violations, but fewer than {EXCELLENT_MIN_CALLS} calls.")
 
 
 def in_range(call_date: str, start: str | None, end: str | None) -> bool:
@@ -53,13 +55,14 @@ def top_rule(by_rule: dict[str, int]) -> str | None:
 
 def status_of(n_calls: int, violations: int, serious: int, avg_risk: float | None) -> str:
     """Fixed rule: needs_training = at least 2 R3/R4/R5 violations or average risk of 40 or more; excellent = no
-    violations in at least 3 calls; no_calls = nothing to judge; otherwise watch."""
+    violations in at least 3 calls; watch = any other agent with a violation; too_few_calls = no violations but fewer
+    than 3 calls (docs/09 leaves this case open: neutral, never Watch); no_calls = nothing to judge."""
     if n_calls == 0:
         return "no_calls"
     if serious >= TRAINING_MIN_SERIOUS or (avg_risk is not None and avg_risk >= TRAINING_AVG_RISK):
         return "needs_training"
-    if violations == 0 and n_calls >= EXCELLENT_MIN_CALLS:
-        return "excellent"
+    if violations == 0:
+        return "excellent" if n_calls >= EXCELLENT_MIN_CALLS else "too_few_calls"
     return "watch"
 
 
@@ -69,6 +72,10 @@ def _agent_row(agent: dict, calls: list[dict]) -> dict:
     for c in calls:
         for f in _violations(c):
             by_rule[f["rule_id"]] += 1
+    review_by_rule = dict.fromkeys(RULES, 0)
+    for c in calls:
+        for rule, _turn in {(f["rule_id"], f["turn_idx"]) for f in c["findings"] if f["kind"] == "needs_review" and f["rule_id"] in RULES}:
+            review_by_rule[rule] += 1
     violations = sum(by_rule.values())
     serious = sum(by_rule[r] for r in SERIOUS)
     risks = [c["risk_peak"] for c in calls]
@@ -85,7 +92,7 @@ def _agent_row(agent: dict, calls: list[dict]) -> dict:
         "needs_review": sum(_count_kind(c, "needs_review") for c in calls),
         "good_practice": sum(1 for c in calls if _has_good(c)),
         "avg_risk": avg, "peak_risk": max(risks) if risks else None,
-        "by_rule": by_rule, "top_rule": top_rule(by_rule), "status": status,
+        "by_rule": by_rule, "review_by_rule": review_by_rule, "top_rule": top_rule(by_rule), "status": status,
         "risk_trend": risks,  # one value per call, oldest first (the sparkline)
         "first_half_vs_second_half": {"first": sum(len(_violations(c)) for c in first),
                                       "second": sum(len(_violations(c)) for c in second),
@@ -126,6 +133,24 @@ def _hours(calls: list[dict]) -> list[dict]:
              "r1_calls": per.get(h, [0, 0, 0])[2]} for h in range(min(per), max(per) + 1)]
 
 
+def _rates(calls: list[dict]) -> dict:
+    n = len(calls)
+    return {"violation_rate": sum(1 for c in calls if _violations(c)) / n,
+            "avg_risk": sum(c["risk_peak"] for c in calls) / n,
+            "good_practice_rate": sum(1 for c in calls if _has_good(c)) / n}
+
+
+def _deltas(calls: list[dict]) -> dict | None:
+    """Later half minus earlier half (calls in date order; the middle call of an odd count is in the later half) for the
+    rate KPIs. None unless both halves have at least DELTA_MIN_CALLS calls (docs/09 4.1)."""
+    ordered = sorted(calls, key=lambda c: (c["call_date"], c.get("call_time", ""), c["call_id"]))
+    half = len(ordered) // 2
+    if half < DELTA_MIN_CALLS:
+        return None
+    a, b = _rates(ordered[:half]), _rates(ordered[half:])
+    return {k: round(b[k] - a[k], 4 if k != "avg_risk" else 1) for k in a} | {"first_calls": half, "second_calls": len(ordered) - half}
+
+
 def aggregate(calls: list[dict], agents: list[dict], start: str | None = None, end: str | None = None) -> dict:
     """Everything the dashboard shows for the calls dated start..end (inclusive; None = open). Agents with no calls
     in range stay in the list with status "no_calls"."""
@@ -146,7 +171,12 @@ def aggregate(calls: list[dict], agents: list[dict], start: str | None = None, e
         "avg_risk": round(sum(risks) / n, 1) if n else None,
         "good_practice_calls": good, "good_practice_rate": good / n if n else None,
     }
+    review_totals = dict.fromkeys(RULES, 0)
+    for r in rows:
+        for k in RULES:
+            review_totals[k] += r["review_by_rule"][k]
     attention = [r["id"] for r in rows if r["status"] in ("needs_training", "watch") and r["violations"]][:3]
-    return {"n_calls": n, "kpis": kpis, "agents": rows, "rule_totals": totals, "by_day": _days(chosen),
+    return {"n_calls": n, "kpis": kpis, "agents": rows, "rule_totals": totals, "review_totals": review_totals,
+            "kpi_deltas": _deltas(chosen), "by_day": _days(chosen),
             "by_hour": _hours(chosen), "attention": attention,
             "calls": sorted(chosen, key=lambda c: (c["call_date"], c.get("call_time", ""), c["call_id"]))}

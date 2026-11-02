@@ -21,8 +21,8 @@ from app.rules.schemas import Finding
 EVAL = ROOT / "data" / "eval"
 CONDITION = "clean"
 SOURCES = {
-    "full": "Full engine detections (phrase checks and language model) on clean audio.",
-    "rules_only": "Rules-only detections, full engine not run yet.",
+    "full": "These numbers are what Maryada's engine (phrase checks and a language model) detected on the 30 synthetic calls, played on clean audio, grouped by the fictional agent persona each call is assigned to. They are not real agents and not the dataset labels.",
+    "rules_only": "These numbers are what Maryada's phrase checks alone detected on the 30 synthetic calls on clean audio (the language model was not run), grouped by the fictional agent persona each call is assigned to. They are not real agents and not the dataset labels.",
 }
 
 

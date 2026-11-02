@@ -5,7 +5,7 @@ import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YA
 import { ErrorCard } from '@/components/ErrorCard'
 import { Initials, RecordedChip, StatusChip } from '@/components/manager/Shared'
 import { ApiError, getManager, type ManagerCall, type ManagerPayload } from '@/lib/api'
-import { num, plural, ruleIds, ruleTitle, shortDate } from '@/lib/manager'
+import { isReviewOnly, num, plural, reviewNote, ruleCount, ruleIds, ruleTitle, shortDate } from '@/lib/manager'
 import { usePageTitle } from '@/lib/usePageTitle'
 
 const KIND_LABEL: Record<string, string> = { violation: 'violation', advisory: 'advisory', needs_review: 'needs review', good_practice: 'good practice' }
@@ -107,10 +107,11 @@ export function ManagerAgent() {
                 {ruleIds(data).map((r) => (
                   <li key={r} className="flex items-center justify-between gap-3 text-[13px]">
                     <span><b className="font-semibold">{r}</b> <span className="text-[var(--mc-muted)]">{ruleTitle(data, r)}</span></span>
-                    <b className="font-semibold tabular-nums">{agent.by_rule[r] ?? 0}</b>
+                    <b className="font-semibold tabular-nums">{ruleCount(data, agent, r)}{isReviewOnly(data, r) ? ' to review' : ''}</b>
                   </li>
                 ))}
               </ul>
+              {reviewNote(data) && <p className="text-xs text-[var(--mc-muted)]">{reviewNote(data)}</p>}
             </section>
             <section className="card flex min-w-[280px] flex-[2_1_420px] flex-col gap-3 px-6 py-5" aria-labelledby="rt-h">
               <h2 id="rt-h" className="text-base font-semibold">Risk per call</h2>

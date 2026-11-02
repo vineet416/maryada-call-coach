@@ -36,6 +36,7 @@ def manager_payload(start: str | None, end: str | None) -> dict | None:
         "generated_at": saved.get("generated_at"), "batch_label": saved.get("batch_label"), "source": saved["source"],
         "range": {"from": start, "to": end, "first_day": days[0] if days else None, "last_day": days[-1] if days else None},
         **agg, "status_rule": STATUS_RULE,
-        "rules": [{"id": r["id"], "title": r["title"], "coach_line": (r.get("coach_lines") or [""])[0]}
+        "rules": [{"id": r["id"], "title": r["title"], "coach_line": (r.get("coach_lines") or [""])[0],
+                   "review_only": r.get("kind_default") == "needs_review"}
                   for r in rules if r["id"].startswith("R")],
     }

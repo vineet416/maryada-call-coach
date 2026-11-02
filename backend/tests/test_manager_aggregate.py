@@ -17,7 +17,7 @@ def agent(rows, aid):
 
 def test_status_thresholds_at_the_edges():
     assert status_of(3, 0, 0, 0) == "excellent"
-    assert status_of(2, 0, 0, 0) == "watch"  # clean but too few calls
+    assert status_of(2, 0, 0, 0) == "too_few_calls"  # clean but too few calls: not Watch (Watch needs a violation)
     assert status_of(3, 1, 0, 5) == "watch"
     assert status_of(4, 3, 1, 10) == "watch"  # one R3/R4/R5 violation is not enough
     assert status_of(4, 3, 2, 10) == "needs_training"
@@ -80,7 +80,7 @@ def test_filter_changes_status_and_agent_aggregates():
              call("c2", "A1", "2026-10-13", finds=[("R5", "violation", 7)], risk=35), call("c3", "A1", "2026-10-20")]
     assert agent(aggregate(calls, AGENTS), "A1")["status"] == "needs_training"
     late = aggregate(calls, AGENTS, "2026-10-15", None)
-    assert (agent(late, "A1")["calls"], agent(late, "A1")["status"]) == (1, "watch")
+    assert (agent(late, "A1")["calls"], agent(late, "A1")["status"]) == (1, "too_few_calls")
 
 
 def test_kpis_equal_sums_over_calls():
@@ -120,3 +120,38 @@ def test_leaderboard_order_and_attention_cards():
     assert out["attention"] == ["A1", "A2"]  # the excellent agent is never an attention card
     ties = aggregate([call("a", "A1", "2026-10-12", finds=[("R2", "advisory", 3)]), call("b", "A2", "2026-10-12", finds=[("R2", "advisory", 3)])], AGENTS)
     assert [a["name"] for a in ties["agents"][:2]] == ["Alpha", "Beta"]  # equal rows are ordered by name
+
+
+def test_needs_review_is_counted_per_rule_and_never_as_a_violation():
+    calls = [call("c1", "A1", "2026-10-12", finds=[("R6", "needs_review", 5), ("R6", "needs_review", 5), ("R6", "needs_review", 9)]),
+             call("c2", "A1", "2026-10-13", finds=[("R3", "needs_review", 4)])]
+    out = aggregate(calls, AGENTS)
+    a = agent(out, "A1")
+    assert a["violations"] == 0 and a["by_rule"]["R6"] == 0
+    assert a["review_by_rule"]["R6"] == 2 and a["review_by_rule"]["R3"] == 1
+    assert out["review_totals"]["R6"] == 2 and out["rule_totals"]["R6"] == 0
+    assert a["status"] == "too_few_calls"
+
+
+def _batch(n, bad_in_second):
+    """n calls on consecutive days; the first n//2 clean, then `bad_in_second` of the rest with a violation."""
+    days = [f"2026-10-{12 + i:02d}" for i in range(n)]
+    out = []
+    for i, d in enumerate(days):
+        late_bad = i >= n // 2 and i - n // 2 < bad_in_second
+        out.append(call(f"c{i}", "A1", d, risk=40 if late_bad else 0, finds=[("R3", "violation", 7)] if late_bad else [("G1", "good_practice", 3)]))
+    return out
+
+
+def test_kpi_deltas_need_eight_calls_in_each_half():
+    assert aggregate(_batch(15, 2), AGENTS)["kpi_deltas"] is None  # halves of 7 and 8
+    assert aggregate([], AGENTS)["kpi_deltas"] is None
+    d = aggregate(_batch(16, 4), AGENTS)["kpi_deltas"]
+    assert d["first_calls"] == d["second_calls"] == 8
+    assert d["violation_rate"] == 0.5 and d["avg_risk"] == 20.0 and d["good_practice_rate"] == -0.5
+    assert aggregate(_batch(16, 4), AGENTS, "2026-10-20", None)["kpi_deltas"] is None  # a narrower range can drop them
+
+
+def test_status_rule_text_names_the_too_few_calls_case():
+    from app.manager.aggregate import STATUS_RULE
+    assert "Too few calls" in STATUS_RULE and "Watch: at least one violation" in STATUS_RULE

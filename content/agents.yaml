@@ -1,13 +1,15 @@
 # 8 fictional agents. Gender is used for correct Hindi verb forms in scripts and for voice choice.
-# profile = intended behaviour (drives dashboard story; calls in scenarios/ are already consistent with it)
+# profile = what the engine detected on this agent's calls (clean audio, full engine; see data/eval/manager_data.json):
+#   excellent = no violations | repeat_offender = violations in every call, R3/R4/R5 clusters | occasional = a couple of one-off slips
+#   mixed = mostly small slips plus a serious R3/R4/R5 cluster | low_risk_flat = a couple of low-risk slips, no trend either way
 agents:
   - {id: A1, name: "Amit Kulkarni",   gender: M, voice_role: agent_m1, team: "Pune Collections",   profile: occasional}
   - {id: A2, name: "Neha Deshmukh",   gender: F, voice_role: agent_f1, team: "Pune Collections",   profile: excellent}
   - {id: A3, name: "Rohit Jadhav",    gender: M, voice_role: agent_m2, team: "Mumbai Collections", profile: repeat_offender}
-  - {id: A4, name: "Priya Shinde",    gender: F, voice_role: agent_f2, team: "Mumbai Collections", profile: improving}
-  - {id: A5, name: "Sandeep More",    gender: M, voice_role: agent_m1, team: "Nashik Collections", profile: occasional}
+  - {id: A4, name: "Priya Shinde",    gender: F, voice_role: agent_f2, team: "Mumbai Collections", profile: low_risk_flat}
+  - {id: A5, name: "Sandeep More",    gender: M, voice_role: agent_m1, team: "Nashik Collections", profile: mixed}
   - {id: A6, name: "Kavita Pawar",    gender: F, voice_role: agent_f1, team: "Nashik Collections", profile: repeat_offender}
   - {id: A7, name: "Vikram Salunke",  gender: M, voice_role: agent_m2, team: "Pune Collections",   profile: excellent}
-  - {id: A8, name: "Pooja Gaikwad",   gender: F, voice_role: agent_f2, team: "Mumbai Collections", profile: occasional}
+  - {id: A8, name: "Pooja Gaikwad",   gender: F, voice_role: agent_f2, team: "Mumbai Collections", profile: mixed}
 # Note: in call scripts the agent says only the FIRST name (Amit, Neha, Rohit, Priya, Sandeep, Kavita, Vikram, Pooja).
 # Dashboard status rule (docs/09): Excellent = 0 violations in >= 3 calls; Needs training = >= 2 violations of R3/R4/R5 or avg risk >= 40; otherwise Watch (any violation) .

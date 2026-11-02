@@ -6,7 +6,8 @@ import { ErrorCard } from '@/components/ErrorCard'
 import { Initials, RecordedChip, Spark, StatusChip } from '@/components/manager/Shared'
 import { ApiError, getManager, type ManagerAgent, type ManagerPayload } from '@/lib/api'
 import {
-  agentsCsv, downloadCsv, exampleCall, num, pct, plural, ruleIds, ruleTitle, shortDate,
+  agentsCsv, downloadCsv, exampleCall, isReviewOnly, num, pct, plural, reviewNote, ruleCount, ruleIds, ruleTitle, shortDate,
+  SORT_LABEL, sortAgents, type SortKey,
 } from '@/lib/manager'
 import { usePageTitle } from '@/lib/usePageTitle'
 
@@ -82,6 +83,8 @@ function Dashboard({ data, range, setRange, busy, error, retry }: {
   const filtered = Boolean(range.from || range.to)
   const attention = data.attention.map((id) => data.agents.find((a) => a.id === id)).filter((a): a is ManagerAgent => Boolean(a))
   const dayCount = data.by_day.length
+  const [picked, setPicked] = useState<string[]>([])
+  const shownRules = picked.length ? ruleIds(data).filter((r) => picked.includes(r)) : ruleIds(data)
 
   return (
     <div className={`flex flex-col gap-6 ${error ? "opacity-60" : ""}`} aria-busy={busy}>
@@ -94,7 +97,7 @@ function Dashboard({ data, range, setRange, busy, error, retry }: {
           <DateField id="from" label="From" value={range.from} min={first} max={range.to || last} onChange={(v) => setRange({ ...range, from: v })} />
           <DateField id="to" label="To" value={range.to} min={range.from || first} max={last} onChange={(v) => setRange({ ...range, to: v })} />
           {filtered && <button type="button" className="btn" onClick={() => setRange({ from: '', to: '' })}>All dates</button>}
-          <button type="button" className="btn" disabled={!data.agents.length} onClick={() => downloadCsv('maryada-agents.csv', agentsCsv(data.agents, ruleIds(data)))}>
+          <button type="button" className="btn" disabled={!data.agents.length} onClick={() => downloadCsv('maryada-agents.csv', agentsCsv(data, data.agents, ruleIds(data)))}>
             <Download className="h-3.5 w-3.5" aria-hidden /> Export CSV
           </button>
         </div>
@@ -106,6 +109,8 @@ function Dashboard({ data, range, setRange, busy, error, retry }: {
         </span>
         <RecordedChip note="Results come from a saved evaluation run, not a live one" savedOn={data.generated_at} />
       </div>
+
+      <RuleChips data={data} picked={picked} setPicked={setPicked} />
 
       {error && <div role="alert" className="banner-error rounded-xl px-4 py-3 text-[13px]">{error} <button type="button" className="font-semibold underline" onClick={retry}>Try again</button></div>}
 
@@ -120,11 +125,11 @@ function Dashboard({ data, range, setRange, busy, error, retry }: {
         <>
           <Kpis data={data} dayCount={dayCount} />
           <div className="flex flex-wrap items-start gap-5">
-            <Leaderboard data={data} search={search} />
-            <ByRule data={data} />
+            <Leaderboard data={data} search={search} rules={shownRules} filtered={picked.length > 0} />
+            <ByRule data={data} rules={shownRules} />
           </div>
           <div className="flex flex-wrap items-start gap-5">
-            <Heatmap data={data} />
+            <Heatmap data={data} rules={shownRules} />
             <PerDay data={data} />
             <ByHour data={data} />
           </div>
@@ -153,12 +158,26 @@ function DateField({ id, label, value, min, max, onChange }: {
   )
 }
 
-function Kpi({ label, value, sub, tone }: { label: string; value: string; sub: string; tone?: string }) {
+type Delta = { text: string; tone: string }
+/** Later half minus earlier half. `lowerIsBetter` decides the colour; the arrow and sign carry the meaning without it. */
+function delta(d: number | undefined, unit: 'pts' | 'risk', lowerIsBetter: boolean): Delta | undefined {
+  if (d === undefined) return undefined
+  const v = unit === 'pts' ? Math.round(d * 100) : Math.round(d)
+  if (v === 0) return { text: 'no change vs first half', tone: 'text-[var(--mc-muted)]' }
+  const good = lowerIsBetter ? v < 0 : v > 0
+  return {
+    text: `${v > 0 ? '▲ +' : '▼ −'}${Math.abs(v)}${unit === 'pts' ? ' pts' : ''} vs first half`,
+    tone: good ? 'text-[var(--mc-good-practice-ink)]' : 'text-[var(--mc-violation-ink)]',
+  }
+}
+
+function Kpi({ label, value, sub, tone, delta: dl }: { label: string; value: string; sub: string; tone?: string; delta?: Delta }) {
   return (
     <div className="card px-5 py-[18px]">
       <div className="lbl">{label}</div>
       <div className={`mt-1 text-[30px] font-bold leading-tight tracking-[-0.03em] ${tone ?? ''}`}>{value}</div>
       <div className="text-xs text-[var(--mc-muted)]">{sub}</div>
+      {dl && <div className={`text-xs font-semibold ${dl.tone}`}>{dl.text}</div>}
     </div>
   )
 }
@@ -168,50 +187,105 @@ function Kpis({ data, dayCount }: { data: ManagerPayload; dayCount: number }) {
   const withCalls = data.agents.filter((a) => a.calls)
   const lo = Math.min(...withCalls.map((a) => a.calls))
   const hi = Math.max(...withCalls.map((a) => a.calls))
+  const dl = data.kpi_deltas ?? undefined
   const rulesHit = Object.values(data.rule_totals).filter((n) => n > 0).length
   return (
     <section aria-label="Summary" className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
       <Kpi label="Calls analysed" value={String(k.calls)} sub={`over ${plural(dayCount, 'day')}`} />
       <Kpi label="Agents" value={String(k.agents)} sub={lo === hi ? `${lo} calls each` : `${lo} to ${hi} calls each`} />
       <Kpi label="Violations" value={String(k.violations)} sub={`across ${plural(rulesHit, 'rule')}`} tone="text-[var(--mc-violation-ink)]" />
-      <Kpi label="Violation rate" value={pct(k.violation_rate)} sub={`${k.calls_with_violation} of ${k.calls} calls`} />
-      <Kpi label="Average risk" value={num(k.avg_risk)} sub="out of 100, peak of each call" />
-      <Kpi label="Good-practice rate" value={pct(k.good_practice_rate)} sub={`${k.good_practice_calls} of ${k.calls} calls`} tone="text-[var(--mc-good-practice-ink)]" />
+      <Kpi label="Violation rate" value={pct(k.violation_rate)} sub={`${k.calls_with_violation} of ${k.calls} calls`} delta={delta(dl?.violation_rate, 'pts', true)} />
+      <Kpi label="Average risk" value={num(k.avg_risk)} sub="out of 100, peak of each call" delta={delta(dl?.avg_risk, 'risk', true)} />
+      <Kpi label="Good-practice rate" value={pct(k.good_practice_rate)} sub={`${k.good_practice_calls} of ${k.calls} calls`} tone="text-[var(--mc-good-practice-ink)]" delta={delta(dl?.good_practice_rate, 'pts', false)} />
     </section>
   )
 }
 
-function Leaderboard({ data, search }: { data: ManagerPayload; search: string }) {
+function RuleChips({ data, picked, setPicked }: { data: ManagerPayload; picked: string[]; setPicked: (r: string[]) => void }) {
+  const toggle = (id: string) => setPicked(picked.includes(id) ? picked.filter((x) => x !== id) : [...picked, id])
+  return (
+    <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Filter by rule">
+      <span className="lbl">Rules</span>
+      {data.rules.map((r) => {
+        const on = picked.includes(r.id)
+        return (
+          <button
+            key={r.id} type="button" aria-pressed={on} title={`${r.title}${r.review_only ? ' (needs review only)' : ''}`} onClick={() => toggle(r.id)}
+            className={`inline-flex h-8 items-center rounded-full border px-3 text-xs font-semibold ${on ? 'border-[var(--mc-accent)] bg-[var(--mc-accent-tint)] text-[var(--mc-accent-dark)]' : 'border-[var(--mc-field)] bg-white text-[var(--mc-text-2)]'}`}
+          >
+            {r.id}
+          </button>
+        )
+      })}
+      {picked.length > 0 && <button type="button" className="text-xs font-semibold underline" onClick={() => setPicked([])}>All rules</button>}
+    </div>
+  )
+}
+
+const DESC_FIRST: SortKey[] = ['calls', 'violations', 'avg_risk']
+
+function Leaderboard({ data, search, rules, filtered }: { data: ManagerPayload; search: string; rules: string[]; filtered: boolean }) {
+  const [sort, setSort] = useState<{ key: SortKey; desc: boolean }>({ key: 'default', desc: false })
   const cols = 'md:grid md:grid-cols-[minmax(0,2.2fr)_.6fr_.9fr_.8fr_.8fr_1.3fr_1fr] md:items-center md:gap-3'
+  // With a rule filter, only agents with a finding in the chosen rules stay, and their count covers those rules only.
+  const counts = (a: ManagerAgent) => {
+    let v = 0, r = 0
+    for (const id of rules) { if (isReviewOnly(data, id)) r += ruleCount(data, a, id); else v += ruleCount(data, a, id) }
+    return { v, r }
+  }
+  const rows = sortAgents(data.agents.filter((a) => !filtered || counts(a).v + counts(a).r > 0), sort.key, sort.desc, (a) => (filtered ? counts(a).v : a.violations))
+  const heads: [string, SortKey | null][] = [['Agent', 'name'], ['Calls', 'calls'], ['Violations', 'violations'], ['Avg risk', 'avg_risk'], ['Top rule', 'top_rule'], ['Status', 'status'], ['Risk trend', null]]
+  const click = (k: SortKey) => setSort((s) => (s.key !== k ? { key: k, desc: DESC_FIRST.includes(k) } : s.desc === DESC_FIRST.includes(k) ? { key: k, desc: !s.desc } : { key: 'default', desc: false })) // third click: back to the default order
   return (
     <section className="card min-w-0 flex-[999_1_640px] overflow-hidden" aria-labelledby="lb-h">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--mc-line)] px-6 py-4">
         <h2 id="lb-h" className="text-base font-semibold">Agent leaderboard</h2>
-        <span className="text-xs text-[var(--mc-muted)]" title={data.status_rule}>Hover or focus a status for the rule</span>
+        <label className="flex items-center gap-2 text-xs text-[var(--mc-muted)] md:hidden">
+          Sort by
+          <select
+            className="h-8 rounded-[10px] border border-[var(--mc-field)] bg-white px-2 text-[13px] font-medium text-[var(--mc-text-2)]"
+            value={sort.key} onChange={(e) => setSort({ key: e.target.value as SortKey, desc: DESC_FIRST.includes(e.target.value as SortKey) })}
+          >
+            {(Object.keys(SORT_LABEL) as SortKey[]).map((k) => <option key={k} value={k}>{SORT_LABEL[k]}</option>)}
+          </select>
+        </label>
+        <span className="hidden text-xs text-[var(--mc-muted)] md:inline" title={data.status_rule}>Click a heading to sort (a third click resets). Hover or focus a status for the rule.</span>
       </div>
-      <div className={`hidden border-b border-[var(--mc-line)] bg-[#f9fafb] px-6 py-2.5 ${cols}`} aria-hidden>
-        {['Agent', 'Calls', 'Violations', 'Avg risk', 'Top rule', 'Status', 'Risk trend'].map((h) => <span key={h} className="th">{h}</span>)}
+      <div className={`hidden border-b border-[var(--mc-line)] bg-[#f9fafb] px-6 py-2.5 ${cols}`}>
+        {heads.map(([h, k]) => k ? (
+          <span key={h} className="th" aria-sort={sort.key === k ? (sort.desc ? 'descending' : 'ascending') : 'none'}>
+            <button type="button" className="inline-flex items-center gap-1 font-[inherit] uppercase" onClick={() => click(k)}>
+              {h}{sort.key === k ? (sort.desc ? ' ▼' : ' ▲') : ''}
+            </button>
+          </span>
+        ) : <span key={h} className="th">{h}</span>)}
       </div>
+      {rows.length === 0 && <p className="px-6 py-5 text-[13.5px] text-[var(--mc-text-2)]">No agent has a finding in the chosen rules.</p>}
       <ul>
-        {data.agents.map((a) => (
-          <li key={a.id} className={`flex flex-col gap-2 border-b border-[var(--mc-line-soft)] px-6 py-3.5 last:border-b-0 ${cols}`}>
-            <Link to={`/manager/agent/${a.id}${search ? `?${search}` : ''}`} className="flex min-w-0 items-center gap-3 rounded-lg" aria-label={`${a.name}, ${a.team}: open their calls`}>
-              <Initials name={a.name} status={a.status} />
-              <span className="min-w-0">
-                <span className="block truncate text-sm font-semibold text-[var(--mc-text)]">{a.name}</span>
-                <span className="block truncate text-xs text-[var(--mc-muted)]">{a.team}</span>
-              </span>
-            </Link>
-            <Col label="Calls">{a.calls}</Col>
-            <Col label="Violations"><b className="font-semibold">{a.violations}</b></Col>
-            <Col label="Avg risk">{num(a.avg_risk)}</Col>
-            <Col label="Top rule">
-              {a.top_rule ? <span className="inline-flex h-[22px] items-center rounded-full bg-[var(--mc-line-soft)] px-2.5 text-[11px] font-bold text-[var(--mc-text-2)]" title={ruleTitle(data, a.top_rule)}>{a.top_rule}</span> : <span aria-label="none">–</span>}
-            </Col>
-            <Col label="Status"><StatusChip status={a.status} rule={data.status_rule} /></Col>
-            <Col label="Risk trend"><Spark values={a.risk_trend} status={a.status} name={a.name} /></Col>
-          </li>
-        ))}
+        {rows.map((a) => {
+          const c = counts(a)
+          return (
+            <li key={a.id} className={`flex flex-col gap-2 border-b border-[var(--mc-line-soft)] px-6 py-3.5 last:border-b-0 ${cols}`}>
+              <Link to={`/manager/agent/${a.id}${search ? `?${search}` : ''}`} className="flex min-w-0 items-center gap-3 rounded-lg" aria-label={`${a.name}, ${a.team}: open their calls`}>
+                <Initials name={a.name} status={a.status} />
+                <span className="min-w-0">
+                  <span className="block truncate text-sm font-semibold text-[var(--mc-text)]">{a.name}</span>
+                  <span className="block truncate text-xs text-[var(--mc-muted)]">{a.team}</span>
+                </span>
+              </Link>
+              <Col label="Calls">{a.calls}</Col>
+              <Col label="Violations">
+                <span><b className="font-semibold">{filtered ? c.v : a.violations}</b>{filtered && c.r > 0 && <span className="text-xs text-[var(--mc-needs-review-ink)]"> +{c.r} to review</span>}</span>
+              </Col>
+              <Col label="Avg risk">{num(a.avg_risk)}</Col>
+              <Col label="Top rule">
+                {a.top_rule ? <span className="inline-flex h-[22px] items-center rounded-full bg-[var(--mc-line-soft)] px-2.5 text-[11px] font-bold text-[var(--mc-text-2)]" title={ruleTitle(data, a.top_rule)}>{a.top_rule}</span> : <span aria-label="none">–</span>}
+              </Col>
+              <Col label="Status"><StatusChip status={a.status} rule={data.status_rule} /></Col>
+              <Col label="Risk trend"><Spark values={a.risk_trend} status={a.status} name={a.name} /></Col>
+            </li>
+          )
+        })}
       </ul>
     </section>
   )
@@ -227,27 +301,33 @@ function Col({ label, children }: { label: string; children: React.ReactNode }) 
   )
 }
 
-function ByRule({ data }: { data: ManagerPayload }) {
-  const rows = ruleIds(data).map((id) => ({ id, name: ruleTitle(data, id), count: data.rule_totals[id] ?? 0 }))
-  const summary = rows.map((r) => `${r.id} ${r.name}: ${r.count}`).join('; ')
+function ByRule({ data, rules }: { data: ManagerPayload; rules: string[] }) {
+  const rows = rules.map((id) => {
+    const review = isReviewOnly(data, id)
+    return { id, name: ruleTitle(data, id), review, count: (review ? data.review_totals : data.rule_totals)[id] ?? 0 }
+  })
+  const unit = (r: { review: boolean; count: number }) => (r.review ? `${r.count} to review` : String(r.count))
+  const summary = rows.map((r) => `${r.id} ${r.name}: ${unit(r)}`).join('; ')
+  const note = reviewNote(data)
   return (
     <section className="card flex min-w-[300px] flex-[1_1_340px] flex-col gap-3 px-6 py-5" aria-labelledby="br-h">
       <h2 id="br-h" className="text-base font-semibold">Violations by rule</h2>
-      <div role="img" aria-label={`Violations by rule. ${summary}`} className="h-[270px]">
+      <div role="img" aria-label={`Violations by rule. ${summary}`} style={{ height: Math.max(90, rows.length * 45) }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={rows} layout="vertical" margin={{ top: 0, right: 28, bottom: 0, left: 0 }} accessibilityLayer={false}>
             <XAxis type="number" hide domain={[0, 'dataMax']} />
             <YAxis type="category" dataKey="id" width={30} tick={{ ...AXIS, fontWeight: 600 }} axisLine={false} tickLine={false} />
             <Bar dataKey="count" radius={[0, 6, 6, 0]} barSize={14} isAnimationActive={false} background={{ fill: '#f2f4f7', radius: 6 }}>
-              {rows.map((r) => <Cell key={r.id} fill={barColor(r.count)} />)}
+              {rows.map((r) => <Cell key={r.id} fill={r.review ? 'var(--mc-needs-review)' : barColor(r.count)} />)}
               <LabelList dataKey="count" position="right" style={{ fontSize: 12, fontWeight: 600, fill: '#0f172a' }} />
             </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
       <ul className="grid gap-x-4 gap-y-0.5 text-xs text-[var(--mc-muted)] sm:grid-cols-2">
-        {rows.map((r) => <li key={r.id}><b className="font-semibold text-[var(--mc-text-2)]">{r.id}</b> {r.name}: {r.count}</li>)}
+        {rows.map((r) => <li key={r.id}><b className="font-semibold text-[var(--mc-text-2)]">{r.id}</b> {r.name}: {unit(r)}</li>)}
       </ul>
+      {note && rows.some((r) => r.review) && <p className="text-xs text-[var(--mc-muted)]">{note}</p>}
     </section>
   )
 }
@@ -255,7 +335,7 @@ function ByRule({ data }: { data: ManagerPayload }) {
 const cellTone = (n: number) =>
   n === 0 ? 'bg-[#f9fafb] text-[#667085]' : n === 1 ? 'bg-[#fee4e2] text-[#b42318]' : n === 2 ? 'bg-[#fda29b] text-[#7a271a]' : 'bg-[#d92d20] text-white'
 
-function Heatmap({ data }: { data: ManagerPayload }) {
+function Heatmap({ data, rules }: { data: ManagerPayload; rules: string[] }) {
   const rows = data.agents.filter((a) => a.calls)
   return (
     <section className="card flex min-w-0 flex-[1.3_1_480px] flex-col gap-3 px-6 py-5" aria-labelledby="hm-h">
@@ -267,17 +347,19 @@ function Heatmap({ data }: { data: ManagerPayload }) {
         <thead>
           <tr>
             <th scope="col" className="w-[34%] sm:w-[150px]"><span className="sr-only">Agent</span></th>
-            {ruleIds(data).map((r) => <th key={r} scope="col" className="th text-center" title={ruleTitle(data, r)}>{r}</th>)}
+            {rules.map((r) => <th key={r} scope="col" className="th text-center" title={ruleTitle(data, r)}>{r}{isReviewOnly(data, r) ? '*' : ''}</th>)}
           </tr>
         </thead>
         <tbody>
           {rows.map((a) => (
             <tr key={a.id}>
               <th scope="row" className="truncate pr-1 text-[13px] font-medium" title={a.name}>{a.name}</th>
-              {ruleIds(data).map((r) => {
-                const n = a.by_rule[r] ?? 0
+              {rules.map((r) => {
+                const review = isReviewOnly(data, r)
+                const n = ruleCount(data, a, r)
+                const tone = review ? (n ? 'bg-[var(--mc-needs-review-tint)] text-[var(--mc-needs-review-ink)]' : 'bg-[#f9fafb] text-[#667085]') : cellTone(n)
                 return (
-                  <td key={r} className={`h-[30px] rounded-lg text-center text-xs font-semibold tabular-nums ${cellTone(n)}`} aria-label={`${a.name}, ${r}: ${plural(n, 'violation')}`}>
+                  <td key={r} className={`h-[30px] rounded-lg text-center text-xs font-semibold tabular-nums ${tone}`} aria-label={`${a.name}, ${r}: ${review ? `${plural(n, 'case')} to review` : plural(n, 'violation')}`}>
                     {n}
                   </td>
                 )
@@ -286,6 +368,7 @@ function Heatmap({ data }: { data: ManagerPayload }) {
           ))}
         </tbody>
       </table>
+      {rules.some((r) => isReviewOnly(data, r)) && <p className="text-xs text-[var(--mc-muted)]">* {reviewNote(data)}</p>}
     </section>
   )
 }

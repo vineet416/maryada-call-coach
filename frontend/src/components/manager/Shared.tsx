@@ -32,6 +32,7 @@ export function Initials({ name, status }: { name: string; status: ManagerStatus
     needs_training: 'bg-[var(--mc-violation-tint)] text-[var(--mc-violation-ink)]',
     watch: 'bg-[var(--mc-advisory-tint)] text-[var(--mc-advisory-ink)]',
     excellent: 'bg-[var(--mc-good-practice-tint)] text-[var(--mc-good-practice-ink)]',
+    too_few_calls: 'bg-[var(--mc-line-soft)] text-[var(--mc-muted)]',
     no_calls: 'bg-[var(--mc-line-soft)] text-[var(--mc-muted)]',
   }
   const letters = name.split(' ').map((w) => w[0]).slice(0, 2).join('')

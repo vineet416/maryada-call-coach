@@ -219,7 +219,7 @@ export const getScenario = (id: string, signal?: AbortSignal) =>
   getJson<ScenarioDetail>(`/api/scenarios/${encodeURIComponent(id)}`, signal)
 export const getEval = (signal?: AbortSignal) => getJson<EvalPayload>('/api/eval', signal)
 
-export type ManagerStatus = 'needs_training' | 'watch' | 'excellent' | 'no_calls'
+export type ManagerStatus = 'needs_training' | 'watch' | 'excellent' | 'too_few_calls' | 'no_calls'
 export type FindingKind = 'violation' | 'advisory' | 'needs_review' | 'good_practice'
 export interface ManagerFinding { rule_id: string; kind: FindingKind; turn_idx: number; quote: string }
 export interface ManagerCall {
@@ -247,6 +247,7 @@ export interface ManagerAgent {
   avg_risk: number | null
   peak_risk: number | null
   by_rule: Record<string, number>
+  review_by_rule: Record<string, number>
   top_rule: string | null
   status: ManagerStatus
   risk_trend: number[]
@@ -272,11 +273,19 @@ export interface ManagerPayload {
   }
   agents: ManagerAgent[]
   rule_totals: Record<string, number>
+  review_totals: Record<string, number>
+  kpi_deltas: {
+    violation_rate: number
+    avg_risk: number
+    good_practice_rate: number
+    first_calls: number
+    second_calls: number
+  } | null
   by_day: { date: string; calls: number; violations: number }[]
   by_hour: { hour: number; calls: number; violations: number; r1_calls: number }[]
   attention: string[]
   calls: ManagerCall[]
-  rules: { id: string; title: string; coach_line: string }[]
+  rules: { id: string; title: string; coach_line: string; review_only: boolean }[]
   status_rule: string
 }
 export function getManager(range: { from?: string; to?: string }, signal?: AbortSignal) {
