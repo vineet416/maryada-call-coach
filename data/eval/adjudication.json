@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "reviewed_on": "2026-11-02",
+  "reviewer": "project author",
+  "scope": "the 13 extra flags of the clean full-engine run (flags on units the script labels do not mark); one reviewer; labels and labels hash unchanged",
+  "items": [
+    {"call": "c16", "turn": 5, "rule": "R3", "verdict": "real", "note": "Tells the neighbour the borrower is cheating and that neighbours should know: public shaming."},
+    {"call": "c16", "turn": 7, "rule": "R3", "verdict": "real", "note": "Asks the neighbour to make sure everyone in the society finds out: public shaming."},
+    {"call": "c29", "turn": 7, "rule": "R4", "verdict": "real", "note": "Tells a neighbour the borrower's property will be sealed tomorrow: third-party disclosure."},
+    {"call": "c14", "turn": 7, "rule": "R3", "verdict": "unsure", "note": "Threatens to seize house and vehicle by tomorrow; borderline between a threat and a stated consequence."},
+    {"call": "c28", "turn": 3, "rule": "R3", "verdict": "unsure", "note": "Rude 'tu' form and sharp tone, but no insult or threat."},
+    {"call": "c28", "turn": 7, "rule": "R3", "verdict": "unsure", "note": "'Do whatever you want' is dismissive; unclear whether it counts as abuse."},
+    {"call": "c08", "turn": 11, "rule": "R3", "verdict": "not_a_violation", "note": "Firm payment demand with a link, no abuse or threat."},
+    {"call": "c11", "turn": 11, "rule": "R5", "verdict": "not_a_violation", "note": "Accepts a smaller payment today; no false statement."},
+    {"call": "c15", "turn": 5, "rule": "R3", "verdict": "not_a_violation", "note": "Insistent but not abusive or threatening."},
+    {"call": "c15", "turn": 7, "rule": "R4", "verdict": "not_a_violation", "note": "Leaves a callback message only, which the rule allows."},
+    {"call": "c07", "turn": 11, "rule": "R3", "verdict": "not_a_violation", "note": "Polite confirmation of the payment date; the flagged quote belongs to an earlier turn."},
+    {"call": "c12", "turn": 9, "rule": "R5", "verdict": "not_a_violation", "note": "Asks for payment today; no false claim in this turn."},
+    {"call": "c13", "turn": 9, "rule": "R5", "verdict": "not_a_violation", "note": "Offers a part payment; no false claim in this turn."}
+  ]
+}
