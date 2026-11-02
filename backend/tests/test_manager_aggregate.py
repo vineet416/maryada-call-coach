@@ -46,7 +46,7 @@ def test_agent_with_no_calls_stays_listed():
 def test_empty_selection_has_no_rates():
     out = aggregate([], AGENTS)
     k = out["kpis"]
-    assert (k["calls"], k["violation_rate"], k["avg_risk"], k["good_practice_rate"]) == (0, None, None, None)
+    assert (k["calls"], k["violation_rate"], k["avg_risk"], k["clean_rate"]) == (0, None, None, None)
     assert out["by_day"] == [] and out["by_hour"] == [] and out["attention"] == []
 
 
@@ -89,7 +89,8 @@ def test_kpis_equal_sums_over_calls():
              call("c3", "A2", "2026-10-14", risk=20, hour=7, finds=[("R1", "violation", 1)])]
     out = aggregate(calls, AGENTS)
     k = out["kpis"]
-    assert (k["calls"], k["violations"], k["calls_with_violation"], k["good_practice_calls"]) == (3, 3, 2, 1)
+    assert (k["calls"], k["violations"], k["calls_with_violation"], k["clean_calls"]) == (3, 3, 2, 1)
+    assert k["clean_rate"] == 1 / 3
     assert k["avg_risk"] == round(50 / 3, 1)
     assert k["violations"] == sum(a["violations"] for a in out["agents"]) == sum(out["rule_totals"].values())
     assert sum(d["violations"] for d in out["by_day"]) == 3 and sum(d["calls"] for d in out["by_day"]) == 3
@@ -148,7 +149,7 @@ def test_kpi_deltas_need_eight_calls_in_each_half():
     assert aggregate([], AGENTS)["kpi_deltas"] is None
     d = aggregate(_batch(16, 4), AGENTS)["kpi_deltas"]
     assert d["first_calls"] == d["second_calls"] == 8
-    assert d["violation_rate"] == 0.5 and d["avg_risk"] == 20.0 and d["good_practice_rate"] == -0.5
+    assert d["violation_rate"] == 0.5 and d["avg_risk"] == 20.0 and d["clean_rate"] == -0.5
     assert aggregate(_batch(16, 4), AGENTS, "2026-10-20", None)["kpi_deltas"] is None  # a narrower range can drop them
 
 
