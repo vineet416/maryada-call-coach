@@ -150,7 +150,8 @@ async def _visitor_creds(body: StartBody) -> Creds | None:
     if body.credentials is None:
         return None
     c = body.credentials
-    if not c.gnani.api_key.get_secret_value().strip() or not c.llm.api_key.get_secret_value().strip()             or not c.llm.base_url.strip() or not c.llm.model.strip():
+    if not (c.gnani.api_key.get_secret_value().strip() and c.llm.api_key.get_secret_value().strip()
+            and c.llm.base_url.strip() and c.llm.model.strip()):
         raise _err(400, "keys_required", KEYS_MSG)
     await _checked_url(c.llm.base_url.strip())
     return Creds.from_body(c)
@@ -159,12 +160,12 @@ async def _visitor_creds(body: StartBody) -> Creds | None:
 async def _create_mic_session(body: StartBody) -> dict:
     if not settings.speak_live_enabled:
         raise _err(403, "speak_live_off", "Speak live is not available yet.")
-    creds = await _visitor_creds(body)
-    if creds is None and not settings.server_keys:
-        raise _err(400, "keys_required", KEYS_MSG)
     clock = None
     if body.clock is not None and (clock := mic_rules.valid_clock(body.clock)) is None:
         raise _err(400, "bad_clock", "The clock must look like 14:30.")
+    creds = await _visitor_creds(body)
+    if creds is None and not settings.server_keys:
+        raise _err(400, "keys_required", KEYS_MSG)
     try:
         s = mic.new_mic_session(creds, clock)
     except mic.MicUnavailable as e:

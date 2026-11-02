@@ -239,29 +239,34 @@ class _MicCall:
 
         failed = False
         try:
-            async for seg in _segments(None, audio, load_profile("agent"), self.key, self.gate, label=f"turn {idx}",
-                                       turn_started_at=started_at):
-                (await current()).on_segment(seg)
-        except SttAuthError as e:
-            log.warning("session=%s gnani key rejected: %s", s.id, e)
-            s.log.emit("error", {"code": "gnani_key_rejected", "retryable": False, "message_user":
-                                 "Your Gnani key was rejected. Check it in Settings. Your report so far is available."})
-            self.fatal = True
-        except SttError as e:
-            failed = True
-            log.warning("session=%s turn %d: speech recognition failed (%s)", s.id, idx, e)
-        turn = await current()
-        if turn.text:
-            self.failed_in_a_row = 0
-            self.history.append(Turn(speaker="A", text=turn.text))
-            self.agent_turns += 1
-            if reminder_due(self.agent_turns, self.ctx.answered_by, self.m.reminded):
-                self.m.reminded = True
-                self._reminder(idx)
-        elif failed:
-            self._speech_gap()
-        self.closing.append(asyncio.create_task(self._close(turn, idx, self.closing[-1] if self.closing else None)))
-        done.set()
+            try:
+                async for seg in _segments(None, audio, load_profile("agent"), self.key, self.gate, label=f"turn {idx}",
+                                           turn_started_at=started_at):
+                    (await current()).on_segment(seg)
+            except SttAuthError as e:
+                log.warning("session=%s gnani key rejected: %s", s.id, e)
+                s.log.emit("error", {"code": "gnani_key_rejected", "retryable": False, "message_user":
+                                     "Your Gnani key was rejected. Check it in Settings. Your report so far is available."})
+                self.fatal = True
+            except SttError as e:
+                failed = True
+                log.warning("session=%s turn %d: speech recognition failed (%s)", s.id, idx, e)
+            except Exception:  # noqa: BLE001 - one bad turn must not stop the next turn from being processed
+                failed = True
+                log.exception("session=%s turn %d: unexpected failure", s.id, idx)
+            turn = await current()
+            if turn.text:
+                self.failed_in_a_row = 0
+                self.history.append(Turn(speaker="A", text=turn.text))
+                self.agent_turns += 1
+                if reminder_due(self.agent_turns, self.ctx.answered_by, self.m.reminded):
+                    self.m.reminded = True
+                    self._reminder(idx)
+            elif failed:
+                self._speech_gap()
+            self.closing.append(asyncio.create_task(self._close(turn, idx, self.closing[-1] if self.closing else None)))
+        finally:
+            done.set()  # the next turn never waits for a turn that failed
 
     def _speech_gap(self) -> None:
         self.failed_in_a_row += 1
