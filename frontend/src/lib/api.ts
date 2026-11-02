@@ -126,8 +126,32 @@ export interface LatencyRow {
   p50_ms: number | null
   p95_ms: number | null
 }
+export interface ReviewView {
+  flags: number
+  correct_original: number
+  correct_low: number
+  correct_high: number
+  extras_real: number
+  extras_unsure: number
+  extras_not_a_violation: number
+  precision_original: number | null
+  precision_low: number | null
+  precision_high: number | null
+  recall: number | null
+}
+export interface ReviewGroup {
+  strict: ReviewView
+  with_review: ReviewView
+}
+export interface EvalReview {
+  reviewer: string | null
+  reviewed_on: string | null
+  items: { call: string; turn: number; rule: string; verdict: string; note: string }[]
+  adjusted: Record<string, { all?: ReviewGroup; held_out?: ReviewGroup }>
+}
 export interface EvalPayload {
   results: EvalResults | null
+  review: EvalReview | null
   latency: { calls: string[]; rows: LatencyRow[]; method: string }
 }
 
