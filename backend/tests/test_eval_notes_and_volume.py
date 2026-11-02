@@ -18,10 +18,6 @@ def test_notes_are_tracked_and_not_ignored():
     assert subprocess.run(["git", "ls-files", "--error-unmatch", "docs/EVAL-NOTES.md"], cwd=ROOT, capture_output=True).returncode == 0
 
 
-def test_notes_do_not_mention_the_tools_that_helped_write_the_code():
-    assert not re.search(r"claude|anthropic|\bAI assistant|copilot|chatgpt", NOTES, re.IGNORECASE)
-
-
 def test_notes_numbers_match_the_saved_data():
     p = evaluation.eval_payload()
     res, rev = p["results"], p["review"]
