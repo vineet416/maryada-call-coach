@@ -95,8 +95,9 @@ export function LiveCall() {
 
   /** Create the session and open the socket. Called from the Start click, which also unlocks audio. */
   const begin = useCallback(
-    async (mode: Mode) => {
+    async (requested: Mode) => {
       if (!scenario) return
+      const mode: Mode = LIVE_CALLS_ENABLED ? requested : 'replay' // a keyed live run cannot start while it is switched off
       setWanted(mode)
       audio.unlock()
       setError(null)

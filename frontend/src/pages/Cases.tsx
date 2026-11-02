@@ -198,7 +198,7 @@ function ModeCard({ featured, icon, title, chip, text, action }: { featured?: bo
         <span className={`flex h-8 w-8 items-center justify-center rounded-full ${featured ? 'bg-[var(--mc-accent)] text-white' : 'bg-[#f2f4f7] text-[#475467]'}`}>{icon}</span>
         <span className={`chip h-6 text-[11.5px] ${featured ? 'chip-ok' : ''}`}>{chip}</span>
       </div>
-      <h2 className="text-base font-semibold tracking-tight">{title}</h2>
+      <h3 className="text-base font-semibold tracking-tight">{title}</h3>
       <p className="text-[13.5px] leading-relaxed text-[var(--mc-muted)]">{text}</p>
       <div className="mt-auto pt-1">{action}</div>
     </article>
