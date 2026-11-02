@@ -1,0 +1,174 @@
+{
+ "schema": 1,
+ "call_id": "c03",
+ "condition": "snr10",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "1d00a71c99b73ca1"
+ },
+ "stt": {
+  "requests": 11,
+  "cached": 0,
+  "latency_ms": 5138,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 5,
+  "cache_hits": 0,
+  "skipped": 1,
+  "degraded": 0,
+  "tokens": 4362
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Good afternoon, मीना जगताप जी।",
+   "stt_ms": 349,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "जी बोलिए।",
+   "stt_ms": 426,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "मैं नेहा बोल रही हूँ। तारंग Finserv से call recorded है quality purpose के लिए।",
+   "stt_ms": 482,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ, क्या हुआ?",
+   "stt_ms": 260,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "मैडम, हमारे system में आपकी 4,800 की EMI अभी भी pending दिख रही है, तीन दिन हो गए, payment कब तक आएगा?",
+   "stt_ms": 504,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "अरे, मैंने तो कल ही online भर दिया है, UPI से किया था, पैसा मेरे account से कट भी गया, receipt भी आई है मेरे को।",
+   "stt_ms": 697,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "ओ अच्छा, शायद update होने में time लग रहा है, कभी-कभी 2-3 दिन लग जाते हैं, आप transaction ID बता सकती हैं? मैं अभी check कर लेती हूँ।",
+   "stt_ms": 411,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "हाँ, एक मिनट। मैसेज में है। मैं अभी WhatsApp पर भेज देती हूँ screenshot के साथ।",
+   "stt_ms": 452,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "मिल गया madam payment आ गया है। बस system में update नहीं हुआ था। मैं अभी update करवा देती हूँ। आपको कोई penalty नहीं लगेगी। disturb करने के लिए sorry।",
+   "stt_ms": 560,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "कोई बात नहीं madam, बस यह update जल्दी कर दो। बार-बार message आ रहा है।",
+   "stt_ms": 527,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "हो जाएगा madam आज ही okay bye",
+   "stt_ms": 470,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c03",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Good afternoon, मीना जगताप जी।"
+  },
+  {
+   "call": "c03",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मैं नेहा बोल रही हूँ।"
+  },
+  {
+   "call": "c03",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "तारंग Finserv से call recorded है quality purpose के लिए।"
+  },
+  {
+   "call": "c03",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मैडम, हमारे system में आपकी 4,800 की EMI अभी भी pending दिख रही है, तीन दिन हो गए, payment कब तक आएगा?"
+  },
+  {
+   "call": "c03",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "ओ अच्छा, शायद update होने में time लग रहा है, कभी-कभी 2-3 दिन लग जाते हैं, आप transaction ID बता सकती हैं?"
+  },
+  {
+   "call": "c03",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "आपको कोई penalty नहीं लगेगी।"
+  },
+  {
+   "call": "c03",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "disturb करने के लिए sorry।"
+  }
+ ],
+ "completed_at": "2026-11-02T05:32:13+00:00"
+}
