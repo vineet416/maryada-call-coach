@@ -58,7 +58,7 @@ export function CallReport() {
   useEffect(() => {
     if (state.kind === 'ready') {
       window.scrollTo(0, 0)
-      if (lastInputKeyboard) heading.current?.setAttribute('data-kbd', '')
+      heading.current?.toggleAttribute('data-kbd', lastInputKeyboard)
       heading.current?.focus({ preventScroll: true })
     }
   }, [state.kind])
@@ -139,7 +139,7 @@ export function CallReport() {
               <span aria-hidden>/</span>
               <span aria-current="page">Call report</span>
             </nav>
-            <h1 ref={heading} tabIndex={-1} className="text-xl font-semibold leading-tight tracking-tight outline-none sm:text-2xl">{scenario.title}</h1>
+            <h1 ref={heading} tabIndex={-1} className="text-xl font-semibold leading-tight tracking-tight sm:text-2xl">{scenario.title}</h1>
             <p className="flex flex-wrap items-center gap-2 text-[13px] text-[var(--mc-muted)]">
               {recorded && <ModeBadge mode="replay" status="ended" />}
               <span>{subline.join(' · ')}</span>
