@@ -36,6 +36,9 @@ Keys come from environment variables only (`.env` is git-ignored; use `.env.exam
 ## Git
 One feature branch per phase, named as in docs/07 (e.g. `feat/rule-engine`); never commit straight to main. Commit small via `/commit`; `/commit` runs a quick check; before a PR run `/verify` (full checks + every acceptance criterion in docs/07 + spec review). Only a passing `/verify` allows the PR and merge (a hook enforces it). After the merge STOP: run `/report phase` and wait; never start the next phase until the user says so. Branch names, commits and PR text describe the change and NEVER contain "phase", "day" or step numbers; no Co-Authored-By, "Generated with" or session links (settings and a hook enforce both). Never force-push.
 
+## Commit and PR style
+Conventional Commits: `feat`, `fix`, `chore`, `docs`, `test`, `refactor`, with an optional scope, e.g. `fix(ws): ping every 15 s`. Imperative mood, subject 72 characters or less, one logical change per commit, details in the body. The PR title uses the same style. PRs are squash-merged (`gh pr merge --squash`), so each PR lands on main as one commit titled like the PR title. The Git rules above still apply (no "phase", "day" or step numbers; no attribution lines; `/verify` must pass before any PR; stop after the merge with a report).
+
 ## Where to look (git-ignored specs: Read by exact path; Grep/Glob skip them)
 - docs/00 scope, cut list | 01 architecture, env vars, deploy | 02 API/WS events, SQLite | 03 rules engine, risk weights
 - docs/05 frontend spec, never-stuck states | 06 spike and evaluation | 07 day-by-day plan | 08 Settings/BYOK
