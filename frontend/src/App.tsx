@@ -1,7 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { Disclaimer } from '@/components/Disclaimer'
 import { TopBar } from '@/components/TopBar'
-import { Cases, Evaluation, HowItWorks, LiveCall, Manager, NotFound, Settings } from '@/pages/Pages'
+import { Cases, Evaluation, HowItWorks, LiveCall, Manager, ManagerAgent, NotFound, Settings } from '@/pages/Pages'
 
 /** The call page fits one laptop screen (see .shell-call); every other page scrolls normally. */
 function Shell() {
@@ -14,6 +14,7 @@ function Shell() {
           <Route path="/" element={<Cases />} />
           <Route path="/call/:id" element={<LiveCall />} />
           <Route path="/manager" element={<Manager />} />
+          <Route path="/manager/agent/:id" element={<ManagerAgent />} />
           <Route path="/eval" element={<Evaluation />} />
           <Route path="/evaluation" element={<Navigate to="/eval" replace />} />
           <Route path="/how" element={<HowItWorks />} />

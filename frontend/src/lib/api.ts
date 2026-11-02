@@ -176,9 +176,11 @@ export interface SessionStart {
 /** A failure shown to the user as a friendly card (never raw JSON). */
 export class ApiError extends Error {
   retryable: boolean
-  constructor(message: string, retryable = true) {
+  code: string
+  constructor(message: string, retryable = true, code = '') {
     super(message)
     this.retryable = retryable
+    this.code = code
   }
 }
 
@@ -186,15 +188,17 @@ async function parse<T>(res: Response): Promise<T> {
   if (res.ok) return (await res.json()) as T
   let message = 'Something went wrong on the server. Please try again.'
   let retryable = res.status >= 500
+  let code = ''
   try {
     const body = await res.json()
     const e = body?.detail?.error ?? body?.error
     if (e?.message_user) message = e.message_user
     if (typeof e?.retryable === 'boolean') retryable = e.retryable
+    if (typeof e?.code === 'string') code = e.code
   } catch {
     /* keep the friendly default */
   }
-  throw new ApiError(message, retryable)
+  throw new ApiError(message, retryable, code)
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -214,6 +218,82 @@ export const getScenarios = (signal?: AbortSignal) => getJson<ScenarioSummary[]>
 export const getScenario = (id: string, signal?: AbortSignal) =>
   getJson<ScenarioDetail>(`/api/scenarios/${encodeURIComponent(id)}`, signal)
 export const getEval = (signal?: AbortSignal) => getJson<EvalPayload>('/api/eval', signal)
+
+export type ManagerStatus = 'needs_training' | 'watch' | 'excellent' | 'too_few_calls' | 'no_calls'
+export type FindingKind = 'violation' | 'advisory' | 'needs_review' | 'good_practice'
+export interface ManagerFinding { rule_id: string; kind: FindingKind; turn_idx: number; quote: string }
+export interface ManagerCall {
+  call_id: string
+  title: string
+  agent_id: string
+  call_date: string
+  call_time: string
+  hour: number
+  risk_peak: number
+  findings: ManagerFinding[]
+  has_replay: boolean
+}
+export interface ManagerAgent {
+  id: string
+  name: string
+  team: string
+  calls: number
+  violations: number
+  serious_violations: number
+  calls_with_violation: number
+  advisories: number
+  needs_review: number
+  good_practice: number
+  avg_risk: number | null
+  peak_risk: number | null
+  by_rule: Record<string, number>
+  review_by_rule: Record<string, number>
+  top_rule: string | null
+  status: ManagerStatus
+  risk_trend: number[]
+  first_half_vs_second_half: { first: number; second: number; calls_first: number; calls_second: number }
+  training_flag: boolean
+  training_topics: string[]
+}
+export interface ManagerPayload {
+  generated_at: string | null
+  batch_label: string | null
+  source: { mode: 'full' | 'rules_only'; condition: string; note: string }
+  range: { from: string | null; to: string | null; first_day: string | null; last_day: string | null }
+  n_calls: number
+  kpis: {
+    calls: number
+    agents: number
+    violations: number
+    calls_with_violation: number
+    violation_rate: number | null
+    avg_risk: number | null
+    good_practice_calls: number
+    good_practice_rate: number | null
+  }
+  agents: ManagerAgent[]
+  rule_totals: Record<string, number>
+  review_totals: Record<string, number>
+  kpi_deltas: {
+    violation_rate: number
+    avg_risk: number
+    good_practice_rate: number
+    first_calls: number
+    second_calls: number
+  } | null
+  by_day: { date: string; calls: number; violations: number }[]
+  by_hour: { hour: number; calls: number; violations: number; r1_calls: number }[]
+  attention: string[]
+  calls: ManagerCall[]
+  rules: { id: string; title: string; coach_line: string; review_only: boolean }[]
+  status_rule: string
+}
+export function getManager(range: { from?: string; to?: string }, signal?: AbortSignal) {
+  const q = new URLSearchParams()
+  if (range.from) q.set('from', range.from)
+  if (range.to) q.set('to', range.to)
+  return getJson<ManagerPayload>(`/api/manager${q.size ? `?${q}` : ''}`, signal)
+}
 export const getRules = (signal?: AbortSignal) => getJson<Rule[]>('/api/rules', signal)
 export interface Credentials {
   gnani: { api_key: string }

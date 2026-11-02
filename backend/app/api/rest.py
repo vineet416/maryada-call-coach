@@ -5,12 +5,13 @@ from pathlib import Path
 from typing import Literal
 
 import httpx2 as httpx
-from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, HTTPException, Query, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field, SecretStr
 
 from .. import db, evaluation, replay
 from ..config import log, settings
+from ..manager import data as manager_data
 from ..models import Health
 from ..rules import llm
 from ..rules.loader import load_rules
@@ -72,6 +73,21 @@ def list_rules() -> list[dict]:
 def get_eval() -> dict:
     """Committed evaluation results (null when none are published) and time-to-flag statistics from the recordings."""
     return evaluation.eval_payload()
+
+
+@router.get("/api/manager")
+def get_manager(from_: str | None = Query(None, alias="from"), to: str | None = None) -> dict:
+    """Team compliance over the saved batch, optionally limited to calls dated from..to (ISO dates, inclusive)."""
+    try:
+        start, end = manager_data.parse_day(from_), manager_data.parse_day(to)
+    except ValueError:
+        raise _err(400, "bad_date", "Dates must look like 2026-10-24.") from None
+    if start and end and start > end:
+        raise _err(400, "bad_range", "The start date is after the end date.")
+    out = manager_data.manager_payload(start, end)
+    if out is None:
+        raise _err(404, "no_manager_data", "The team data file has not been built yet.")
+    return out
 
 
 class StartBody(BaseModel):

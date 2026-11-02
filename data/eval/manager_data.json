@@ -1,0 +1,2253 @@
+{
+ "generated_at": "2026-11-02T06:54:59+00:00",
+ "batch_label": "30 synthetic calls, 8 fictional agents, clean audio",
+ "source": {
+  "mode": "full",
+  "condition": "clean",
+  "note": "These numbers are what Maryada's engine (phrase checks and a language model) detected on the 30 synthetic calls, played on clean audio, grouped by the fictional agent persona each call is assigned to. They are not real agents and not the dataset labels."
+ },
+ "n_calls": 30,
+ "roster": [
+  {
+   "id": "A1",
+   "name": "Amit Kulkarni",
+   "team": "Pune Collections"
+  },
+  {
+   "id": "A2",
+   "name": "Neha Deshmukh",
+   "team": "Pune Collections"
+  },
+  {
+   "id": "A3",
+   "name": "Rohit Jadhav",
+   "team": "Mumbai Collections"
+  },
+  {
+   "id": "A4",
+   "name": "Priya Shinde",
+   "team": "Mumbai Collections"
+  },
+  {
+   "id": "A5",
+   "name": "Sandeep More",
+   "team": "Nashik Collections"
+  },
+  {
+   "id": "A6",
+   "name": "Kavita Pawar",
+   "team": "Nashik Collections"
+  },
+  {
+   "id": "A7",
+   "name": "Vikram Salunke",
+   "team": "Pune Collections"
+  },
+  {
+   "id": "A8",
+   "name": "Pooja Gaikwad",
+   "team": "Mumbai Collections"
+  }
+ ],
+ "calls": [
+  {
+   "call_id": "c01",
+   "title": "Salary delay, polite follow-up",
+   "agent_id": "A2",
+   "call_date": "2026-10-12",
+   "call_time": "10:30",
+   "hour": 10,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "नमस्ते, सुरेश भोसले बोल रहे हैं।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "मैं नेहा तारंग फिनसर्व से। यह call quality और training के लिए record हो रही है।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "सुरेश जी, आपकी 6,200 रुपये की EMI bounce हुई थी, 12 दिन से pending है, penalty भी लग रही है, कब तक हो जाएगा?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "तो salary आते ही payment हो जाएगा ना?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "मैं note कर लेती हूँ और SMS भेज देती हूँ"
+    }
+   ]
+  },
+  {
+   "call_id": "c02",
+   "title": "Late fee explained, politely",
+   "agent_id": "A7",
+   "call_date": "2026-10-13",
+   "call_time": "11:05",
+   "hour": 11,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "अनिल जी, विक्रम बोल रहा हूँ Starlink Finserv से। यह call record हो रही है quality और training के लिए।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "आपकी 12,500 रुपये की EMI दो हफ्ते से अटकी हुई है, एक बार bounce भी हो चुकी है, आप भर कब रहे हैं?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "agreement के हिसाब से late होने पर late fees लगती है और credit score पर भी असर पड़ता है"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "कोशिश नहीं sir, मेरे को एक date चाहिए Friday या Saturday कौन सा ठीक रहेगा?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 11,
+     "quote": "अगर आसानी चाहिए तो EMI date change करने का option भी देख सकते हैं।"
+    }
+   ]
+  },
+  {
+   "call_id": "c03",
+   "title": "Borrower already paid",
+   "agent_id": "A2",
+   "call_date": "2026-10-20",
+   "call_time": "16:10",
+   "hour": 16,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "Good afternoon, Meena Jagtap ji."
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "मैं नेहा बोल रही हूँ। सारंग Finserv से call recorded है quality purpose के लिए।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "मैडम, हमारे system में आपकी 4,800 की EMI अभी भी pending दिख रही है, तीन दिन हो गए, payment कब तक आएगा?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "ओ अच्छा, शायद update होने में time लग रहा है, कभी-कभी 2-3 दिन लग जाते हैं, आप transaction ID बता सकती हैं? मैं अभी check कर लेती हूँ।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "मिल गया madam payment आ गया है। बस system में update नहीं हुआ था।"
+    }
+   ]
+  },
+  {
+   "call_id": "c04",
+   "title": "Honest mention of a possible notice",
+   "agent_id": "A7",
+   "call_date": "2026-10-22",
+   "call_time": "12:40",
+   "hour": 12,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "दिनेश जी, विक्रम बोल रहा हूँ, तारंग फिनसर्व से।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "आपके business loan की 8,000 की EMI दो महीने से बाकी है"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "लेकिन अभी हम चाहते हैं कि आपके साथ मिलकर कोई option निकाल लें"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "ठीक है sir, महीने के end तक आधा amount और बाकी next month, यह मैं note कर लेता हूँ, मैं reminder भेज दूंगा, thank you।"
+    }
+   ]
+  },
+  {
+   "call_id": "c05",
+   "title": "Firm early-morning reminder",
+   "agent_id": "A7",
+   "call_date": "2026-10-24",
+   "call_time": "09:15",
+   "hour": 9,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "Good morning संतोष जी।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "संतोष वाघ जी, विक्रम बोल रहा हूँ, तारंगफिनसर्व से। ध्यान रहे, यह call record की जा रही है।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "आपकी two wheeler loan की 4,800 की EMI due date से पाँच दिन ऊपर चल रही है SMS भी भेजा था देखा आपने please आज payment कर दीजिए।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "ठीक है sir, दो दिन का time दे देता हूँ, लेकिन please परसों तक जरूर कर दीजिए, नहीं तो late fees बढ़ जाएगी और credit score पे भी असर पड़ेगा, परसों कितने बजे तक हो जाएगा?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "अच्छा अच्छा, परसों सुबह मैं परसों एक reminder भेज दूंगा, okay sir।"
+    }
+   ]
+  },
+  {
+   "call_id": "c06",
+   "title": "The threat that broke two RBI rules",
+   "agent_id": "A3",
+   "call_date": "2026-10-14",
+   "call_time": "11:20",
+   "hour": 11,
+   "risk_peak": 65,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    65,
+    55,
+    45
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "मैं रोहित बोल रहा हूँ।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "स्मिता जी, आपके personal loan की 2 EMI pending हैं, दोनों बार bounce हो गई हैं, ऊपर से penalty भी लग रही है, आप payment कब कर रही हैं?"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "मोहल्ले में सबको बता"
+    },
+    {
+     "rule_id": "R5",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "तो police को भेजूंगा आपके घर।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "Friday तक कितना कर सकती हैं?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 11,
+     "quote": "बाकी का plan next month से मैं system में note कर देता हूँ."
+    }
+   ]
+  },
+  {
+   "call_id": "c07",
+   "title": "Insult over a late payment",
+   "agent_id": "A6",
+   "call_date": "2026-10-15",
+   "call_time": "15:00",
+   "hour": 15,
+   "risk_peak": 60,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    30,
+    60,
+    50
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "नमस्ते"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "मैं कविता सारंग Finserve से।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "महेश जी, shop loan की 9,500 की EMI तीन हफ्ते से pending है, दो बार bounce हो चुकी है, ऊपर से penalty लग रही है, payment कब करेंगे?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "मुझे date चाहिए, गोल गोल जवाब नहीं चलेगा"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "आपको शर्म नहीं आती,"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 9,
+     "quote": "भागने का सोचना भी मत,"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 11,
+     "quote": "ठीक है Friday को 5,000 पक्का मैं नोट कर लेती हूँ UPI से कर देना।"
+    }
+   ]
+  },
+  {
+   "call_id": "c08",
+   "title": "Name-calling and a family threat",
+   "agent_id": "A3",
+   "call_date": "2026-10-16",
+   "call_time": "14:30",
+   "hour": 14,
+   "risk_peak": 90,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    30,
+    60,
+    90
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "विनोद जी, रोहित बोल रहा हूँ, सारंग Finserv से।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "और ध्यान रहे, यह call record की जा रही है, सीधी बात पर आता हूँ।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "7,200 की EMI एक महीने से pending है, bounce भी हो चुकी है और penalty चढ़ रही है, पैसा कब आएगा?"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "आप बेवकूफ हो क्या?"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 9,
+     "quote": "निकम्मे"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 11,
+     "quote": "SMS पे link आ जाएगा"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 11,
+     "quote": "जो करना है करो"
+    }
+   ]
+  },
+  {
+   "call_id": "c09",
+   "title": "Shaming a borrower in front of neighbours",
+   "agent_id": "A6",
+   "call_date": "2026-10-18",
+   "call_time": "17:20",
+   "hour": 17,
+   "risk_peak": 36,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    30,
+    36,
+    26
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "मैं कविता बोल रही हूँ Starung Finserv से और यह call record हो रही है quality और training के लिए।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "आज payment कब तक हो जाएगा?"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "हिम्मत नहीं है क्या?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "तो पैसा दो ना कल सुबह तक चाहिए वरना देखें ना"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "needs_review",
+     "turn_idx": 9,
+     "quote": "कल सुबह तक चाहिए"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 11,
+     "quote": "मैं SMS भेज रही हूँ।"
+    }
+   ]
+  },
+  {
+   "call_id": "c10",
+   "title": "Mild sarcasm (early-career slip)",
+   "agent_id": "A4",
+   "call_date": "2026-10-13",
+   "call_time": "13:10",
+   "hour": 13,
+   "risk_peak": 30,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    30,
+    20
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "गणेश चौहान जी, मैं प्रिया सारंग Finserv से, इस call की recording हो रही है training के लिए।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "आपकी 7,000 की EMI 15 दिन से pending है, bounce हो गई थी, reminder भी भेजा था, payment कब कर रहे हैं?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "मुझे पक्की date चाहिए sir, गोल-गोल जवाब से कुछ नहीं होता"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "आप लोग हमेशा अगले हफ्ते बोलते हो"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 9,
+     "quote": "कैसे इंसान हैं आप,"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 11,
+     "quote": "अच्छा ठीक है अगले Tuesday को आधा पक्का मैं reminder भेज दूंगी।"
+    }
+   ]
+  },
+  {
+   "call_id": "c11",
+   "title": "Fake arrest warrant",
+   "agent_id": "A3",
+   "call_date": "2026-10-19",
+   "call_time": "12:00",
+   "hour": 12,
+   "risk_peak": 100,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    35,
+    70,
+    100
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "नमस्ते किरण सावन जी।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "रोहित बोल रहा हूँ तारंग फिनसर्व से और call recorded है quality purpose के लिए।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "penalty भी चढ़ रही है"
+    },
+    {
+     "rule_id": "R5",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "arrest warrant"
+    },
+    {
+     "rule_id": "R5",
+     "kind": "violation",
+     "turn_idx": 9,
+     "quote": "वारंट रुक सकता"
+    },
+    {
+     "rule_id": "R5",
+     "kind": "violation",
+     "turn_idx": 11,
+     "quote": "ठीक है आज ही करो 2,300 भी चलेगा बस आज हो जाए।"
+    }
+   ]
+  },
+  {
+   "call_id": "c12",
+   "title": "Pretending to speak for the RBI",
+   "agent_id": "A6",
+   "call_date": "2026-10-21",
+   "call_time": "10:45",
+   "hour": 10,
+   "risk_peak": 35,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    35,
+    25,
+    15
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "कविता बोल रही हूँ। सारंग Finserv से madam। एक minute। यह line recorded है।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "रेखा जी, आपकी 6,000 की EMI 25 दिन से pending है, एक बार bounce भी हुई, आप कब तक भर पाएंगी?"
+    },
+    {
+     "rule_id": "R5",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "मैं RBI की तरफ से भी बोल रही हूँ"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "हाँ madam, इसलिए आज ही भर दीजिए, थोड़ा भी भर दो तो चलेगा"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 11,
+     "quote": "ठीक है कल शाम तक पक्का UPI से कर देना।"
+    }
+   ]
+  },
+  {
+   "call_id": "c13",
+   "title": "Invented daily penalty",
+   "agent_id": "A1",
+   "call_date": "2026-10-17",
+   "call_time": "15:40",
+   "hour": 15,
+   "risk_peak": 35,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    35,
+    25,
+    15
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "राजेश जी, अमित बोल रहा हूँ, तारंग फिनसर्व से।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "यह call recorded है quality purpose के लिए।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "4,200 की EMI 10 दिन से pending है SMS भी भेजा था आप कब दे रहे हैं।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "Friday तक, पक्का ना?"
+    },
+    {
+     "rule_id": "R5",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "अगर Friday तक नहीं दिया तो हर दिन 5,000 रुपये penalty लगेगी और यह RBI का rule है।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "इसलिए Friday से पहले कर दीजिए sir, आज कल में हो जाए तो best है, पूरा नहीं हो तो थोड़ा अभी कर दो बाकी Friday को।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 11,
+     "quote": "payment link अभी WhatsApp पर भेज रहा हूँ"
+    }
+   ]
+  },
+  {
+   "call_id": "c14",
+   "title": "Threat to seize house and car tomorrow",
+   "agent_id": "A5",
+   "call_date": "2026-10-23",
+   "call_time": "16:55",
+   "hour": 16,
+   "risk_peak": 100,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    65,
+    100,
+    90
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "Hello निलेश जी, संदीप बोल रहा हूँ तारंग Finserv से।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "यह call record की जा रही है।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "दो reminder भेज चुका हूँ, कब तक हो जाएगी?"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "मेरे को रोज यही सुनना पड़ता है"
+    },
+    {
+     "rule_id": "R5",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "अगर कल तक payment नहीं आया तो कल ही हमारी team आपका घर और गाड़ी seize कर लेगी"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "जल्दी payment कीजिए, आज शाम तक जितना हो सके उतना"
+    },
+    {
+     "rule_id": "R5",
+     "kind": "violation",
+     "turn_idx": 9,
+     "quote": "notice की जरूरत नहीं है अब"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 11,
+     "quote": "Okay, कल सुबह दोबारा call करूंगा, तब तक कुछ आ जाना चाहिए।"
+    }
+   ]
+  },
+  {
+   "call_id": "c15",
+   "title": "Debt disclosed to the borrower's wife",
+   "agent_id": "A3",
+   "call_date": "2026-10-25",
+   "call_time": "11:30",
+   "hour": 11,
+   "risk_peak": 100,
+   "risk_by_turn": [
+    0,
+    0,
+    65,
+    100,
+    90
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "Hello, ये हेमंत जोशी जी का number है?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "रोहित बोल रहा हूँ। तारंग Finserv से call record हो रही है।"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 5,
+     "quote": "मुझे उनसे बात करनी ही पड़ेगी।"
+    },
+    {
+     "rule_id": "R4",
+     "kind": "violation",
+     "turn_idx": 5,
+     "quote": "आपके पति ने Taran Singh Service से loan लिया था और 6 महीने से EMI नहीं भर रहे, total 20,000 रुपये बाकी हैं"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "आज शाम तक कर लें तो अच्छा है।"
+    },
+    {
+     "rule_id": "R4",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "रोहित का phone आया था"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "ठीक है madam, मैं शाम को एक बार दोबारा call करूँगा।"
+    }
+   ]
+  },
+  {
+   "call_id": "c16",
+   "title": "Shaming through the neighbour",
+   "agent_id": "A6",
+   "call_date": "2026-10-24",
+   "call_time": "13:20",
+   "hour": 13,
+   "risk_peak": 100,
+   "risk_by_turn": [
+    0,
+    0,
+    65,
+    100,
+    90
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "Hello, ये आनंद दलवी जी का number है?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "मैं कविता सारंग Finserv से call recorded है।"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 5,
+     "quote": "धोखा दे रहा है, पैसा वापस नहीं करता, सब पड़ोसी जान लें तो अच्छा है"
+    },
+    {
+     "rule_id": "R4",
+     "kind": "violation",
+     "turn_idx": 5,
+     "quote": "आप उनको बता देना कि आनंद ने loan लिया है"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "आप बोल देना उनकी society में सबको पता चलना चाहिए।"
+    },
+    {
+     "rule_id": "R4",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "सबको पता चलना चाहिए।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "Okay, मैं उनको कल दोबारा call करती हूँ।"
+    }
+   ]
+  },
+  {
+   "call_id": "c17",
+   "title": "Amount revealed to the spouse",
+   "agent_id": "A8",
+   "call_date": "2026-10-19",
+   "call_time": "14:00",
+   "hour": 14,
+   "risk_peak": 70,
+   "risk_by_turn": [
+    0,
+    0,
+    35,
+    70,
+    60
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "नमस्ते, सचिन लाड जी हैं।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "सचिन जी कब तक आएंगे?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "penalty भी लग रही है"
+    },
+    {
+     "rule_id": "R4",
+     "kind": "violation",
+     "turn_idx": 5,
+     "quote": "overdue"
+    },
+    {
+     "rule_id": "R4",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "हाँ madam, आप उनको बोल दीजिए कि इस हफ्ते तक कुछ payment कर दें, मुझे एक date मिल जाए तो मैं system में note कर लूंगी."
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "मैं शाम को 7:30 बजे दोबारा कॉल करूँगी।"
+    }
+   ]
+  },
+  {
+   "call_id": "c18",
+   "title": "Asks for the borrower, says nothing about the loan",
+   "agent_id": "A1",
+   "call_date": "2026-10-16",
+   "call_time": "12:15",
+   "hour": 12,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "Hello, प्रमोद जी हैं?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "नमस्ते madam, अमित बोल रहा हूँ तारंगफिनसर्व से, एक minute, यह line recorded है"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "आप बस इतना बता दीजिए कि अमित का phone आया था और वो इस number पर वापस call कर लें।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "बस एक जरूरी call है और वो उनसे ही discuss करनी है"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "जी madam यही number है"
+    }
+   ]
+  },
+  {
+   "call_id": "c19",
+   "title": "Call at 07:40",
+   "agent_id": "A1",
+   "call_date": "2026-10-14",
+   "call_time": "07:40",
+   "hour": 7,
+   "risk_peak": 20,
+   "risk_by_turn": [
+    20,
+    10,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "Good morning"
+    },
+    {
+     "rule_id": "R1",
+     "kind": "violation",
+     "turn_idx": 1,
+     "quote": ""
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "अमित बोल रहा हूँ तारंग Finserv से। यह call record हो रही है।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "Payment link Friday सुबह WhatsApp पर भेज दूंगा."
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "मैं Friday सुबह एक reminder भेज दूँगा"
+    }
+   ]
+  },
+  {
+   "call_id": "c20",
+   "title": "Call at 19:25",
+   "agent_id": "A8",
+   "call_date": "2026-10-22",
+   "call_time": "19:25",
+   "hour": 19,
+   "risk_peak": 20,
+   "risk_by_turn": [
+    20,
+    10,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "R1",
+     "kind": "violation",
+     "turn_idx": 1,
+     "quote": ""
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "पूजा बोल रही हूँ। Starung Finserv से ध्यान रहे call record की जा रही है।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "आपकी 6,000 की EMI 12 दिन से अटकी हुई है और penalty भी लग रही है, क्या आप कल तक भर सकते हैं?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "तो परसों पक्का ना sir, पूरा नहीं हो तो थोड़ा अभी भी कर सकते हैं, बाकी परसों इससे आपको भी tension नहीं रहेगी।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "मैं note कर लेती हूँ। SMS भेज दूंगी।"
+    }
+   ]
+  },
+  {
+   "call_id": "c21",
+   "title": "Call at 21:10",
+   "agent_id": "A5",
+   "call_date": "2026-10-25",
+   "call_time": "21:10",
+   "hour": 21,
+   "risk_peak": 20,
+   "risk_by_turn": [
+    20,
+    10,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "Hello, दीपक सुर्वे बोल रहे हैं।"
+    },
+    {
+     "rule_id": "R1",
+     "kind": "violation",
+     "turn_idx": 1,
+     "quote": ""
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "Starlink Finserv से इस call की recording हो रही है"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "मैं जानता हूँ अभी time सही नहीं है। कल सुबह दोबारा call करूँ?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "ठीक है sir, कल दोपहर में call करूँगा तब payment की date पक्की कर लेंगे।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "Thank you sir, कल दोपहर को बात करते हैं। Good night."
+    }
+   ]
+  },
+  {
+   "call_id": "c22",
+   "title": "No introduction, no recording notice",
+   "agent_id": "A4",
+   "call_date": "2026-10-12",
+   "call_time": "11:50",
+   "hour": 11,
+   "risk_peak": 8,
+   "risk_by_turn": [
+    0,
+    8,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "राहुल जी, आपकी 6,000 की EMI अभी भी pending है, penalty भी लग रही है, payment कब कर रहे हैं?"
+    },
+    {
+     "rule_id": "R2",
+     "kind": "advisory",
+     "turn_idx": 3,
+     "quote": ""
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "Payment कब तक होगा?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "Next week में कौन सी date sir?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "Payment link अभी WhatsApp पर भेज रही हूँ"
+    }
+   ]
+  },
+  {
+   "call_id": "c23",
+   "title": "Casual opening, no company name",
+   "agent_id": "A5",
+   "call_date": "2026-10-21",
+   "call_time": "10:10",
+   "hour": 10,
+   "risk_peak": 8,
+   "risk_by_turn": [
+    0,
+    8,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "EMI bounce हो गई है 7,000 रुपये। 16 दिन हो गए और penalty भी लग रही है, कब दोगे? मेरे को एक date चाहिए."
+    },
+    {
+     "rule_id": "R2",
+     "kind": "advisory",
+     "turn_idx": 3,
+     "quote": ""
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "Payment कब तक कर दोगे?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "Date बोलो sir, देखता हूँ बोलके काम नहीं चलेगा, पूरा नहीं हो तो थोड़ा अभी कर दो।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "चलो Monday को आधा, बाकी आधा महीने के end तक Monday सुबह तक UPI से कर देना।"
+    }
+   ]
+  },
+  {
+   "call_id": "c24",
+   "title": "Introduction missing with a woman borrower",
+   "agent_id": "A8",
+   "call_date": "2026-10-24",
+   "call_time": "15:25",
+   "hour": 15,
+   "risk_peak": 8,
+   "risk_by_turn": [
+    0,
+    8,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "Madam, 5,400 की EMI bounce हुई है, आठ दिन से pending penalty भी लग रही है, payment कब कर रही हैं?"
+    },
+    {
+     "rule_id": "R2",
+     "kind": "advisory",
+     "turn_idx": 3,
+     "quote": ""
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "आप चाहें तो company के number से verify कर सकती हैं।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "बस एक date बता दीजिए, कौन सा दिन ठीक रहेगा?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "Tuesday को एक reminder भी आएगा, आप tension मत लेना।"
+    }
+   ]
+  },
+  {
+   "call_id": "c25",
+   "title": "Pressing after a death in the family",
+   "agent_id": "A4",
+   "call_date": "2026-10-15",
+   "call_time": "12:30",
+   "hour": 12,
+   "risk_peak": 20,
+   "risk_by_turn": [
+    0,
+    0,
+    10,
+    20,
+    10,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "नमस्ते विजय घाडगे जी।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "प्रिया बोल रही हूँ तारंग फिनसर्व से और यह call quality और training के लिए record हो रही है।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "ओह sorry to hear that"
+    },
+    {
+     "rule_id": "R6",
+     "kind": "needs_review",
+     "turn_idx": 5,
+     "quote": "आज ही कुछ भेज"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "विजय जी, समझ सकती हूँ पर due date निकल चुकी है, कल तक payment जरूरी है, थोड़ा भी कर दो तो चलेगा।"
+    },
+    {
+     "rule_id": "R6",
+     "kind": "needs_review",
+     "turn_idx": 7,
+     "quote": "due date निकल चुकी"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "कोशिश नहीं, पक्का बताइए कितना कर सकते हैं कल तक"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 11,
+     "quote": "Payment link अभी WhatsApp पर भेज रही हूँ."
+    }
+   ]
+  },
+  {
+   "call_id": "c26",
+   "title": "Pressing while the wife is in hospital",
+   "agent_id": "A1",
+   "call_date": "2026-10-23",
+   "call_time": "17:00",
+   "hour": 17,
+   "risk_peak": 20,
+   "risk_by_turn": [
+    0,
+    0,
+    10,
+    20,
+    10,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "Good evening, प्रशांत जी, अमित बोल रहा हूँ तारंग फिनसर्व से।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "ये call भी recorded है quality purpose के लिए। प्रशांत गोले जी ही हैं ना?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "8,000 की EMI 22 दिन से pending है और penalty भी लग रही है"
+    },
+    {
+     "rule_id": "R6",
+     "kind": "needs_review",
+     "turn_idx": 5,
+     "quote": "आज ही online कर"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "इस हफ्ते कुछ तो भेजना पड़ेगा"
+    },
+    {
+     "rule_id": "R6",
+     "kind": "needs_review",
+     "turn_idx": 7,
+     "quote": "इस हफ्ते कुछ तो भेजना"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "इस हफ्ते जो भी हो सके कितना कर सकते हैं बता दीजिए तो मैं note कर लेता हूँ।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 11,
+     "quote": "ओके sir कल तक 2,300 मैं SMS भेज देता हूँ।"
+    }
+   ]
+  },
+  {
+   "call_id": "c27",
+   "title": "Empathy first",
+   "agent_id": "A5",
+   "call_date": "2026-10-25",
+   "call_time": "11:15",
+   "hour": 11,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "नमस्ते रवि नाईक जी।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "संदीप बोल रहा हूँ, तारंग फिनसर्व से। एक मिनट सर, यह line recorded है।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "रवि जी, 5,500 की EMI 19 दिन से बाकी है, penalty भी लग रही है, payment कब तक हो पाएगा?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "आप पहले उनका ख्याल रखिये, payment की चिंता अभी मत कीजिये, मम्मी अब कैसी हैं?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "मैं 2 हफ्ते बाद एक reminder भेज दूंगा"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 11,
+     "quote": "मम्मी को मेरी तरफ से get well soon बोलना, take care।"
+    }
+   ]
+  },
+  {
+   "call_id": "c28",
+   "title": "Rude, no introduction, personal threat",
+   "agent_id": "A3",
+   "call_date": "2026-10-22",
+   "call_time": "14:10",
+   "hour": 14,
+   "risk_peak": 98,
+   "risk_by_turn": [
+    0,
+    38,
+    68,
+    98,
+    88
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "हाँ, अशोक तांबे बोल रहा है।"
+    },
+    {
+     "rule_id": "R2",
+     "kind": "advisory",
+     "turn_idx": 3,
+     "quote": ""
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 3,
+     "quote": "तू सुनता ही नहीं"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 5,
+     "quote": "होशियारी मत दिखा,"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "Friday tak payment चाहिए"
+    },
+    {
+     "rule_id": "R3",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "जा कर ले जो करना है"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "link SMS पर भेज देता हूँ"
+    }
+   ]
+  },
+  {
+   "call_id": "c29",
+   "title": "Telling the neighbour about a court case",
+   "agent_id": "A6",
+   "call_date": "2026-10-25",
+   "call_time": "16:30",
+   "hour": 16,
+   "risk_peak": 100,
+   "risk_by_turn": [
+    0,
+    0,
+    70,
+    100,
+    90
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 1,
+     "quote": "Hello, यह योगेश सालवी जी का नंबर है?"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "मैं कविता तारंग Finserve से बता दूँ। यह call quality और training के लिए record हो रही है।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "उनको बोल देना"
+    },
+    {
+     "rule_id": "R4",
+     "kind": "violation",
+     "turn_idx": 5,
+     "quote": "उनको बोल देना कि उनका loan default हो गया है"
+    },
+    {
+     "rule_id": "R5",
+     "kind": "violation",
+     "turn_idx": 5,
+     "quote": "court में case डालने वाले हैं"
+    },
+    {
+     "rule_id": "R4",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "क्योंकि उनकी property कल seal होगी, आप भी उनको समझा देना, आप पड़ोसी हैं, आपकी बात वो सुनेंगे।"
+    },
+    {
+     "rule_id": "R5",
+     "kind": "violation",
+     "turn_idx": 7,
+     "quote": "क्योंकि उनकी property कल seal होगी"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "ठीक है, मैं उनको दोबारा call करती हूँ। Thank you।"
+    }
+   ]
+  },
+  {
+   "call_id": "c30",
+   "title": "Firm but respectful",
+   "agent_id": "A2",
+   "call_date": "2026-10-24",
+   "call_time": "14:50",
+   "hour": 14,
+   "risk_peak": 0,
+   "risk_by_turn": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "findings": [
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 3,
+     "quote": "मैं नेहा तारंग Finserv से। यह call record हो रही है। Quality और training के लिए बस 1 minute लूँगी।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 5,
+     "quote": "मैं समझ सकती हूँ कि आपको परेशानी है"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 7,
+     "quote": "हम छोटी installment का plan भी बना सकते हैं"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 9,
+     "quote": "आप date बता दीजिए, मैं note कर लेती हूँ।"
+    },
+    {
+     "rule_id": "G1",
+     "kind": "good_practice",
+     "turn_idx": 11,
+     "quote": "Wednesday पक्का, मैं reminder भेज दूंगी, thank you sir."
+    }
+   ]
+  }
+ ],
+ "agents": [
+  {
+   "id": "A3",
+   "name": "Rohit Jadhav",
+   "team": "Mumbai Collections",
+   "calls": 5,
+   "violations": 15,
+   "serious_violations": 14,
+   "calls_with_violation": 5,
+   "advisories": 1,
+   "needs_review": 0,
+   "good_practice": 5,
+   "avg_risk": 90.6,
+   "peak_risk": 100,
+   "by_rule": {
+    "R1": 0,
+    "R2": 1,
+    "R3": 8,
+    "R4": 2,
+    "R5": 4,
+    "R6": 0
+   },
+   "review_by_rule": {
+    "R1": 0,
+    "R2": 0,
+    "R3": 0,
+    "R4": 0,
+    "R5": 0,
+    "R6": 0
+   },
+   "top_rule": "R3",
+   "status": "needs_training",
+   "risk_trend": [
+    65,
+    90,
+    100,
+    98,
+    100
+   ],
+   "first_half_vs_second_half": {
+    "first": 5,
+    "second": 10,
+    "calls_first": 2,
+    "calls_second": 3
+   },
+   "training_flag": true,
+   "training_topics": [
+    "R3",
+    "R5",
+    "R4",
+    "R2"
+   ]
+  },
+  {
+   "id": "A6",
+   "name": "Kavita Pawar",
+   "team": "Nashik Collections",
+   "calls": 5,
+   "violations": 12,
+   "serious_violations": 12,
+   "calls_with_violation": 5,
+   "advisories": 0,
+   "needs_review": 1,
+   "good_practice": 5,
+   "avg_risk": 66.2,
+   "peak_risk": 100,
+   "by_rule": {
+    "R1": 0,
+    "R2": 0,
+    "R3": 5,
+    "R4": 4,
+    "R5": 3,
+    "R6": 0
+   },
+   "review_by_rule": {
+    "R1": 0,
+    "R2": 0,
+    "R3": 1,
+    "R4": 0,
+    "R5": 0,
+    "R6": 0
+   },
+   "top_rule": "R3",
+   "status": "needs_training",
+   "risk_trend": [
+    60,
+    36,
+    35,
+    100,
+    100
+   ],
+   "first_half_vs_second_half": {
+    "first": 3,
+    "second": 9,
+    "calls_first": 2,
+    "calls_second": 3
+   },
+   "training_flag": true,
+   "training_topics": [
+    "R3",
+    "R4",
+    "R5"
+   ]
+  },
+  {
+   "id": "A5",
+   "name": "Sandeep More",
+   "team": "Nashik Collections",
+   "calls": 4,
+   "violations": 5,
+   "serious_violations": 3,
+   "calls_with_violation": 3,
+   "advisories": 1,
+   "needs_review": 0,
+   "good_practice": 4,
+   "avg_risk": 32.0,
+   "peak_risk": 100,
+   "by_rule": {
+    "R1": 1,
+    "R2": 1,
+    "R3": 1,
+    "R4": 0,
+    "R5": 2,
+    "R6": 0
+   },
+   "review_by_rule": {
+    "R1": 0,
+    "R2": 0,
+    "R3": 0,
+    "R4": 0,
+    "R5": 0,
+    "R6": 0
+   },
+   "top_rule": "R5",
+   "status": "needs_training",
+   "risk_trend": [
+    8,
+    100,
+    0,
+    20
+   ],
+   "first_half_vs_second_half": {
+    "first": 4,
+    "second": 1,
+    "calls_first": 2,
+    "calls_second": 2
+   },
+   "training_flag": true,
+   "training_topics": [
+    "R5",
+    "R3",
+    "R1",
+    "R2"
+   ]
+  },
+  {
+   "id": "A8",
+   "name": "Pooja Gaikwad",
+   "team": "Mumbai Collections",
+   "calls": 3,
+   "violations": 4,
+   "serious_violations": 2,
+   "calls_with_violation": 3,
+   "advisories": 1,
+   "needs_review": 0,
+   "good_practice": 3,
+   "avg_risk": 32.7,
+   "peak_risk": 70,
+   "by_rule": {
+    "R1": 1,
+    "R2": 1,
+    "R3": 0,
+    "R4": 2,
+    "R5": 0,
+    "R6": 0
+   },
+   "review_by_rule": {
+    "R1": 0,
+    "R2": 0,
+    "R3": 0,
+    "R4": 0,
+    "R5": 0,
+    "R6": 0
+   },
+   "top_rule": "R4",
+   "status": "needs_training",
+   "risk_trend": [
+    70,
+    20,
+    8
+   ],
+   "first_half_vs_second_half": {
+    "first": 2,
+    "second": 2,
+    "calls_first": 1,
+    "calls_second": 2
+   },
+   "training_flag": true,
+   "training_topics": [
+    "R4",
+    "R1",
+    "R2"
+   ]
+  },
+  {
+   "id": "A4",
+   "name": "Priya Shinde",
+   "team": "Mumbai Collections",
+   "calls": 3,
+   "violations": 2,
+   "serious_violations": 1,
+   "calls_with_violation": 2,
+   "advisories": 1,
+   "needs_review": 2,
+   "good_practice": 3,
+   "avg_risk": 19.3,
+   "peak_risk": 30,
+   "by_rule": {
+    "R1": 0,
+    "R2": 1,
+    "R3": 1,
+    "R4": 0,
+    "R5": 0,
+    "R6": 0
+   },
+   "review_by_rule": {
+    "R1": 0,
+    "R2": 0,
+    "R3": 0,
+    "R4": 0,
+    "R5": 0,
+    "R6": 2
+   },
+   "top_rule": "R3",
+   "status": "watch",
+   "risk_trend": [
+    8,
+    30,
+    20
+   ],
+   "first_half_vs_second_half": {
+    "first": 1,
+    "second": 1,
+    "calls_first": 1,
+    "calls_second": 2
+   },
+   "training_flag": false,
+   "training_topics": [
+    "R3",
+    "R2"
+   ]
+  },
+  {
+   "id": "A1",
+   "name": "Amit Kulkarni",
+   "team": "Pune Collections",
+   "calls": 4,
+   "violations": 2,
+   "serious_violations": 1,
+   "calls_with_violation": 2,
+   "advisories": 0,
+   "needs_review": 2,
+   "good_practice": 4,
+   "avg_risk": 18.8,
+   "peak_risk": 35,
+   "by_rule": {
+    "R1": 1,
+    "R2": 0,
+    "R3": 0,
+    "R4": 0,
+    "R5": 1,
+    "R6": 0
+   },
+   "review_by_rule": {
+    "R1": 0,
+    "R2": 0,
+    "R3": 0,
+    "R4": 0,
+    "R5": 0,
+    "R6": 2
+   },
+   "top_rule": "R5",
+   "status": "watch",
+   "risk_trend": [
+    20,
+    0,
+    35,
+    20
+   ],
+   "first_half_vs_second_half": {
+    "first": 1,
+    "second": 1,
+    "calls_first": 2,
+    "calls_second": 2
+   },
+   "training_flag": false,
+   "training_topics": [
+    "R5",
+    "R1"
+   ]
+  },
+  {
+   "id": "A2",
+   "name": "Neha Deshmukh",
+   "team": "Pune Collections",
+   "calls": 3,
+   "violations": 0,
+   "serious_violations": 0,
+   "calls_with_violation": 0,
+   "advisories": 0,
+   "needs_review": 0,
+   "good_practice": 3,
+   "avg_risk": 0.0,
+   "peak_risk": 0,
+   "by_rule": {
+    "R1": 0,
+    "R2": 0,
+    "R3": 0,
+    "R4": 0,
+    "R5": 0,
+    "R6": 0
+   },
+   "review_by_rule": {
+    "R1": 0,
+    "R2": 0,
+    "R3": 0,
+    "R4": 0,
+    "R5": 0,
+    "R6": 0
+   },
+   "top_rule": null,
+   "status": "excellent",
+   "risk_trend": [
+    0,
+    0,
+    0
+   ],
+   "first_half_vs_second_half": {
+    "first": 0,
+    "second": 0,
+    "calls_first": 1,
+    "calls_second": 2
+   },
+   "training_flag": false,
+   "training_topics": []
+  },
+  {
+   "id": "A7",
+   "name": "Vikram Salunke",
+   "team": "Pune Collections",
+   "calls": 3,
+   "violations": 0,
+   "serious_violations": 0,
+   "calls_with_violation": 0,
+   "advisories": 0,
+   "needs_review": 0,
+   "good_practice": 3,
+   "avg_risk": 0.0,
+   "peak_risk": 0,
+   "by_rule": {
+    "R1": 0,
+    "R2": 0,
+    "R3": 0,
+    "R4": 0,
+    "R5": 0,
+    "R6": 0
+   },
+   "review_by_rule": {
+    "R1": 0,
+    "R2": 0,
+    "R3": 0,
+    "R4": 0,
+    "R5": 0,
+    "R6": 0
+   },
+   "top_rule": null,
+   "status": "excellent",
+   "risk_trend": [
+    0,
+    0,
+    0
+   ],
+   "first_half_vs_second_half": {
+    "first": 0,
+    "second": 0,
+    "calls_first": 1,
+    "calls_second": 2
+   },
+   "training_flag": false,
+   "training_topics": []
+  }
+ ],
+ "by_day": [
+  {
+   "date": "2026-10-12",
+   "calls": 2,
+   "violations": 1
+  },
+  {
+   "date": "2026-10-13",
+   "calls": 2,
+   "violations": 1
+  },
+  {
+   "date": "2026-10-14",
+   "calls": 2,
+   "violations": 3
+  },
+  {
+   "date": "2026-10-15",
+   "calls": 2,
+   "violations": 2
+  },
+  {
+   "date": "2026-10-16",
+   "calls": 2,
+   "violations": 3
+  },
+  {
+   "date": "2026-10-17",
+   "calls": 1,
+   "violations": 1
+  },
+  {
+   "date": "2026-10-18",
+   "calls": 1,
+   "violations": 1
+  },
+  {
+   "date": "2026-10-19",
+   "calls": 2,
+   "violations": 5
+  },
+  {
+   "date": "2026-10-20",
+   "calls": 1,
+   "violations": 0
+  },
+  {
+   "date": "2026-10-21",
+   "calls": 2,
+   "violations": 2
+  },
+  {
+   "date": "2026-10-22",
+   "calls": 3,
+   "violations": 5
+  },
+  {
+   "date": "2026-10-23",
+   "calls": 2,
+   "violations": 3
+  },
+  {
+   "date": "2026-10-24",
+   "calls": 4,
+   "violations": 5
+  },
+  {
+   "date": "2026-10-25",
+   "calls": 4,
+   "violations": 8
+  }
+ ],
+ "by_hour": [
+  {
+   "hour": 7,
+   "calls": 1,
+   "violations": 1,
+   "r1_calls": 1
+  },
+  {
+   "hour": 8,
+   "calls": 0,
+   "violations": 0,
+   "r1_calls": 0
+  },
+  {
+   "hour": 9,
+   "calls": 1,
+   "violations": 0,
+   "r1_calls": 0
+  },
+  {
+   "hour": 10,
+   "calls": 3,
+   "violations": 2,
+   "r1_calls": 0
+  },
+  {
+   "hour": 11,
+   "calls": 5,
+   "violations": 6,
+   "r1_calls": 0
+  },
+  {
+   "hour": 12,
+   "calls": 4,
+   "violations": 3,
+   "r1_calls": 0
+  },
+  {
+   "hour": 13,
+   "calls": 2,
+   "violations": 5,
+   "r1_calls": 0
+  },
+  {
+   "hour": 14,
+   "calls": 4,
+   "violations": 9,
+   "r1_calls": 0
+  },
+  {
+   "hour": 15,
+   "calls": 3,
+   "violations": 4,
+   "r1_calls": 0
+  },
+  {
+   "hour": 16,
+   "calls": 3,
+   "violations": 7,
+   "r1_calls": 0
+  },
+  {
+   "hour": 17,
+   "calls": 2,
+   "violations": 1,
+   "r1_calls": 0
+  },
+  {
+   "hour": 18,
+   "calls": 0,
+   "violations": 0,
+   "r1_calls": 0
+  },
+  {
+   "hour": 19,
+   "calls": 1,
+   "violations": 1,
+   "r1_calls": 1
+  },
+  {
+   "hour": 20,
+   "calls": 0,
+   "violations": 0,
+   "r1_calls": 0
+  },
+  {
+   "hour": 21,
+   "calls": 1,
+   "violations": 1,
+   "r1_calls": 1
+  }
+ ],
+ "rule_totals": {
+  "R1": 3,
+  "R2": 4,
+  "R3": 15,
+  "R4": 8,
+  "R5": 10,
+  "R6": 0
+ }
+}
