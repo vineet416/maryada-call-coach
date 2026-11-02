@@ -1,7 +1,7 @@
 import { Check } from 'lucide-react'
 import type { Finding } from '@/lib/events'
 import { KIND_LABEL } from '@/lib/events'
-import { tokId } from '@/lib/findings'
+import { absenceLine, tokId } from '@/lib/findings'
 import type { Rule } from '@/lib/api'
 
 export function scrollToFinding(f: Finding) {
@@ -17,9 +17,10 @@ interface Props {
   findings: Finding[]
   rules: Rule[]
   onOpen: (f: Finding) => void
+  callTime?: string | null
 }
 
-export function FindingList({ findings: all, rules, onOpen }: Props) {
+export function FindingList({ findings: all, rules, onOpen, callTime }: Props) {
   const findings = all.filter((f) => f.kind !== 'good_practice')
   const good = all.length - findings.length
   return (
@@ -48,8 +49,8 @@ export function FindingList({ findings: all, rules, onOpen }: Props) {
                   <span className={`chip chip-${f.kind} h-[22px]`}>{f.rule_id}</span>
                   <span className="min-w-0 flex-1">
                     <span className="block text-[13px] font-medium">{title}</span>
-                    <span lang="hi" className="block truncate text-xs text-[var(--mc-muted)]">
-                      {f.kind === 'violation' ? `“${f.quote}”` : `${KIND_LABEL[f.kind]} · “${f.quote}”`}
+                    <span lang={absenceLine(f, callTime) ? undefined : 'hi'} className="block truncate text-xs text-[var(--mc-muted)]">
+                      {absenceLine(f, callTime) ?? (f.kind === 'violation' ? `“${f.quote}”` : `${KIND_LABEL[f.kind]} · “${f.quote}”`)}
                     </span>
                   </span>
                   <span className="mono flex-none text-right text-xs leading-snug text-[var(--mc-muted)]">

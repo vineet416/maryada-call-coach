@@ -15,6 +15,7 @@ export function StageLine() {
   const stage = useSessionStore((s) => s.stage)
   const status = useSessionStore((s) => s.status)
   const turns = useSessionStore((s) => s.turns)
+  const ended = status === 'ended'
   // Only agent turns are checked: while someone else speaks, the line reads "Listening"
   const latest = Math.max(stage?.turnIdx ?? -1, turns.length ? turns[turns.length - 1].idx : -1)
   const speaker = turns.find((t) => t.idx === latest)?.speaker
@@ -27,6 +28,13 @@ export function StageLine() {
     : (stage?.text ?? (current === 'connecting' ? 'Connecting' : 'Each agent turn is checked against the rulebook as it is spoken'))
   // The detail line never repeats the step name that is already highlighted
   const showDetail = detail.trim().toLowerCase() !== label.toLowerCase()
+  if (ended)
+    return (
+      <div role="status" aria-live="polite" aria-label="Stage" className="flex items-center gap-2 border-t border-[#eaecf0] px-4 py-2.5 text-[13px] font-semibold text-[var(--mc-text-2)] sm:px-6">
+        <Check className="h-4 w-4 text-[var(--mc-good-practice-ink)]" strokeWidth={2.5} aria-hidden />
+        Call ended
+      </div>
+    )
   return (
     <div role="status" aria-live="polite" aria-label="Stage" className="flex flex-col gap-2 border-t border-[#eaecf0] px-4 py-2.5 text-[13px] sm:flex-row sm:flex-wrap sm:items-center sm:px-6">
       <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1.5 sm:gap-x-2.5">
