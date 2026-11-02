@@ -2,47 +2,65 @@ import { usePageTitle } from '@/lib/usePageTitle'
 import { ChevronRight, Gauge, Headset, Mic, ShieldCheck, TextAlignStart } from 'lucide-react'
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { getRules, type Rule } from '@/lib/api'
+import { getEval, getRules, type EvalPayload, type Rule } from '@/lib/api'
 import { KIND_LABEL, type Kind } from '@/lib/events'
 
-const STEPS = [
-  { icon: Mic, title: '1. Call audio', text: 'The agent and borrower speak. Audio streams in turn by turn.' },
-  {
-    icon: TextAlignStart,
-    title: '2. Speech to text',
-    text: 'Gnani Prisma turns Indian-language speech, including Hindi and English mixed together, into a live transcript.',
-  },
-  {
-    icon: ShieldCheck,
-    title: '3. Rule check',
-    text: 'A fast phrase check usually flags in about 3 s. A deep language check usually confirms in about 5 s (measured locally).',
-  },
-  { icon: Gauge, title: '4. Risk score', text: 'Each finding adds to a 0 to 100 meter. Clean turns bring it down.' },
-  { icon: Headset, title: '5. Coach voice', text: 'A short spoken nudge plays in the agent headset at the next pause.', last: true },
-]
+const LANGUAGE_NAME: Record<string, string> = { hi: 'Hindi', en: 'English', mr: 'Marathi' }
 
-const MODELS = [
-  {
-    task: 'Speech to text',
-    how: 'Gnani Prisma V3.0',
-    note: 'Indian-language speech, language detected automatically. Tested here on Hindi and English calls. Your Gnani key.',
-  },
-  {
-    task: 'Fast phrase check',
-    how: 'Rules and phrase lists, no model',
-    note: 'Flags in about 3 s. R1 (calling hours) and R2 (identification and recording notice) are also decided here, by fixed rules.',
-  },
-  {
-    task: 'Deep rule check',
-    how: 'The language model you choose',
-    note: 'Confirms in about 5 s. Tuned on gpt-5.4-mini; other models vary.',
-  },
-  {
-    task: 'Coach voice and call audio',
-    how: 'Gnani Timbre V3.0',
-    note: 'Recorded in advance, so recorded runs play with no keys.',
-  },
-]
+/** Median seconds for a time-to-flag row, from the saved recordings (null when unknown). */
+const median = (p: EvalPayload | null, label: string): string | null => {
+  const ms = p?.latency.rows.find((r) => r.label === label)?.p50_ms
+  return ms == null ? null : `${(ms / 1000).toFixed(1)} s`
+}
+const joinNames = (names: string[]) => (names.length > 1 ? `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}` : (names[0] ?? ''))
+
+function steps(p: EvalPayload | null) {
+  const fast = median(p, 'Fast phrase check')
+  const deep = median(p, 'Deep language check')
+  return [
+    { icon: Mic, title: '1. Call audio', text: 'The agent and borrower speak. Audio streams in turn by turn.' },
+    {
+      icon: TextAlignStart,
+      title: '2. Speech to text',
+      text: 'Gnani Prisma turns Indian-language speech, including Hindi and English mixed together, into a live transcript.',
+    },
+    {
+      icon: ShieldCheck,
+      title: '3. Rule check',
+      text: `A fast phrase check flags first${fast ? `, in a median of ${fast}` : ''}. A deep language check confirms${deep ? ` in a median of ${deep}` : ' afterwards'}${fast || deep ? ' (from the recorded runs)' : ''}.`,
+    },
+    { icon: Gauge, title: '4. Risk score', text: 'Each finding adds to a 0 to 100 meter. Clean turns bring it down.' },
+    { icon: Headset, title: '5. Coach voice', text: 'A short spoken nudge plays in the agent headset at the next pause.', last: true },
+  ]
+}
+
+function models(p: EvalPayload | null) {
+  const fast = median(p, 'Fast phrase check')
+  const deep = median(p, 'Deep language check')
+  const names = (p?.languages ?? []).map((c) => LANGUAGE_NAME[c] ?? c)
+  return [
+    {
+      task: 'Speech to text',
+      how: 'Gnani Prisma V3.0',
+      note: `Indian-language speech, language detected automatically.${names.length ? ` Tested here on ${joinNames(names)} calls.` : ''} Your Gnani key.`,
+    },
+    {
+      task: 'Fast phrase check',
+      how: 'Rules and phrase lists, no model',
+      note: `${fast ? `Median ${fast} to flag in the recorded runs. ` : ''}R1 (calling hours) and R2 (identification and recording notice) are also decided here, by fixed rules.`,
+    },
+    {
+      task: 'Deep rule check',
+      how: 'The language model you choose',
+      note: `${deep ? `Median ${deep} to flag in the recorded runs. ` : ''}Tuned on gpt-5.4-mini; other models vary.`,
+    },
+    {
+      task: 'Coach voice and call audio',
+      how: 'Gnani Timbre V3.0',
+      note: 'Recorded in advance, so recorded runs play with no keys.',
+    },
+  ]
+}
 
 const LEGEND: { kind: Kind; text: string }[] = [
   { kind: 'violation', text: 'a clear breach of a rule' },
@@ -55,11 +73,15 @@ export function HowItWorks() {
   usePageTitle('How it works · Maryada')
   const [rules, setRules] = useState<Rule[] | null>(null)
   const [failed, setFailed] = useState(false)
+  const [facts, setFacts] = useState<EvalPayload | null>(null)
   useEffect(() => {
     const ctl = new AbortController()
     getRules(ctl.signal)
       .then(setRules)
       .catch((e: Error) => e.name !== 'AbortError' && setFailed(true))
+    getEval(ctl.signal)
+      .then(setFacts)
+      .catch(() => undefined) // the measured times and languages are left out when they cannot be read
     return () => ctl.abort()
   }, [])
 
@@ -75,7 +97,7 @@ export function HowItWorks() {
       <section aria-labelledby="flow-h" className="flex flex-col gap-3.5">
         <h2 id="flow-h" className="text-lg font-semibold tracking-tight">From voice to coaching in seconds</h2>
         <ol className="flex flex-wrap items-stretch gap-2.5">
-          {STEPS.map(({ icon: Icon, title, text, last }, i) => (
+          {steps(facts).map(({ icon: Icon, title, text, last }, i, all) => (
             <li key={title} className="contents">
               <div
                 className={`card flex min-w-[200px] flex-[1_1_200px] flex-col gap-2.5 p-[18px] ${last ? '!border-[var(--mc-accent-ring)] !bg-[#f8f8ff]' : ''}`}
@@ -86,7 +108,7 @@ export function HowItWorks() {
                 <h3 className="text-[15px] font-semibold">{title}</h3>
                 <p className="text-[13px] leading-normal text-[var(--mc-muted)]">{text}</p>
               </div>
-              {i < STEPS.length - 1 && (
+              {i < all.length - 1 && (
                 <span className="hidden items-center text-[#667085] xl:flex" aria-hidden>
                   <ChevronRight className="h-5 w-5" />
                 </span>
@@ -123,7 +145,7 @@ export function HowItWorks() {
 
       <TableCard title="Which model does what" aside="Live calls use your keys. Recorded runs use none.">
         <Grid cols="1.6fr 2.2fr 3fr" head={['Task', 'Model or method', 'Notes']} />
-        {MODELS.map((m) => (
+        {models(facts).map((m) => (
           <Grid key={m.task} cols="1.6fr 2.2fr 3fr" row={[<b key="t" className="font-semibold">{m.task}</b>, m.how, <span key="n" className="text-[#475467]">{m.note}</span>]} />
         ))}
       </TableCard>

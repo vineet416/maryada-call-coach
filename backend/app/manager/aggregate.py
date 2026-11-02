@@ -66,6 +66,18 @@ def status_of(n_calls: int, violations: int, serious: int, avg_risk: float | Non
     return "watch"
 
 
+def example_call_id(calls: list[dict], rule: str | None) -> str | None:
+    """The agent's own call with the most violations of `rule` (the agent's top rule); ties go to the higher peak risk,
+    then to the lower call id. None when there is no top rule."""
+    if rule is None:
+        return None
+    scored = [(sum(1 for f in _violations(c) if f["rule_id"] == rule), c) for c in calls]
+    scored = [(n, c) for n, c in scored if n > 0]
+    if not scored:
+        return None
+    return min(scored, key=lambda nc: (-nc[0], -nc[1]["risk_peak"], nc[1]["call_id"]))[1]["call_id"]
+
+
 def _agent_row(agent: dict, calls: list[dict]) -> dict:
     calls = sorted(calls, key=lambda c: (c["call_date"], c.get("call_time", ""), c["call_id"]))
     by_rule = dict.fromkeys(RULES, 0)
@@ -92,7 +104,8 @@ def _agent_row(agent: dict, calls: list[dict]) -> dict:
         "needs_review": sum(_count_kind(c, "needs_review") for c in calls),
         "good_practice": sum(1 for c in calls if _has_good(c)),
         "avg_risk": avg, "peak_risk": max(risks) if risks else None,
-        "by_rule": by_rule, "review_by_rule": review_by_rule, "top_rule": top_rule(by_rule), "status": status,
+        "by_rule": by_rule, "review_by_rule": review_by_rule, "top_rule": top_rule(by_rule),
+        "example_call_id": example_call_id(calls, top_rule(by_rule)), "status": status,
         "risk_trend": risks,  # one value per call, oldest first (the sparkline)
         "first_half_vs_second_half": {"first": sum(len(_violations(c)) for c in first),
                                       "second": sum(len(_violations(c)) for c in second),

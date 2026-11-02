@@ -25,12 +25,15 @@ const ENGINES: { id: Engine; label: string; short: string }[] = [
   { id: 'ablation_llm_off', label: 'Rules only, no language model', short: 'Rules only' },
   { id: 'full', label: 'Full engine (rules and language model)', short: 'Full engine' },
 ]
-const CONDITIONS = [
-  { id: 'clean', label: 'Clean audio' },
-  { id: 'snr10', label: '10 dB noise' },
-  { id: 'snr20', label: '20 dB noise' },
-  { id: 'snr5', label: '5 dB noise' },
-]
+/** "clean" -> "Clean audio", "snr10" -> "10 dB noise"; any other id is shown as it is. */
+const condLabel = (id: string) => (id === 'clean' ? 'Clean audio' : /^snr\d+$/.test(id) ? `${id.slice(3)} dB noise` : id)
+/** Conditions named in the results file (run or planned) plus any that have a run: clean first, then the least noise first. */
+function conditionsOf(results: EvalResults | null): { id: string; label: string }[] {
+  const ids = new Set<string>(results?.conditions ?? [])
+  for (const e of ['ablation_llm_off', 'full'] as const) for (const id of Object.keys(results?.[e] ?? {})) ids.add(id)
+  const snr = (id: string) => (id === 'clean' ? Infinity : Number(id.replace(/\D/g, '')) || 0)
+  return [...ids].sort((x, y) => snr(y) - snr(x)).map((id) => ({ id, label: condLabel(id) }))
+}
 const GROUPS: { id: Group; label: string; note: string }[] = [
   { id: 'all', label: 'All calls', note: 'Every labelled call, pooled.' },
   { id: 'tune', label: 'Tuning calls', note: 'The calls the phrase lists and prompt were developed on.' },
@@ -70,7 +73,7 @@ export function Evaluation() {
   useEffect(() => load(), [load])
 
   const results = data?.results ?? null
-  const ran = (e: Engine) => CONDITIONS.filter((c) => results?.[e]?.[c.id]).map((c) => c.id)
+  const ran = (e: Engine) => conditionsOf(results).filter((c) => results?.[e]?.[c.id]).map((c) => c.id)
   // Default view: the full engine on clean audio as soon as the full engine has results; else the rules-only baseline.
   const eng: Engine = engine ?? (ran('full').length ? 'full' : 'ablation_llm_off')
   const available = ran(eng)
@@ -123,7 +126,7 @@ export function Evaluation() {
             <section className="card p-6" role="status">
               <h2 className="text-[17px] font-semibold tracking-tight">Not run yet</h2>
               <p className="mt-1 text-[13.5px] text-[var(--mc-text-2)]">
-                {ENGINES.find((e) => e.id === eng)?.label} on {lc(CONDITIONS.find((c) => c.id === cd)?.label ?? '')} has not been run, so there are no numbers to show for it.
+                {ENGINES.find((e) => e.id === eng)?.label} on {lc(condLabel(cd))} has not been run, so there are no numbers to show for it.
                 There are also no errors to show under “Where it went wrong” for this selection. Pick a run that has results above.
               </p>
             </section>
@@ -150,7 +153,7 @@ function Coverage({ results }: { results: EvalResults }) {
       <h2 id="cov-h" className="text-[15px] font-semibold text-[var(--mc-accent-dark)]">What has been run</h2>
       <ul className="mt-2 grid gap-x-8 gap-y-1.5 text-[13.5px] sm:grid-cols-2">
         {ENGINES.map((e) =>
-          CONDITIONS.map((c) => {
+          conditionsOf(results).map((c) => {
             const r = results[e.id]?.[c.id]
             return (
               <li key={`${e.id}-${c.id}`} className="flex items-baseline justify-between gap-3 border-b border-[var(--mc-line)] py-1">
@@ -180,7 +183,7 @@ function RunPicker({ results, eng, cond, setEngine, setCond }: {
     <div className="flex flex-col gap-3">
       <div role="group" aria-label="Engine" className="flex flex-wrap gap-2">
         {ENGINES.map((e) => {
-          const ran = CONDITIONS.some((c) => results[e.id]?.[c.id])
+          const ran = conditionsOf(results).some((c) => results[e.id]?.[c.id])
           return (
             <button key={e.id} type="button" aria-pressed={eng === e.id} onClick={() => setEngine(e.id)} className={btn(eng === e.id, ran)}>
               {e.label}{ran ? '' : ' · not run yet'}
@@ -189,7 +192,7 @@ function RunPicker({ results, eng, cond, setEngine, setCond }: {
         })}
       </div>
       <div role="group" aria-label="Audio condition" className="flex flex-wrap gap-2">
-        {CONDITIONS.map((c) => {
+        {conditionsOf(results).map((c) => {
           const ran = Boolean(results[eng]?.[c.id])
           return (
             <button key={c.id} type="button" aria-pressed={cond === c.id} onClick={() => setCond(c.id)} className={btn(cond === c.id, ran)}>
@@ -265,7 +268,7 @@ function RunView({ run, results, rules, group, setGroup, eng, cond, review, chan
             )}
           </section>
           <p className="-mt-3 text-[12.5px] text-[var(--mc-muted)]">
-            All headline cards: {ENGINES.find((e) => e.id === eng)?.label.toLowerCase()}, {lc(CONDITIONS.find((c) => c.id === cond)?.label ?? '')}, {all.n_calls} calls.
+            All headline cards: {ENGINES.find((e) => e.id === eng)?.label.toLowerCase()}, {lc(condLabel(cond))}, {all.n_calls} calls.
             Strict counts violations and advisories only. A unit is one agent turn and one rule.
           </p>
           {eng === 'full' && changes.filter((c) => c.condition === `full/${cond}`).map((c) => (
@@ -473,8 +476,8 @@ function Noise({ results, eng }: { results: EvalResults; eng: Engine }) {
     <section className="card flex min-w-[300px] flex-[2_1_480px] flex-col gap-3 p-6" aria-labelledby="noise-h">
       <h2 id="noise-h" className="text-base font-semibold">Noise robustness</h2>
       <p className="-mt-1 text-[12.5px] text-[var(--mc-muted)]">Strict recall for {ENGINES.find((e) => e.id === eng)?.label.toLowerCase()}, all calls, as phone-line noise increases.</p>
-      <div className="grid grid-cols-4 gap-3">
-        {CONDITIONS.map((c) => {
+      <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.max(conditionsOf(results).length, 1)}, minmax(0, 1fr))` }}>
+        {conditionsOf(results).map((c) => {
           const s = results[eng]?.[c.id]?.all?.overall?.strict
           return (
             <div key={c.id} className="flex flex-col items-center gap-1.5">
