@@ -2,7 +2,7 @@
 from typing import Any
 
 from .loader import load_rules
-from .schemas import CallContext, Finding, Turn
+from .schemas import R4_JUDGED, CallContext, Finding, Turn
 from .text import (
     find_phrase,
     split_variants,
@@ -114,7 +114,7 @@ def prefilter(ctx: CallContext, history: list[Turn], turn_idx: int, text: str) -
         for key, conf in (("strong", STRONG), ("weak", WEAK)):
             for s, e, _ in _hits(words, pf.get(key, [])):
                 out.append(_make(turn_idx, rid, conf, text, toks, s, e))
-    if ctx.answered_by != "borrower":  # R4 gate
+    if ctx.answered_by in R4_JUDGED:  # R4 gate
         pf = rules["R4"]["prefilter"]
         for key in ("disclosure_triggers", "shaming_triggers"):
             for s, e, v in _hits(words, pf.get(key, [])):

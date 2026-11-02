@@ -95,6 +95,32 @@ class TranscriptSegment:
     via: str = "realtime"  # "rest" for a segment from the REST fallback (it covers audio that may not have been played yet)
 
 
+class LiveAudio:
+    """The audio of one microphone turn, growing while the visitor speaks (8 kHz PCM16, memory only, never written to disk).
+    The realtime sender reads it from any position, so a retry on a new socket can resend what the first one had."""
+
+    def __init__(self) -> None:
+        self.buf = bytearray()
+        self.closed = False
+        self._more = asyncio.Event()
+
+    @property
+    def total_ms(self) -> int:
+        return len(self.buf) // BYTES_PER_MS
+
+    def feed(self, pcm: bytes) -> None:
+        self.buf += pcm
+        self._more.set()
+
+    def close(self) -> None:
+        self.closed = True
+        self._more.set()
+
+    async def wait_more(self) -> None:
+        self._more.clear()  # no await between the caller's check and this line, so no feed is missed
+        await self._more.wait()
+
+
 def load_profile(role: str) -> dict:
     prof = yaml.safe_load((settings.content_dir / "stt_profile.yaml").read_text(encoding="utf-8"))
     return {"model": prof["model"], "language_code": prof[role]["language_code"]}

@@ -6,7 +6,7 @@ from pydantic import ValidationError
 from .align import align_quote
 from .loader import load_rules
 from .prefilter import gate_findings, good_practice, prefilter
-from .schemas import CallContext, Finding, LlmOut, Turn
+from .schemas import R4_JUDGED, CallContext, Finding, LlmOut, Turn
 from .text import normalize
 
 VIOLATION_MIN, REVIEW_MIN = 0.75, 0.45
@@ -127,7 +127,7 @@ def deep_findings(ctx: CallContext, fast: list[Finding], llm: LlmOut | None, tur
         return fast
     seen = [t.text for t in history or []]  # pass the same turns the model was shown
     from_llm = [f for f in llm_to_findings(llm, turn_idx, text, seen) if f.rule_id != "R2"]  # R2 is rule-based only, like R1
-    if ctx.answered_by == "borrower":  # R4 gate applies to the LLM too
+    if ctx.answered_by not in R4_JUDGED:  # R4 gate applies to the LLM too (borrower answered, or not chosen yet)
         from_llm = [f for f in from_llm if f.rule_id != "R4"]
     items = [f for f in fast if f.kind != "good_practice"] + from_llm
     merged = finalize(items, turn_idx, text)

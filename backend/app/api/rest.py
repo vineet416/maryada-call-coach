@@ -1,4 +1,5 @@
 import asyncio
+import json
 import time
 from collections import deque
 from pathlib import Path
@@ -19,7 +20,7 @@ from ..security import redact, safe_http
 from ..security.credentials import CredentialsIn, Creds
 from ..security.models_list import clean_models
 from ..security.url_guard import UnsafeUrl, resolve_safe
-from ..session import assets, runner
+from ..session import assets, mic, mic_rules, runner
 from ..stt import realtime
 from ..stt.base import SttAuthError, SttError
 
@@ -105,10 +106,11 @@ def get_manager(from_: str | None = Query(None, alias="from"), to: str | None = 
 
 
 class StartBody(BaseModel):
-    scenario_id: str
+    scenario_id: str = ""  # not used by mode "mic"
     mode: str = "live"
     credentials: CredentialsIn | None = None  # the visitor's keys; sent in the POST body only, never in a URL
     pause_for_coach: bool = False  # the user's option: the call pauses only while a coach clip plays
+    clock: str | None = Field(None, max_length=5)  # mode "mic" only: "HH:MM" replaces the live IST clock for R1
 
 
 class TestBody(BaseModel):
@@ -143,20 +145,46 @@ async def _checked_url(url: str) -> None:
         raise _err(400, "invalid_base_url", str(e)) from None
 
 
+async def _visitor_creds(body: StartBody) -> Creds | None:
+    """The visitor's keys from the POST body (None = no keys sent). Incomplete keys are refused; the base URL is checked."""
+    if body.credentials is None:
+        return None
+    c = body.credentials
+    if not (c.gnani.api_key.get_secret_value().strip() and c.llm.api_key.get_secret_value().strip()
+            and c.llm.base_url.strip() and c.llm.model.strip()):
+        raise _err(400, "keys_required", KEYS_MSG)
+    await _checked_url(c.llm.base_url.strip())
+    return Creds.from_body(c)
+
+
+async def _create_mic_session(body: StartBody) -> dict:
+    if not settings.speak_live_enabled:
+        raise _err(403, "speak_live_off", "Speak live is not available yet.")
+    clock = None
+    if body.clock is not None and (clock := mic_rules.valid_clock(body.clock)) is None:
+        raise _err(400, "bad_clock", "The clock must look like 14:30.")
+    creds = await _visitor_creds(body)
+    if creds is None and not settings.server_keys:
+        raise _err(400, "keys_required", KEYS_MSG)
+    try:
+        s = mic.new_mic_session(creds, clock)
+    except mic.MicUnavailable as e:
+        if creds is not None:
+            creds.wipe()
+        raise _err(503, "live_unavailable", str(e), True) from None
+    return {"session_id": s.id, "effective_mode": s.effective_mode, "ws_url": f"/ws/session/{s.id}"}
+
+
 @router.post("/api/sessions")
 async def create_session(body: StartBody) -> dict:
+    if body.mode == "mic":
+        return await _create_mic_session(body)
     if body.scenario_id not in assets.scenarios():
         raise _err(404, "unknown_scenario", "That case does not exist.")
     creds = None
     if body.mode == "live":
-        if body.credentials is not None:
-            c = body.credentials
-            if not c.gnani.api_key.get_secret_value().strip() or not c.llm.api_key.get_secret_value().strip() \
-                    or not c.llm.base_url.strip() or not c.llm.model.strip():
-                raise _err(400, "keys_required", KEYS_MSG)
-            await _checked_url(c.llm.base_url.strip())
-            creds = Creds.from_body(c)
-        elif not settings.server_keys:
+        creds = await _visitor_creds(body)
+        if creds is None and not settings.server_keys:
             raise _err(400, "keys_required", KEYS_MSG)
     s = runner.new_session(body.scenario_id, body.mode, creds, body.pause_for_coach)
     out = {"session_id": s.id, "effective_mode": s.effective_mode, "ws_url": f"/ws/session/{s.id}"}
@@ -227,6 +255,15 @@ def get_session(sid: str) -> dict:
     return out
 
 
+@router.get("/api/sessions/{sid}/report")
+def get_session_report(sid: str) -> dict:
+    """The call report of a finished Speak live call, rebuilt from its in-memory events (kept 30 minutes, nothing on disk)."""
+    s = runner.SESSIONS.get(sid)
+    if s is None or s.mic is None or not s.log.done:
+        raise _err(404, "no_report", "This report is no longer available.")
+    return mic.build_session_report(s)
+
+
 @router.get("/audio/{path:path}")
 def audio(path: str) -> FileResponse:
     """Call-turn and coach MP3s only (never the raw or cached files)."""
@@ -278,11 +315,26 @@ async def ws_session(ws: WebSocket, sid: str) -> None:
         nonlocal close_code, close_by
         try:
             while True:
-                if (await ws.receive_json()).get("type") == "stop":
+                msg = await ws.receive()
+                if msg["type"] == "websocket.disconnect":
+                    raise WebSocketDisconnect(msg.get("code", 1000))
+                if msg.get("bytes") is not None:  # a Speak live audio frame (anything else ignores binary)
+                    mic.on_frame(s, msg["bytes"])
+                    continue
+                try:
+                    body = json.loads(msg.get("text") or "")
+                    kind = body.get("type")
+                except (ValueError, TypeError, AttributeError):
+                    if s.mic is None:
+                        return  # as before: a bad message ends listening, the stream keeps going
+                    continue
+                if kind == "stop":
                     runner.stop(s)
+                elif s.mic is not None:
+                    mic.handle_control(s, body)
         except WebSocketDisconnect as e:
             close_code, close_by = e.code, "transport"
-        except (RuntimeError, ValueError, TypeError, AttributeError):
+        except RuntimeError:
             return
 
     async def send() -> None:

@@ -4,6 +4,7 @@ import logging
 import time
 import uuid
 from datetime import UTC, datetime
+from pathlib import Path
 
 import httpx2 as httpx
 
@@ -18,6 +19,7 @@ from ..security.credentials import Creds
 from ..stt import realtime
 from ..stt import rest as stt_rest
 from ..stt.base import (
+    LiveAudio,
     SttAuthError,
     SttError,
     SttGate,
@@ -42,6 +44,7 @@ _RANK = {"good_practice": 0, "advisory": 1, "needs_review": 2, "violation": 3}
 SESSIONS: dict[str, "Session"] = {}
 _live_active: set[str] = set()  # ids of running live sessions (at most settings.max_live_sessions)
 MAX_SESSIONS_KEPT = 400
+MIC_HARD_EXTRA_S = 30.0  # a Speak live call ends gracefully at its limit; this is the safety net past it
 UNSTARTED_TTL_S = 90  # a session whose WebSocket never connects drops its keys after this long
 
 
@@ -71,6 +74,8 @@ class Session:
         self.coach_used: dict[str, int] = {}
         self.llm_skipped = 0  # LLM reviews skipped by the short-segment guard (not the same as a clean review)
         self.stt_gate: SttGate | None = None  # the live run's socket gate: its counters go into the summary
+        self.private = mode == "mic"  # Speak live: the visitor's words are never written to the database or a recording
+        self.mic = None  # the Speak live state (session/mic.py)
 
 
 def new_session(scenario_id: str, requested: str, creds: Creds | None = None, pause_for_coach: bool = False) -> Session:
@@ -151,8 +156,12 @@ def summary(s: Session, stopped: bool = False) -> dict:
 
 async def _run(s: Session) -> None:
     try:
-        async with asyncio.timeout(settings.session_max_s):
-            if s.effective_mode == "live":
+        limit = settings.mic_session_max_s + MIC_HARD_EXTRA_S if s.effective_mode == "mic" else settings.session_max_s
+        async with asyncio.timeout(limit):
+            if s.effective_mode == "mic":
+                from . import mic  # imported here: mic.py builds on this module
+                await mic.run_mic(s)
+            elif s.effective_mode == "live":
                 _live_active.add(s.id)
                 try:
                     await _run_live(s)
@@ -185,17 +194,21 @@ def _finish(s: Session) -> None:
     if s.creds is not None:
         s.creds.wipe()
         s.creds = None
-    db.log_session_end(s.id, _now(), s.risk_peak)
+    if not s.private:
+        db.log_session_end(s.id, _now(), s.risk_peak)
     last = s.log.events[-1] if s.log.events else {}
     done = last.get("type") == "session.ended" and not last["data"]["summary"].get("stopped")
-    if settings.record_runs and s.effective_mode == "live" and done:
+    if settings.record_runs and s.effective_mode == "live" and done and not s.private:
         replay.save(f"_runs/{s.scenario_id}_{s.id}", s.log.events)
     s.log.close()
+    if s.private:  # a Speak live call stays in memory for its report only
+        asyncio.get_running_loop().call_later(settings.mic_events_ttl_s, SESSIONS.pop, s.id, None)
 
 
 # ---------------------------------------------------------------- replay
 def _store_finding(s: Session, d: dict) -> None:
-    db.log_finding(s.id, d)
+    if not s.private:
+        db.log_finding(s.id, d)
     s.findings[d["id"]] = Finding(id=d["id"], turn_idx=d["turn_idx"], rule_id=d["rule_id"], kind=d["kind"],
                                   confidence=d["confidence"])
 
@@ -245,7 +258,7 @@ async def _switch_to_replay(s: Session) -> None:
 
 
 # ---------------------------------------------------------------- live
-async def _segments(client: httpx.AsyncClient, wav, profile: dict, key: str, gate: SttGate | None = None, label: str = "",
+async def _segments(client: httpx.AsyncClient | None, wav: Path | LiveAudio, profile: dict, key: str, gate: SttGate | None = None, label: str = "",
                     turn_started_at: float | None = None):
     """Realtime first. If the socket fails (before or during the turn, or it ends with no text) the turn is retried ONCE on a
     new realtime socket that resumes after the segments already delivered and catches up to the live position faster than real
@@ -253,6 +266,7 @@ async def _segments(client: httpx.AsyncClient, wav, profile: dict, key: str, gat
     cleanly with some text, or by the post-commit timeout with some text, is kept as it is. If REST fails too, SttError
     (the caller falls back to replay)."""
     gate = gate or SttGate()
+    live = isinstance(wav, LiveAudio)  # a microphone turn: one retry on a new socket, no REST (there is no file to send)
     got, covered, complete, why_first = 0, 0, False, ""
     if settings.stt_mode == "realtime":
         for attempt in (0, 1):
@@ -262,7 +276,7 @@ async def _segments(client: httpx.AsyncClient, wav, profile: dict, key: str, gat
                 log.info("session=%r %s: retrying on a new realtime socket from %d ms (%s)", gate.label, label, covered, why_first)
             try:
                 gen = realtime.stream_turn(wav, profile, key, gate=gate, start_ms=covered, first_idx=got,
-                                           turn_started_at=turn_started_at if attempt else None,
+                                           turn_started_at=turn_started_at if attempt or live else None,
                                            via="realtime_retry" if attempt else "realtime")
                 while True:
                     try:
@@ -296,6 +310,8 @@ async def _segments(client: httpx.AsyncClient, wav, profile: dict, key: str, gat
                 why_first = why
             else:
                 log.warning("session=%r %s: the retry failed too (%s), using REST", gate.label, label, why)
+    if live:
+        raise SttError("microphone turn: the realtime socket and its retry both failed")
     gate.rest_turns += 1
     start = retry_start_ms(got, covered, rest_tried=False)
     lock = rest_lock(key)
