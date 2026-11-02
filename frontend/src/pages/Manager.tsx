@@ -461,11 +461,14 @@ function Attention({ data, agents, search }: { data: ManagerPayload; agents: Man
                   Practise this rule in role-play. Coach line: “{rule.coach_line}”
                 </p>
               )}
-              {ex && (
-                <Link to={`/call/${ex.call_id}`} className="text-[13px] font-semibold">
-                  Review example call{ex.has_replay ? ' (recorded run)' : ''}: {ex.title} →
-                </Link>
-              )}
+              {ex &&
+                (ex.has_replay ? (
+                  <Link to={`/call/${ex.call_id}`} className="text-[13px] font-semibold">
+                    Review example call (recorded run): {ex.title} →
+                  </Link>
+                ) : (
+                  <p className="text-[13px] text-[var(--mc-muted)]">Example call: {ex.title}</p>
+                ))}
             </li>
           )
         })}

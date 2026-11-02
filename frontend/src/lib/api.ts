@@ -45,6 +45,8 @@ export interface Rule {
   rbi_ref: string
   summary: string
   why: string
+  /** An existing coach clip of this rule (its first line), or null */
+  coach_clip?: string | null
 }
 
 export interface Prf {

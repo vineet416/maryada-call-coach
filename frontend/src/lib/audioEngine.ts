@@ -4,6 +4,7 @@ import { audioUrl } from '@/lib/api'
 const COACH_KEY = 'maryada.coachVoice'
 const MUTE_KEY = 'maryada.muted'
 const PAUSE_KEY = 'maryada.pauseForCoach'
+const VOLUME_KEY = 'maryada.coachVolume'
 
 /**
  * Browser gains. The library already mixes the voices at agent -22, borrower -24, third party -25 and coach -27 LUFS.
@@ -13,6 +14,8 @@ const PAUSE_KEY = 'maryada.pauseForCoach'
  */
 const CALL_GAIN = { agent: 1, borrower: 1, third_party: 1 }
 export const COACH_GAIN = 0.84
+/** The volume slider (0 to 100) is the element volume in percent: 100 is the clip at its own level, which peaks well under full scale, so it never clips. Untouched, it equals COACH_GAIN. */
+export const DEFAULT_COACH_VOLUME = Math.round(COACH_GAIN * 100)
 /** The call audio is lowered by this much while the coach clip plays (0 turns ducking off). */
 export const DUCK_DB = -1.5
 
@@ -23,9 +26,18 @@ function override(name: string, lo: number, hi: number): number | null {
   const v = raw === null || raw.trim() === '' ? NaN : Number(raw)
   return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : null
 }
-const coachGain = () => override('coach', 0.1, 1) ?? COACH_GAIN
 const duckDb = () => (override('duck', 0, 6) !== null ? -(override('duck', 0, 6) as number) : DUCK_DB)
 const FADE_MS = 150
+
+function readVolume(): number {
+  try {
+    const raw = localStorage.getItem(VOLUME_KEY)
+    const v = raw === null ? NaN : Number(raw)
+    return Number.isFinite(v) ? Math.min(100, Math.max(0, Math.round(v))) : DEFAULT_COACH_VOLUME
+  } catch {
+    return DEFAULT_COACH_VOLUME
+  }
+}
 
 function readFlag(key: string, fallback: boolean): boolean {
   try {
@@ -48,6 +60,7 @@ class AudioEngine {
   private coach: HTMLAudioElement | null = null
   private cache = new Map<string, HTMLAudioElement>()
   private onCoachEnd: (() => void) | null = null
+  private coachToken = 0 // counts the coach clips started: tells a late event of an old clip from the current one
   private turnGain = 1
   private duckLevel = 1 // current multiplier on the call audio (1 = not ducked)
   private duckTarget = 1
@@ -58,6 +71,8 @@ class AudioEngine {
   private frozenInto = 0 // ms into the turn while the call is held
   private held = false // the call is paused for the coach (the pause option); a finished clip also reports paused
   coachVoice = readFlag(COACH_KEY, true)
+  /** 0 to 100, kept in this browser; applies to the next coach clip (and to the one playing). */
+  coachVolume = readVolume()
   muted = readFlag(MUTE_KEY, false)
   /** Option: the call pauses only while the coach clip plays. Default off (the coach plays over the call). */
   pauseForCoach = readFlag(PAUSE_KEY, false)
@@ -150,21 +165,28 @@ class AudioEngine {
     return into === null ? null : this.turnStartT + into
   }
 
-  playCoach(url: string, onEnd: () => void, duck = true) {
+  private coachLevel() {
+    return override('coach', 0.1, 1) ?? this.coachVolume / 100
+  }
+
+  playCoach(url: string, onEnd: () => void, duck = true, force = false) {
     this.stopCoach()
-    if (!this.coachVoice || this.muted) {
+    if (!force && (!this.coachVoice || this.muted)) {
       onEnd()
       return
     }
     const a = this.get(url)
     a.currentTime = 0
-    a.volume = coachGain()
+    a.volume = this.coachLevel()
     this.coach = a
     this.onCoachEnd = onEnd
     if (duck) this.setDuck(true)
-    a.onended = () => this.finishCoach()
-    a.onerror = () => this.finishCoach()
-    void a.play().catch(() => this.finishCoach())
+    // a clip that was replaced (its play() rejects with an abort, or it fires a late end) must not finish the clip that replaced it
+    const mine = ++this.coachToken
+    const done = () => mine === this.coachToken && this.finishCoach()
+    a.onended = done
+    a.onerror = done
+    void a.play().catch(done)
   }
 
   private finishCoach() {
@@ -174,6 +196,21 @@ class AudioEngine {
     if (this.coach) this.coach.onended = null
     this.coach = null
     cb?.()
+  }
+
+  /** Settings: hear an existing coach clip at the chosen level (no call is playing, so nothing is ducked). */
+  previewCoach(url: string, onEnd: () => void) {
+    this.playCoach(url, onEnd, false, true)
+  }
+
+  setCoachVolume(v: number) {
+    this.coachVolume = Math.min(100, Math.max(0, Math.round(v)))
+    try {
+      localStorage.setItem(VOLUME_KEY, String(this.coachVolume))
+    } catch {
+      /* storage may be blocked: the level then lasts until the page is closed */
+    }
+    if (this.coach) this.coach.volume = this.coachLevel()
   }
 
   stopCoach() {

@@ -4,12 +4,15 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { Switch } from '@/components/Switch'
 import { audio } from '@/lib/audioEngine'
-import { listModels, testGnani, testLlm, type TestResult } from '@/lib/api'
-import { CALL_LIMIT_S, CONCURRENT_CALLS } from '@/lib/limits'
+import { getRules, listModels, testGnani, testLlm, type TestResult } from '@/lib/api'
+import { CONCURRENT_CALLS, MIC_CALL_LIMIT_S } from '@/lib/limits'
 import { GNANI_KEY_URL, PROVIDERS } from '@/lib/providers'
 import { useKeysStore } from '@/store/keysStore'
 
 type Test = TestResult | 'busy' | null
+
+/** After the last keyboard step on the volume slider, the sample plays this long after. */
+const SETTLE_MS = 250
 
 export function Settings() {
   usePageTitle('Settings · Maryada')
@@ -26,7 +29,58 @@ export function Settings() {
   const [cleared, setCleared] = useState(false)
   const [pauseCoach, setPauseCoach] = useState(audio.pauseForCoach)
   const [voice, setVoice] = useState(audio.coachVoice)
+  const [volume, setVolume] = useState(audio.coachVolume)
+  const [sample, setSample] = useState<string | null>(null) // an existing coach clip, to hear the level
+  const [sampling, setSampling] = useState(false)
   const seq = useRef(0)
+
+  useEffect(() => {
+    const ctl = new AbortController()
+    getRules(ctl.signal)
+      .then((r) => setSample(r.find((x) => x.coach_clip)?.coach_clip ?? null))
+      .catch(() => undefined) // without it the sample button stays off; the slider still works
+    return () => {
+      ctl.abort()
+      audio.stopCoach()
+    }
+  }, [])
+
+  // a disabled sample button always says why (while a sample plays, its own label "Playing…" is the reason)
+  const noSampleWhy = !voice ? 'Turn on the coach voice to preview' : !sample ? 'Sample not available' : null
+
+  const playSample = () => {
+    if (!sample) return
+    // previewCoach stops a clip that is still playing first, so samples never overlap; its end callback runs before the new
+    // clip starts, hence "Playing…" is set after it
+    audio.previewCoach(sample, () => setSampling(false))
+    setSampling(true)
+  }
+
+  // After the slider moves, the sample plays once the change has settled: on release of a mouse or touch drag, or SETTLE_MS after
+  // the last keyboard step. Never on page load, and never while the coach voice is off.
+  const dragging = useRef(false)
+  const settle = useRef<number | undefined>(undefined)
+  const latest = useRef({ voice, sample, play: playSample })
+  latest.current = { voice, sample, play: playSample }
+  const playIfAllowed = () => {
+    const l = latest.current
+    if (l.voice && l.sample) l.play()
+  }
+  useEffect(() => {
+    const release = () => {
+      if (!dragging.current) return
+      dragging.current = false
+      window.clearTimeout(settle.current)
+      playIfAllowed()
+    }
+    window.addEventListener('pointerup', release)
+    window.addEventListener('pointercancel', release)
+    return () => {
+      window.removeEventListener('pointerup', release)
+      window.removeEventListener('pointercancel', release)
+      window.clearTimeout(settle.current)
+    }
+  }, [])
 
   // The preset decides the stored base URL; Custom keeps what the visitor typed.
   useEffect(() => {
@@ -296,28 +350,57 @@ export function Settings() {
             </div>
           </section>
 
-          <section className="card flex flex-col gap-3 p-5">
-            <h2 className="text-[15px] font-semibold">Live call limits</h2>
-            <dl className="overflow-hidden rounded-xl border border-[#eaecf0] text-[13px]">
-              <Row k="Who pays" v="Your own accounts" />
-              <Row k="Call length" v={`${CALL_LIMIT_S} s`} />
-              <Row k="Calls at once" v={String(CONCURRENT_CALLS)} last />
-            </dl>
-          </section>
-
-          <section className="card flex flex-col gap-2.5 border-[var(--mc-accent-ring)] bg-[#f8f8ff] p-5">
-            <h2 className="text-[15px] font-semibold text-[var(--mc-accent-dark)]">No keys? Use recorded runs</h2>
-            <p className="text-[13.5px] leading-relaxed text-[var(--mc-text-2)]">
-              Calls that have a recorded run play with the real findings and coach nudges. They need no keys and are free to play as often as you like.
-            </p>
-            <Link to="/" className="link text-[13.5px]">Browse recorded runs →</Link>
-          </section>
 
           <section className="card flex flex-col gap-3 p-5" aria-labelledby="prefs-h">
             <h2 id="prefs-h" className="text-[15px] font-semibold">Preferences</h2>
             <div className="flex items-center justify-between gap-3 text-[13.5px]">
               <span id="voice-l">Play the coach voice</span>
               <Switch label="Play the coach voice" checked={voice} onChange={(v) => { audio.setCoachVoice(v); setVoice(v) }} />
+            </div>
+            <div className="flex flex-col gap-1.5 text-[13.5px]">
+              <div className="flex items-center justify-between gap-3">
+                <label htmlFor="coach-volume">Coach voice volume</label>
+                <output htmlFor="coach-volume" className="mono text-[13px] font-semibold">{volume}</output>
+              </div>
+              <div className="flex flex-col gap-2">
+                <input
+                  id="coach-volume"
+                  type="range"
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={volume}
+                  disabled={!voice}
+                  aria-valuetext={`${volume} out of 100`}
+                  onPointerDown={(e) => {
+                    if (e.button === 0) dragging.current = true // the primary button or a touch; a right-click is not a drag
+                  }}
+                  onKeyDown={() => {
+                    dragging.current = false // a key press is a keyboard change, whatever happened to the pointer before
+                  }}
+                  onBlur={() => {
+                    dragging.current = false
+                  }}
+                  onChange={(e) => {
+                    const v = Number(e.target.value)
+                    audio.setCoachVolume(v)
+                    setVolume(v)
+                    window.clearTimeout(settle.current)
+                    if (!dragging.current) settle.current = window.setTimeout(playIfAllowed, SETTLE_MS) // keyboard: wait for the last step
+                  }}
+                  className="h-6 w-full min-w-0 cursor-pointer accent-[var(--mc-accent)] disabled:cursor-not-allowed disabled:opacity-50"
+                />
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <button type="button" onClick={playSample} disabled={!voice || !sample || sampling} aria-describedby={noSampleWhy ? 'sample-why' : undefined} className="btn btn-sm">
+                    {sampling ? 'Playing…' : 'Play sample'}
+                  </button>
+                  {noSampleWhy && <span id="sample-why" className="text-xs text-[var(--mc-muted)]">{noSampleWhy}</span>}
+                </div>
+              </div>
+              <span className="text-xs text-[var(--mc-muted)]">
+                Applies to the next coach clip, in recorded runs and in Speak live. The call audio keeps its quiet mix.
+                {!voice && ' Turn the coach voice on to change it.'}
+              </span>
             </div>
             <div className="flex items-start justify-between gap-3 text-[13.5px]">
               <span>
@@ -333,6 +416,24 @@ export function Settings() {
               />
             </div>
           </section>
+
+          <section className="card flex flex-col gap-3 p-5">
+            <h2 className="text-[15px] font-semibold">Live call limits</h2>
+            <dl className="overflow-hidden rounded-xl border border-[#eaecf0] text-[13px]">
+              <Row k="Who pays" v="Your own accounts" />
+              <Row k="Call length" v={`${MIC_CALL_LIMIT_S} s`} />
+              <Row k="Calls at once" v={String(CONCURRENT_CALLS)} last />
+            </dl>
+          </section>
+
+          <section className="card flex flex-col gap-2.5 border-[var(--mc-accent-ring)] bg-[#f8f8ff] p-5">
+            <h2 className="text-[15px] font-semibold text-[var(--mc-accent-dark)]">No keys? Use recorded runs</h2>
+            <p className="text-[13.5px] leading-relaxed text-[var(--mc-text-2)]">
+              Calls that have a recorded run play with the real findings and coach nudges. They need no keys and are free to play as often as you like.
+            </p>
+            <Link to="/" className="link text-[13.5px]">Browse recorded runs →</Link>
+          </section>
+
         </aside>
       </div>
     </div>
