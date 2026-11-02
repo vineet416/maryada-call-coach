@@ -11,15 +11,17 @@ What it is not:
 - It stores nothing about visitors: no audio, no keys, and nothing at all from the microphone mode.
 - It is not legal advice. The rules come from one source, RBI/2026-27/223.
 
+There are three ways to run a call. A recorded run replays saved results and needs no keys. A live pass sends a built-in call's audio through the full pipeline with the visitor's keys, and falls back to the recorded run if speech-to-text fails. Speak live uses the microphone. Sections 4 and 5 cover the first and last.
+
 ## 2. The big picture
 
 ```mermaid
 flowchart LR
     V[Visitor browser] -->|loads the app| F[Vercel frontend]
     V -->|REST and WebSocket| B[Render backend]
-    B -->|speech, one connection per turn| G[Gnani Prisma speech-to-text]
+    B -->|speech, streaming connection per turn| G[Gnani Prisma speech-to-text]
     B -->|text review| L[Visitor language model provider]
-    K[Gnani key and model key stay in the browser tab] -.->|sent only with the start request| B
+    K[Gnani key and model key stay in the browser] -.->|sent only with the start request| B
 ```
 
 The backend is one Docker service on Render. It holds no Gnani key and no language-model key. The visitor types their own keys on the Settings page. The browser sends them once, in the request that starts a call, and the backend keeps them in memory for that call only. A recorded run needs no keys at all.
@@ -89,7 +91,7 @@ sequenceDiagram
     M->>B: sound
     B->>S: 8 kHz audio frames over WebSocket
     S->>S: split into turns on pauses
-    S->>G: one connection per turn
+    S->>G: streaming connection per turn
     G-->>E: transcript
     E-->>B: flag, risk and coach card
     E-->>B: coach voice clip
@@ -124,12 +126,12 @@ On the 10 held-out calls, clean audio gives 69.2% precision and 81.8% recall. Wi
 
 ## 7. Privacy and keys
 
-- Keys stay in the browser tab. They travel only in the request that starts a call, are never logged, and are wiped when the call ends.
+- Keys stay in the browser: in the tab by default, or on that device if the visitor chooses "Remember on this device". They travel only in the request that starts a call, are never logged, and the backend wipes its copy when the call ends.
 - Speak live writes nothing to disk or to the database: no audio, no transcript, no recording.
-- The built-in synthetic calls do get a small SQLite log (session times, findings and, for a live pass over a call's audio, the synthetic transcript). It lives inside the container and resets on every redeploy.
+- The built-in synthetic calls do get a small SQLite log: session times, findings and the synthetic transcript turns. It lives inside the container and resets on every redeploy.
 - Speak live events stay in memory for 30 minutes, only so the report can be shown, and are then dropped.
-- Only the origins listed in `ALLOWED_ORIGINS` may call the REST API from a browser, plus localhost for development.
-- The WebSocket does not check the browser origin. Access depends on the session id, which is only issued after a start request that passed that origin check.
+- Browser calls to the REST API are limited by CORS to the origins in `ALLOWED_ORIGINS`, plus any localhost port for development. CORS is enforced by the browser, not by a server block.
+- The WebSocket has no origin check. Access depends on the session id, which is random and hard to guess.
 - A custom model address is checked before the backend calls it, so it cannot point at internal addresses.
 
 ## 8. Limits and the path to a real call centre
