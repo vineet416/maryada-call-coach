@@ -1,10 +1,10 @@
-import { Clock, Headset, Mic, Play, Search, ShieldAlert } from 'lucide-react'
+import { Clock, Headset, Mic, Play, Search, ShieldAlert, Upload } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ErrorCard } from '@/components/ErrorCard'
 import { getEval, getRules, getScenarios, type LatencyRow, type Rule, type ScenarioSummary } from '@/lib/api'
+import { LIVE_CALLS_ENABLED } from '@/lib/features'
 import { usePageTitle } from '@/lib/usePageTitle'
-import { useHasKeys } from '@/store/keysStore'
 
 const lengthLabel = (s: number | null) => {
   if (!s) return ''
@@ -78,10 +78,11 @@ export function Cases() {
         <>
           <ProductLine calls={all.length} families={families} flag={flag} />
           {hero && <Hero c={hero} name={name} />}
+          <Modes />
           <section aria-labelledby="samples-h" className="flex flex-col gap-4">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
-                <h2 id="samples-h" className="text-xl font-semibold tracking-tight">Sample calls</h2>
+                <h2 id="samples-h" tabIndex={-1} className="text-xl font-semibold tracking-tight">Sample calls</h2>
                 <p className="mt-0.5 text-[13px] text-[var(--mc-muted)]">
                   {all.length} synthetic recovery calls with known rule labels. Pick one to run it through Maryada.
                 </p>
@@ -151,6 +152,73 @@ function ProductLine({ calls, families, flag }: { calls: number; families: numbe
   )
 }
 
+/** The three ways to use Maryada. Only the recorded run works today; the other two are shown, not clickable. */
+function Modes() {
+  const toSamples = () => {
+    const el = document.getElementById('samples-h')
+    el?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })
+    el?.focus({ preventScroll: true })
+  }
+  return (
+    <section aria-labelledby="modes-h" className="flex flex-col gap-3">
+      <h2 id="modes-h" className="sr-only">Ways to use Maryada</h2>
+      <div className="grid gap-4 md:grid-cols-3 md:gap-5">
+        <ModeCard
+          featured
+          icon={<Play className="h-4 w-4 fill-current" aria-hidden />}
+          title="Play a recorded run"
+          chip="No keys needed"
+          text="Pick a sample call and watch the flags, risk and coaching as it plays."
+          action={<button type="button" onClick={toSamples} className="btn btn-primary">Choose a sample call</button>}
+        />
+        <ModeCard
+          icon={<Mic className="h-4 w-4" aria-hidden />}
+          title="Speak live"
+          chip="Coming soon"
+          text="Speak as the agent into your microphone and get live flags and coaching."
+          action={<DisabledButton>Speak live</DisabledButton>}
+        />
+        <ModeCard
+          icon={<Upload className="h-4 w-4" aria-hidden />}
+          title="Upload a recording"
+          chip="Coming soon"
+          text="Bring a two-channel call recording and get flags, coaching and a call report."
+          action={<DisabledButton>Upload a recording</DisabledButton>}
+        />
+      </div>
+      <p className="text-[13px] text-[var(--mc-muted)]">Live modes are coming soon and will use your own Gnani and language-model keys.</p>
+    </section>
+  )
+}
+
+function ModeCard({ featured, icon, title, chip, text, action }: { featured?: boolean; icon: React.ReactNode; title: string; chip: string; text: string; action: React.ReactNode }) {
+  return (
+    <article className={`card flex flex-col gap-3 p-5 sm:p-6 ${featured ? '!border-2 !border-[var(--mc-accent)] shadow-[0_8px_24px_rgb(67_56_202/0.12)]' : ''}`}>
+      <div className="flex items-center justify-between gap-2">
+        <span className={`flex h-8 w-8 items-center justify-center rounded-full ${featured ? 'bg-[var(--mc-accent)] text-white' : 'bg-[#f2f4f7] text-[#475467]'}`}>{icon}</span>
+        <span className={`chip h-6 text-[11.5px] ${featured ? 'chip-ok' : ''}`}>{chip}</span>
+      </div>
+      <h2 className="text-base font-semibold tracking-tight">{title}</h2>
+      <p className="text-[13.5px] leading-relaxed text-[var(--mc-muted)]">{text}</p>
+      <div className="mt-auto pt-1">{action}</div>
+    </article>
+  )
+}
+
+/** Visible, announced as unavailable, does nothing, no hover state. */
+function DisabledButton({ children }: { children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      aria-disabled="true"
+      onClick={(e) => e.preventDefault()}
+      className="btn cursor-not-allowed !border-[var(--mc-line)] !bg-[#f2f4f7] !text-[#5b6577] hover:!bg-[#f2f4f7] hover:!border-[var(--mc-line)] hover:!shadow-none"
+    >
+      {children}
+    </button>
+  )
+}
+
 function FilterChip({ on, onClick, children }: { on: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
     <button
@@ -165,7 +233,6 @@ function FilterChip({ on, onClick, children }: { on: boolean; onClick: () => voi
 }
 
 function Hero({ c, name }: { c: ScenarioSummary; name: (id: string) => string | undefined }) {
-  const hasKeys = useHasKeys()
   return (
     <section className="card flex flex-wrap overflow-hidden" aria-label="Featured call">
       <div className="flex min-w-0 flex-[1_1_520px] flex-col justify-center gap-4 p-6 sm:p-10">
@@ -188,10 +255,6 @@ function Hero({ c, name }: { c: ScenarioSummary; name: (id: string) => string | 
         <div className="mt-1.5 flex flex-wrap gap-3">
           <Link to={`/call/${c.id}`} className="btn btn-lg btn-primary">
             <Play className="h-3.5 w-3.5 fill-current" aria-hidden /> {c.has_replay ? 'Play recorded run' : 'Open the call'}
-          </Link>
-          <Link to={`/call/${c.id}`} className="btn btn-lg">
-            Start live call
-            {!hasKeys && <span className="chip chip-warn h-5 text-[11px]">Needs your keys</span>}
           </Link>
         </div>
       </div>
@@ -227,7 +290,7 @@ function CaseCard({ c }: { c: ScenarioSummary }) {
         {c.has_replay ? (
           <span className="text-xs text-[var(--mc-muted)]">Recorded run</span>
         ) : (
-          <span className="chip h-5 text-[11px]" title="No recorded run: this call needs your own keys">Live only</span>
+          <span className="chip h-5 text-[11px]" title="This call has no recorded run yet">{LIVE_CALLS_ENABLED ? 'Live only' : 'No recorded run yet'}</span>
         )}
       </div>
       <h3 className="text-base font-semibold leading-snug tracking-tight">{c.title}</h3>
@@ -243,7 +306,7 @@ function CaseCard({ c }: { c: ScenarioSummary }) {
         <span>{lengthLabel(c.duration_s)}</span>
         <span className="flex items-center gap-1 font-semibold text-[var(--mc-accent)]">
           {c.has_replay && <Play className="h-3 w-3 fill-current" aria-hidden />}
-          {c.has_replay ? 'Play recorded run' : 'Live with your keys'}
+          {c.has_replay ? 'Play recorded run' : LIVE_CALLS_ENABLED ? 'Live with your keys' : 'View call'}
         </span>
       </div>
     </Link>
