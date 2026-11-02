@@ -267,7 +267,7 @@ function RunView({ run, results, rules, group, setGroup, eng, cond, review }: {
           {adj && (
             <p className="-mt-3 text-[12.5px] text-[var(--mc-muted)]">
               After human review of extras: the project author reviewed only the {review?.items.length ?? 0} extra flags
-              the labels do not have, and is the only reviewer. {adj.extras_real} were judged real (counted as correct flags), {adj.extras_unsure} unsure, and the rest not violations (still false flags). Unsure makes the second number a range: all unsure counted false, then all counted correct. The first number above is still scored against the original labels.
+              the labels do not have ({adj.flags - adj.correct_original} of them are in the strict count above), and is the only reviewer. {adj.extras_real} were judged real (counted as correct flags), {adj.extras_unsure} unsure, and the rest not violations (still false flags). Unsure makes the second number a range: all unsure counted false, then all counted correct. The first number above is still scored against the original labels.
             </p>
           )}
         </>
