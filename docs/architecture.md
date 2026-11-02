@@ -11,7 +11,7 @@ What it is not:
 - It stores nothing about visitors: no audio, no keys, and nothing at all from the microphone mode.
 - It is not legal advice. The rules come from one source, RBI/2026-27/223.
 
-There are three ways to run a call. A recorded run replays saved results and needs no keys. A live pass sends a built-in call's audio through the full pipeline with the visitor's keys, and falls back to the recorded run if speech-to-text fails. Speak live uses the microphone. Sections 4 and 5 cover the first and last.
+There are two ways to run a call today. A recorded run replays saved results and needs no keys. Speak live uses the microphone and the visitor's keys. Sections 4 and 5 cover them in that order. A mode for uploading a recording is planned but not built.
 
 ## 2. The big picture
 
@@ -122,6 +122,8 @@ Results for the full engine on the 30 calls, counted per labelled unit:
 | Clean audio | 75% (30 correct, 10 extra flags) | 85.7% (30 of 35) | 100% (35 of 35) |
 | 10 dB noise | 66.0% | 88.6% | 100% |
 
+At 10 dB the whole precision drop comes from rule R2. It goes from 0 to 8 extra advisory flags, in 8 calls. The two examples saved in the results file show the transcript with the lender name garbled or missing, so the introduction check fails. R2 has no model step, and the model-based rules were not affected: R1, R3, R4 and R5 have the same or fewer extra flags than on clean audio.
+
 On the 10 held-out calls, clean audio gives 69.2% precision and 81.8% recall. With the model check switched off (phrase checks only), clean audio gives 100% precision and 57.1% recall, so the model check is what finds the missed cases. A flag with no matching label counts against precision.
 
 ## 7. Privacy and keys
@@ -141,3 +143,4 @@ On the 10 held-out calls, clean audio gives 69.2% precision and 81.8% recall. Wi
 - R2 is rule-based and sensitive to speech-to-text errors. R6 is review-only by design.
 - A real deployment would take two audio tracks from the dialer, one for the agent and one for the borrower. The engine already takes both sides and judges only the agent. What is not built is the dialer connection, storage, access control and a legal review of the rules.
 - Speech in the evaluation uses Gnani's request-per-turn API, while the live app streams, so live transcripts can differ.
+- An older keyed live pass over a built-in call's audio still exists in the code, but it is switched off and not offered on the Home page.
