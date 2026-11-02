@@ -38,6 +38,7 @@ from app.rules.schemas import Turn
 from app.session import assets
 from app.stt import rest
 from app.stt.base import SttAuthError, SttError, load_profile
+from eval_keys import KeyPool, is_quota_error, second_key
 
 CONDITIONS = ("clean", "snr10", "snr20", "snr5")
 GROUPS = ("tune", "held_out", "seen_in_development")
@@ -106,6 +107,40 @@ async def transcribe(client: httpx.AsyncClient, wav: Path, profile: dict, key: s
 
 
 # ---------------------------------------------------------------- language model
+POOL: KeyPool | None = None  # set in main() for a full run
+
+
+def switch_key(why: str) -> None:
+    """Continue the run on the second Euri key (settings object of this process only; counts are printed, never keys)."""
+    settings.euri_api_key = POOL.switch()
+    say(f"switching to the second Euri key ({why}); {POOL.summary()}")
+
+
+async def ask(client: httpx.AsyncClient, model: str, messages: list[dict], budget: int | None) -> str | None:
+    """One model request on the active key. Budget reached or daily allowance spent -> second key; none left -> Stop."""
+    while True:
+        if POOL.budget_reached(budget):
+            if not POOL.can_switch():
+                raise Stop(f"token budget {budget} reached ({POOL.summary()})")
+            switch_key(f"token budget {budget} reached on key 1")
+        before = llm.STATS["tokens"]
+        try:
+            raw, _ = await asyncio.wait_for(llm.chat(client, model, messages, None), LLM_TIMEOUT_S)
+        except httpx.HTTPStatusError as e:
+            code = e.response.status_code
+            if is_quota_error(code, e.response.text) and POOL.can_switch():
+                switch_key(f"Euri answered {code}: daily allowance of key {POOL.number} used up")
+                continue
+            if code in (401, 403, 429):
+                raise Stop(f"Euri answered {code} on key {POOL.number}; key refused, allowance used up or rate limited "
+                           f"({POOL.summary()})") from e
+            return None
+        except (TimeoutError, httpx.HTTPError, KeyError, IndexError, ValueError, TypeError):
+            return None
+        POOL.add_tokens(llm.STATS["tokens"] - before)
+        return raw
+
+
 async def review(client: httpx.AsyncClient, ctx, hist: list[Turn], text: str, st: dict, budget: int | None):
     """Same prompt, model, fallback and cache key as app.rules.llm.review; a 403/429 stops the run instead of degrading."""
     messages = llm._messages(ctx, hist, text)
@@ -114,15 +149,8 @@ async def review(client: httpx.AsyncClient, ctx, hist: list[Turn], text: str, st
         if ck in llm._CACHE and (out := engine.parse_llm(llm._CACHE[ck])) is not None:
             st["cache_hits"] += 1
             return out
-        if budget is not None and llm.STATS["tokens"] >= budget:
-            raise Stop(f"token budget {budget} reached ({llm.STATS['tokens']} reported tokens used in this run)")
-        try:
-            raw, _ = await asyncio.wait_for(llm.chat(client, model, messages, None), LLM_TIMEOUT_S)
-        except httpx.HTTPStatusError as e:
-            if e.response.status_code in (401, 403, 429):
-                raise Stop(f"Euri answered {e.response.status_code}; key refused, allowance used up or rate limited") from e
-            continue
-        except (TimeoutError, httpx.HTTPError, KeyError, IndexError, ValueError, TypeError):
+        raw = await ask(client, model, messages, budget)
+        if raw is None:
             continue
         out = engine.parse_llm(raw)
         if out is not None:
@@ -375,6 +403,9 @@ async def main() -> int:
             if not settings.euri_api_key:
                 say("EURI_API_KEY is not set (environment); cannot run the language model")
                 return 2
+            global POOL
+            POOL = KeyPool(settings.euri_api_key, second_key(settings.model_config["env_file"]))
+            say(f"Euri keys available: {len(POOL.keys)}")
             say(f"language model answers cached on disk: {llm.enable_disk_cache(LLM_CACHE)} entries")
         budget = args.token_budget or None
         stopped = ""
@@ -397,7 +428,8 @@ async def main() -> int:
                 stopped = str(e)
         if stopped:
             say(f"\nSTOPPED CLEANLY: {stopped}. Finished calls are saved; run the same command again to continue.")
-        say(f"language model tokens used in this run: {llm.STATS['tokens']} ({llm.STATS['calls']} requests)")
+        say(f"language model tokens used in this run: {llm.STATS['tokens']} ({llm.STATS['calls']} requests)"
+            + (f"; {POOL.summary()}" if POOL else ""))
     res = write_results(scenarios, labels_h)
     section = res["full"] if args.mode == "full" else res["ablation_llm_off"]
     for cond in conds:
