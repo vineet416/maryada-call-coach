@@ -63,7 +63,7 @@ class TurnSplitter:
                 self._loud_frames += 1
             else:
                 self._loud_ms, self._loud_frames = 0.0, 0
-            while len(self._pre) > 1 and sum(m for _, m in self._pre) > PREROLL_MS + self._loud_ms:
+            while self._seen >= SPARSE_FRAMES and len(self._pre) > 1 and sum(m for _, m in self._pre) > PREROLL_MS + self._loud_ms:  # whole lead-in kept while calibrating (at most 12 frames)
                 self._pre.popleft()
             if self._loud_ms >= START_MS and self._seen >= SPARSE_FRAMES:
                 for _ in range(min(self._loud_frames, len(self._recent))):
