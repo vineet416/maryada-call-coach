@@ -2,6 +2,61 @@
 
 Demo with synthetic calls. Not legal advice. Based on RBI/2026-27/223 (effective 1 Jan 2027).
 
+## Results notes
+
+These notes belong to the Evaluation page. Every number is read from the saved results (`data/eval/eval_results.json`, `engine_changes.json`, `adjudication.json`, `label_changes.json`), generated 2026-11-02. All of it is about the full engine (rules and language model) on clean audio, all 30 calls, unless it says otherwise.
+
+### Limits
+1. The calls are synthetic: the speech is text-to-speech made from authored scripts, not real recordings.
+2. The set is small: 30 calls, 35 labelled units, one run per condition.
+3. The thresholds are fixed (0.75 for a violation, 0.45 for needs review) and were not tuned for this evaluation.
+4. The evaluation transcribes each turn with Gnani REST (one request per turn), while the live app streams the audio, so live transcripts can differ.
+5. All 30 scripts were visible when the phrase lists were written, so the held-out set only protects against prompt tuning.
+
+### The two worst mistakes
+Both are extra flags: the engine raised a violation the script does not label. They are counted against the score; nothing was adjusted.
+
+- **C08, agent turn 11, R3 (abuse, threats, humiliation).** The turn as the speech service heard it: "जो करना है करो, मेरे को Monday तक payment चाहिए, SMS पे link आ जाएगा।" The language model flagged "जो करना है करो" as a violation with confidence 0.98. The labels have nothing here. Review verdict: not a violation. Firm payment demand with a link, no abuse or threat.
+- **C11, agent turn 11, R5 (false or misleading statements).** The turn as heard: "ठीक है आज ही करो 2,300 भी चलेगा बस आज हो जाए।" The language model flagged the whole sentence as a violation with confidence 0.84. The labels have nothing here. Review verdict: not a violation. Accepts a smaller payment today; no false statement.
+
+### An engine change made after seeing the results
+After the first full run, the rule engine was changed. It drops a finding from the language model when its quote matches the current turn only through the whole-sentence fallback **and** the same quote appears in one of the earlier turns the model was shown as context. It removed 3 flags: C07 turn 11 R3, C12 turn 9 R5, C13 turn 9 R5. Each of them quoted a line from an earlier turn, so the flagged turn itself held no violation.
+
+- It was made on 2026-11-02, after seeing the results.
+- It does not use the labels (`uses_labels` is false in `data/eval/engine_changes.json`).
+- It touches only how the model's findings are turned into engine findings (`llm_to_findings` and `deep_findings`): no prompt, threshold, label or phrase-list change.
+- The scores were re-scored from the saved model answers, so the re-score used 0 tokens. The first run used 164 requests and 141,961 reported tokens.
+
+| Counts before and after | Before | After |
+|---|---|---|
+| Strict found / extra / missed | 30 / 10 / 5 | 30 / 10 / 5 |
+| With needs review: found / extra / missed | 35 / 13 / 0 | 35 / 10 / 0 |
+| Held-out calls, strict | 9 / 4 / 2 | 9 / 4 / 2 |
+| Held-out calls, with needs review | 11 / 5 / 0 | 11 / 4 / 0 |
+| Needs-review flags the labels do not have | 3 | 0 |
+
+The strict scores did not change; the change removed only needs-review flags.
+
+### Human review of the extra flags
+The 13 extra flags the labels do not have (the engine flagged them, the script does not label them) were reviewed by one person, the project author, on 2026-11-02. Nobody else reviewed them, so treat the verdicts as one reader's judgement. Verdicts: 3 real, 3 unsure, 7 not a violation. Of the 13, 10 are still flagged after the engine change above and are in the strict count (3 real, 3 unsure, 4 not a violation); the other 3 (C07 turn 11 R3, C12 turn 9 R5, C13 turn 9 R5) are the ones the engine change removed.
+
+- The scores on the Evaluation page are still against the original labels: strict precision 0.75 (30 of 40 flags).
+- Counting the real ones as correct gives a precision of 0.825 to 0.900 (33 to 36 of 40 flags). The low end counts every unsure flag as false, the high end counts every unsure flag as correct.
+- Recall is unchanged: 0.857 (30 of 35 labelled units), because the review adds no labels.
+- The verdicts and notes are in `data/eval/adjudication.json`. The labels were not edited.
+
+### The label change after the first run
+On 2026-11-01, after the first clean rules-only baseline had been scored, the label R4 was added on C17 turn 7. The agent again asks the spouse to relay the payment, the same disclosure as in turn 5. The clean rules-only baseline was first scored with the old labels (34 labelled units) and re-scored with the new ones (35). Labels hash before `be1f14d003059999`, after `21caa31f45898ae6`.
+
+### Model, speech service, thresholds and labels
+Model: gpt-5.4-mini · speech: Gnani Prisma V3.0 (REST, one request per turn) · thresholds 0.75 (violation) and 0.45 (needs review) · labels `21caa31f45898ae6`.
+
+### How to re-score
+- Print the report from the results already on disk (no run, no keys): `python tools/run_eval.py --report --mode full --conditions clean`.
+- Run or resume the evaluation: `python tools/run_eval.py --mode full --conditions clean` (it needs the speech and language-model keys; answers already saved in `data/eval/llm_cache.jsonl` and `data/eval/transcripts_cache/` cost nothing, so repeating a stopped run continues where it stopped). Add `--rerun` to ignore finished calls and score them again from those caches.
+- See the section "Two Euri keys for the evaluation runner" below for the token budget and the second key.
+- The scoring itself is `tools/eval_scoring.py`, covered by `backend/tests/test_eval_scoring.py`.
+
 ## Known failure examples (kept on purpose)
 - **c28, agent turn 3 (held-out call), prefilter only:** the weak R3 phrase "tu sunta hi nahi" matches and produces an R3 `needs_review` finding (confidence 0.6). The label places R3 on turn 5 only, so this counts as one false positive. The phrase list, label, thresholds and weights were not changed, because c28 is in the held-out set and is never tuned against. The LLM check also scored this phrase as R3 in a manual run, so the LLM does not remove it.
 

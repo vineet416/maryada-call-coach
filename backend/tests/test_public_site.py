@@ -91,11 +91,12 @@ def test_call_page_without_a_recording_shows_only_title_and_one_line():
     assert "This call has no recorded run" in s and "!scenario.has_replay && !LIVE_CALLS_ENABLED" in s
 
 
-def test_settings_hides_key_forms_and_limits_until_speak_live_is_on():
+def test_settings_shows_everything_and_reads_the_real_call_cap():
     s = source("Settings.tsx")
-    assert s.count("SPEAK_LIVE_ENABLED &&") >= 3  # key forms, "How your keys are handled", "Live call limits"
+    assert "SPEAK_LIVE_ENABLED" not in s  # the full page shows whatever the Speak live flag says
+    for part in ("Speech to text", "Language model", "Where keys are kept", "How your keys are handled", "Live call limits", "Preferences", "Browse recorded runs"):
+        assert part in s, part
     assert "MIC_CALL_LIMIT_S" in s and not re.search(r"(?<!MIC_)CALL_LIMIT_S", s) and "200" not in s
-    assert "Preferences" in s and "Browse recorded runs" in s
 
 
 def test_how_it_works_says_upload_is_coming_soon():
@@ -105,8 +106,10 @@ def test_how_it_works_says_upload_is_coming_soon():
 
 def test_evaluation_page_is_the_slim_layout():
     s = source("Evaluation.tsx")
-    for gone in ("F1", "f1", "PerCall", "RunPicker", "Coverage", "hard_negative", "off / on label", "Time to flag", "Tuning calls"):
+    for gone in ("F1", "f1", "PerCall", "RunPicker", "Coverage", "hard_negative", "off / on label", "Time to flag", "Tuning calls",
+                 "Where it went wrong", "Honest limits", "How these numbers were produced", "<details"):
         assert gone not in s, gone
-    for kept in ("Count needs-review as found", "How these numbers were produced", "Where it went wrong", "Honest limits"):
+    for kept in ("Count needs-review as found", "needs-review rule by design", "With phone-line noise", "Speed", "Violations found", "Correct flags"):
         assert kept in s, kept
-    assert s.count("<li>") >= 5 and s.count("<li>Synthetic") == 1  # the five limits are fixed text, numbers come from the data
+    assert "https://github.com/vineet416/maryada-call-coach/blob/main/docs/EVAL-NOTES.md" in s
+    assert "Limits, method notes and the two worst mistakes: see docs/EVAL-NOTES.md" in s

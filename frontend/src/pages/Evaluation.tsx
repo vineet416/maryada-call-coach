@@ -4,7 +4,6 @@ import { Switch } from '@/components/Switch'
 import {
   getEval,
   getRules,
-  type EvalExample,
   type EvalPayload,
   type EvalResults,
   type Prf,
@@ -19,7 +18,7 @@ const snrOf = (id: string) => (id === 'clean' ? Infinity : Number(id.replace(/\D
 const condLabel = (id: string) => (id === 'clean' ? 'Clean audio' : /^snr\d+$/.test(id) ? `${id.slice(3)} dB` : id)
 const f2 = (x: number | null) => (x === null ? '–' : x.toFixed(2))
 const ratio = (num: number, den: number) => `${num} of ${den}`
-const SOURCE: Record<string, string> = { prefilter: 'phrase check', llm: 'language model', both: 'phrase check and language model', gate: 'rule check' }
+const NOTES_URL = 'https://github.com/vineet416/maryada-call-coach/blob/main/docs/EVAL-NOTES.md'
 const dateOf = (iso: string) => new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 const seconds = (ms: number | null | undefined) => (ms == null ? null : `${(ms / 1000).toFixed(1)} s`)
 const found = (p: Prf) => ratio(p.tp, p.tp + p.fn)
@@ -98,9 +97,11 @@ export function Evaluation() {
       )}
 
       <Speed fast={seconds(rowOf('Fast phrase check')?.p50_ms)} deep={seconds(rowOf('Deep language check')?.p50_ms)} runs={data.latency.calls.length} />
-      {run && <Examples examples={run.examples ?? []} rules={rules} />}
-      {results && all && <Limits results={results} all={all.overall.strict} />}
-      {results && run && <Produced results={results} data={data} />}
+      <p className="text-[12.5px] text-[var(--mc-muted)]">
+        <a href={NOTES_URL} target="_blank" rel="noopener noreferrer" className="link">
+          Limits, method notes and the two worst mistakes: see docs/EVAL-NOTES.md
+        </a>
+      </p>
     </div>
   )
 }
@@ -194,6 +195,13 @@ function RuleTable({ run, rules }: { run: RunResult; rules: Rule[] }) {
             })}
           </tbody>
         </table>
+        {rules
+          .filter((r) => r.kind_default === 'needs_review' && all.per_rule[r.id])
+          .map((r) => (
+            <p key={r.id} className="px-6 pt-3 text-[12.5px] text-[var(--mc-text-2)]">
+              {r.id} ({r.title.toLowerCase()}) is a needs-review rule by design, so it has no strict recall; switch the toggle to count its needs-review flags as found.
+            </p>
+          ))}
         <p className="px-6 py-3 text-[12px] text-[var(--mc-muted)]">
           Full engine, clean audio, all calls. Found, missed and extra are counts of units (one agent turn and one rule). A dash means the score is undefined: nothing was labelled, or nothing flagged, for that rule.
         </p>
@@ -254,92 +262,5 @@ function Speed({ fast, deep, runs }: { fast: string | null; deep: string | null;
       </ul>
       <p className="text-[12px] text-[var(--mc-muted)]">Read from the {runs} recorded runs, not a fresh measurement.</p>
     </section>
-  )
-}
-
-function Examples({ examples, rules }: { examples: EvalExample[]; rules: Rule[] }) {
-  if (!examples.length) return null
-  const kind = (id: string) => rules.find((r) => r.id === id)?.kind_default ?? 'violation'
-  return (
-    <section className="card flex flex-col gap-4 p-6" aria-labelledby="ex-h">
-      <h2 id="ex-h" className="text-base font-semibold">Where it went wrong</h2>
-      <p className="-mt-2 text-[13px] text-[var(--mc-muted)]">Real errors from this run, with the turn as the speech service heard it. Counted against the score; nothing was adjusted.</p>
-      <div className="grid gap-4 lg:grid-cols-2">
-        {examples.map((e) => (
-          <div key={`${e.call}-${e.turn}-${e.rule}`} className="flex flex-col gap-2 rounded-xl border border-[var(--mc-line)] p-4">
-            <div className="flex flex-wrap items-center gap-2 text-[13px]">
-              <b>{e.call.toUpperCase()}</b> <span className="text-[var(--mc-muted)]">agent turn {e.turn}</span>
-              <span className={`chip chip-${kind(e.rule)} h-5 text-[11px]`}>{e.rule}</span>
-              <span className="chip h-5 text-[11px]">{e.type === 'miss' ? 'Missed' : 'Extra flag'}</span>
-            </div>
-            <p lang="hi" className="rounded-lg bg-[var(--mc-advisory-tint)] px-3 py-2 text-[14px] leading-relaxed">{e.text}</p>
-            <p className="text-[13px] leading-relaxed text-[var(--mc-text-2)]">
-              {e.type === 'miss'
-                ? `The script labels ${e.rule} here (“${e.labelled_phrase ?? 'whole turn'}”), but the engine raised nothing for this rule on this turn.`
-                : e.detection
-                  ? `The engine raised ${e.rule} as ${e.detection.kind.replace('_', ' ')} at confidence ${e.detection.confidence.toFixed(2)} from “${e.detection.quote}” (${SOURCE[e.detection.source] ?? e.detection.source}), but the script labels nothing here.`
-                  : 'The engine raised a flag the script does not label.'}
-            </p>
-          </div>
-        ))}
-      </div>
-    </section>
-  )
-}
-
-/** Exactly five limits; the numbers come from the saved results. */
-function Limits({ results, all }: { results: EvalResults; all: Prf }) {
-  const t = results.model_info?.thresholds
-  return (
-    <section className="card flex flex-col gap-3 p-6" aria-labelledby="lim-h">
-      <h2 id="lim-h" className="text-base font-semibold">Honest limits</h2>
-      <ul className="flex list-disc flex-col gap-2 pl-5 text-[13.5px] leading-relaxed text-[var(--mc-text-2)]">
-        <li>Synthetic text-to-speech audio from authored scripts, not real recordings.</li>
-        <li>A small set ({results.n_calls} calls, {all.tp + all.fn} labelled units, one run per condition).</li>
-        <li>Thresholds are fixed{t ? ` (${t.violation}, ${t.needs_review})` : ''} and were not tuned for this evaluation.</li>
-        <li>The evaluation transcribes each turn with Gnani REST while the live app streams, so live transcripts can differ.</li>
-        <li>All scripts were visible when the phrase lists were written, so the held-out set only protects against prompt tuning.</li>
-      </ul>
-    </section>
-  )
-}
-
-/** How the numbers were made: the engine change, the human review of extras, the label change, and the model line. Closed by default. */
-function Produced({ results, data }: { results: EvalResults; data: EvalPayload }) {
-  const review = data.review
-  const adj = review?.adjusted[`${FULL}/${CLEAN}`]?.all?.strict ?? null
-  const wr = review?.adjusted[`${FULL}/${CLEAN}`]?.all?.with_review ?? null
-  const gone = wr ? (review?.items.length ?? 0) - (wr.extras_real + wr.extras_unsure + wr.extras_not_a_violation) : 0
-  const changes = data.engine_changes.filter((c) => c.condition === `${FULL}/${CLEAN}`)
-  const line = [
-    results.model_info?.llm && `Model: ${results.model_info.llm}`,
-    results.model_info?.stt && `speech: ${results.model_info.stt}`,
-    results.model_info?.thresholds && `thresholds ${results.model_info.thresholds.violation} (violation) and ${results.model_info.thresholds.needs_review} (needs review)`,
-    results.labels_hash && `labels ${results.labels_hash}`,
-  ].filter(Boolean).join(' · ')
-  return (
-    <details className="card p-0">
-      <summary className="cursor-pointer px-6 py-4 text-base font-semibold">How these numbers were produced</summary>
-      <div className="flex flex-col gap-3 border-t border-[var(--mc-line-soft)] px-6 py-5 text-[13px] leading-relaxed text-[var(--mc-text-2)]">
-        {changes.map((c) => (
-          <p key={c.id}>
-            Engine change made after seeing results ({dateOf(c.date)}): it does not use the labels. It removes {c.removed_flags.length} flags
-            whose quote is not in the flagged turn but in an earlier one the model was shown. Scores above are after this change; the before and after counts are saved with the results.
-          </p>
-        ))}
-        {adj && (
-          <p>
-            After human review of extras: the project author reviewed only the {review?.items.length ?? 0} extra flags
-            the labels do not have ({adj.flags - adj.correct_original} of them are in the strict count above{gone > 0 ? `; ${gone} are no longer flagged after the engine change above` : ''}), and is the only reviewer. {adj.extras_real} were judged real (counted as correct flags), {adj.extras_unsure} unsure, and the rest not violations (still false flags). Counting the real ones as correct gives a precision of {f2(adj.precision_low)} to {f2(adj.precision_high)} ({adj.correct_low} to {adj.correct_high} of {adj.flags} flags; unsure counted false, then correct); recall is unchanged ({f2(adj.recall)}). The scores above are still against the original labels.
-          </p>
-        )}
-        {(results.label_changes ?? []).map((c) => (
-          <p key={`${c.call}-${c.turn}-${c.rule}`} className="rounded-lg bg-[var(--mc-advisory-tint)] px-3 py-2 text-[var(--mc-advisory-ink)]">
-            Label changed after the first run: {c.rule} {c.action} on {c.call.toUpperCase()} turn {c.turn} ({c.changed_on}; labels {c.label_hash_before} to {c.label_hash_after}). {c.reason}
-          </p>
-        ))}
-        {line && <p className="text-[12px] text-[var(--mc-muted)]">{line}</p>}
-      </div>
-    </details>
   )
 }
