@@ -22,11 +22,13 @@ export class CallClient {
 
   private path: string
   private hold: boolean // the "pause for the coach" choice made at start; the server uses the same one
+  private mic: boolean // Speak live: the server also gates the microphone while a coach clip plays
   private played = new Set<number>()
 
-  constructor(path: string, hold = false) {
+  constructor(path: string, hold = false, mic = false) {
     this.path = path
     this.hold = hold
+    this.mic = mic
   }
 
   open() {
@@ -151,7 +153,7 @@ export class CallClient {
         }
         audio.playCoach(env.data.audio_url, () => useSessionStore.getState().setNudgeSpeaking(false), !this.hold)
         // Speak live: the server treats the microphone as silent while the clip plays. If it will not play, release that at once.
-        if (!audio.coachVoice || audio.muted) this.control({ type: 'barge_in' })
+        if (this.mic && (!audio.coachVoice || audio.muted)) this.control({ type: 'barge_in' })
         break
       }
       case 'coach.nudge':

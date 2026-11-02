@@ -108,13 +108,21 @@ export class MicCapture {
 let current: MicCapture | null = null
 let opening: Promise<MicCapture> | null = null
 let releaseTimer: number | undefined
+let released = false // the last page let go while the browser was still asking
 
 /** The shared capture: reuses a live one, otherwise asks the browser. */
 export async function acquireMic(): Promise<MicCapture> {
   window.clearTimeout(releaseTimer)
+  released = false
   if (current?.alive) return current
   opening ??= MicCapture.open()
-    .then((c) => (current = c))
+    .then((c) => {
+      if (released) {
+        c.close() // nobody wants it any more: do not leave the microphone on
+        throw new MicError('error')
+      }
+      return (current = c)
+    })
     .finally(() => (opening = null))
   return opening
 }
@@ -123,6 +131,7 @@ export async function acquireMic(): Promise<MicCapture> {
 export function releaseMicSoon(delayMs = 1000) {
   window.clearTimeout(releaseTimer)
   releaseTimer = window.setTimeout(() => {
+    released = true
     current?.close()
     current = null
   }, delayMs)

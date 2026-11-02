@@ -43,11 +43,12 @@ export function SpeakCall() {
   const [slowEnd, setSlowEnd] = useState(false)
   const [elapsed, setElapsed] = useState(0)
   const client = useRef<CallClient | null>(null)
+  const finished = useRef(false) // the call ended and the page is moving on to the report
   const level = useMicLevel(mic)
 
   // no session (reload, or a direct visit): back to the set-up page
   useEffect(() => {
-    if (!session && useSessionStore.getState().status !== 'ended') navigate('/speak', { replace: true }) // an ended call is on its way to the report
+    if (!session && !finished.current) navigate('/speak', { replace: true }) // a finished call is on its way to the report
   }, [session, navigate])
 
   useEffect(() => {
@@ -63,13 +64,15 @@ export function SpeakCall() {
     store.reset('live')
     store.setSessionId(session.id)
     store.setStatus('connecting')
-    const c = new CallClient(session.wsUrl)
+    const c = new CallClient(session.wsUrl, false, true)
     client.current = c
     c.open()
     let mine: MicCapture | null = null
     let off: (() => void) | null = null
+    let gone = false
     acquireMic()
       .then((m) => {
+        if (gone) return
         mine = m
         m.setSink((f) => c.sendFrame(f))
         off = m.onEnded(() => setMicProblem('Your microphone stopped. End the call to see your report.'))
@@ -77,6 +80,7 @@ export function SpeakCall() {
       })
       .catch((e) => setMicProblem(e instanceof MicError ? MIC_PROBLEM_TEXT[e.problem] : MIC_PROBLEM_TEXT.error))
     return () => {
+      gone = true
       off?.()
       mine?.setSink(null)
       c.close()
@@ -113,6 +117,7 @@ export function SpeakCall() {
   useEffect(() => {
     if (st.status !== 'ended' || !session || st.sessionId !== session.id) return // sessionId: ignore the previous call's ended state
     const notice = useSessionStore.getState().error
+    finished.current = true
     useSpeakStore.getState().setSession(null)
     navigate(`/speak/report/${session.id}`, { replace: true, state: notice ? { notice } : null })
   }, [st.status, st.sessionId, session, navigate])
@@ -151,7 +156,7 @@ export function SpeakCall() {
         <div className="flex flex-wrap items-center gap-2">
           <span className="chip chip-ok">
             <span className={`h-[7px] w-[7px] rounded-full bg-[var(--mc-good-practice)] ${ending ? '' : 'pulse-dot'}`} aria-hidden />
-            {ending ? 'Finishing…' : st.status === 'live' ? 'Listening to you' : 'Connecting…'}
+            {ending ? 'Finishing…' : micProblem ? 'Microphone off' : st.status === 'live' ? 'Listening to you' : 'Connecting…'}
           </span>
           {clock && <span className="chip chip-warn">Clock set to {clock} (test)</span>}
           <span className={`chip mono text-[13px] font-semibold ${warn ? 'chip-advisory' : 'text-[var(--mc-text)]'}`} aria-label="Call timer">

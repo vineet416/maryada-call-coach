@@ -16,7 +16,7 @@ export const useSpeakStore = create<SpeakState>((set) => ({
   clock: null,
   session: null,
   setClockFromAddress: (raw) => {
-    if (raw !== null) set({ clock: CLOCK.test(raw) ? raw : null })
+    set({ clock: raw !== null && CLOCK.test(raw) ? raw : null })
   },
   setSession: (session) => set({ session }),
 }))

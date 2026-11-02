@@ -34,6 +34,7 @@ export function SpeakSetup() {
   // ?clock=HH:MM is read once, here, and kept in the set-up store
   useEffect(() => {
     useSpeakStore.getState().setClockFromAddress(new URLSearchParams(window.location.search).get('clock'))
+    useSpeakStore.getState().setSession(null) // an earlier call's session is over
   }, [])
 
   // leaving this page lets go of the microphone unless the call page takes it over within a second
