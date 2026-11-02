@@ -52,7 +52,7 @@ export function LiveCall() {
   const client = useRef<CallClient | null>(null)
 
   const st = useSessionStore()
-  usePageTitle(scenario ? `${scenario.id.toUpperCase()} ${scenario.title} · Maryada` : 'Call · Maryada')
+  usePageTitle(scenario ? `${scenario.id.toUpperCase()} ${scenario.title} · Maryada` : `${id.toUpperCase() || 'Call'} · Maryada`)
 
   const teardown = useCallback(() => {
     client.current?.close()
@@ -173,6 +173,7 @@ export function LiveCall() {
   if (phase === 'loading' || !scenario)
     return (
       <div aria-busy="true" aria-label="Loading call" className="space-y-5">
+        <p role="status" className="text-sm font-medium text-[var(--mc-muted)]">Loading call… the server may take a few seconds to wake up.</p>
         <div className="skeleton h-40" />
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_380px]">
           <div className="skeleton h-96" />
@@ -278,12 +279,12 @@ export function LiveCall() {
             <RiskMeter />
           </div>
           <div className="call-find min-h-0 min-w-0 order-4 lg:order-none lg:col-start-2 lg:row-start-3">
-            <FindingList findings={st.findings} rules={rules} onOpen={setOpen} />
+            <FindingList findings={st.findings} rules={rules} onOpen={setOpen} callTime={scenario.simulated_start_time} />
           </div>
         </div>
       )}
 
-      <DetailDrawer finding={open} rule={rule(open)} onClose={closeDrawer} />
+      <DetailDrawer finding={open} rule={rule(open)} onClose={closeDrawer} callTime={scenario.simulated_start_time} />
       {st.status === 'ended' && st.summary && summaryOpen && (
         <SummaryModal
           scenario={scenario}

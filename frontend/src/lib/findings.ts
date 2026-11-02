@@ -31,3 +31,12 @@ export const KIND_COLOR: Record<Kind, string> = {
 }
 
 export const tokId = (turnIdx: number, i: number) => `tok-${turnIdx}-${i}`
+
+/** Findings that flag something missing (R1 hours, R2 introduction) have no quote: say so in plain words.
+ *  Wording per rule is the user's; any other quote-less finding gets a neutral line. */
+export function absenceLine(f: Finding, callTime?: string | null): string | null {
+  if (f.quote.trim()) return null
+  if (f.rule_id === 'R2') return 'Introduction or recording notice not found in the first turns'
+  if (f.rule_id === 'R1') return `Call started outside permitted hours${callTime ? ` (call time ${callTime})` : ''}`
+  return 'Nothing in the call matched; this check flags something missing'
+}

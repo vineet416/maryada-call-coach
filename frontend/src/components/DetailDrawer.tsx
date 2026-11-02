@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { Rule } from '@/lib/api'
 import type { Finding } from '@/lib/events'
 import { KIND_LABEL } from '@/lib/events'
-import { SOURCE_LABEL, confidenceLabel } from '@/lib/findings'
+import { SOURCE_LABEL, absenceLine, confidenceLabel } from '@/lib/findings'
 import { useFocusTrap } from '@/lib/useFocusTrap'
 
 const QUOTE_BG = {
@@ -14,7 +14,7 @@ const QUOTE_BG = {
 } as const
 
 /** Right-side drawer on desktop, bottom sheet on mobile. Esc or a tap outside closes it. */
-export function DetailDrawer({ finding, rule, onClose }: { finding: Finding | null; rule?: Rule; onClose: () => void }) {
+export function DetailDrawer({ finding, rule, onClose, callTime }: { finding: Finding | null; rule?: Rule; onClose: () => void; callTime?: string | null }) {
   const closeBtn = useRef<HTMLButtonElement>(null)
   const panel = useRef<HTMLElement>(null)
   const [copied, setCopied] = useState(false)
@@ -76,10 +76,14 @@ export function DetailDrawer({ finding, rule, onClose }: { finding: Finding | nu
             {(finding.rbi_ref || rule?.rbi_ref) && <span className="chip mono">RBI para {finding.rbi_ref || rule?.rbi_ref}</span>}
           </div>
 
-          <Block title="What the agent said">
-            <blockquote lang="hi" className={`rounded-xl px-4 py-3.5 text-[17px] leading-[1.8] ${QUOTE_BG[finding.kind]}`}>
-              “<span className={`tok tok-${finding.kind}`}>{finding.quote}</span>”
-            </blockquote>
+          <Block title={absenceLine(finding, callTime) ? 'What was found' : 'What the agent said'}>
+            {absenceLine(finding, callTime) ? (
+              <p className={`rounded-xl px-4 py-3.5 text-[15px] leading-relaxed ${QUOTE_BG[finding.kind]}`}>{absenceLine(finding, callTime)}</p>
+            ) : (
+              <blockquote lang="hi" className={`rounded-xl px-4 py-3.5 text-[17px] leading-[1.8] ${QUOTE_BG[finding.kind]}`}>
+                “<span className={`tok tok-${finding.kind}`}>{finding.quote}</span>”
+              </blockquote>
+            )}
           </Block>
 
           {finding.reason && <Block title="Why it is flagged"><p className="text-sm leading-relaxed text-[var(--mc-text-2)]">{finding.reason}</p></Block>}
