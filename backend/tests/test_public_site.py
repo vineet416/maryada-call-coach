@@ -113,3 +113,24 @@ def test_evaluation_page_is_the_slim_layout():
         assert kept in s, kept
     assert "https://github.com/vineet416/maryada-call-coach/blob/main/docs/EVAL-NOTES.md" in s
     assert "Limits, method notes and the two worst mistakes: see docs/EVAL-NOTES.md" in s
+
+
+# ---- no status or provenance tags on the pages
+def test_status_and_provenance_chips_are_gone():
+    assert not (SRC / "components" / "ModeBadge.tsx").exists()
+    assert "RecordedChip" not in (SRC / "components" / "manager" / "Shared.tsx").read_text(encoding="utf-8")
+    for name, bad in {
+        "Manager.tsx": ("RecordedChip", "Recorded run ·", "savedOn"),
+        "ManagerAgent.tsx": ("RecordedChip",),
+        "Evaluation.tsx": ("Results saved", "generated_at"),
+        "CallReport.tsx": ("ModeBadge", "Recorded run'", "call dated"),
+        "LiveCall.tsx": ("ModeBadge", "Flag in ", "· recorded"),
+    }.items():
+        s = source(name)
+        for text in bad:
+            assert text not in s, (name, text)
+
+
+def test_report_subline_is_the_duration_and_a_live_report_stays_marked():
+    s = source("CallReport.tsx")
+    assert "[live ? 'Live call' : null, scenario.duration_ms ? spoken(scenario.duration_ms) : null]" in s

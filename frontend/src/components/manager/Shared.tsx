@@ -42,11 +42,3 @@ export function Initials({ name, status }: { name: string; status: ManagerStatus
     </span>
   )
 }
-
-export function RecordedChip({ note, savedOn }: { note: string; savedOn: string | null }) {
-  return (
-    <span className="chip chip-warn" title={note}>
-      Recorded run{savedOn ? ` · saved ${new Date(savedOn).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}
-    </span>
-  )
-}

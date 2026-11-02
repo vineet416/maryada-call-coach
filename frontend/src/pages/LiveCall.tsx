@@ -1,4 +1,4 @@
-import { Clock, KeyRound, Play, Square, Volume2, VolumeX } from 'lucide-react'
+import { KeyRound, Play, Square, Volume2, VolumeX } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { CoachCard } from '@/components/CoachCard'
@@ -6,7 +6,6 @@ import { ColdStartScreen } from '@/components/ColdStartScreen'
 import { DetailDrawer } from '@/components/DetailDrawer'
 import { ErrorCard } from '@/components/ErrorCard'
 import { FindingList } from '@/components/FindingChip'
-import { ModeBadge } from '@/components/ModeBadge'
 import { ReconnectBanner } from '@/components/ReconnectBanner'
 import { RiskMeter } from '@/components/RiskMeter'
 import { StageLine } from '@/components/StageLine'
@@ -224,18 +223,8 @@ export function LiveCall() {
             <h1 className="text-lg font-semibold leading-tight tracking-tight sm:text-xl">{scenario.title}</h1>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <ModeBadge mode={st.mode} status={st.status} />
             <span className="chip mono text-[13px] font-semibold text-[var(--mc-text)]" aria-label="Call timer">
               {fmt(timeMs)} {total > 0 && <span className="font-medium text-[var(--mc-muted)]">/ {fmt(total)}</span>}
-            </span>
-            {/* These two slots keep their width while empty, so the band never jumps when a chip appears */}
-            <span
-              className={`chip mono ${st.latencyMs === null ? 'invisible' : ''}`}
-              title="From the end of the agent words to the coach card"
-              aria-hidden={st.latencyMs === null}
-            >
-              <Clock className="h-[13px] w-[13px]" aria-hidden />
-              Flag in {((st.latencyMs ?? 0) / 1000).toFixed(1)} s{st.mode === 'replay' ? ' · recorded' : ''}
             </span>
             <span role="group" className="flex min-h-7 min-w-[132px] flex-wrap items-center gap-1.5" aria-label="Languages heard">
               {st.langs.map((l) => (

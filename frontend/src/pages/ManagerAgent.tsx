@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { ErrorCard } from '@/components/ErrorCard'
-import { Initials, RecordedChip, StatusChip } from '@/components/manager/Shared'
+import { Initials, StatusChip } from '@/components/manager/Shared'
 import { ApiError, getManager, type ManagerCall, type ManagerPayload } from '@/lib/api'
 import { isReviewOnly, num, plural, reviewNote, ruleCount, ruleIds, ruleTitle, shortDate } from '@/lib/manager'
 import { usePageTitle } from '@/lib/usePageTitle'
@@ -79,7 +79,6 @@ export function ManagerAgent() {
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <StatusChip status={agent.status} rule={data.status_rule} />
-          <RecordedChip note="Results come from a saved evaluation run, not a live one" savedOn={data.generated_at} />
         </div>
       </div>
       <p className="rounded-xl border border-[var(--mc-accent-ring)] bg-[var(--mc-accent-tint)] px-4 py-3 text-[13px] font-medium text-[var(--mc-accent-dark)]">
