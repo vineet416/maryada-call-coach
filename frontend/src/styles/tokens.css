@@ -407,6 +407,23 @@ h1[tabindex='-1']:focus-visible:not([data-kbd]) {
   }
 }
 
+/* Speak live: the "who are you speaking with" bar asks for a choice. The base style is a strong static outline (what shows
+   with reduced motion, where the animation below is switched off); the animation adds a soft pulsing glow around it. */
+.card.choose-bar {
+  border-color: var(--mc-accent);
+  box-shadow: 0 0 0 3px var(--mc-accent);
+  animation: choose-glow 1.8s ease-in-out infinite;
+}
+@keyframes choose-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px var(--mc-accent), 0 0 0 3px rgb(67 56 202 / 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 3px var(--mc-accent), 0 0 0 13px rgb(67 56 202 / 0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

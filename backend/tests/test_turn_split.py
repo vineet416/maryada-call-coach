@@ -1,4 +1,8 @@
 """Speak live: the TurnSplitter cuts an 8 kHz PCM16 stream into turns (pure, time is counted from the audio)."""
+import struct
+
+import pytest
+
 from app.session.turn_split import MAX_TURN_S, PAUSE_S, TurnSplitter
 
 FRAME = 1024  # 64 ms
@@ -66,3 +70,37 @@ def test_finish_closes_an_open_turn_once():
 def test_noise_floor_adapts_to_a_steady_hum():
     hum = b"\x40\x00\xc0\xff" * (FRAME // 4)  # amplitude 64, below the absolute minimum
     assert kinds(run(TurnSplitter(), [hum] * 200)) == []
+
+
+def tone(amplitude):
+    """A steady square-wave frame: its RMS is the amplitude."""
+    return struct.pack("<2h", amplitude, -amplitude) * (FRAME // 4)
+
+
+def call(ambient, gap_s, pause_s=PAUSE_S, sentences=5):
+    """The ambient hum, then `sentences` spoken sentences of 2 s with `gap_s` of hum between them."""
+    frames = [tone(ambient)] * 8
+    for i in range(sentences):
+        frames += [tone(3000)] * frames_for(2.0)
+        frames += [tone(ambient)] * frames_for(gap_s if i < sentences - 1 else 2.0)
+    return run(TurnSplitter(pause_s=pause_s), frames)
+
+
+@pytest.mark.parametrize("ambient", [60, 280, 350, 600, 900])
+def test_a_steady_hum_above_the_old_threshold_does_not_glue_the_call_into_one_turn(ambient):
+    # before the floor followed loud-looking frames, a hum above 300 RMS never read as quiet: no turn ever ended
+    assert kinds(call(ambient, gap_s=1.6)) == ["start", "end"] * 5
+
+
+def test_sentences_with_pauses_under_the_limit_are_one_turn():
+    assert kinds(call(60, gap_s=0.9)) == ["start", "end"]  # five sentences, one turn: no third-turn reminder can follow
+
+
+def test_a_shorter_pause_limit_splits_the_same_speech_into_turns():
+    assert kinds(call(60, gap_s=0.9, pause_s=0.8)) == ["start", "end"] * 5
+
+
+def test_the_last_turn_reports_its_speech_and_its_longest_quiet():
+    s = TurnSplitter()
+    run(s, [LOUD] * 16 + [QUIET] * 8 + [LOUD] * 16 + [QUIET] * frames_for(PAUSE_S))
+    assert 2400 <= s.last_turn["speech_ms"] <= 2700 and 480 <= s.last_turn["longest_quiet_ms"] <= 1300

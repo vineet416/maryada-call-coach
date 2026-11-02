@@ -7,12 +7,16 @@ export const ANSWERED_BY = [
   { value: 'neighbour', label: 'Other third party' },
 ] as const
 
-/** "Who are you speaking with?": three radio options, operable with the arrow keys. The server's value is what shows. */
+/** "Who are you speaking with?": three radio options, operable with the arrow keys. The server's value is what shows. Until one is chosen the bar has a ring and a "Choose one" chip. */
 export function AnsweredBySelector({ value, onChoose, disabled = false }: { value: string; onChoose: (v: string) => void; disabled?: boolean }) {
+  const waiting = value === 'unknown' // until a choice is made the bar asks for one; a choice cannot be taken back to "unknown"
   return (
-    <fieldset disabled={disabled} className="card flex flex-col gap-2.5 p-3 sm:flex-row sm:items-center sm:gap-4 sm:px-5 sm:py-3">
-      <legend className="sr-only">Who are you speaking with?</legend>
-      <p className="text-[13.5px] font-semibold" aria-hidden>Who are you speaking with?</p>
+    <fieldset disabled={disabled} className={`card flex flex-col gap-2.5 p-3 sm:flex-row sm:items-center sm:gap-4 sm:px-5 sm:py-3 ${waiting ? 'choose-bar' : ''}`}>
+      <legend className="sr-only">Who are you speaking with?{waiting ? ' Choose one.' : ''}</legend>
+      <div className="flex flex-wrap items-center gap-2" aria-hidden>
+        <p className="text-[13.5px] font-semibold">Who are you speaking with?</p>
+        {waiting && <span className="chip chip-advisory font-semibold">Choose one</span>}
+      </div>
       <div className="flex flex-1 flex-col gap-2 sm:flex-row">
         {ANSWERED_BY.map((o) => {
           const on = value === o.value
