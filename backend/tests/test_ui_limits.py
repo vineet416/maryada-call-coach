@@ -19,3 +19,7 @@ def test_call_length_matches_backend():
 
 def test_concurrent_calls_match_backend():
     assert _ts_number("CONCURRENT_CALLS") == Settings.model_fields["max_live_sessions"].default
+
+
+def test_mic_call_length_matches_backend():
+    assert _ts_number("MIC_CALL_LIMIT_S") == Settings.model_fields["mic_session_max_s"].default

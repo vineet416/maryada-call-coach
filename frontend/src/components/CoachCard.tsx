@@ -7,11 +7,12 @@ import { Switch } from '@/components/Switch'
 const KIND: Record<string, string> = { violation: 'violation', advisory: 'advisory', needs_review: 'needs_review', good_practice: 'good_practice' }
 
 /** The coach nudge: the card is the primary channel, the voice (optional) plays over the call, quieter than the callers. */
-export function CoachCard({ rules, voiceOn, onVoice }: { rules: Rule[]; voiceOn: boolean; onVoice: (v: boolean) => void }) {
+export function CoachCard({ rules, voiceOn, onVoice, reminder = false }: { rules: Rule[]; voiceOn: boolean; onVoice: (v: boolean) => void; reminder?: boolean }) {
   const nudge = useSessionStore((s) => s.nudge)
   const hold = useSessionStore((s) => s.coachHold)
-  const rule = nudge ? rules.find((r) => r.id === nudge.ruleId) : null
-  const tone = KIND[rule?.kind_default ?? 'violation'] ?? 'violation'
+  const select = nudge?.ruleId === 'SELECT' // Speak live reminder to choose who answered: not a rule, so it is not in the rulebook
+  const rule = nudge && !select ? rules.find((r) => r.id === nudge.ruleId) : null
+  const tone = select ? 'advisory' : (KIND[rule?.kind_default ?? 'violation'] ?? 'violation')
 
   return (
     <section
@@ -45,10 +46,10 @@ export function CoachCard({ rules, voiceOn, onVoice }: { rules: Rule[]; voiceOn:
         <div key={nudge.findingId ?? nudge.text} className="rise flex flex-col gap-3.5">
           <div>
             <span className={`chip chip-${tone} text-[11px] font-semibold uppercase tracking-wide`}>
-              {nudge.ruleId} · {rule?.title ?? 'Rule'}
+              {select ? 'Reminder · Who are you speaking with?' : `${nudge.ruleId} · ${rule?.title ?? 'Rule'}`}
             </span>
           </div>
-          <p className="text-[17px] font-medium leading-normal tracking-[-0.005em]">{nudge.text}</p>
+          <p className="text-[17px] font-medium leading-normal tracking-[-0.005em]">{select ? 'Select who you are speaking with.' : nudge.text}</p>
           <div className="flex items-center gap-2.5 text-[13px] text-[#475467]" aria-live="polite">
             {nudge.speaking ? (
               <>
@@ -65,6 +66,13 @@ export function CoachCard({ rules, voiceOn, onVoice }: { rules: Rule[]; voiceOn:
               'Voice is off. The card still shows.'
             )}
           </div>
+        </div>
+      ) : reminder ? (
+        <div className="flex flex-col gap-2.5">
+          <div>
+            <span className="chip chip-advisory text-[11px] font-semibold uppercase tracking-wide">Reminder · Who are you speaking with?</span>
+          </div>
+          <p className="text-[17px] font-medium leading-normal tracking-[-0.005em]">Select who you are speaking with.</p>
         </div>
       ) : (
         <p className="py-1 text-sm text-[var(--mc-muted)]">Quiet so far. The coach speaks up when a rule is at risk.</p>

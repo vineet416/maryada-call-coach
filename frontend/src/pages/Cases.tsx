@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ErrorCard } from '@/components/ErrorCard'
 import { getEval, getRules, getScenarios, type LatencyRow, type Rule, type ScenarioSummary } from '@/lib/api'
-import { LIVE_CALLS_ENABLED } from '@/lib/features'
+import { LIVE_CALLS_ENABLED, SPEAK_LIVE_ENABLED } from '@/lib/features'
 import { usePageTitle } from '@/lib/usePageTitle'
 
 const lengthLabel = (s: number | null) => {
@@ -167,36 +167,38 @@ function Modes() {
           featured
           icon={<Play className="h-4 w-4 fill-current" aria-hidden />}
           title="Play a recorded run"
-          chip="No keys needed"
+          chips={['No keys needed']}
           text="Pick a sample call and watch the flags, risk and coaching as it plays."
           action={<button type="button" onClick={toSamples} className="btn btn-primary">Choose a sample call</button>}
         />
         <ModeCard
           icon={<Mic className="h-4 w-4" aria-hidden />}
           title="Speak live"
-          chip="Coming soon"
+          chips={SPEAK_LIVE_ENABLED ? ['Needs your keys', 'Uses your microphone', 'Up to 3 minutes'] : ['Coming soon']}
           text="Speak as the agent into your microphone and get live flags and coaching."
-          action={<DisabledButton>Speak live</DisabledButton>}
+          action={SPEAK_LIVE_ENABLED ? <Link to="/speak" className="btn btn-primary">Speak live</Link> : <DisabledButton>Speak live</DisabledButton>}
         />
         <ModeCard
           icon={<Upload className="h-4 w-4" aria-hidden />}
           title="Upload a recording"
-          chip="Coming soon"
+          chips={['Coming soon']}
           text="Bring a two-channel call recording and get flags, coaching and a call report."
           action={<DisabledButton>Upload a recording</DisabledButton>}
         />
       </div>
-      <p className="text-[13px] text-[var(--mc-muted)]">Live modes are coming soon and will use your own Gnani and language-model keys.</p>
+      <p className="text-[13px] text-[var(--mc-muted)]">{SPEAK_LIVE_ENABLED ? 'Speak live uses your own Gnani and language-model keys. Upload a recording is coming soon.' : 'Live modes are coming soon and will use your own Gnani and language-model keys.'}</p>
     </section>
   )
 }
 
-function ModeCard({ featured, icon, title, chip, text, action }: { featured?: boolean; icon: React.ReactNode; title: string; chip: string; text: string; action: React.ReactNode }) {
+function ModeCard({ featured, icon, title, chips, text, action }: { featured?: boolean; icon: React.ReactNode; title: string; chips: string[]; text: string; action: React.ReactNode }) {
   return (
     <article className={`card flex flex-col gap-3 p-5 sm:p-6 ${featured ? '!border-2 !border-[var(--mc-accent)] shadow-[0_8px_24px_rgb(67_56_202/0.12)]' : ''}`}>
       <div className="flex items-center justify-between gap-2">
         <span className={`flex h-8 w-8 items-center justify-center rounded-full ${featured ? 'bg-[var(--mc-accent)] text-white' : 'bg-[#f2f4f7] text-[#475467]'}`}>{icon}</span>
-        <span className={`chip h-6 text-[11.5px] ${featured ? 'chip-ok' : ''}`}>{chip}</span>
+        <span className="flex flex-wrap justify-end gap-1.5">
+          {chips.map((c) => <span key={c} className={`chip h-6 text-[11.5px] ${featured ? 'chip-ok' : ''}`}>{c}</span>)}
+        </span>
       </div>
       <h3 className="text-base font-semibold tracking-tight">{title}</h3>
       <p className="text-[13.5px] leading-relaxed text-[var(--mc-muted)]">{text}</p>

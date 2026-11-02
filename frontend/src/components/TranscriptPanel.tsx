@@ -12,12 +12,15 @@ interface Props {
   scenario: ScenarioDetail | null
   onOpen: (f: Finding) => void
   children?: ReactNode
+  /** Speak live: no scenario timeline, so the caller gives each turn's time and the agent is labelled "You" */
+  offsetOf?: (turn: TurnView) => number
+  you?: boolean
 }
 
 const LEGEND = ['violation', 'advisory', 'needs_review', 'good_practice'] as const
 
 /** Chat-style transcript. Follows the call; if the viewer scrolls up, a "jump to latest" pill appears. */
-export function TranscriptPanel({ turns, findings, scenario, onOpen, children }: Props) {
+export function TranscriptPanel({ turns, findings, scenario, onOpen, children, offsetOf, you }: Props) {
   const box = useRef<HTMLDivElement>(null)
   const pinned = useRef(true)
   const [away, setAway] = useState(false)
@@ -66,7 +69,7 @@ export function TranscriptPanel({ turns, findings, scenario, onOpen, children }:
       >
         {turns.length === 0 && <p className="py-10 text-center text-sm text-[var(--mc-muted)]">Waiting for the first words…</p>}
         {turns.map((t) => (
-          <Bubble key={t.idx} turn={t} offsetMs={offset(t.idx)} findings={findings} onOpen={onOpen} />
+          <Bubble key={t.idx} turn={t} offsetMs={offsetOf ? offsetOf(t) : offset(t.idx)} findings={findings} onOpen={onOpen} you={you} />
         ))}
       </div>
       {children}

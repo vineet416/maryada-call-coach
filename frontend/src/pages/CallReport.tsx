@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { Bubble } from '@/components/Bubble'
 import { DetailDrawer } from '@/components/DetailDrawer'
 import { ErrorCard } from '@/components/ErrorCard'
 import { ModeBadge } from '@/components/ModeBadge'
 import { RiskChart } from '@/components/report/RiskChart'
-import { ApiError, getReport, getRules, type CallReport as Report, type Rule } from '@/lib/api'
+import { ApiError, getReport, getRules, getSessionReport, type CallReport as Report, type Rule } from '@/lib/api'
 import type { Finding } from '@/lib/events'
 import { KIND_LABEL } from '@/lib/events'
 import { absenceLine } from '@/lib/findings'
@@ -34,25 +34,27 @@ const BAND_LABEL = { low: 'Low band', medium: 'Medium band', high: 'High band' }
 const LEGEND = ['violation', 'advisory', 'needs_review', 'good_practice'] as const
 
 /** Summary of one finished call, built from the call's events. A recorded run is rebuilt from its saved events, so a refresh works. */
-export function CallReport() {
-  const { id = '' } = useParams()
+export function CallReport({ live = false }: { live?: boolean }) {
+  const params = useParams()
+  const id = (live ? params.sid : params.id) ?? ''
+  const notice = (useLocation().state as { notice?: string } | null)?.notice
   const [state, setState] = useState<State>({ kind: 'loading' })
   const [open, setOpen] = useState<Finding | null>(null)
   const heading = useRef<HTMLHeadingElement>(null)
-  const next = useNextRecorded(id)
-  usePageTitle(`${id.toUpperCase() || 'Call'} call report · Maryada`)
+  const next = useNextRecorded(live ? '' : id)
+  usePageTitle(live ? 'Speak live call report · Maryada' : `${id.toUpperCase() || 'Call'} call report · Maryada`)
 
   const load = useCallback(() => {
     setState({ kind: 'loading' })
     const ctl = new AbortController()
-    Promise.all([getReport(id, ctl.signal), getRules(ctl.signal)])
+    Promise.all([live ? getSessionReport(id, ctl.signal) : getReport(id, ctl.signal), getRules(ctl.signal)])
       .then(([report, rules]) => setState({ kind: 'ready', report, rules }))
       .catch((e: Error) => {
         if (e.name === 'AbortError') return
         setState(e instanceof ApiError && e.code === 'no_report' ? { kind: 'gone' } : { kind: 'error', message: e.message })
       })
     return () => ctl.abort()
-  }, [id])
+  }, [id, live])
 
   useEffect(() => load(), [load])
   useEffect(() => {
@@ -100,7 +102,7 @@ export function CallReport() {
       <section role="status" className="card rise mx-auto flex max-w-md flex-col items-center gap-2.5 p-8 text-center">
         <h1 className="text-[17px] font-semibold tracking-tight">This report is no longer available</h1>
         <p className="max-w-[300px] text-[13.5px] leading-relaxed text-[var(--mc-muted)]">Reports are not saved. Run the call again to see it.</p>
-        <Link to="/" className="btn btn-primary mt-1.5">Back to cases</Link>
+        <Link to={live ? '/speak' : '/'} className="btn btn-primary mt-1.5">{live ? 'Speak live again' : 'Back to cases'}</Link>
       </section>
     )
 
@@ -119,7 +121,7 @@ export function CallReport() {
   const subline = [
     recorded ? 'Recorded run' : 'Live call',
     scenario.duration_ms ? spoken(scenario.duration_ms) : null,
-    scenario.call_date ? `call dated ${shortDate(scenario.call_date)}` : null,
+    scenario.call_date && !live ? `call dated ${shortDate(scenario.call_date)}` : null,
   ].filter(Boolean)
   const jumpToTranscript = () => {
     const el = document.getElementById('report-transcript')
@@ -135,7 +137,11 @@ export function CallReport() {
             <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-xs text-[var(--mc-muted)]">
               <Link to="/" className="link !font-normal">Cases</Link>
               <span aria-hidden>/</span>
-              <Link to={`/call/${scenario.id}`} className="link !font-normal">{scenario.id.toUpperCase()}</Link>
+              {live ? (
+                <Link to="/speak" className="link !font-normal">Speak live</Link>
+              ) : (
+                <Link to={`/call/${scenario.id}`} className="link !font-normal">{scenario.id.toUpperCase()}</Link>
+              )}
               <span aria-hidden>/</span>
               <span aria-current="page">Call report</span>
             </nav>
@@ -147,11 +153,22 @@ export function CallReport() {
           </div>
           <div className="flex flex-wrap gap-2.5">
             <button type="button" onClick={jumpToTranscript} className="btn">Review transcript</button>
-            <Link to={next ? `/call/${next}` : '/'} className="btn">Try another call</Link>
-            <Link to={`/call/${scenario.id}`} className="btn btn-primary">Run again</Link>
+            {live ? (
+              <>
+                <Link to={next ? `/call/${next}` : '/'} className="btn">Try a recorded run</Link>
+                <Link to="/speak" className="btn btn-primary">Speak again</Link>
+              </>
+            ) : (
+              <>
+                <Link to={next ? `/call/${next}` : '/'} className="btn">Try another call</Link>
+                <Link to={`/call/${scenario.id}`} className="btn btn-primary">Run again</Link>
+              </>
+            )}
           </div>
         </div>
       </header>
+
+      {notice && <p role="status" className="banner banner-warn">{notice}</p>}
 
       <section aria-label="Key figures" className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <Kpi label="Peak risk" value={String(kpis.peak_risk)} note={BAND_LABEL[kpis.peak_band]} tone="bg-[#f9fafb]" ink="text-[var(--mc-text)]" />
@@ -210,7 +227,7 @@ export function CallReport() {
         </div>
         <div id="report-transcript" tabIndex={-1} aria-label="Call transcript" className="flex flex-col gap-[18px] px-4 py-4 outline-none sm:px-6">
           {turns.map((t) => (
-            <Bubble key={t.idx} turn={t} offsetMs={turnAt(t.idx)} findings={report.findings} onOpen={setOpen} />
+            <Bubble key={t.idx} turn={t} offsetMs={turnAt(t.idx)} findings={report.findings} onOpen={setOpen} you={live} />
           ))}
         </div>
       </section>
@@ -271,7 +288,7 @@ export function CallReport() {
         )}
       </Panel>
 
-      <p className="text-center text-xs text-[var(--mc-muted)]">Synthetic call. Detections are by Maryada, not a legal finding.</p>
+      <p className="text-center text-xs text-[var(--mc-muted)]">{live ? 'Your own spoken call. ' : 'Synthetic call. '}Detections are by Maryada, not a legal finding.</p>
 
       <DetailDrawer finding={open} rule={rule(open)} onClose={closeDrawer} callTime={scenario.call_time} />
     </div>

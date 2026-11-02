@@ -177,7 +177,7 @@ class _MicCall:
             for task in [*self.turn_tasks, *self.closing, *self.coach_tasks, *s.late_tasks]:
                 task.cancel()
             await self.client.aclose()
-            log.info("session=%s mic call over: turns=%d dropped_frames=%d llm_skipped=%d", s.id, self.idx, m.dropped, s.llm_skipped)
+            log.info("session=%s mic call over: turns=%d with_text=%d dropped_frames=%d llm_skipped=%d", s.id, self.idx, self.agent_turns, m.dropped, s.llm_skipped)
 
     async def _listen(self) -> str:
         """Feed frames to the splitter until the visitor ends the call, the time limit, silence on the line, or a fatal failure."""
@@ -206,6 +206,9 @@ class _MicCall:
         elif kind == "audio" and self.cur is not None:
             self.cur.feed(val)  # type: ignore[arg-type]
         elif kind == "end" and self.cur is not None:
+            lt = self.splitter.last_turn
+            log.info("session=%s mic turn %d ended by %s: %.1f s of speech, longest quiet inside it %.1f s, noise floor %.0f",
+                     self.s.id, self.idx, val, lt.get("speech_ms", 0) / 1000, lt.get("longest_quiet_ms", 0) / 1000, self.splitter.floor)
             self.cur.close()
             self.ended_at[self.idx] = time.perf_counter()
             self.turn_over[self.idx].set()

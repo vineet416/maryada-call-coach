@@ -120,6 +120,12 @@
    "rule": "G1",
    "n": 2,
    "duration_ms": 3270
+  },
+  {
+   "file": "SELECT_1.mp3",
+   "rule": "SELECT",
+   "n": 1,
+   "duration_ms": 3330
   }
  ]
 }
