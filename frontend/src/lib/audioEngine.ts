@@ -60,6 +60,7 @@ class AudioEngine {
   private coach: HTMLAudioElement | null = null
   private cache = new Map<string, HTMLAudioElement>()
   private onCoachEnd: (() => void) | null = null
+  private coachToken = 0 // counts the coach clips started: tells a late event of an old clip from the current one
   private turnGain = 1
   private duckLevel = 1 // current multiplier on the call audio (1 = not ducked)
   private duckTarget = 1
@@ -180,9 +181,12 @@ class AudioEngine {
     this.coach = a
     this.onCoachEnd = onEnd
     if (duck) this.setDuck(true)
-    a.onended = () => this.finishCoach()
-    a.onerror = () => this.finishCoach()
-    void a.play().catch(() => this.finishCoach())
+    // a clip that was replaced (its play() rejects with an abort, or it fires a late end) must not finish the clip that replaced it
+    const mine = ++this.coachToken
+    const done = () => mine === this.coachToken && this.finishCoach()
+    a.onended = done
+    a.onerror = done
+    void a.play().catch(done)
   }
 
   private finishCoach() {

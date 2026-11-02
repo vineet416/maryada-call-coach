@@ -372,8 +372,14 @@ export function Settings() {
                   value={volume}
                   disabled={!voice}
                   aria-valuetext={`${volume} out of 100`}
-                  onPointerDown={() => {
-                    dragging.current = true
+                  onPointerDown={(e) => {
+                    if (e.button === 0) dragging.current = true // the primary button or a touch; a right-click is not a drag
+                  }}
+                  onKeyDown={() => {
+                    dragging.current = false // a key press is a keyboard change, whatever happened to the pointer before
+                  }}
+                  onBlur={() => {
+                    dragging.current = false
                   }}
                   onChange={(e) => {
                     const v = Number(e.target.value)
