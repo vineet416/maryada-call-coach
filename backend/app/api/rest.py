@@ -9,7 +9,7 @@ from fastapi import APIRouter, HTTPException, Query, WebSocket, WebSocketDisconn
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field, SecretStr
 
-from .. import db, evaluation, replay
+from .. import db, evaluation, replay, report
 from ..config import log, settings
 from ..manager import data as manager_data
 from ..models import Health
@@ -61,6 +61,20 @@ def get_scenario(sid: str) -> dict:
             "has_replay": replay.replay_path(sid).exists(), "simulated_start_time": sc.get("time"), "turns": turns,
             "call_audio_url": f"/audio/{entry['call_mp3']}" if entry else None,
             "duration_ms": entry["duration_ms"] if entry else None}
+
+
+@router.get("/api/scenarios/{sid}/report")
+def get_report(sid: str) -> dict:
+    """The call report of a recorded run, rebuilt from its saved events on the call clock (nothing is stored per visitor)."""
+    sc = assets.scenarios().get(sid)
+    events = replay.load(sid) if sc else None
+    if sc is None or events is None:
+        raise _err(404, "no_report", "This report is no longer available.")
+    entry = assets.audio_manifest().get(sid, {})
+    turns = entry.get("turns", [])
+    meta = {"id": sid, "title": sc["title"], "date": sc.get("date"), "time": sc.get("time"), "duration_ms": entry.get("duration_ms"),
+            "turn_offsets": {t["idx"]: t["offset_ms"] for t in turns}}
+    return report.build_report(replay.retime(replay.as_replay(events), turns), meta, load_rules()["rules"], "replay")
 
 
 @router.get("/api/rules")

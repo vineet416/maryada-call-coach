@@ -3,6 +3,7 @@ import { usePageTitle } from '@/lib/usePageTitle'
 
 export { Cases } from '@/pages/Cases'
 export { LiveCall } from '@/pages/LiveCall'
+export { CallReport } from '@/pages/CallReport'
 export { HowItWorks } from '@/pages/HowItWorks'
 export { Settings } from '@/pages/Settings'
 export { Evaluation } from '@/pages/Evaluation'

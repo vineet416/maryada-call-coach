@@ -1,11 +1,11 @@
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { Disclaimer } from '@/components/Disclaimer'
 import { TopBar } from '@/components/TopBar'
-import { Cases, Evaluation, HowItWorks, LiveCall, Manager, ManagerAgent, NotFound, Settings } from '@/pages/Pages'
+import { Cases, CallReport, Evaluation, HowItWorks, LiveCall, Manager, ManagerAgent, NotFound, Settings } from '@/pages/Pages'
 
-/** The call page fits one laptop screen (see .shell-call); every other page scrolls normally. */
+/** The call page fits one laptop screen (see .shell-call); every other page, the call report included, scrolls normally. */
 function Shell() {
-  const onCall = useLocation().pathname.startsWith('/call/')
+  const onCall = /^\/call\/[^/]+\/?$/.test(useLocation().pathname)
   return (
     <div className={`shell flex min-h-screen flex-col ${onCall ? 'shell-call' : ''}`}>
       <TopBar />
@@ -13,6 +13,7 @@ function Shell() {
         <Routes>
           <Route path="/" element={<Cases />} />
           <Route path="/call/:id" element={<LiveCall />} />
+          <Route path="/call/:id/report" element={<CallReport />} />
           <Route path="/manager" element={<Manager />} />
           <Route path="/manager/agent/:id" element={<ManagerAgent />} />
           <Route path="/eval" element={<Evaluation />} />
