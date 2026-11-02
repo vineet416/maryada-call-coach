@@ -375,7 +375,7 @@ async def _run_live(s: Session) -> None:
             return nat_due
         nxt = order[order.index(k) + 1]
         floor = start_at[nxt] + info[nxt]["duration_ms"] / 1000 + rules_clock.MIN_FILE_GAP_S if nxt != m else 0.0
-        return max(clip["end"] + rules_clock.AGENT_AFTER_COACH_S, floor)
+        return max(nat_due, clip["end"] + rules_clock.AGENT_AFTER_COACH_S, floor)  # an early clip never pulls the agent ahead of the call schedule
 
     async def clock() -> None:
         """The call itself: turns start on the natural audio schedule, whatever transcription and checking are doing.
@@ -399,16 +399,17 @@ async def _run_live(s: Session) -> None:
                 prev_agent = idx
 
     async def run_coach(k: int, clip: dict) -> None:
-        """Play the nudge under the next speaker's turn (or when it is ready, if later). Rules: schedule.py."""
+        """Play the nudge when its agent turn has ended (plus COACH_AFTER_TURN_S), or when the card is shown if later, never
+        within COACH_QUEUE_GAP_S of another clip. If the agent's next turn has begun by then the voice is skipped (rules: schedule.py)."""
         nonlocal last_coach_end, shift_s
-        i = order.index(k)
-        nxt = order[i + 1] if i + 1 < len(order) else None
-        if nxt is not None and info[nxt]["speaker"] != info[k]["speaker"]:
-            await started[nxt].wait()
-            at = start_at[nxt] + rules_clock.COACH_DELAY_S
-        else:  # last turn of the call, or the same speaker again: after the turn ended
-            at = start_at[k] + info[k]["duration_ms"] / 1000 + rules_clock.COACH_LAST_TURN_GAP_S
+        at = start_at[k] + info[k]["duration_ms"] / 1000 + rules_clock.COACH_AFTER_TURN_S
         await sleep_until(lambda: max(at, clip["ready"], last_coach_end + rules_clock.COACH_QUEUE_GAP_S))
+        nxt_agent = next((j for j in order[order.index(k) + 1:] if info[j]["speaker"] == "A"), None)
+        if nxt_agent is not None and started[nxt_agent].is_set():
+            log.info("session=%s coach voice skipped for turn %s: the agent's next turn had already started", s.id, k)
+            clip["end"] = time.perf_counter()
+            clip["done"].set()
+            return
         line = clip["line"]
         s.log.emit("coach.speak", {"audio_url": line["audio_url"], "duration_ms": line["duration_ms"]})
         clip["end"] = time.perf_counter() + line["duration_ms"] / 1000
