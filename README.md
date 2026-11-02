@@ -36,5 +36,8 @@ Free-plan limits:
 cd backend && pip install -r requirements-dev.txt && pytest -q
 ```
 
+## Architecture
+A React app on Vercel talks to a FastAPI backend on Render. The backend streams each agent turn to Gnani speech-to-text, checks the text with phrase rules plus a language model the visitor brings, and returns flags, a risk score and a coach line. Read [how it works, with diagrams](docs/architecture.md) (about five minutes).
+
 ## Docs
 [Architecture](docs/architecture.md) · [Conventions](docs/conventions.md)
