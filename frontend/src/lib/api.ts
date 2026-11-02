@@ -173,7 +173,7 @@ export interface EvalPayload {
 
 export interface SessionStart {
   session_id: string
-  effective_mode: 'live' | 'replay'
+  effective_mode: 'live' | 'replay' | 'mic'
   ws_url: string
   reason?: string
 }
@@ -323,6 +323,16 @@ export function getManager(range: { from?: string; to?: string }, signal?: Abort
   if (range.to) q.set('to', range.to)
   return getJson<ManagerPayload>(`/api/manager${q.size ? `?${q}` : ''}`, signal)
 }
+/** Speak live: keys and the optional test clock travel in this POST body only. */
+export const createSpeakSession = (credentials: Credentials, clock?: string | null) =>
+  request<SessionStart>('/api/sessions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(clock ? { mode: 'mic', credentials, clock } : { mode: 'mic', credentials }),
+  })
+/** The report of a finished Speak live call (kept in server memory for 30 minutes, 404 after that). */
+export const getSessionReport = (sid: string, signal?: AbortSignal) =>
+  getJson<CallReport>(`/api/sessions/${encodeURIComponent(sid)}/report`, signal)
 export const getRules = (signal?: AbortSignal) => getJson<Rule[]>('/api/rules', signal)
 export interface Credentials {
   gnani: { api_key: string }

@@ -123,7 +123,7 @@ export function LiveCall() {
         const s = await createSession(scenario.id, mode, creds, hold)
         const store = useSessionStore.getState()
         store.setSessionId(s.session_id)
-        store.setMode(s.effective_mode)
+        store.setMode(s.effective_mode === 'mic' ? 'live' : s.effective_mode)
         audio.preload(scenario.turns.map((t) => t.audio_url))
         client.current = new CallClient(s.ws_url, hold)
         client.current.open()

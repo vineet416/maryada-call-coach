@@ -21,10 +21,12 @@ interface Props {
   offsetMs: number
   findings: Finding[]
   onOpen: (f: Finding) => void
+  /** Speak live: the agent is the visitor, so the speaker label reads "You" */
+  you?: boolean
 }
 
-export function Bubble({ turn, offsetMs, findings, onOpen }: Props) {
-  const who = WHO[turn.speaker]
+export function Bubble({ turn, offsetMs, findings, onOpen, you = false }: Props) {
+  const who = you ? { ...WHO.agent, label: 'You', initials: 'YOU' } : WHO[turn.speaker]
   const agent = turn.speaker === 'agent'
   const waiting = turn.tokens.length === 0
   const slow = useSlow(turn)

@@ -75,6 +75,9 @@ export interface SessionState {
   langs: string[]
   latencyMs: number | null
   simulatedStart: string | null
+  /** Speak live: who the visitor says they are speaking with (the server's value; 'unknown' until chosen) */
+  answeredBy: string
+  callStart: number | null
   reset: (mode: Mode) => void
   setStatus: (s: SessionStatus) => void
   setMode: (m: Mode) => void
@@ -108,6 +111,8 @@ const initial = {
   langs: [] as string[],
   latencyMs: null,
   simulatedStart: null,
+  answeredBy: 'unknown',
+  callStart: null,
 }
 
 const LANG_CODE: Record<string, string> = { hi: 'Hindi', mr: 'Marathi', en: 'English' }
@@ -134,6 +139,12 @@ export const useSessionStore = create<SessionState>((set, get) => ({
       case 'session.started':
         patch.status = 'live'
         patch.simulatedStart = d.simulated_start_time ?? null
+        patch.callStart = Date.now()
+        break
+
+      case 'context.updated':
+        patch.answeredBy = d.answered_by
+        if (s.nudge?.ruleId === 'SELECT' && d.answered_by !== 'unknown') patch.nudge = null // the reminder has done its job
         break
 
       case 'stage.status':

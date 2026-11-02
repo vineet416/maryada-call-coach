@@ -34,6 +34,16 @@ export class CallClient {
     this.connect()
   }
 
+  /** Speak live: one binary audio frame (8 kHz PCM16). Dropped while the socket is down; the call goes on after a reconnect. */
+  sendFrame(frame: ArrayBuffer) {
+    if (this.ws?.readyState === WebSocket.OPEN) this.ws.send(frame)
+  }
+
+  /** Speak live control messages: end, set_answered_by, barge_in. */
+  control(msg: { type: 'end' | 'barge_in' } | { type: 'set_answered_by'; value: string }) {
+    this.send(msg)
+  }
+
   /** Stop the call from the user's side. */
   stop() {
     this.send({ type: 'stop' })
@@ -120,6 +130,7 @@ export class CallClient {
     switch (env.type) {
       case 'turn.started':
         // a turn re-sent by the recorded fallback must not restart audio that already played
+        if (!env.data.audio_url) break // a Speak live turn is the visitor's own voice: there is no audio to play
         if (this.played.has(env.data.turn_idx)) break
         this.played.add(env.data.turn_idx)
         audio.playTurn(env.data.audio_url, env.data.turn_idx, env.data.speaker, env.t_ms)
@@ -139,6 +150,8 @@ export class CallClient {
           }, (env.data.duration_ms ?? 0) + COACH_GAP_MS)
         }
         audio.playCoach(env.data.audio_url, () => useSessionStore.getState().setNudgeSpeaking(false), !this.hold)
+        // Speak live: the server treats the microphone as silent while the clip plays. If it will not play, release that at once.
+        if (!audio.coachVoice || audio.muted) this.control({ type: 'barge_in' })
         break
       }
       case 'coach.nudge':
