@@ -23,6 +23,13 @@ const QUOTE_BG = {
   good_practice: 'bg-[var(--mc-good-practice-tint)]',
 } as const
 
+// Whether the last input was the keyboard: only then does the focused heading show its ring
+let lastInputKeyboard = false
+if (typeof window !== 'undefined') {
+  window.addEventListener('keydown', () => (lastInputKeyboard = true), true)
+  window.addEventListener('pointerdown', () => (lastInputKeyboard = false), true)
+}
+
 const BAND_LABEL = { low: 'Low band', medium: 'Medium band', high: 'High band' } as const
 const LEGEND = ['violation', 'advisory', 'needs_review', 'good_practice'] as const
 
@@ -51,6 +58,7 @@ export function CallReport() {
   useEffect(() => {
     if (state.kind === 'ready') {
       window.scrollTo(0, 0)
+      if (lastInputKeyboard) heading.current?.setAttribute('data-kbd', '')
       heading.current?.focus({ preventScroll: true })
     }
   }, [state.kind])

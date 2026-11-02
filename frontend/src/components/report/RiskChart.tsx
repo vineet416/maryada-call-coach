@@ -25,6 +25,7 @@ export function RiskChart({ report }: { report: CallReport }) {
   const line = [{ t: 0, score: 0 }, ...risk.map((r) => ({ t: r.t_ms, score: r.score }))]
   const dots = flags.map((f) => ({ t: f.t_ms, y: scoreAt(risk, f.t_ms), kind: f.kind }))
   const top = Math.max(kpis.peak_risk, bands.high_from)
+  const floor = -Math.ceil(top * 0.1) // headroom below zero so a marker on the baseline is drawn whole
   const kinds = [...new Set(flags.map((f) => f.kind))]
   const label = `Risk over time. ${risk.length ? `${risk.length} readings, peak ${kpis.peak_risk}.` : 'No readings.'} ${flags.length} flag${flags.length === 1 ? '' : 's'}.`
 
@@ -37,8 +38,8 @@ export function RiskChart({ report }: { report: CallReport }) {
             <ReferenceArea y1={bands.high_from} y2={top} fill="var(--mc-violation-tint)" fillOpacity={0.7} ifOverflow="visible" />
             <ReferenceLine y={bands.medium_from} stroke="#98a2b3" strokeDasharray="4 4" label={{ value: 'Medium', position: 'insideTopLeft', fill: INK, fontSize: 11 }} />
             <ReferenceLine y={bands.high_from} stroke="#98a2b3" strokeDasharray="4 4" label={{ value: 'High', position: 'insideTopLeft', fill: INK, fontSize: 11 }} />
-            <XAxis type="number" dataKey="t" domain={[0, end]} tickFormatter={clock} tick={{ fill: INK, fontSize: 12 }} tickLine={false} axisLine={{ stroke: '#d0d5dd' }} />
-            <YAxis type="number" domain={[0, top]} ticks={[0, bands.medium_from, bands.high_from]} tick={{ fill: INK, fontSize: 12 }} tickLine={false} axisLine={false} width={32} allowDataOverflow />
+            <XAxis type="number" dataKey="t" domain={[0, end]} padding={{ left: MARK, right: 0 }} tickFormatter={clock} tick={{ fill: INK, fontSize: 12 }} tickLine={false} axisLine={{ stroke: '#d0d5dd' }} />
+            <YAxis type="number" domain={[floor, top]} ticks={[0, bands.medium_from, bands.high_from]} tick={{ fill: INK, fontSize: 12 }} tickLine={false} axisLine={false} width={32} allowDataOverflow />
             <Line data={line} dataKey="score" type="stepAfter" stroke="var(--mc-accent)" strokeWidth={2.5} dot={false} isAnimationActive={false} />
             <Scatter data={dots} dataKey="y" isAnimationActive={false} shape={(p: { cx?: number; cy?: number; payload?: { kind: Kind } }) => <Marker cx={p.cx} cy={p.cy} kind={p.payload?.kind ?? 'violation'} />} />
           </ComposedChart>

@@ -313,6 +313,11 @@ body {
   outline: none;
   box-shadow: none;
 }
+/* A page heading is focused by script after navigation so screen readers announce it; the ring shows only when a keyboard led there */
+h1[tabindex='-1']:focus-visible:not([data-kbd]) {
+  outline: none;
+  box-shadow: none;
+}
 .tok-flash {
   animation: flash 1.2s ease;
 }
