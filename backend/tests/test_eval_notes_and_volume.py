@@ -70,3 +70,15 @@ def test_settings_slider_is_labelled_keyboard_operable_and_off_with_the_voice():
     s = (SRC / "pages" / "Settings.tsx").read_text(encoding="utf-8")
     assert 'htmlFor="coach-volume"' in s and "Coach voice volume" in s and 'type="range"' in s
     assert "min={0}" in s and "max={100}" in s and "disabled={!voice}" in s and "Play sample" in s
+
+
+def test_settings_right_column_order_and_sample_behaviour():
+    s = (SRC / "pages" / "Settings.tsx").read_text(encoding="utf-8")
+    aside = s[s.index("<aside"):]
+    order = [aside.index(t) for t in ("How your keys are handled", 'aria-labelledby="prefs-h"', "Live call limits", "No keys? Use recorded runs")]
+    assert order == sorted(order), "right-hand column: keys handled, Preferences, Live call limits, then the rest"
+    # the sample plays by itself only when a change settles, never on load, and a disabled button says why
+    assert "const SETTLE_MS = 250" in s and "window.setTimeout(playIfAllowed, SETTLE_MS)" in s
+    assert "addEventListener('pointerup', release)" in s and "onPointerDown" in s
+    assert s.index("audio.previewCoach(sample") < s.index("setSampling(true)", s.index("audio.previewCoach(sample"))  # a new sample replaces the old one
+    assert "Turn on the coach voice to preview" in s and "Sample not available" in s and "aria-describedby={noSampleWhy" in s
