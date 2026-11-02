@@ -23,6 +23,7 @@ import {
   type ScenarioDetail,
 } from '@/lib/api'
 import { audio } from '@/lib/audioEngine'
+import { LIVE_CALLS_ENABLED } from '@/lib/features'
 import { CallClient } from '@/lib/callClient'
 import { usePageTitle } from '@/lib/usePageTitle'
 import type { Finding } from '@/lib/events'
@@ -94,8 +95,9 @@ export function LiveCall() {
 
   /** Create the session and open the socket. Called from the Start click, which also unlocks audio. */
   const begin = useCallback(
-    async (mode: Mode) => {
+    async (requested: Mode) => {
       if (!scenario) return
+      const mode: Mode = LIVE_CALLS_ENABLED ? requested : 'replay' // a keyed live run cannot start while it is switched off
       setWanted(mode)
       audio.unlock()
       setError(null)
@@ -311,7 +313,7 @@ export function LiveCall() {
 function StartCard({ scenario, busy, onStart }: { scenario: ScenarioDetail; busy: boolean; onStart: (m: Mode) => void }) {
   const hasKeys = useHasKeys()
   const [needKeys, setNeedKeys] = useState(false)
-  if (needKeys && !hasKeys)
+  if (LIVE_CALLS_ENABLED && needKeys && !hasKeys)
     return (
       <section className="card rise mx-auto flex w-full max-w-xl flex-col gap-3.5 p-6 sm:p-7" aria-labelledby="keys-h">
         <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--mc-accent-tint)]">
@@ -345,14 +347,21 @@ function StartCard({ scenario, busy, onStart }: { scenario: ScenarioDetail; busy
             <Play className="h-3.5 w-3.5 fill-current" aria-hidden /> {busy ? 'Starting…' : 'Play recorded run'}
           </button>
         )}
-        <button
-          disabled={busy}
-          onClick={() => (hasKeys ? onStart('live') : setNeedKeys(true))}
-          className={`btn btn-lg ${scenario.has_replay ? '' : 'btn-primary'}`}
-        >
-          Start live call
-          {!hasKeys && !busy && <span className="chip chip-warn h-5 text-[11px]">Needs your keys</span>}
-        </button>
+        {LIVE_CALLS_ENABLED && (
+          <button
+            disabled={busy}
+            onClick={() => (hasKeys ? onStart('live') : setNeedKeys(true))}
+            className={`btn btn-lg ${scenario.has_replay ? '' : 'btn-primary'}`}
+          >
+            Start live call
+            {!hasKeys && !busy && <span className="chip chip-warn h-5 text-[11px]">Needs your keys</span>}
+          </button>
+        )}
+        {!scenario.has_replay && !LIVE_CALLS_ENABLED && (
+          <p role="status" className="text-[13.5px] text-[var(--mc-text-2)]">
+            This call has no recorded run yet. Live modes are coming soon. <Link to="/" className="link">Choose a call with a recorded run</Link>
+          </p>
+        )}
       </div>
       <p className="text-xs text-[var(--mc-muted)]">
         Press start to allow sound. The coach card shows on screen; its voice is optional.
