@@ -1,0 +1,160 @@
+{
+ "schema": 1,
+ "call_id": "c22",
+ "condition": "clean",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "1d00a71c99b73ca1"
+ },
+ "stt": {
+  "requests": 0,
+  "cached": 9,
+  "latency_ms": 0,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 5,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Hello राहुल कांबले जी।",
+   "stt_ms": 282,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ बोलिए, आप कौन?",
+   "stt_ms": 415,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "राहुल जी, आपकी 6,000 की EMI अभी भी pending है, penalty भी लग रही है, payment कब कर रहे हैं?",
+   "stt_ms": 590,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "पहले बताइए आप कौन बोल रही हो? कौन सी company से? ऐसे कोई भी phone करके पैसा मांगता है क्या?",
+   "stt_ms": 620,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "Sorry sir, मैं प्रिया बोल रही हूँ। Starung Finserv से आपका personal loan हमारे पास है, EMI pending है, इसलिए call किया। Payment कब तक होगा?",
+   "stt_ms": 674,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "अच्छा, तारंग से पहले बोलना चाहिए था ना, आप लोग पहले बताया करो, next week तक कर दूंगा।",
+   "stt_ms": 549,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "Next week में कौन सी date sir? मुझे एक पक्की date चाहिए। पूरा नहीं हो पाए तो थोड़ा अभी कर दीजिए।",
+   "stt_ms": 510,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "19 तारीख 19 को पक्का पूरा कर दूंगा।",
+   "stt_ms": 416,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "ठीक है, 19 तारीख पक्का। Payment link अभी WhatsApp पर भेज रही हूँ। Thank you.",
+   "stt_ms": 526,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c22",
+   "turn": 3,
+   "rule": "R2",
+   "kind": "advisory",
+   "confidence": 1.0,
+   "source": "gate",
+   "quote": ""
+  },
+  {
+   "call": "c22",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "राहुल जी, आपकी 6,000 की EMI अभी भी pending है, penalty भी लग रही है, payment कब कर रहे हैं?"
+  },
+  {
+   "call": "c22",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Payment कब तक होगा?"
+  },
+  {
+   "call": "c22",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Next week में कौन सी date sir?"
+  },
+  {
+   "call": "c22",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "पूरा नहीं हो पाए तो थोड़ा अभी कर दीजिए।"
+  },
+  {
+   "call": "c22",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Payment link अभी WhatsApp पर भेज रही हूँ"
+  },
+  {
+   "call": "c22",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "ठीक है, 19 तारीख पक्का"
+  }
+ ],
+ "completed_at": "2026-11-02T05:51:35+00:00"
+}

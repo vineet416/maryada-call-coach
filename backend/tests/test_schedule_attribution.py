@@ -32,7 +32,7 @@ def with_nudge(nudge_t):
 def test_a_late_nudge_for_turn_7_stays_on_turn_7_not_8_or_9():
     p = plan(with_nudge(NAT[8] + 1500), TURNS)  # arrives while turn 8 (the borrower) is playing
     assert list(p.coach) == [7]
-    assert p.coach[7] == p.starts[8] + 3500  # 3.5 s after the NEXT speaker starts
+    assert p.coach[7] == NAT[8] + 1500 + 10  # the turn had ended: the voice plays as soon as the card is shown
     assert p.starts[8] == NAT[8]  # the borrower is not moved by the nudge
     assert p.agent_started_anyway == 0
     assert p.starts[9] == p.coach[7] + 4000 + 1000  # the agent follows the clip by 1 s
@@ -40,7 +40,8 @@ def test_a_late_nudge_for_turn_7_stays_on_turn_7_not_8_or_9():
 
 def test_a_nudge_that_arrives_during_turn_9_is_still_turn_7s_and_the_2s_wait_applies_to_turn_9():
     p = plan(with_nudge(NAT[9] + 6000), TURNS)  # ready 30 s after turn 7 started... far past turn 9's natural start
-    assert list(p.coach) == [7]
+    assert p.coach == {} and p.skipped == [7]  # stale: turn 9 began first, so the voice is dropped (the card stays)
+    assert not [e for e in p.events if e["type"] == "coach.speak"]
     assert p.starts[8] == NAT[8]
     assert p.starts[9] == NAT[9] + 2000  # waited the 2 s cap, then started without the nudge
     assert p.agent_started_anyway == 1

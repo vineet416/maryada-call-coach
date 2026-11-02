@@ -1,0 +1,174 @@
+{
+ "schema": 1,
+ "call_id": "c09",
+ "condition": "clean",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "1d00a71c99b73ca1"
+ },
+ "stt": {
+  "requests": 0,
+  "cached": 11,
+  "latency_ms": 0,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 6,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Good evening, सुनीता पसाल जी।",
+   "stt_ms": 300,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ जी, बोलिए।",
+   "stt_ms": 241,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "मैं कविता बोल रही हूँ Starung Finserv से और यह call record हो रही है quality और training के लिए।",
+   "stt_ms": 418,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ, क्या हुआ?",
+   "stt_ms": 275,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "सुनीता जी, आपकी 5,500 की EMI bounce हुई है, 18 दिन हो गए, आज payment कब तक हो जाएगा?",
+   "stt_ms": 660,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Madam, आज नहीं होगा, पति बाहर गए हैं, वापस आएंगे तो करूंगी।",
+   "stt_ms": 421,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "Madam, ये सब मुझे नहीं सुनना। पति के भरोसे रहती हो, खुद कमाने की हिम्मत नहीं है क्या? पड़ोसियों को पता चलेगा तो क्या इज्जत रहेगी?",
+   "stt_ms": 610,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "Madam, please ऐसे नहीं बोलो, मुझे बहुत बुरा लग रहा है।",
+   "stt_ms": 363,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "तो पैसा दो ना कल सुबह तक चाहिए वरना देखें ना",
+   "stt_ms": 433,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "ठीक है madam, कल सुबह तक कोशिश करती हूँ, बस आप ऐसे बात मत कीजिए।",
+   "stt_ms": 422,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "ठीक है, कल सुबह तक पक्का। मैं SMS भेज रही हूँ।",
+   "stt_ms": 468,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c09",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मैं कविता बोल रही हूँ Starung Finserv से और यह call record हो रही है quality और training के लिए।"
+  },
+  {
+   "call": "c09",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "आज payment कब तक हो जाएगा?"
+  },
+  {
+   "call": "c09",
+   "turn": 7,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 1.0,
+   "source": "both",
+   "quote": "हिम्मत नहीं है क्या?"
+  },
+  {
+   "call": "c09",
+   "turn": 7,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 1.0,
+   "source": "both",
+   "quote": "पड़ोसियों को पता चलेगा"
+  },
+  {
+   "call": "c09",
+   "turn": 9,
+   "rule": "R3",
+   "kind": "needs_review",
+   "confidence": 0.6,
+   "source": "prefilter",
+   "quote": "कल सुबह तक चाहिए"
+  },
+  {
+   "call": "c09",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "तो पैसा दो ना कल सुबह तक चाहिए वरना देखें ना"
+  },
+  {
+   "call": "c09",
+   "turn": 11,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मैं SMS भेज रही हूँ।"
+  }
+ ],
+ "completed_at": "2026-11-02T05:51:34+00:00"
+}

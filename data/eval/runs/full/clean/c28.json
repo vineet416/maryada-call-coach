@@ -1,0 +1,169 @@
+{
+ "schema": 1,
+ "call_id": "c28",
+ "condition": "clean",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "1d00a71c99b73ca1"
+ },
+ "stt": {
+  "requests": 0,
+  "cached": 9,
+  "latency_ms": 0,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 5,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "हाँ, अशोक तांबे बोल रहा है।",
+   "stt_ms": 299,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ, कौन?",
+   "stt_ms": 258,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "पैसा कब दे रहा है? दो महीने से ऊपर हो गए। तू सुनता ही नहीं है, phone उठाता नहीं। आज उठाया है तो सीधा बोल।",
+   "stt_ms": 521,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "आप कौन बोल रहे हो? ऐसे तू-तू करके क्यों बात कर रहे हो?",
+   "stt_ms": 366,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "सवाल मत पूछ, पैसा बोल, ज्यादा होशियारी मत दिखा, नहीं तो तेरे घर आकर तमाशा करूँगा, समझ गया?",
+   "stt_ms": 533,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "मैं पुलिस में complaint करूँगा, यह सब record हो रहा होगा।",
+   "stt_ms": 423,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "जा कर ले जो करना है, मेरे को Friday तक payment चाहिए बस मेरी team को रोज report देनी पड़ती है।",
+   "stt_ms": 550,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "पहले ये बोलो कि आप कौन हो, कौन सी company से? मैं ऐसे किसी को पैसा नहीं दूंगा।",
+   "stt_ms": 445,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "तारंग Finserve से रोहित, तेरा personal loan है, 9,500 की EMI 2 महीने से pending है, link SMS पर भेज देता हूँ, Friday तक कर देना।",
+   "stt_ms": 594,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c28",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "हाँ, अशोक तांबे बोल रहा है।"
+  },
+  {
+   "call": "c28",
+   "turn": 3,
+   "rule": "R2",
+   "kind": "advisory",
+   "confidence": 1.0,
+   "source": "gate",
+   "quote": ""
+  },
+  {
+   "call": "c28",
+   "turn": 3,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.97,
+   "source": "both",
+   "quote": "तू सुनता ही नहीं"
+  },
+  {
+   "call": "c28",
+   "turn": 5,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 1.0,
+   "source": "both",
+   "quote": "होशियारी मत दिखा,"
+  },
+  {
+   "call": "c28",
+   "turn": 7,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.98,
+   "source": "llm",
+   "quote": "जा कर ले जो करना है"
+  },
+  {
+   "call": "c28",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Friday tak payment चाहिए"
+  },
+  {
+   "call": "c28",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मेरी team को रोज report देनी पड़ती है"
+  },
+  {
+   "call": "c28",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "link SMS पर भेज देता हूँ"
+  }
+ ],
+ "completed_at": "2026-11-02T05:51:35+00:00"
+}

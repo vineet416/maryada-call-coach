@@ -1,0 +1,178 @@
+{
+ "schema": 1,
+ "call_id": "c29",
+ "condition": "clean",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "1d00a71c99b73ca1"
+ },
+ "stt": {
+  "requests": 0,
+  "cached": 9,
+  "latency_ms": 0,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 5,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Hello, यह योगेश सालवी जी का नंबर है?",
+   "stt_ms": 365,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "T",
+   "text": "हाँ, पर योगेश अभी नहीं है, मैं पड़ोसी बोल रहा हूँ।",
+   "stt_ms": 546,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "मैं कविता तारंग Finserve से बता दूँ। यह call quality और training के लिए record हो रही है। योगेश जी का यही number है ना? आप उनको एक message दे सकते हैं।",
+   "stt_ms": 673,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "T",
+   "text": "हाँ, यही number है उनका। बोलिए, क्या message देना है?",
+   "stt_ms": 375,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "देखिए, हम कितने दिन से call कर रहे हैं, वो phone ही नहीं उठाते, उनको बोल देना कि उनका loan default हो गया है और court में case डालने वाले हैं।",
+   "stt_ms": 525,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "T",
+   "text": "क्या court यह बात मुझे क्यों बोल रही हैं आप, मेरा इससे क्या लेना-देना?",
+   "stt_ms": 521,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "क्योंकि उनकी property कल seal होगी, आप भी उनको समझा देना, आप पड़ोसी हैं, आपकी बात वो सुनेंगे।",
+   "stt_ms": 425,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "T",
+   "text": "मैं नहीं बोलूँगा जी, आप उनका number लो और उनसे ही बात करो, मुझे इसमें मत घसीटो।",
+   "stt_ms": 534,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "ठीक है, मैं उनको दोबारा call करती हूँ। Thank you।",
+   "stt_ms": 370,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c29",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Hello, यह योगेश सालवी जी का नंबर है?"
+  },
+  {
+   "call": "c29",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मैं कविता तारंग Finserve से बता दूँ। यह call quality और training के लिए record हो रही है।"
+  },
+  {
+   "call": "c29",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "आप उनको एक message दे सकते हैं।"
+  },
+  {
+   "call": "c29",
+   "turn": 5,
+   "rule": "R4",
+   "kind": "violation",
+   "confidence": 0.98,
+   "source": "llm",
+   "quote": "उनको बोल देना कि उनका loan default हो गया है"
+  },
+  {
+   "call": "c29",
+   "turn": 5,
+   "rule": "R5",
+   "kind": "violation",
+   "confidence": 0.94,
+   "source": "llm",
+   "quote": "court में case डालने वाले हैं"
+  },
+  {
+   "call": "c29",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "उनको बोल देना"
+  },
+  {
+   "call": "c29",
+   "turn": 7,
+   "rule": "R4",
+   "kind": "violation",
+   "confidence": 0.98,
+   "source": "llm",
+   "quote": "क्योंकि उनकी property कल seal होगी, आप भी उनको समझा देना, आप पड़ोसी हैं, आपकी बात वो सुनेंगे।"
+  },
+  {
+   "call": "c29",
+   "turn": 7,
+   "rule": "R5",
+   "kind": "violation",
+   "confidence": 0.88,
+   "source": "llm",
+   "quote": "क्योंकि उनकी property कल seal होगी"
+  },
+  {
+   "call": "c29",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "ठीक है, मैं उनको दोबारा call करती हूँ। Thank you।"
+  }
+ ],
+ "completed_at": "2026-11-02T05:51:35+00:00"
+}

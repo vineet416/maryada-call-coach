@@ -6,6 +6,8 @@ import {
   getRules,
   type EvalExample,
   type EvalPayload,
+  type EngineChange,
+  type EvalReview,
   type EvalResults,
   type LatencyRow,
   type Prf,
@@ -80,7 +82,7 @@ export function Evaluation() {
     return (
       <div className="space-y-5" aria-busy="true" aria-label="Loading the evaluation">
         <div className="skeleton h-16" />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[0, 1, 2, 3].map((i) => <div key={i} className="skeleton h-28" />)}
         </div>
         <div className="skeleton h-80" />
@@ -116,7 +118,7 @@ export function Evaluation() {
           <Coverage results={results} />
           <RunPicker results={results} eng={eng} cond={cd} setEngine={setEngine} setCond={setCond} />
           {run ? (
-            <RunView run={run} results={results} rules={rules} group={group} setGroup={setGroup} eng={eng} cond={cd} />
+            <RunView run={run} results={results} rules={rules} group={group} setGroup={setGroup} eng={eng} cond={cd} review={data.review} changes={data.engine_changes} />
           ) : (
             <section className="card p-6" role="status">
               <h2 className="text-[17px] font-semibold tracking-tight">Not run yet</h2>
@@ -215,7 +217,7 @@ function Stat({ label, prf, kind, note }: { label: string; prf: Prf; kind: 'r' |
   )
 }
 
-function RunView({ run, results, rules, group, setGroup, eng, cond }: {
+function RunView({ run, results, rules, group, setGroup, eng, cond, review, changes }: {
   run: RunResult
   results: EvalResults
   rules: Rule[]
@@ -223,7 +225,12 @@ function RunView({ run, results, rules, group, setGroup, eng, cond }: {
   setGroup: (g: Group) => void
   eng: Engine
   cond: string
+  review: EvalReview | null
+  changes: EngineChange[]
 }) {
+  const adj = review?.adjusted[`${eng}/${cond}`]?.all?.strict ?? null
+  const wr = review?.adjusted[`${eng}/${cond}`]?.all?.with_review ?? null
+  const gone = wr ? (review?.items.length ?? 0) - (wr.extras_real + wr.extras_unsure + wr.extras_not_a_violation) : 0
   const score: Score | null = run[group] ?? null
   const held = run.held_out ?? null
   const all = run.all ?? null
@@ -236,7 +243,20 @@ function RunView({ run, results, rules, group, setGroup, eng, cond }: {
         <>
           <section aria-label="Headline scores" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Stat label="Violations found" prf={all.overall.strict} kind="r" note="labelled units, strict" />
-            <Stat label="Flags that were correct" prf={all.overall.strict} kind="p" note="flags, strict" />
+            <div>
+              <Stat label="Flags that were correct" prf={all.overall.strict} kind="p" note="flags, strict, original labels" />
+              {adj && (
+                <div className="card mt-2 p-4" aria-label="After human review of extras">
+                  <div className="lbl">After human review of extras</div>
+                  <div className="mt-1 text-[22px] font-bold leading-tight tracking-[-0.02em]">
+                    {f2(adj.precision_low)}–{f2(adj.precision_high)}
+                  </div>
+                  <div className="text-[12.5px] text-[var(--mc-muted)]">
+                    {adj.correct_low}–{adj.correct_high} of {adj.flags} flags · recall unchanged ({f2(adj.recall)})
+                  </div>
+                </div>
+              )}
+            </div>
             <Stat label="Found, counting needs review" prf={all.overall.with_review} kind="r" note="labelled units" />
             {held ? (
               <Stat label={`Held-out calls (${held.n_calls})`} prf={held.overall.strict} kind="r" note="labelled units, strict" />
@@ -248,6 +268,18 @@ function RunView({ run, results, rules, group, setGroup, eng, cond }: {
             All headline cards: {ENGINES.find((e) => e.id === eng)?.label.toLowerCase()}, {lc(CONDITIONS.find((c) => c.id === cond)?.label ?? '')}, {all.n_calls} calls.
             Strict counts violations and advisories only. A unit is one agent turn and one rule.
           </p>
+          {eng === 'full' && changes.filter((c) => c.condition === `full/${cond}`).map((c) => (
+            <p key={c.id} className="-mt-3 text-[12.5px] text-[var(--mc-muted)]">
+              Engine change made after seeing results ({dateOf(c.date)}): it does not use the labels. It removes {c.removed_flags.length} flags
+              whose quote is not in the flagged turn but in an earlier one the model was shown. Scores above are after this change; the before and after counts are saved with the results.
+            </p>
+          ))}
+          {adj && (
+            <p className="-mt-3 text-[12.5px] text-[var(--mc-muted)]">
+              After human review of extras: the project author reviewed only the {review?.items.length ?? 0} extra flags
+              the labels do not have ({adj.flags - adj.correct_original} of them are in the strict count above{gone > 0 ? `; ${gone} are no longer flagged after the engine change above` : ''}), and is the only reviewer. {adj.extras_real} were judged real (counted as correct flags), {adj.extras_unsure} unsure, and the rest not violations (still false flags). Unsure makes the second number a range: all unsure counted false, then all counted correct. The first number above is still scored against the original labels.
+            </p>
+          )}
         </>
       ) : (
         <p role="status" className="card p-5 text-[13.5px] text-[var(--mc-muted)]">This run has no combined scores, so the headline cards are left out. The groups below show what exists.</p>

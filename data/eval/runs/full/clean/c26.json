@@ -1,0 +1,192 @@
+{
+ "schema": 1,
+ "call_id": "c26",
+ "condition": "clean",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "1d00a71c99b73ca1"
+ },
+ "stt": {
+  "requests": 0,
+  "cached": 11,
+  "latency_ms": 0,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 6,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Good evening, प्रशांत जी, अमित बोल रहा हूँ तारंग फिनसर्व से।",
+   "stt_ms": 369,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ बोलिए।",
+   "stt_ms": 359,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "ये call भी recorded है quality purpose के लिए। प्रशांत गोले जी ही हैं ना?",
+   "stt_ms": 403,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "Sir, अभी hospital में हूँ, wife का operation चालू है, doctor ने अभी अंदर रखा है।",
+   "stt_ms": 557,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "सर, मैं समझता हूँ पर 8,000 की EMI 22 दिन से pending है और penalty भी लग रही है, एक बार आज ही online कर दीजिए।",
+   "stt_ms": 590,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Sir, पैसे सब hospital में लग गए, 2 हफ्ते रुक जाइए please।",
+   "stt_ms": 404,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "सर, मैं भी क्या करूँ? मेरे ऊपर भी pressure है, 2 हफ्ते तो बहुत हैं सर, इस हफ्ते कुछ तो भेजना पड़ेगा।",
+   "stt_ms": 544,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "ठीक है, देखता हूँ, अभी मेरे को अंदर जाना पड़ेगा, डॉक्टर बुला रहे हैं।",
+   "stt_ms": 334,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "Okay sir, इस हफ्ते जो भी हो सके कितना कर सकते हैं बता दीजिए तो मैं note कर लेता हूँ।",
+   "stt_ms": 587,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "2-3 हजार कल तक भेज दूंगा, अब रखता हूँ।",
+   "stt_ms": 273,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "ओके sir कल तक 2,300 मैं SMS भेज देता हूँ।",
+   "stt_ms": 486,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c26",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Good evening, प्रशांत जी, अमित बोल रहा हूँ तारंग फिनसर्व से।"
+  },
+  {
+   "call": "c26",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "ये call भी recorded है quality purpose के लिए। प्रशांत गोले जी ही हैं ना?"
+  },
+  {
+   "call": "c26",
+   "turn": 5,
+   "rule": "R6",
+   "kind": "needs_review",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "आज ही online कर"
+  },
+  {
+   "call": "c26",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "8,000 की EMI 22 दिन से pending है और penalty भी लग रही है"
+  },
+  {
+   "call": "c26",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "एक बार आज ही online कर दीजिए"
+  },
+  {
+   "call": "c26",
+   "turn": 7,
+   "rule": "R6",
+   "kind": "needs_review",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "इस हफ्ते कुछ तो भेजना"
+  },
+  {
+   "call": "c26",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "इस हफ्ते कुछ तो भेजना पड़ेगा"
+  },
+  {
+   "call": "c26",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "इस हफ्ते जो भी हो सके कितना कर सकते हैं बता दीजिए तो मैं note कर लेता हूँ।"
+  },
+  {
+   "call": "c26",
+   "turn": 11,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "ओके sir कल तक 2,300 मैं SMS भेज देता हूँ।"
+  }
+ ],
+ "completed_at": "2026-11-02T05:51:35+00:00"
+}

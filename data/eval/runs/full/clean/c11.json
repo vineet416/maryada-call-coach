@@ -1,0 +1,183 @@
+{
+ "schema": 1,
+ "call_id": "c11",
+ "condition": "clean",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "1d00a71c99b73ca1"
+ },
+ "stt": {
+  "requests": 0,
+  "cached": 11,
+  "latency_ms": 0,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 6,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "नमस्ते किरण सावन जी।",
+   "stt_ms": 304,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ, कौन बोल रहा है?",
+   "stt_ms": 276,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "रोहित बोल रहा हूँ तारंग फिनसर्व से और call recorded है quality purpose के लिए।",
+   "stt_ms": 442,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ, बोलिए।",
+   "stt_ms": 241,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "किरण जी, 10,000 की EMI दो महीने से pending है, दोनों बार bounce हुई, penalty भी चढ़ रही है, कब तक भरेंगे?",
+   "stt_ms": 616,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Sir, अभी पैसा नहीं है, नौकरी में भी दिक्कत चल रही है, एक महीना दे दो, कुछ arrange करता हूँ।",
+   "stt_ms": 619,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "एक महीना नहीं मिलेगा, किरण जी, मेरे को आज का बोलो, court से आपके नाम पर arrest warrant निकल चुका है, कभी भी police पकड़ लेगी।",
+   "stt_ms": 463,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "क्या? warrant मेरे को तो कोई notice भी नहीं आया",
+   "stt_ms": 351,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "आया नहीं तो अब आएगा, अभी पैसा भर दो तो वारंट रुक सकता है।",
+   "stt_ms": 551,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "Sir, please ऐसे मत बोलो, मैं आज ही bank जाता हूँ, कुछ देता हूँ, 2-3 हज़ार अभी, बाकी बाद में।",
+   "stt_ms": 694,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "ठीक है आज ही करो 2,300 भी चलेगा बस आज हो जाए।",
+   "stt_ms": 421,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c11",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "नमस्ते किरण सावन जी।"
+  },
+  {
+   "call": "c11",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "रोहित बोल रहा हूँ तारंग फिनसर्व से और call recorded है quality purpose के लिए।"
+  },
+  {
+   "call": "c11",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "penalty भी चढ़ रही है"
+  },
+  {
+   "call": "c11",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "कब तक भरेंगे?"
+  },
+  {
+   "call": "c11",
+   "turn": 7,
+   "rule": "R5",
+   "kind": "violation",
+   "confidence": 1.0,
+   "source": "both",
+   "quote": "arrest warrant"
+  },
+  {
+   "call": "c11",
+   "turn": 7,
+   "rule": "R5",
+   "kind": "violation",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "पकड़ लेगी।"
+  },
+  {
+   "call": "c11",
+   "turn": 9,
+   "rule": "R5",
+   "kind": "violation",
+   "confidence": 1.0,
+   "source": "both",
+   "quote": "वारंट रुक सकता"
+  },
+  {
+   "call": "c11",
+   "turn": 11,
+   "rule": "R5",
+   "kind": "violation",
+   "confidence": 0.84,
+   "source": "llm",
+   "quote": "ठीक है आज ही करो 2,300 भी चलेगा बस आज हो जाए।"
+  }
+ ],
+ "completed_at": "2026-11-02T05:51:35+00:00"
+}

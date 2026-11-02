@@ -1,20 +1,23 @@
 """Call timing rules shared by the live clock and the replayer (decided 2026-11-01).
 
 The audio of a call is stitched with natural gaps (the turn offsets in the audio manifest). A coach nudge changes the clock in
-two ways, and only then: the coach clip starts COACH_DELAY_S after the NEXT speaker's turn starts (or as soon as it is ready,
-if that is later), and the agent's next turn starts AGENT_AFTER_COACH_S after the clip ends. The call audio itself never pauses:
+two ways, and only then: the coach clip starts COACH_AFTER_TURN_S after the nudged agent turn ends, or when the card is shown if
+that is later (decided 2026-11-02), and the agent's next turn starts AGENT_AFTER_COACH_S after the clip ends. A clip that would begin
+after the agent's next turn has already started is skipped (the card stays). The call audio itself never pauses:
 the agent simply starts later (or a little earlier than the natural schedule, never before the usual minimum gap).
 """
 import copy
+import logging
 from dataclasses import dataclass, field
 
-COACH_DELAY_S = 3.5  # coach clip starts this long after the next speaker's turn starts (decided range 3-4 s)
+COACH_AFTER_TURN_S = 0.5  # the coach clip starts this long after the nudged agent turn ends (or when the card is shown, if later)
 AGENT_AFTER_COACH_S = 1.0  # the agent's next turn starts this long after the coach clip ends
 AGENT_WAIT_S = 2.0  # the agent waits at most this long (past its natural start) for a nudge that is not ready yet
 COACH_QUEUE_GAP_S = 1.0  # two coach clips never run closer than this
 MIN_FILE_GAP_S = 0.9  # smallest silence between two clips: the heard gap of 1.0 s minus the 50 ms kept at each clip edge
 COACH_HOLD_GAP_MS = 300  # the pause option: the call also waits this long after the clip
-COACH_LAST_TURN_GAP_S = 1.0  # a nudge on the last turn of a call plays this long after that turn ended (or when ready)
+
+log = logging.getLogger("maryada.schedule")
 
 
 @dataclass
@@ -23,6 +26,7 @@ class Plan:
     agent_started_anyway: int = 0  # times the agent started after the 2 s wait without the nudge being ready
     coach: dict[int, int] = field(default_factory=dict)  # nudged turn -> coach clip start (ms)
     starts: dict[int, int] = field(default_factory=dict)  # turn -> start (ms)
+    skipped: list[int] = field(default_factory=list)  # nudged turns whose voice was dropped: the next agent turn had already started
 
 
 def rest_text_lags(evs: list[dict], dur: dict[int, int]) -> dict[int, int]:
@@ -115,22 +119,26 @@ def plan(events: list[dict], turns: list[dict], hold: bool = False) -> Plan:
 
     start: dict[int, int] = {}
     coach: dict[int, int] = {}
+    skipped: list[int] = []
     last_coach_end = -10**9
     late = 0
 
-    def coach_start(k: int) -> int:
+    def coach_start(k: int) -> int | None:
+        """When the clip of nudged turn k starts, or None when it is skipped (the agent's next turn had already started)."""
         nonlocal last_coach_end
-        if k not in coach:
+        if k not in coach and k not in skipped:
             i = order.index(k)
-            nxt = order[i + 1] if i + 1 < len(order) else None
-            ready = start[k] + nudges[k]["lag"]
-            if nxt is None or who[nxt] == who[k]:
-                base = start[k] + dur[k] + round(COACH_LAST_TURN_GAP_S * 1000)
+            card = start[k] + nudges[k]["lag"]
+            at = max(start[k] + dur[k] + round(COACH_AFTER_TURN_S * 1000), card, last_coach_end + round(COACH_QUEUE_GAP_S * 1000))
+            nxt_agent = next((j for j in order[i + 1:] if who[j] == "A"), None)
+            if nxt_agent is not None and nxt_agent in start and start[nxt_agent] <= at:
+                skipped.append(k)
+                log.info("coach voice skipped for turn %s: it would start at %d ms, after the next agent turn began (%d ms)",
+                         k, at, start[nxt_agent])
             else:
-                base = start[nxt] + round(COACH_DELAY_S * 1000)
-            coach[k] = max(base, ready, last_coach_end + round(COACH_QUEUE_GAP_S * 1000))
-            last_coach_end = coach[k] + nudges[k]["speak"]["data"].get("duration_ms", 0)
-        return coach[k]
+                coach[k] = at
+                last_coach_end = at + nudges[k]["speak"]["data"].get("duration_ms", 0)
+        return coach.get(k)
 
     shift = 0
     for pos, idx in enumerate(order):
@@ -143,12 +151,13 @@ def plan(events: list[dict], turns: list[dict], hold: bool = False) -> Plan:
                 if ready > s + round(AGENT_WAIT_S * 1000):  # not ready in time: start anyway, the clip plays when ready
                     s += round(AGENT_WAIT_S * 1000)
                     late += 1
+                    start[idx] = s  # this agent turn begins now: a clip that is only ready later is stale
                     coach_start(k)
                 else:
                     c_end = coach_start(k) + nudges[k]["speak"]["data"].get("duration_ms", 0)
                     after = order[order.index(k) + 1]
                     floor = start[after] + dur[after] + round(MIN_FILE_GAP_S * 1000) if after != idx else 0
-                    s = max(c_end + round(AGENT_AFTER_COACH_S * 1000), floor)
+                    s = max(s, c_end + round(AGENT_AFTER_COACH_S * 1000), floor)  # an early clip never pulls the agent ahead of the call schedule
             elif k is not None and k in ended_lag:  # no spoken nudge: wait for its check to settle, at most 2 s
                 s = max(s, min(start[k] + ended_lag[k], s + round(AGENT_WAIT_S * 1000)))
             shift = s - nat[idx]
@@ -161,7 +170,10 @@ def plan(events: list[dict], turns: list[dict], hold: bool = False) -> Plan:
         lag = e.pop("_lag")
         e["t_ms"] = start[idx] + lag if idx is not None and idx in start else e["t_ms"]
     for k, n in nudges.items():
-        n["speak"]["t_ms"] = coach[k]
+        if k in coach:
+            n["speak"]["t_ms"] = coach[k]
+    gone = {id(nudges[k]["speak"]) for k in skipped}
+    evs = [e for e in evs if id(e) not in gone]  # a skipped voice: the card stays, the clip is not played
     evs.sort(key=lambda e: e["t_ms"])  # stable: equal times keep the recorded order
     if hold:  # in call time order: everything after a coach clip moves later by the clip's length
         moved = 0
@@ -171,4 +183,4 @@ def plan(events: list[dict], turns: list[dict], hold: bool = False) -> Plan:
                 moved += e["data"].get("duration_ms", 0) + COACH_HOLD_GAP_MS
     for n, e in enumerate(evs, 1):
         e["seq"] = n
-    return Plan(evs, late, coach, start)
+    return Plan(evs, late, coach, start, skipped)

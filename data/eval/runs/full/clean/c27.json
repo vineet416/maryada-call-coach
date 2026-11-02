@@ -1,0 +1,174 @@
+{
+ "schema": 1,
+ "call_id": "c27",
+ "condition": "clean",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "1d00a71c99b73ca1"
+ },
+ "stt": {
+  "requests": 0,
+  "cached": 11,
+  "latency_ms": 0,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 6,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "नमस्ते रवि नाईक जी।",
+   "stt_ms": 444,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "जी, मैं ही हूँ।",
+   "stt_ms": 306,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "संदीप बोल रहा हूँ, तारंग फिनसर्व से। एक मिनट सर, यह line recorded है।",
+   "stt_ms": 454,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ sir, बोलो।",
+   "stt_ms": 326,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "रवि जी, 5,500 की EMI 19 दिन से बाकी है, penalty भी लग रही है, payment कब तक हो पाएगा?",
+   "stt_ms": 473,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Sir, मेरी मम्मी hospital में हैं इसलिए payment नहीं कर पाया, 2 दिन से वहीं हूँ।",
+   "stt_ms": 511,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "Sir, सुनके बहुत बुरा लगा, आप पहले उनका ख्याल रखिये, payment की चिंता अभी मत कीजिये, मम्मी अब कैसी हैं?",
+   "stt_ms": 536,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "थोड़ा better है sir, thank you, दो हफ्ते बाद कुछ करता हूँ।",
+   "stt_ms": 483,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "बिल्कुल sir, मैं 2 हफ्ते बाद एक reminder भेज दूंगा और जरूरत हो तो हम EMI में relief का option भी देखेंगे, आप अपना ध्यान रखिये।",
+   "stt_ms": 573,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "Thank you sir, बहुत अच्छा लगा कि आपने समझा।",
+   "stt_ms": 453,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "कोई बात नहीं sir, मम्मी को मेरी तरफ से get well soon बोलना, take care।",
+   "stt_ms": 382,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c27",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "नमस्ते रवि नाईक जी।"
+  },
+  {
+   "call": "c27",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "संदीप बोल रहा हूँ, तारंग फिनसर्व से। एक मिनट सर, यह line recorded है।"
+  },
+  {
+   "call": "c27",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "रवि जी, 5,500 की EMI 19 दिन से बाकी है, penalty भी लग रही है, payment कब तक हो पाएगा?"
+  },
+  {
+   "call": "c27",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "आप पहले उनका ख्याल रखिये, payment की चिंता अभी मत कीजिये, मम्मी अब कैसी हैं?"
+  },
+  {
+   "call": "c27",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मैं 2 हफ्ते बाद एक reminder भेज दूंगा"
+  },
+  {
+   "call": "c27",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "हम EMI में relief का option भी देखेंगे"
+  },
+  {
+   "call": "c27",
+   "turn": 11,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मम्मी को मेरी तरफ से get well soon बोलना, take care।"
+  }
+ ],
+ "completed_at": "2026-11-02T05:51:35+00:00"
+}
