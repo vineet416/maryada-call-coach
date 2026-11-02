@@ -14,8 +14,8 @@ SRC = ROOT / "frontend" / "src"
 
 
 def test_notes_are_tracked_and_not_ignored():
-    assert subprocess.run(["git", "check-ignore", "-q", "docs/EVAL-NOTES.md"], cwd=ROOT).returncode == 1
-    assert subprocess.run(["git", "ls-files", "--error-unmatch", "docs/EVAL-NOTES.md"], cwd=ROOT, capture_output=True).returncode == 0
+    assert subprocess.run(["git", "check-ignore", "-q", "docs/EVAL-NOTES.md"], cwd=ROOT, check=False).returncode == 1
+    assert subprocess.run(["git", "ls-files", "--error-unmatch", "docs/EVAL-NOTES.md"], cwd=ROOT, capture_output=True, check=False).returncode == 0
 
 
 def test_notes_numbers_match_the_saved_data():
