@@ -1,6 +1,5 @@
 import type { ManagerAgent, ManagerCall, ManagerPayload, ManagerStatus } from '@/lib/api'
 
-export const RULE_IDS = ['R1', 'R2', 'R3', 'R4', 'R5', 'R6']
 export const STATUS_LABEL: Record<ManagerStatus, string> = {
   needs_training: 'Needs training',
   watch: 'Watch',
@@ -19,9 +18,6 @@ export const STATUS_COLOR: Record<ManagerStatus, string> = {
   excellent: 'var(--mc-good-practice)',
   no_calls: '#98a2b3',
 }
-/** The fixed status rule, shown wherever a status is shown. */
-export const STATUS_RULE =
-  'Excellent: no violations in at least 3 calls. Needs training: 2 or more violations of R3, R4 or R5, or an average risk of 40 or more. Otherwise: Watch.'
 
 export const pct = (n: number | null) => (n === null ? '–' : `${Math.round(n * 100)}%`)
 export const num = (n: number | null) => (n === null ? '–' : String(Math.round(n)))
@@ -29,6 +25,7 @@ export const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n ==
 export const shortDate = (iso: string) =>
   new Date(`${iso}T00:00:00`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
 
+export const ruleIds = (p: ManagerPayload) => p.rules.map((r) => r.id)
 export const ruleTitle = (p: ManagerPayload, id: string) => p.rules.find((r) => r.id === id)?.title ?? ''
 
 export const violationsOf = (c: ManagerCall) =>
@@ -49,11 +46,11 @@ const csvCell = (v: string | number | null) => {
 }
 
 /** CSV text of the agent table, as shown (same numbers, same date range). */
-export function agentsCsv(agents: ManagerAgent[]): string {
-  const head = ['Agent', 'Team', 'Calls', 'Violations', 'Needs review', 'Average risk', 'Peak risk', 'Top rule', 'Status', ...RULE_IDS]
+export function agentsCsv(agents: ManagerAgent[], ids: string[]): string {
+  const head = ['Agent', 'Team', 'Calls', 'Violations', 'Needs review', 'Average risk', 'Peak risk', 'Top rule', 'Status', ...ids]
   const rows = agents.map((a) => [
     a.name, a.team, a.calls, a.violations, a.needs_review, a.avg_risk, a.peak_risk, a.top_rule ?? '', STATUS_LABEL[a.status],
-    ...RULE_IDS.map((r) => a.by_rule[r] ?? 0),
+    ...ids.map((r) => a.by_rule[r] ?? 0),
   ])
   return [head, ...rows].map((r) => r.map(csvCell).join(',')).join('\r\n') + '\r\n'
 }

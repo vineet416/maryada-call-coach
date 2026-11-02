@@ -5,7 +5,7 @@ from datetime import date
 from .. import replay
 from ..config import settings
 from ..rules.loader import load_rules
-from .aggregate import aggregate
+from .aggregate import STATUS_RULE, aggregate
 
 
 def load_saved() -> dict | None:
@@ -35,7 +35,7 @@ def manager_payload(start: str | None, end: str | None) -> dict | None:
     return {
         "generated_at": saved.get("generated_at"), "batch_label": saved.get("batch_label"), "source": saved["source"],
         "range": {"from": start, "to": end, "first_day": days[0] if days else None, "last_day": days[-1] if days else None},
-        **agg,
+        **agg, "status_rule": STATUS_RULE,
         "rules": [{"id": r["id"], "title": r["title"], "coach_line": (r.get("coach_lines") or [""])[0]}
                   for r in rules if r["id"].startswith("R")],
     }

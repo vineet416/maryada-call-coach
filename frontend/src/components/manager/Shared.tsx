@@ -1,10 +1,10 @@
 import { Line, LineChart, ResponsiveContainer, YAxis } from 'recharts'
 import type { ManagerStatus } from '@/lib/api'
-import { STATUS_CLASS, STATUS_COLOR, STATUS_LABEL, STATUS_RULE } from '@/lib/manager'
+import { STATUS_CLASS, STATUS_COLOR, STATUS_LABEL } from '@/lib/manager'
 
-export function StatusChip({ status }: { status: ManagerStatus }) {
+export function StatusChip({ status, rule }: { status: ManagerStatus; rule: string }) {
   return (
-    <span className={`chip ${STATUS_CLASS[status]} font-semibold`} title={STATUS_RULE}>
+    <span className={`chip ${STATUS_CLASS[status]} font-semibold`} title={rule}>
       {STATUS_LABEL[status]}
     </span>
   )

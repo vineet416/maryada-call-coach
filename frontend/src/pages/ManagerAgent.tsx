@@ -5,7 +5,7 @@ import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YA
 import { ErrorCard } from '@/components/ErrorCard'
 import { Initials, RecordedChip, StatusChip } from '@/components/manager/Shared'
 import { ApiError, getManager, type ManagerCall, type ManagerPayload } from '@/lib/api'
-import { RULE_IDS, num, plural, ruleTitle, shortDate } from '@/lib/manager'
+import { num, plural, ruleIds, ruleTitle, shortDate } from '@/lib/manager'
 import { usePageTitle } from '@/lib/usePageTitle'
 
 const KIND_LABEL: Record<string, string> = { violation: 'violation', advisory: 'advisory', needs_review: 'needs review', good_practice: 'good practice' }
@@ -78,7 +78,7 @@ export function ManagerAgent() {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <StatusChip status={agent.status} />
+          <StatusChip status={agent.status} rule={data.status_rule} />
           <RecordedChip note="Results come from a saved evaluation run, not a live one" savedOn={data.generated_at} />
         </div>
       </div>
@@ -104,7 +104,7 @@ export function ManagerAgent() {
             <section className="card flex min-w-[280px] flex-[1_1_320px] flex-col gap-3 px-6 py-5" aria-labelledby="mix-h">
               <h2 id="mix-h" className="text-base font-semibold">Rule mix</h2>
               <ul className="flex flex-col gap-1.5">
-                {RULE_IDS.map((r) => (
+                {ruleIds(data).map((r) => (
                   <li key={r} className="flex items-center justify-between gap-3 text-[13px]">
                     <span><b className="font-semibold">{r}</b> <span className="text-[var(--mc-muted)]">{ruleTitle(data, r)}</span></span>
                     <b className="font-semibold tabular-nums">{agent.by_rule[r] ?? 0}</b>

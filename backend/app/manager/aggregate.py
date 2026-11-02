@@ -17,6 +17,10 @@ _WEIGHT = {"R3": 30, "R5": 35, "R4": 35, "R1": 20, "R2": 8, "R6": 10}
 STATUS_ORDER = {"needs_training": 0, "watch": 1, "excellent": 2, "no_calls": 3}
 
 
+STATUS_RULE = (f"Excellent: no violations in at least {EXCELLENT_MIN_CALLS} calls. Needs training: {TRAINING_MIN_SERIOUS} or more "
+               f"violations of {', '.join(SERIOUS[:-1])} or {SERIOUS[-1]}, or an average risk of {TRAINING_AVG_RISK} or more. Otherwise: Watch.")
+
+
 def in_range(call_date: str, start: str | None, end: str | None) -> bool:
     """Inclusive ISO-date bounds; either may be None. ISO dates compare correctly as strings."""
     return (start is None or call_date >= start) and (end is None or call_date <= end)

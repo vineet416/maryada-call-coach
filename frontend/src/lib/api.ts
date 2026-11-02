@@ -242,6 +242,7 @@ export interface ManagerPayload {
   attention: string[]
   calls: ManagerCall[]
   rules: { id: string; title: string; coach_line: string }[]
+  status_rule: string
 }
 export function getManager(range: { from?: string; to?: string }, signal?: AbortSignal) {
   const q = new URLSearchParams()

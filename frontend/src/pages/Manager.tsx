@@ -6,7 +6,7 @@ import { ErrorCard } from '@/components/ErrorCard'
 import { Initials, RecordedChip, Spark, StatusChip } from '@/components/manager/Shared'
 import { ApiError, getManager, type ManagerAgent, type ManagerPayload } from '@/lib/api'
 import {
-  RULE_IDS, STATUS_RULE, agentsCsv, downloadCsv, exampleCall, num, pct, plural, ruleTitle, shortDate,
+  agentsCsv, downloadCsv, exampleCall, num, pct, plural, ruleIds, ruleTitle, shortDate,
 } from '@/lib/manager'
 import { usePageTitle } from '@/lib/usePageTitle'
 
@@ -84,7 +84,7 @@ function Dashboard({ data, range, setRange, busy, error, retry }: {
   const dayCount = data.by_day.length
 
   return (
-    <div className="flex flex-col gap-6" aria-busy={busy}>
+    <div className={`flex flex-col gap-6 ${error ? "opacity-60" : ""}`} aria-busy={busy}>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-[28px] font-bold tracking-[-0.025em]">Team compliance</h1>
@@ -94,7 +94,7 @@ function Dashboard({ data, range, setRange, busy, error, retry }: {
           <DateField id="from" label="From" value={range.from} min={first} max={range.to || last} onChange={(v) => setRange({ ...range, from: v })} />
           <DateField id="to" label="To" value={range.to} min={range.from || first} max={last} onChange={(v) => setRange({ ...range, to: v })} />
           {filtered && <button type="button" className="btn" onClick={() => setRange({ from: '', to: '' })}>All dates</button>}
-          <button type="button" className="btn" disabled={!data.agents.length} onClick={() => downloadCsv('maryada-agents.csv', agentsCsv(data.agents))}>
+          <button type="button" className="btn" disabled={!data.agents.length} onClick={() => downloadCsv('maryada-agents.csv', agentsCsv(data.agents, ruleIds(data)))}>
             <Download className="h-3.5 w-3.5" aria-hidden /> Export CSV
           </button>
         </div>
@@ -187,7 +187,7 @@ function Leaderboard({ data, search }: { data: ManagerPayload; search: string })
     <section className="card min-w-0 flex-[999_1_640px] overflow-hidden" aria-labelledby="lb-h">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--mc-line)] px-6 py-4">
         <h2 id="lb-h" className="text-base font-semibold">Agent leaderboard</h2>
-        <span className="text-xs text-[var(--mc-muted)]" title={STATUS_RULE}>Needs training = 2 or more R3/R4/R5 violations, or average risk of 40 or more</span>
+        <span className="text-xs text-[var(--mc-muted)]" title={data.status_rule}>Hover or focus a status for the rule</span>
       </div>
       <div className={`hidden border-b border-[var(--mc-line)] bg-[#f9fafb] px-6 py-2.5 ${cols}`} aria-hidden>
         {['Agent', 'Calls', 'Violations', 'Avg risk', 'Top rule', 'Status', 'Risk trend'].map((h) => <span key={h} className="th">{h}</span>)}
@@ -208,7 +208,7 @@ function Leaderboard({ data, search }: { data: ManagerPayload; search: string })
             <Col label="Top rule">
               {a.top_rule ? <span className="inline-flex h-[22px] items-center rounded-full bg-[var(--mc-line-soft)] px-2.5 text-[11px] font-bold text-[var(--mc-text-2)]" title={ruleTitle(data, a.top_rule)}>{a.top_rule}</span> : <span aria-label="none">–</span>}
             </Col>
-            <Col label="Status"><StatusChip status={a.status} /></Col>
+            <Col label="Status"><StatusChip status={a.status} rule={data.status_rule} /></Col>
             <Col label="Risk trend"><Spark values={a.risk_trend} status={a.status} name={a.name} /></Col>
           </li>
         ))}
@@ -228,7 +228,7 @@ function Col({ label, children }: { label: string; children: React.ReactNode }) 
 }
 
 function ByRule({ data }: { data: ManagerPayload }) {
-  const rows = RULE_IDS.map((id) => ({ id, name: ruleTitle(data, id), count: data.rule_totals[id] ?? 0 }))
+  const rows = ruleIds(data).map((id) => ({ id, name: ruleTitle(data, id), count: data.rule_totals[id] ?? 0 }))
   const summary = rows.map((r) => `${r.id} ${r.name}: ${r.count}`).join('; ')
   return (
     <section className="card flex min-w-[300px] flex-[1_1_340px] flex-col gap-3 px-6 py-5" aria-labelledby="br-h">
@@ -267,14 +267,14 @@ function Heatmap({ data }: { data: ManagerPayload }) {
         <thead>
           <tr>
             <th scope="col" className="w-[34%] sm:w-[150px]"><span className="sr-only">Agent</span></th>
-            {RULE_IDS.map((r) => <th key={r} scope="col" className="th text-center" title={ruleTitle(data, r)}>{r}</th>)}
+            {ruleIds(data).map((r) => <th key={r} scope="col" className="th text-center" title={ruleTitle(data, r)}>{r}</th>)}
           </tr>
         </thead>
         <tbody>
           {rows.map((a) => (
             <tr key={a.id}>
               <th scope="row" className="truncate pr-1 text-[13px] font-medium" title={a.name}>{a.name}</th>
-              {RULE_IDS.map((r) => {
+              {ruleIds(data).map((r) => {
                 const n = a.by_rule[r] ?? 0
                 return (
                   <td key={r} className={`h-[30px] rounded-lg text-center text-xs font-semibold tabular-nums ${cellTone(n)}`} aria-label={`${a.name}, ${r}: ${plural(n, 'violation')}`}>
@@ -362,7 +362,7 @@ function Attention({ data, agents, search }: { data: ManagerPayload; agents: Man
             <li key={a.id} className="card flex flex-col gap-3 p-5">
               <div className="flex items-center justify-between gap-2">
                 <Link to={`/manager/agent/${a.id}${search ? `?${search}` : ''}`} className="text-[15px] font-semibold text-[var(--mc-text)] hover:underline">{a.name}</Link>
-                <StatusChip status={a.status} />
+                <StatusChip status={a.status} rule={data.status_rule} />
               </div>
               <p className="text-[13px] text-[var(--mc-muted)]">
                 Top rule: {a.top_rule} {rule?.title.toLowerCase()}, {plural(n, 'time')}; {plural(a.violations, 'violation')} in {plural(a.calls, 'call')}
