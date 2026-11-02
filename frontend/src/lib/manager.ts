@@ -68,16 +68,9 @@ export function sortAgents<T extends ManagerAgent>(rows: T[], key: SortKey, desc
   })
 }
 
-export const violationsOf = (c: ManagerCall) =>
-  c.findings.filter((f) => f.kind === 'violation' || f.kind === 'advisory')
-
-/** The agent's call that best shows their top rule: highest peak risk among calls with that rule. */
-export function exampleCall(p: ManagerPayload, a: ManagerAgent): ManagerCall | null {
-  const mine = p.calls.filter((c) => c.agent_id === a.id)
-  const withRule = mine.filter((c) => violationsOf(c).some((f) => f.rule_id === a.top_rule))
-  const pool = withRule.length ? withRule : mine
-  return [...pool].sort((x, y) => y.risk_peak - x.risk_peak || x.call_id.localeCompare(y.call_id))[0] ?? null
-}
+/** The agent's own call with the most violations of their top rule (chosen by the backend). */
+export const exampleCall = (p: ManagerPayload, a: ManagerAgent): ManagerCall | null =>
+  p.calls.find((c) => c.call_id === a.example_call_id) ?? null
 
 const csvCell = (v: string | number | null) => {
   let s = v === null ? '' : String(v)

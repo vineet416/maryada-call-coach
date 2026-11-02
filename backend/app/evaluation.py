@@ -63,6 +63,18 @@ def latency_stats(runs: dict[str, list[dict]]) -> dict:
                       "percentiles by linear interpolation; each finding counted once per check."}
 
 
+def languages_heard(runs: dict[str, list[dict]]) -> list[str]:
+    """Sorted base language codes (hi, en, mr...) found in the transcript tokens of recorded runs."""
+    found: set[str] = set()
+    for events in runs.values():
+        for e in events:
+            if isinstance(e, dict) and e.get("type") == "transcript.final" and isinstance(e.get("data"), dict):
+                for t in e["data"].get("tokens") or []:
+                    if isinstance(t, dict) and isinstance(t.get("lang"), str) and t["lang"]:
+                        found.add(t["lang"].split("-")[0].lower())
+    return sorted(found)
+
+
 VERDICTS = ("real", "unsure", "not_a_violation")
 
 
@@ -160,4 +172,5 @@ def eval_payload() -> dict:
         results = None  # not a results file: the page shows "no results published"
     return {"results": results, "review": _review(results, settings.data_dir / "eval"),
             "engine_changes": _engine_changes(settings.data_dir / "eval"),
-            "latency": latency_stats(_replays(settings.data_dir / "replay"))}
+            "latency": latency_stats(_replays(settings.data_dir / "replay")),
+            "languages": languages_heard(_replays(settings.data_dir / "replay"))}

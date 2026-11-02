@@ -113,6 +113,7 @@ export interface EvalResults {
   generated_at: string
   labels_hash: string
   n_calls: number
+  conditions?: string[]
   status: 'partial' | 'complete'
   limits: string[]
   label_changes: LabelChange[]
@@ -164,6 +165,8 @@ export interface EvalPayload {
   review: EvalReview | null
   engine_changes: EngineChange[]
   latency: { calls: string[]; rows: LatencyRow[]; method: string }
+  /** Language codes found in the recorded transcripts (for example hi, en) */
+  languages: string[]
 }
 
 export interface SessionStart {
@@ -249,6 +252,7 @@ export interface ManagerAgent {
   by_rule: Record<string, number>
   review_by_rule: Record<string, number>
   top_rule: string | null
+  example_call_id: string | null
   status: ManagerStatus
   risk_trend: number[]
   first_half_vs_second_half: { first: number; second: number; calls_first: number; calls_second: number }
