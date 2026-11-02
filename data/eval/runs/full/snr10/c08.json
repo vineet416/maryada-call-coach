@@ -1,0 +1,219 @@
+{
+ "schema": 1,
+ "call_id": "c08",
+ "condition": "snr10",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "1d00a71c99b73ca1"
+ },
+ "stt": {
+  "requests": 0,
+  "cached": 11,
+  "latency_ms": 0,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 6,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "विनोद जी, रोहित बोल रहा हूँ। सारंग Finserve",
+   "stt_ms": 486,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ, विनोद बोल रहा हूँ। क्या है?",
+   "stt_ms": 504,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "और ध्यान रहे, यह call record की जा रही है। सीधी बात पर आता हूँ।",
+   "stt_ms": 511,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ बोलो।",
+   "stt_ms": 248,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "7,200 की EMI एक महीने से pending है, bounce भी हो चुकी है और penalty चढ़ रही है, ऐसा कब आएगा?",
+   "stt_ms": 551,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Sir, धंधा बंद पड़ा है, थोड़ा रुक जाइए, अगले हफ्ते तक कुछ करता हूँ।",
+   "stt_ms": 513,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "अगले हफ्ते, अगले हफ्ते। मेरे को आज का बोलो। बहाने मत बनाओ। आप बेवकूफ हो क्या? हर बार एक नया drama।",
+   "stt_ms": 589,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "Sir, ऐसे क्या बोल रहे हो? इज्जत से बात कर।",
+   "stt_ms": 347,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "इज्जत कमाई जाती है। पैसा नहीं दे सकते तो निकम्मे हुआ और ज़्यादा होशियारी मत दिखा, नहीं तो घर आके तमाशा करूँगा।",
+   "stt_ms": 520,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "मैं complaint करूँगा आपकी। ये सब record हो रहा है ना?",
+   "stt_ms": 429,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "जो करना है करो, मेरे को Monday तक payment चाहिए। SMS पे link आ जाएगा।",
+   "stt_ms": 496,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c08",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "विनोद जी, रोहित बोल रहा हूँ। सारंग Finserve"
+  },
+  {
+   "call": "c08",
+   "turn": 3,
+   "rule": "R2",
+   "kind": "advisory",
+   "confidence": 1.0,
+   "source": "gate",
+   "quote": ""
+  },
+  {
+   "call": "c08",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "और ध्यान रहे, यह call record की जा रही है।"
+  },
+  {
+   "call": "c08",
+   "turn": 7,
+   "rule": "R3",
+   "kind": "needs_review",
+   "confidence": 0.6,
+   "source": "prefilter",
+   "quote": "बहाने मत बनाओ।"
+  },
+  {
+   "call": "c08",
+   "turn": 7,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 1.0,
+   "source": "both",
+   "quote": "आप बेवकूफ हो क्या?"
+  },
+  {
+   "call": "c08",
+   "turn": 7,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.93,
+   "source": "llm",
+   "quote": "हर बार एक नया drama."
+  },
+  {
+   "call": "c08",
+   "turn": 9,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 1.0,
+   "source": "both",
+   "quote": "निकम्मे"
+  },
+  {
+   "call": "c08",
+   "turn": 9,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "ज़्यादा होशियारी मत"
+  },
+  {
+   "call": "c08",
+   "turn": 9,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "घर आके तमाशा"
+  },
+  {
+   "call": "c08",
+   "turn": 11,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.97,
+   "source": "llm",
+   "quote": "जो करना है करो"
+  },
+  {
+   "call": "c08",
+   "turn": 11,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Monday तक payment चाहिए"
+  },
+  {
+   "call": "c08",
+   "turn": 11,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "SMS पे link आ जाएगा"
+  }
+ ],
+ "completed_at": "2026-11-02T05:55:25+00:00"
+}

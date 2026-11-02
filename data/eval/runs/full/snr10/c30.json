@@ -1,0 +1,156 @@
+{
+ "schema": 1,
+ "call_id": "c30",
+ "condition": "snr10",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "1d00a71c99b73ca1"
+ },
+ "stt": {
+  "requests": 11,
+  "cached": 0,
+  "latency_ms": 13178,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 4,
+  "cache_hits": 2,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 3400
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Good afternoon, नरेंद्र शेडके जी।",
+   "stt_ms": 826,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "फिर से फोन। कितनी बार फोन करोगे?",
+   "stt_ms": 474,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "मैं नेहा तारंग Finserv से। यह call record हो रही है। Quality और training के लिए बस 1 minute लूंगी।",
+   "stt_ms": 3643,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "देखिए madam पैसा नहीं है अभी। मुझे बार-बार phone मत करना।",
+   "stt_ms": 1096,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "नरेंद्र जी, मैं समझ सकती हूँ कि आपको परेशानी है, लेकिन आपके personal loan की 10,000 रुपये की EMI 2 महीने से pending है, bounce हो चुकी है। मैं आपको सीधा बता देती हूँ कि payment न होने पर late fee लगती है और credit score का नुकसान होता है।",
+   "stt_ms": 2936,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "तो क्या करूँ? मेरे पास सच में पैसा नहीं है",
+   "stt_ms": 477,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "आप बस यह बता दीजिए कि कितना और कब तक arrange हो सकता है, हम छोटी installment का plan भी बना सकते हैं।",
+   "stt_ms": 956,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "5,000 next week बाकी उसके बाद",
+   "stt_ms": 567,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "ठीक है sir, next week 5,000। आप date बता दीजिए, मैं note कर लेती हूँ।",
+   "stt_ms": 1024,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "Next Wednesday",
+   "stt_ms": 412,
+   "lang": "en-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "Wednesday पक्का, मैं reminder भेज दूँगी। Thank you sir.",
+   "stt_ms": 767,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c30",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Quality और training के लिए बस 1 minute लूंगी।"
+  },
+  {
+   "call": "c30",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मैं आपको सीधा बता देती हूँ कि payment न होने पर late fee लगती है और credit score का नुकसान होता है।"
+  },
+  {
+   "call": "c30",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "हम छोटी installment का plan भी बना सकते हैं"
+  },
+  {
+   "call": "c30",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "आप date बता दीजिए, मैं note कर लेती हूँ।"
+  },
+  {
+   "call": "c30",
+   "turn": 11,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Wednesday पक्का, मैं reminder भेज दूँगी।"
+  }
+ ],
+ "completed_at": "2026-11-02T08:23:44+00:00"
+}

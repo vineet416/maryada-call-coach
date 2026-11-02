@@ -1,0 +1,169 @@
+{
+ "schema": 1,
+ "call_id": "c01",
+ "condition": "snr10",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "1d00a71c99b73ca1"
+ },
+ "stt": {
+  "requests": 0,
+  "cached": 9,
+  "latency_ms": 0,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 0,
+  "cache_hits": 5,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 0
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "नमस्ते, सुरेश भोसले बोल रहे हैं।",
+   "stt_ms": 790,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ जी, बोलिए।",
+   "stt_ms": 386,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "मैं नेहा, सारंग Finserv से। यह call quality और training के लिए record हो रही है।",
+   "stt_ms": 598,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ madam बोलो क्या हुआ?",
+   "stt_ms": 429,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "सुरेश जी, आपकी 6,200 रुपये की EMI bounce हुई थी, 12 दिन से pending है, penalty भी लग रही है, कब तक हो जाएगा?",
+   "stt_ms": 1713,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Madam company ने इस बार salary late कर दी। हर महीने जल्दी आती है। अभी तक नहीं आई। 15 तक आ जाएगी।",
+   "stt_ms": 652,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "अच्छा अच्छा, तो salary आते ही payment हो जाएगा ना? मुझे एक पक्की date चाहिए sir, 15 के आसपास से काम नहीं चलेगा।",
+   "stt_ms": 426,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "हाँ, 15 को salary आते ही कर दूँगा। दो-तीन दिन का time लगेगा।",
+   "stt_ms": 518,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "ठीक है, तो 18 तारीख तक पक्का मैं note कर लेती हूँ और SMS भेज देती हूँ और अगर salary पहले आ जाए तो पहले भी कर सकते हैं। Thank you sir.",
+   "stt_ms": 590,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c01",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "नमस्ते, सुरेश भोसले बोल रहे हैं।"
+  },
+  {
+   "call": "c01",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मैं नेहा, सारंग Finserv से।"
+  },
+  {
+   "call": "c01",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "यह call quality और training के लिए record हो रही है।"
+  },
+  {
+   "call": "c01",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "सुरेश जी, आपकी 6,200 रुपये की EMI bounce हुई थी, 12 दिन से pending है, penalty भी लग रही है, कब तक हो जाएगा?"
+  },
+  {
+   "call": "c01",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "salary आते ही payment हो जाएगा ना?"
+  },
+  {
+   "call": "c01",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मुझे एक पक्की date चाहिए sir"
+  },
+  {
+   "call": "c01",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "ठीक है, तो 18 तारीख तक पक्का मैं note कर लेती हूँ"
+  },
+  {
+   "call": "c01",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "अगर salary पहले आ जाए तो पहले भी कर सकते हैं"
+  }
+ ],
+ "completed_at": "2026-11-02T05:55:24+00:00"
+}
