@@ -2,7 +2,6 @@
 import struct
 
 import pytest
-
 from app.session.turn_split import MAX_TURN_S, PAUSE_S, TurnSplitter
 
 FRAME = 1024  # 64 ms
