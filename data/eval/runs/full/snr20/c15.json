@@ -1,0 +1,160 @@
+{
+ "schema": 1,
+ "call_id": "c15",
+ "condition": "snr20",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "b9705440649ab500"
+ },
+ "stt": {
+  "requests": 9,
+  "cached": 0,
+  "latency_ms": 4797,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 4,
+  "cache_hits": 1,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 3712
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Hello, ये हेमंत जोशी जी का number है?",
+   "stt_ms": 427,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "T",
+   "text": "हाँ, पर वो घर पर नहीं हैं, मैं उनकी wife बोल रही हूँ, आप कौन?",
+   "stt_ms": 519,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "रोहित बोल रहा हूँ। तारंग Finserv से call record हो रही है। quality और training के लिए हेमंत जी से ही बात करनी है। वो कब तक मिलेंगे?",
+   "stt_ms": 671,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "T",
+   "text": "बाहर गए हैं, शाम को आएँगे। क्या काम है उनसे?",
+   "stt_ms": 405,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "Madam, काम यह है कि आपके पति ने Taran Singh Service से loan लिया था और 6 महीने से EMI नहीं भर रहे हैं, total 20,000 रुपये बाकी हैं। हम कितने दिन से call कर रहे हैं, वो phone ही नहीं उठाते, मुझे उनसे बात करनी ही पड़ेगी।",
+   "stt_ms": 747,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "T",
+   "text": "मेरे को कुछ पता नहीं है। उन्होंने मेरे को कुछ बताया नहीं। आप मेरे को क्यों बोल रहे हो ये सब?",
+   "stt_ms": 511,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "अच्छा अच्छा, ठीक है madam, उनको बोल देना कि रोहित का phone आया था, वो वापस call कर लें, आज शाम तक कर लें तो अच्छा है।",
+   "stt_ms": 589,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "T",
+   "text": "हाँ, मैं बोल दूँगी, पर आप बार-बार phone मत करना, घर में tension हो जाता है।",
+   "stt_ms": 533,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "ठीक है madam, मैं शाम को एक बार दोबारा call करूंगा।",
+   "stt_ms": 395,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c15",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Hello, ये हेमंत जोशी जी का number है?"
+  },
+  {
+   "call": "c15",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "रोहित बोल रहा हूँ। तारंग Finserv से call record हो रही है।"
+  },
+  {
+   "call": "c15",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "quality और training के लिए हेमंत जी से ही बात करनी है।"
+  },
+  {
+   "call": "c15",
+   "turn": 5,
+   "rule": "R4",
+   "kind": "violation",
+   "confidence": 0.99,
+   "source": "llm",
+   "quote": "आपके पति ने Taran Singh Service से loan लिया था और 6 महीने से EMI नहीं भर रहे हैं, total 20,000 रुपये बाकी हैं."
+  },
+  {
+   "call": "c15",
+   "turn": 7,
+   "rule": "R4",
+   "kind": "violation",
+   "confidence": 0.9,
+   "source": "llm",
+   "quote": "उनको बोल देना कि रोहित का phone आया था, वो वापस call कर लें, आज शाम तक कर लें तो अच्छा है।"
+  },
+  {
+   "call": "c15",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "आज शाम तक कर लें तो अच्छा है।"
+  },
+  {
+   "call": "c15",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "ठीक है madam, मैं शाम को एक बार दोबारा call करूंगा।"
+  }
+ ],
+ "completed_at": "2026-11-03T04:10:34+00:00"
+}

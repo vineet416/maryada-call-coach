@@ -10,21 +10,21 @@
   "skip_words": 8,
   "llm_model": "gpt-5.4-mini",
   "llm_fallback_model": "gpt-4.1-mini",
-  "rules_prompt_hash": "1d00a71c99b73ca1"
+  "rules_prompt_hash": "b9705440649ab500"
  },
  "stt": {
-  "requests": 9,
-  "cached": 0,
-  "latency_ms": 4974,
+  "requests": 0,
+  "cached": 9,
+  "latency_ms": 0,
   "model": "prisma-v3.0",
   "path": "rest"
  },
  "llm": {
-  "requests": 4,
-  "cache_hits": 1,
+  "requests": 0,
+  "cache_hits": 5,
   "skipped": 0,
   "degraded": 0,
-  "tokens": 3353
+  "tokens": 0
  },
  "turns": [
   {
@@ -156,5 +156,5 @@
    "quote": "मैं note कर लेती हूँ।"
   }
  ],
- "completed_at": "2026-11-02T08:21:09+00:00"
+ "completed_at": "2026-11-03T04:14:20+00:00"
 }

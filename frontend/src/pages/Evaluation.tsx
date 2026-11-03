@@ -212,12 +212,13 @@ function Noise({ results }: { results: EvalResults }) {
   if (ids.length === 0) return null
   const strict = (id: string) => results.full[id].all!.overall.strict
   const perRule = (id: string, rule: string) => results.full[id].all!.per_rule[rule]?.strict
-  // The explanation is shown only when the saved numbers agree with it: R2 gains extra flags at 10 dB and the model-based rules do not lose recall
-  const clean = results.full[CLEAN]?.all
+  // The explanation is built only from the saved numbers: noisy conditions where R2 gains extra flags, and model-based rules that lose recall
+  const noisy = ids.filter((id) => id !== CLEAN)
   const r2Clean = perRule(CLEAN, 'R2')
-  const r2Noisy = results.full.snr10?.all ? perRule('snr10', 'R2') : undefined
-  const modelRulesHold = clean && results.full.snr10?.all && ['R3', 'R4', 'R5'].every((r) => (perRule('snr10', r)?.r ?? 0) >= (perRule(CLEAN, r)?.r ?? 0))
-  const explain = !!(r2Clean && r2Noisy && r2Noisy.fp > r2Clean.fp && modelRulesHold)
+  const r2Up = r2Clean ? noisy.filter((id) => (perRule(id, 'R2')?.fp ?? 0) > r2Clean.fp) : []
+  const modelDrops = noisy.flatMap((id) =>
+    ['R3', 'R4', 'R5'].filter((r) => (perRule(id, r)?.r ?? 1) < (perRule(CLEAN, r)?.r ?? 0)).map((r) => `${condLabel(id)}: ${r}`),
+  )
   return (
     <section className="card flex flex-col gap-3 p-6" aria-labelledby="noise-h">
       <h2 id="noise-h" className="text-base font-semibold">With phone-line noise</h2>
@@ -236,9 +237,10 @@ function Noise({ results }: { results: EvalResults }) {
           )
         })}
       </div>
-      {explain && (
+      {r2Up.length > 0 && (
         <p className="text-[13px] leading-relaxed text-[var(--mc-text-2)]">
-          At 10 dB, R2 raised extra advisory flags because the speech-to-text mis-heard the lender name; R2 has no model step to recover from that. The model-based rules were not affected.
+          R2 raised extra advisory flags ({r2Up.map((id) => `${condLabel(id)}: ${perRule(id, 'R2')!.fp}`).join(', ')}; clean audio: {r2Clean!.fp}) because the speech-to-text mis-heard the lender name; R2 has no model step to recover from that.{' '}
+          {modelDrops.length === 0 ? 'The model-based rules did not lose recall.' : `Recall dropped for a model-based rule (${modelDrops.join(', ')}).`}
         </p>
       )}
     </section>

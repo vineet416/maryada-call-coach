@@ -8,7 +8,7 @@
   "violation_min": 0.75,
   "review_min": 0.45,
   "skip_words": 8,
-  "rules_prompt_hash": "d41d4c6123ed19ab"
+  "rules_prompt_hash": "751edc9b959123ae"
  },
  "stt": {
   "requests": 0,
@@ -123,5 +123,5 @@
    "quote": "इस हफ्ते कुछ तो भेजना"
   }
  ],
- "completed_at": "2026-11-01T14:39:49+00:00"
+ "completed_at": "2026-11-03T04:14:21+00:00"
 }

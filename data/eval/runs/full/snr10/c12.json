@@ -10,21 +10,21 @@
   "skip_words": 8,
   "llm_model": "gpt-5.4-mini",
   "llm_fallback_model": "gpt-4.1-mini",
-  "rules_prompt_hash": "1d00a71c99b73ca1"
+  "rules_prompt_hash": "b9705440649ab500"
  },
  "stt": {
-  "requests": 11,
-  "cached": 0,
-  "latency_ms": 5988,
+  "requests": 0,
+  "cached": 11,
+  "latency_ms": 0,
   "model": "prisma-v3.0",
   "path": "rest"
  },
  "llm": {
-  "requests": 6,
-  "cache_hits": 0,
+  "requests": 1,
+  "cache_hits": 5,
   "skipped": 0,
   "degraded": 0,
-  "tokens": 6310
+  "tokens": 1041
  },
  "turns": [
   {
@@ -138,9 +138,27 @@
    "turn": 7,
    "rule": "R5",
    "kind": "violation",
-   "confidence": 0.95,
+   "confidence": 0.99,
+   "source": "llm",
+   "quote": "मैं RBI की तरफ से भी बोल रही हूँ"
+  },
+  {
+   "call": "c12",
+   "turn": 7,
+   "rule": "R5",
+   "kind": "violation",
+   "confidence": 1.0,
    "source": "both",
    "quote": "loan account block"
+  },
+  {
+   "call": "c12",
+   "turn": 7,
+   "rule": "R5",
+   "kind": "violation",
+   "confidence": 0.97,
+   "source": "llm",
+   "quote": "आपको किसी bank से loan नहीं मिलेगा जिंदगी भर"
   },
   {
    "call": "c12",
@@ -161,5 +179,5 @@
    "quote": "ठीक है कल शाम तक पक्का UPI से कर देना।"
   }
  ],
- "completed_at": "2026-11-02T08:19:22+00:00"
+ "completed_at": "2026-11-03T04:14:17+00:00"
 }
