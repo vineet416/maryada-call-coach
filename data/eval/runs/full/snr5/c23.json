@@ -1,0 +1,133 @@
+{
+ "schema": 1,
+ "call_id": "c23",
+ "condition": "snr5",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "b9705440649ab500"
+ },
+ "stt": {
+  "requests": 9,
+  "cached": 0,
+  "latency_ms": 4375,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 4,
+  "cache_hits": 1,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 3477
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "मंगेश धुरी, आप ही हो?",
+   "stt_ms": 410,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ, मैं ही हूँ। कौन?",
+   "stt_ms": 273,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "मुंकेश जी EMI bounce हो गई 7,000 रुपए। 16 दिन हो गए और penalty भी लग गई है। कब दूँ? मेरे को एक date चाहिए।",
+   "stt_ms": 630,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "पहले अपना नाम तो बता दो, फिर पैसा मांग। कौन सी company से हो? ऐसे क्यों पैसा मांग रहे हो?",
+   "stt_ms": 559,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "ठीक है, ठीक है। संदीप बोल रहा हूँ। सारंग Finserv से personal loan की EMI pending है। इसलिए सीधा पूछिए payment कब तक कर दोगे?",
+   "stt_ms": 616,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "अच्छा तारंग से phone उठाते ही पैसा पहना। ये कोई तरीका है? Next week देखता हूँ।",
+   "stt_ms": 560,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "Next week में कौन सा दिन? Date दिन सर। देखता हूँ बोल के काम है। चल पूरा नहीं हो तो थोड़ा आगे कर।",
+   "stt_ms": 545,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "अच्छा Monday को कर दूंगा। आधा Monday को आधा महीने के end को",
+   "stt_ms": 416,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "चलो Monday को आधा, बाकी आधा महीने के end तक Monday सुबह तक UPI से करें।",
+   "stt_ms": 366,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c23",
+   "turn": 3,
+   "rule": "R2",
+   "kind": "advisory",
+   "confidence": 1.0,
+   "source": "gate",
+   "quote": ""
+  },
+  {
+   "call": "c23",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मुंकेश जी EMI bounce हो गई 7,000 रुपए। 16 दिन हो गए और penalty भी लग गई है। कब दूँ? मेरे को एक date चाहिए."
+  },
+  {
+   "call": "c23",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Next week में कौन सा दिन?"
+  },
+  {
+   "call": "c23",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Monday सुबह तक UPI से करें"
+  }
+ ],
+ "completed_at": "2026-11-03T04:23:08+00:00"
+}

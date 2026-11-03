@@ -122,8 +122,9 @@ Results for the full engine on the 30 calls, counted per labelled unit:
 | Clean audio | 75% (30 correct, 10 extra flags) | 85.7% (30 of 35) | 100% (35 of 35) |
 | 10 dB noise | 66.0% (31 correct, 16 extra flags) | 88.6% (31 of 35) | 100% (35 of 35) |
 | 20 dB noise | 73.2% (30 correct, 11 extra flags) | 85.7% (30 of 35) | 97.1% (34 of 35) |
+| 5 dB noise | 56.4% (31 correct, 24 extra flags) | 88.6% (31 of 35) | 97.1% (34 of 35) |
 
-Under noise the precision drop comes from rule R2. It goes from 0 extra advisory flags on clean audio to 8 at 10 dB (in 8 calls) and 1 at 20 dB. The two examples saved in the results file show the transcript with the lender name garbled or missing, so the introduction check fails. R2 has no model step. The model-based rules keep their recall at 10 dB. At 20 dB one R4 unit (c17, turn 7) is missed and R4 has one more extra flag than on clean audio.
+Under noise the precision drop comes from rule R2. It goes from 0 extra advisory flags on clean audio to 1 at 20 dB (in 1 call), 8 at 10 dB (in 8 calls) and 15 at 5 dB (in 15 calls). The two examples saved in the results file show the transcript with the lender name garbled or missing, so the introduction check fails. R2 has no model step. The model-based rules R3, R4 and R5 keep their recall at 10 dB and 5 dB. At 20 dB one R4 unit (c17, turn 7) is missed and R4 has one more extra flag than on clean audio. At 5 dB one R6 unit (c25, turn 7) is also missed by the review rule, so recall counting needs review is 34 of 35.
 
 On the 10 held-out calls, clean audio gives 69.2% precision and 81.8% recall. With the model check switched off (phrase checks only), clean audio gives 100% precision and 57.1% recall, so the model check is what finds the missed cases. A flag with no matching label counts against precision.
 
@@ -140,7 +141,7 @@ On the 10 held-out calls, clean audio gives 69.2% precision and 81.8% recall. Wi
 ## 8. Limits and the path to a real call centre
 
 - The calls are synthetic, so the numbers show the method works, not how it performs on real calls.
-- The set is small: 30 calls and 35 labelled units, one run per condition. Only the clean, 10 dB and 20 dB conditions have results for the full engine so far.
+- The set is small: 30 calls and 35 labelled units, one run per condition. All four conditions (clean, 20 dB, 10 dB and 5 dB) have results for the full engine.
 - R2 is rule-based and sensitive to speech-to-text errors. R6 is review-only by design.
 - A real deployment would take two audio tracks from the dialer, one for the agent and one for the borrower. The engine already takes both sides and judges only the agent. What is not built is the dialer connection, storage, access control and a legal review of the rules.
 - Speech in the evaluation uses Gnani's request-per-turn API, while the live app streams, so live transcripts can differ.

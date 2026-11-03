@@ -1,0 +1,178 @@
+{
+ "schema": 1,
+ "call_id": "c05",
+ "condition": "snr5",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "b9705440649ab500"
+ },
+ "stt": {
+  "requests": 9,
+  "cached": 0,
+  "latency_ms": 4441,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 4,
+  "cache_hits": 1,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 3510
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Good morning संतोष जी।",
+   "stt_ms": 301,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ भाई, बोलो सुबह सुबह क्या हुआ?",
+   "stt_ms": 387,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "संतोष बागची, विक्रम बोररा, सारंग सिंह ध्यान रहे। We call record.",
+   "stt_ms": 666,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ बोलिए।",
+   "stt_ms": 278,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "आपकी two wheeler loan की 4,800 की EMI due date से 5 दिन ऊपर चल रही है। SMS भी भेजा है। देखा आपने? Please आज payment कर दीजिए।",
+   "stt_ms": 681,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "हाँ देखा था यार भूल गया। आज नहीं हो पाएगा। salary परसों आती है। 2 दिन का time दो ना।",
+   "stt_ms": 570,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "ठीक है sir, दो दिन का time दे देता हूँ, लेकिन please परसों तक जरूर कर दीजिए नहीं तो late fees बढ़ जाएगी और credit score पे भी असर पड़ेगा, परसों कितने बजे तक हो जाएगा?",
+   "stt_ms": 697,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "पक्का परसों सुबह salary आते ही कर दूंगा।",
+   "stt_ms": 366,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "अच्छा। परसों सुबह मैं परसों एक reminder भेज दूंगा।",
+   "stt_ms": 495,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c05",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Good morning संतोष जी।"
+  },
+  {
+   "call": "c05",
+   "turn": 3,
+   "rule": "R2",
+   "kind": "advisory",
+   "confidence": 1.0,
+   "source": "gate",
+   "quote": ""
+  },
+  {
+   "call": "c05",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "संतोष बागची, विक्रम बोररा, सारंग सिंह ध्यान रहे।"
+  },
+  {
+   "call": "c05",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Please आज payment कर दीजिए।"
+  },
+  {
+   "call": "c05",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "SMS भी भेजा है।"
+  },
+  {
+   "call": "c05",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "ठीक है sir, दो दिन का time दे देता हूँ"
+  },
+  {
+   "call": "c05",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "late fees बढ़ जाएगी और credit score पे भी असर पड़ेगा"
+  },
+  {
+   "call": "c05",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "परसों कितने बजे तक हो जाएगा?"
+  },
+  {
+   "call": "c05",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "परसों सुबह मैं परसों एक reminder भेज दूंगा"
+  }
+ ],
+ "completed_at": "2026-11-03T04:19:49+00:00"
+}

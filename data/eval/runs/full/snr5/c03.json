@@ -1,0 +1,192 @@
+{
+ "schema": 1,
+ "call_id": "c03",
+ "condition": "snr5",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "b9705440649ab500"
+ },
+ "stt": {
+  "requests": 11,
+  "cached": 0,
+  "latency_ms": 4969,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 4,
+  "cache_hits": 1,
+  "skipped": 1,
+  "degraded": 0,
+  "tokens": 3486
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Good afternoon, मीना जगताप जी।",
+   "stt_ms": 277,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "जी बोलिए।",
+   "stt_ms": 249,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "मैं नेहा बोल रही हूँ। तारंग sensor आप call recorded है। Quality purpose के लिए",
+   "stt_ms": 437,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ, क्या हुआ?",
+   "stt_ms": 312,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "मैडम, हमारे system में आपकी 4,800 की EMI अभी भी pending दिख रही है, 3 दिन हो गए, payment कब तक आएगा?",
+   "stt_ms": 561,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "अरे, मैंने तो कल ही online भर दिया है। UPI से किया था। पैसा मेरे account से कट भी गया। receipt भी आई है मेरे को।",
+   "stt_ms": 552,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "ओ अच्छा, शायद update होने में time लग रहा है। कभी-कभी 2-3 दिन लग जाते हैं। आप transaction ID बता सकती हैं? मैं अभी check कर लेती हूँ।",
+   "stt_ms": 660,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "हाँ, एक minute। message में है। मैं अभी WhatsApp पर भेज देती हूँ। screenshot ले कर",
+   "stt_ms": 478,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "मिल गया madam payment आ गया है। बस system में update नहीं हुआ था। मैं अभी update करवा देती हूँ। आपको कोई penalty नहीं लगेगी। disturb करने के लिए sorry",
+   "stt_ms": 574,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "कोई बात नहीं madam, बस ये update जल्दी कर दो। बार बार message आ रहा है।",
+   "stt_ms": 507,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "हो जाएगा madam आज ही। okay",
+   "stt_ms": 362,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c03",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Good afternoon, मीना जगताप जी।"
+  },
+  {
+   "call": "c03",
+   "turn": 3,
+   "rule": "R2",
+   "kind": "advisory",
+   "confidence": 1.0,
+   "source": "gate",
+   "quote": ""
+  },
+  {
+   "call": "c03",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मैं नेहा बोल रही हूँ। तारंग sensor आप call recorded है। Quality purpose के लिए"
+  },
+  {
+   "call": "c03",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मैडम, हमारे system में आपकी 4,800 की EMI अभी भी pending दिख रही है, 3 दिन हो गए, payment कब तक आएगा?"
+  },
+  {
+   "call": "c03",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "ओ अच्छा, शायद update होने में time लग रहा है।"
+  },
+  {
+   "call": "c03",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "आप transaction ID बता सकती हैं? मैं अभी check कर लेती हूँ।"
+  },
+  {
+   "call": "c03",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मिल गया madam payment आ गया है। बस system में update नहीं हुआ था। मैं अभी update करवा देती हूँ।"
+  },
+  {
+   "call": "c03",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "आपको कोई penalty नहीं लगेगी।"
+  },
+  {
+   "call": "c03",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "disturb करने के लिए sorry"
+  }
+ ],
+ "completed_at": "2026-11-03T04:19:27+00:00"
+}

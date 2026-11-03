@@ -1,0 +1,210 @@
+{
+ "schema": 1,
+ "call_id": "c26",
+ "condition": "snr5",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "b9705440649ab500"
+ },
+ "stt": {
+  "requests": 11,
+  "cached": 0,
+  "latency_ms": 5114,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 6,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 5179
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Good evening, मैं प्रशांत जी, अमित बोल रहा हूँ, Star Health Insurance।",
+   "stt_ms": 425,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ बोलिए।",
+   "stt_ms": 324,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "ये call भी recorded है quality purpose के लिए। हम प्रशांत गोले जी ही हैं।",
+   "stt_ms": 471,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "Sir, अभी hospital में wife का operation चालू है। Doctor ने अभी अंदर रखा है।",
+   "stt_ms": 493,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "Sir, मैं समझता हूँ पर 8,000 की EMI 22 दिन से pending है और penalty भी लग रही है। एक बार आज ही online कर दीजिए।",
+   "stt_ms": 652,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Sir पैसे सब hospital में लग गए। दो हफ्ते रुक जाइए please।",
+   "stt_ms": 433,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "Sir मैं भी क्या करूँ? मेरे ऊपर भी pressure है। 2 हफ्ते तो बहुत हैं sir। इस हफ्ते कुछ तो भेजना पड़ेगा।",
+   "stt_ms": 605,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "ठीक है, देखता हूँ। अभी मेरे को अंदर जाना पड़ेगा, डॉक्टर बुला रहे हैं।",
+   "stt_ms": 411,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "Okay sir, इस हफ्ते जो भी हो सकता है कितना कर सकता हूँ? बता दीजिए तो मैं note कर लूँगा।",
+   "stt_ms": 471,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "2-3 हजार कल तक भेज दूंगा, अब रखता हूँ।",
+   "stt_ms": 401,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "Okay sir, कल तक 2-3 हजार मैं SMS भेज देता हूँ।",
+   "stt_ms": 428,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c26",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Good evening"
+  },
+  {
+   "call": "c26",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मैं प्रशांत जी, अमित बोल रहा हूँ, Star Health Insurance।"
+  },
+  {
+   "call": "c26",
+   "turn": 3,
+   "rule": "R2",
+   "kind": "advisory",
+   "confidence": 1.0,
+   "source": "gate",
+   "quote": ""
+  },
+  {
+   "call": "c26",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "ये call भी recorded है quality purpose के लिए।"
+  },
+  {
+   "call": "c26",
+   "turn": 5,
+   "rule": "R6",
+   "kind": "needs_review",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "आज ही online कर"
+  },
+  {
+   "call": "c26",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मैं समझता हूँ पर 8,000 की EMI 22 दिन से pending है और penalty भी लग रही है।"
+  },
+  {
+   "call": "c26",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "एक बार आज ही online कर दीजिए।"
+  },
+  {
+   "call": "c26",
+   "turn": 7,
+   "rule": "R6",
+   "kind": "needs_review",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "इस हफ्ते कुछ तो भेजना"
+  },
+  {
+   "call": "c26",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "इस हफ्ते कुछ तो भेजना पड़ेगा।"
+  },
+  {
+   "call": "c26",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "इस हफ्ते जो भी हो सकता है कितना कर सकता हूँ? बता दीजिए तो मैं note कर लूँगा।"
+  },
+  {
+   "call": "c26",
+   "turn": 11,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "कल तक 2-3 हजार मैं SMS भेज देता हूँ"
+  }
+ ],
+ "completed_at": "2026-11-03T04:23:45+00:00"
+}

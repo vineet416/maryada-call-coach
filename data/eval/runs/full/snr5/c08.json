@@ -1,0 +1,201 @@
+{
+ "schema": 1,
+ "call_id": "c08",
+ "condition": "snr5",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "b9705440649ab500"
+ },
+ "stt": {
+  "requests": 11,
+  "cached": 0,
+  "latency_ms": 5102,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 5,
+  "cache_hits": 1,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 4412
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "विनोद जी, रोहित बोल रहा हूँ।",
+   "stt_ms": 494,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ, विनोद बोल रहा हूँ। क्या है?",
+   "stt_ms": 522,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "और ध्यान रहे, यह call record की जा रही है। सीधी बात पर आता हूँ।",
+   "stt_ms": 482,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ बोलो।",
+   "stt_ms": 303,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "7,200 की EMI एक महीने से pending है, bounce भी हो चुकी है और penalty चढ़ रही है, ऐसा कब आएगा?",
+   "stt_ms": 562,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Madam थोड़ा रुक जाइए। अगले हफ्ते तक कुछ करता हूँ।",
+   "stt_ms": 521,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "अगले हफ्ते, अगले हफ्ते। मेरे को आज का बोलो। बहाने मत बनाओ। आप बेवकूफ हो क्या? हर बार एक नया ड्रामा।",
+   "stt_ms": 559,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "Sir, ऐसे क्या बोल रहे हो? इज्जत से बात कर।",
+   "stt_ms": 387,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "इज्जत कमाई जाती है। पैसा नहीं दे सकते तो income में होना। और ज्यादा होशियारी मत दिखाओ, नहीं तो घर आके तमाशा करो।",
+   "stt_ms": 495,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "मैं complaint करूंगा। आप, ये सब record हो रहा है ना?",
+   "stt_ms": 422,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "जो करना है करो, मेरे को Monday तक payment चाहिए। SMS पे link आ जाएगा।",
+   "stt_ms": 355,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c08",
+   "turn": 3,
+   "rule": "R2",
+   "kind": "advisory",
+   "confidence": 1.0,
+   "source": "gate",
+   "quote": ""
+  },
+  {
+   "call": "c08",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "और ध्यान रहे, यह call record की जा रही है।"
+  },
+  {
+   "call": "c08",
+   "turn": 7,
+   "rule": "R3",
+   "kind": "needs_review",
+   "confidence": 0.6,
+   "source": "prefilter",
+   "quote": "बहाने मत बनाओ।"
+  },
+  {
+   "call": "c08",
+   "turn": 7,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 1.0,
+   "source": "both",
+   "quote": "आप बेवकूफ हो क्या?"
+  },
+  {
+   "call": "c08",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मेरे को आज का बोलो"
+  },
+  {
+   "call": "c08",
+   "turn": 9,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.98,
+   "source": "llm",
+   "quote": "इज्जत कमाई जाती है।"
+  },
+  {
+   "call": "c08",
+   "turn": 9,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 1.0,
+   "source": "both",
+   "quote": "होशियारी मत दिखाओ,"
+  },
+  {
+   "call": "c08",
+   "turn": 9,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "घर आके तमाशा"
+  },
+  {
+   "call": "c08",
+   "turn": 11,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.97,
+   "source": "llm",
+   "quote": "जो करना है करो"
+  },
+  {
+   "call": "c08",
+   "turn": 11,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Monday तक payment चाहिए। SMS पे link आ जाएगा।"
+  }
+ ],
+ "completed_at": "2026-11-03T04:20:27+00:00"
+}

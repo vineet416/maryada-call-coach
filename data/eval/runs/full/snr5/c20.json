@@ -1,0 +1,169 @@
+{
+ "schema": 1,
+ "call_id": "c20",
+ "condition": "snr5",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "b9705440649ab500"
+ },
+ "stt": {
+  "requests": 9,
+  "cached": 0,
+  "latency_ms": 4432,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 4,
+  "cache_hits": 1,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 3471
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Good evening सुनील जी।",
+   "stt_ms": 357,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "जी बोलिए। अभी काम है। जल्दी बोलिए।",
+   "stt_ms": 330,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "पूजा बोल रही हूँ। Tarah Finserv से ध्यान रहे call record की जा रही है। इतनी late call के लिए sorry। बस 2 minute",
+   "stt_ms": 592,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ बोलो, जल्दी बोलिए। meeting चल रही है, बाहर आया।",
+   "stt_ms": 516,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "सुनील जी, आपकी 6,000 की EMI 12 दिन से अटकी हुई है और penalty भी लग रही है, क्या आप कल तक भर सकते हैं?",
+   "stt_ms": 641,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "कल नहीं परसों। अभी थोड़ा tight चल रहा है। salary कल आने वाली है।",
+   "stt_ms": 463,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "अच्छा अच्छा, तो परसों पक्का ना sir? पूरा नहीं हो तो थोड़ा अभी भी कर सकते हैं, बाकी परसों इससे आपको भी tension नहीं रहेगी।",
+   "stt_ms": 521,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "नहीं, परसों एक साथ कर दूंगा। पक्का दिमाग रखो, meeting में वापस जाना है।",
+   "stt_ms": 435,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "ठीक है। परसों पक्का। मैं note कर लेती हूँ। SMS भेज दूँगी। आपकी evening अच्छी रहे।",
+   "stt_ms": 577,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c20",
+   "turn": 1,
+   "rule": "R1",
+   "kind": "violation",
+   "confidence": 1.0,
+   "source": "gate",
+   "quote": ""
+  },
+  {
+   "call": "c20",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "पूजा बोल रही हूँ। Tarah Finserv से ध्यान रहे call record की जा रही है।"
+  },
+  {
+   "call": "c20",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "इतनी late call के लिए sorry।"
+  },
+  {
+   "call": "c20",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "सुनील जी, आपकी 6,000 की EMI 12 दिन से अटकी हुई है और penalty भी लग रही है, क्या आप कल तक भर सकते हैं?"
+  },
+  {
+   "call": "c20",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "तो परसों पक्का ना sir?"
+  },
+  {
+   "call": "c20",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "पूरा नहीं हो तो थोड़ा अभी भी कर सकते हैं"
+  },
+  {
+   "call": "c20",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "परसों पक्का"
+  },
+  {
+   "call": "c20",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "आपकी evening अच्छी रहे।"
+  }
+ ],
+ "completed_at": "2026-11-03T04:22:38+00:00"
+}

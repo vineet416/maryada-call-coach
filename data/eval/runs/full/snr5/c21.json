@@ -1,0 +1,169 @@
+{
+ "schema": 1,
+ "call_id": "c21",
+ "condition": "snr5",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "b9705440649ab500"
+ },
+ "stt": {
+  "requests": 9,
+  "cached": 0,
+  "latency_ms": 4441,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 4,
+  "cache_hits": 1,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 3512
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Hello, दीपक सुरवे बोल रहे हैं।",
+   "stt_ms": 301,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ, कौन? रात को कौन phone करता है?",
+   "stt_ms": 467,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "संदीप बोल रहा हूँ। तारंग sensor इस call की recording हो रही है training के लिए। sorry sir, इतनी रात को disturb किया।",
+   "stt_ms": 599,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ बोलिए, जल्दी बोलो। रात के 9 बज गए हैं, घर पे हूँ।",
+   "stt_ms": 375,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "दीपक जी 9,000 की EMI 27 दिन से बाकी है। एक बार bounce भी हो चुकी है। मैं जानता हूँ अभी time सही नहीं है। कल सुबह दोबारा call करूं।",
+   "stt_ms": 670,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "हाँ, कल दोपहर को करो। अभी mood नहीं, दिन भर थक गया हूँ। घर पहुँचते ही phone आ गया।",
+   "stt_ms": 565,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "ठीक है sir, मैं कल दोपहर में call करूंगा तब payment की date पक्की कर लूंगा। ठीक है और sorry sir, इतनी रात को phone कर रहा हूँ।",
+   "stt_ms": 636,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "हाँ, ठीक है। कल दोपहर, अब रहो। नींद आ रही है।",
+   "stt_ms": 388,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "Thank you sir, कल दोपहर को बात करते हैं। Good night.",
+   "stt_ms": 440,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c21",
+   "turn": 1,
+   "rule": "R1",
+   "kind": "violation",
+   "confidence": 1.0,
+   "source": "gate",
+   "quote": ""
+  },
+  {
+   "call": "c21",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Hello, दीपक सुरवे बोल रहे हैं।"
+  },
+  {
+   "call": "c21",
+   "turn": 3,
+   "rule": "R2",
+   "kind": "advisory",
+   "confidence": 1.0,
+   "source": "gate",
+   "quote": ""
+  },
+  {
+   "call": "c21",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "sorry sir, इतनी रात को disturb किया।"
+  },
+  {
+   "call": "c21",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मैं जानता हूँ अभी time सही नहीं है। कल सुबह दोबारा call करूं।"
+  },
+  {
+   "call": "c21",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मैं कल दोपहर में call करूंगा"
+  },
+  {
+   "call": "c21",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "sorry sir, इतनी रात को phone कर रहा हूँ"
+  },
+  {
+   "call": "c21",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Thank you sir, कल दोपहर को बात करते हैं. Good night."
+  }
+ ],
+ "completed_at": "2026-11-03T04:22:49+00:00"
+}

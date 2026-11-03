@@ -1,0 +1,178 @@
+{
+ "schema": 1,
+ "call_id": "c24",
+ "condition": "snr5",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "b9705440649ab500"
+ },
+ "stt": {
+  "requests": 9,
+  "cached": 0,
+  "latency_ms": 4011,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 5,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 4242
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Hello madam, अनीता गावडे बोल रही हैं।",
+   "stt_ms": 378,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "हाँ, बोल रही हूँ। आप कौन?",
+   "stt_ms": 296,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "Madam, 5,400 की EMI bounce हुई है, 8 दिन से pending है, penalty भी लग रही है, payment कब कर रही हैं?",
+   "stt_ms": 485,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "आप कौन? मुझे लगा कोई fraud call है। कौन सी EMI?",
+   "stt_ms": 437,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "Madam fraud नहीं है। मैं पूजा बोल रही हूँ। सारंग सिंह sir आपका personal loan है ना, उसी की EMI बाकी है। आप चाहें तो company के number से verify कर सकते हैं।",
+   "stt_ms": 520,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "ओ अच्छा, ठीक है। मैं तो डर गई थी। next week के start में कर दूँगी, अभी थोड़ा tight है।",
+   "stt_ms": 523,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "कोई बात नहीं madam, बस एक date बता दीजिए। कौन सा दिन ठीक रहेगा? पूरा नहीं हो पाए तो थोड़ा अभी कर दीजिए।",
+   "stt_ms": 566,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "Tuesday तक। पक्का Tuesday। पूरा कर दूंगी। आप tension मत लो।",
+   "stt_ms": 448,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "Okay madam, Tuesday को एक reminder भी आएगा, आप tension मत लेना।",
+   "stt_ms": 358,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c24",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Hello madam, अनीता गावडे बोल रही हैं।"
+  },
+  {
+   "call": "c24",
+   "turn": 3,
+   "rule": "R2",
+   "kind": "advisory",
+   "confidence": 1.0,
+   "source": "gate",
+   "quote": ""
+  },
+  {
+   "call": "c24",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Madam, 5,400 की EMI bounce हुई है, 8 दिन से pending है, penalty भी लग रही है, payment कब कर रही हैं?"
+  },
+  {
+   "call": "c24",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Madam fraud नहीं है. मैं पूजा बोल रही हूँ."
+  },
+  {
+   "call": "c24",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "आप चाहें तो company के number से verify कर सकते हैं."
+  },
+  {
+   "call": "c24",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "कोई बात नहीं madam, बस एक date बता दीजिए."
+  },
+  {
+   "call": "c24",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "पूरा नहीं हो पाए तो थोड़ा अभी कर दीजिए."
+  },
+  {
+   "call": "c24",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Tuesday को एक reminder भी आएगा"
+  },
+  {
+   "call": "c24",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "आप tension मत लेना"
+  }
+ ],
+ "completed_at": "2026-11-03T04:23:19+00:00"
+}
