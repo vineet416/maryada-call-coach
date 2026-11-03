@@ -132,7 +132,7 @@ function ProductLine({ calls, families, flag }: { calls: number; families: numbe
   const facts = [
     calls > 0 && `${calls} synthetic calls`,
     families > 0 && `${families} rule families`,
-    flag?.p50_ms != null && `median ${(flag.p50_ms / 1000).toFixed(1)} s to first flag in the recorded runs`,
+    flag?.p50_ms != null && `median ${(flag.p50_ms / 1000).toFixed(1)} s from speech to flag in the recorded runs`,
   ].filter(Boolean) as string[]
   return (
     <div className="flex flex-col gap-1.5">
