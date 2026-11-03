@@ -50,7 +50,7 @@ On 2026-11-01, after the first clean rules-only baseline had been scored, the la
 
 ### Phone-line noise
 
-The same 30 calls were run at 10 dB and 20 dB signal-to-noise (full engine, strict counts). R2 is the rule that reacts to noise: it has 0 extra flags on clean audio, 8 at 10 dB (8 calls) and 1 at 20 dB. The saved examples show the lender name mis-heard or missing, and R2 has no model step to recover. The model-based rules keep their recall at 10 dB. At 20 dB one R4 unit (c17, turn 7) is missed, with no needs-review flag to catch it; it is the label added after the first baseline, and no engine or threshold was changed for it.
+The same 30 calls were run at 20, 10 and 5 dB signal-to-noise (full engine, strict counts). R2 is the rule that reacts to noise: it has 0 extra flags on clean audio, 1 at 20 dB, 8 at 10 dB (8 calls) and 15 at 5 dB (15 calls). The saved examples show the lender name mis-heard or missing, and R2 has no model step to recover. R3, R4 and R5 keep their recall at 10 dB and 5 dB. At 20 dB one R4 unit (c17, turn 7) is missed, with no needs-review flag to catch it; it is the label added after the first baseline. At 5 dB one R6 unit (c25, turn 7) is missed even with review. No engine or threshold was changed for any of these.
 
 ### Model, speech service, thresholds and labels
 Model: gpt-5.4-mini · speech: Gnani Prisma V3.0 (REST, one request per turn) · thresholds 0.75 (violation) and 0.45 (needs review) · labels `21caa31f45898ae6`.

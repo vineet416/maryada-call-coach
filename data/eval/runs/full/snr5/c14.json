@@ -1,0 +1,192 @@
+{
+ "schema": 1,
+ "call_id": "c14",
+ "condition": "snr5",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "b9705440649ab500"
+ },
+ "stt": {
+  "requests": 11,
+  "cached": 0,
+  "latency_ms": 4627,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 5,
+  "cache_hits": 1,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 4390
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Hello नीलेश जी, संदीप बोल रहा हूँ सारंग सिंह से।",
+   "stt_ms": 440,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "कौन? अच्छा बोलिए।",
+   "stt_ms": 288,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "एक call record की जा रही है। ध्यान रहे, आपके personal loan की बात कर रही हूँ।",
+   "stt_ms": 422,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ, बोल दो।",
+   "stt_ms": 270,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "नीलेश जी, आज 9,000 की EMI पिछले महीने से अटकी हुई है। दो reminder भेज चुका हूँ। आज कब तक हो जाएगी?",
+   "stt_ms": 533,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Sir, थोड़ा time चाहिए, धंधा slow है, अगले हफ्ते पक्का।",
+   "stt_ms": 349,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "निलेश जी, मेरे को रोज यही सुनना पड़ता है। अगले हफ्ते नहीं चलेगा। अगर कल तक payment नहीं आया तो कल ही हमारी team आपका घर और गाड़ी seize कर देगी।",
+   "stt_ms": 643,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "क्या इतनी जरूरी? मेरे को तो notice भी नहीं मिला। ऐसे कैसे हो सकता है?",
+   "stt_ms": 447,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "Notice की जरूरत नहीं है। जल्दी payment कीजिए। आज शाम तक जितना हो सके उतना कीजिए।",
+   "stt_ms": 452,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 10,
+   "speaker": "B",
+   "text": "ठीक है sir, कल सुबह bank जाता हूँ, पहले थोड़ा भर देता हूँ।",
+   "stt_ms": 433,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 11,
+   "speaker": "A",
+   "text": "Okay, कल सुबह दोबारा call करूंगा। तब तक कुछ आ जाना।",
+   "stt_ms": 350,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c14",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Hello नीलेश जी, संदीप बोल रहा हूँ सारंग सिंह से।"
+  },
+  {
+   "call": "c14",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "एक call record की जा रही है।"
+  },
+  {
+   "call": "c14",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "ध्यान रहे, आपके personal loan की बात कर रही हूँ।"
+  },
+  {
+   "call": "c14",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "आज कब तक हो जाएगी?"
+  },
+  {
+   "call": "c14",
+   "turn": 7,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.91,
+   "source": "llm",
+   "quote": "मेरे को रोज यही सुनना पड़ता है।"
+  },
+  {
+   "call": "c14",
+   "turn": 7,
+   "rule": "R5",
+   "kind": "violation",
+   "confidence": 0.97,
+   "source": "llm",
+   "quote": "अगर कल तक payment नहीं आया तो कल ही हमारी team आपका घर और गाड़ी seize कर देगी।"
+  },
+  {
+   "call": "c14",
+   "turn": 9,
+   "rule": "R5",
+   "kind": "violation",
+   "confidence": 0.88,
+   "source": "llm",
+   "quote": "Notice की जरूरत नहीं है।"
+  },
+  {
+   "call": "c14",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "आज शाम तक जितना हो सके उतना कीजिए।"
+  },
+  {
+   "call": "c14",
+   "turn": 11,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "कल सुबह दोबारा call करूंगा।"
+  }
+ ],
+ "completed_at": "2026-11-03T04:21:39+00:00"
+}

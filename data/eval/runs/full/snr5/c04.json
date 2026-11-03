@@ -1,0 +1,151 @@
+{
+ "schema": 1,
+ "call_id": "c04",
+ "condition": "snr5",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "b9705440649ab500"
+ },
+ "stt": {
+  "requests": 9,
+  "cached": 0,
+  "latency_ms": 4337,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 5,
+  "cache_hits": 0,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 4267
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "दिनेश जी, विक्रम बोल रहा हूँ।",
+   "stt_ms": 437,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "B",
+   "text": "कौन विक्रम?",
+   "stt_ms": 236,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "एक minute ये line recorded है। दिनेश माने जी से ही बात हो रही है।",
+   "stt_ms": 405,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "B",
+   "text": "हाँ जी, मैं ही हूँ। बोलो, क्या बात है?",
+   "stt_ms": 487,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "Sir, आपके business loan की 8,000 की EMI दो महीने से बाकी है, reminder भी भेजे गए हैं, कोई जवाब नहीं आ रहा है, अब क्या plan है?",
+   "stt_ms": 683,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "B",
+   "text": "Sir, धंधा बहुत slow चल रहा है। क्या करूं? बोलूं? कोई action तो नहीं होगा ना?",
+   "stt_ms": 525,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "Sir, agreement के मुताबिक ज्यादा दिन तक payment न हो तो notice भेजा जाता है, लेकिन अभी हम चाहते हैं कि आपके साथ मिलकर कोई option निकाला जाए।",
+   "stt_ms": 617,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "B",
+   "text": "अच्छा, आधा पैसा महीने के end तक दे सकता हूँ।",
+   "stt_ms": 456,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "ठीक है sir। महीने के end तक आधा amount और बाकी late। ये मैं note कर लेता हूँ। मैं reminder भेज दूँगी।",
+   "stt_ms": 491,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c04",
+   "turn": 3,
+   "rule": "R2",
+   "kind": "advisory",
+   "confidence": 1.0,
+   "source": "gate",
+   "quote": ""
+  },
+  {
+   "call": "c04",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "दिनेश माने जी से ही बात हो रही है।"
+  },
+  {
+   "call": "c04",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "आपके business loan की 8,000 की EMI दो महीने से बाकी है, reminder भी भेजे गए हैं"
+  },
+  {
+   "call": "c04",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "लेकिन अभी हम चाहते हैं कि आपके साथ मिलकर कोई option निकाला जाए"
+  },
+  {
+   "call": "c04",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मैं reminder भेज दूँगी"
+  },
+  {
+   "call": "c04",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "ये मैं note कर लेता हूँ"
+  }
+ ],
+ "completed_at": "2026-11-03T04:19:39+00:00"
+}

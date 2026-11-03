@@ -1,0 +1,160 @@
+{
+ "schema": 1,
+ "call_id": "c18",
+ "condition": "snr5",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "b9705440649ab500"
+ },
+ "stt": {
+  "requests": 9,
+  "cached": 0,
+  "latency_ms": 4493,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 4,
+  "cache_hits": 1,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 3457
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Hello, प्रमोद जी हैं?",
+   "stt_ms": 395,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "T",
+   "text": "नहीं जी अभी घर पे नहीं हैं। मैं उनकी wife बोल रही हूँ। क्या काम है?",
+   "stt_ms": 534,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "नमस्ते madam, अमित बोल रहा हूँ। तारन सिंह sir। एक ये line recorded है। एक बता रहा हूँ। प्रमोद जी के लिए एक जरूरी call है। वो कब तक लाएंगे?",
+   "stt_ms": 613,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "T",
+   "text": "वो शाम को आते हैं। आप मेरे को बता दो क्या बात है। मैं बोल रही हूँ।",
+   "stt_ms": 496,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "नहीं madam बात उनसे ही करना है। आप बस इतना बता दीजिए कि अमित का phone आया है और वो इस number पर वापस call कर रहा है।",
+   "stt_ms": 544,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "T",
+   "text": "लेकिन किस बारे में है, ये तो बता दो, मेरे को tension हो रहा है।",
+   "stt_ms": 419,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "Madam tension की कोई बात नहीं है। बस एक जरूरी call है और वो उनसे ही discuss कर रहे हैं। आप उनको सिर्फ call करने के लिए बोल दें।",
+   "stt_ms": 452,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "T",
+   "text": "अच्छा ठीक है, मैं बोल दूंगी। नंबर यही है ना जिससे आपने फोन किया?",
+   "stt_ms": 526,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "जी madam, यही number है। मैं कल सुबह दोबारा कोशिश करवा दूंगा।",
+   "stt_ms": 514,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c18",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Hello, प्रमोद जी हैं?"
+  },
+  {
+   "call": "c18",
+   "turn": 3,
+   "rule": "R2",
+   "kind": "advisory",
+   "confidence": 1.0,
+   "source": "gate",
+   "quote": ""
+  },
+  {
+   "call": "c18",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "नमस्ते madam, अमित बोल रहा हूँ। तारन सिंह sir। एक ये line recorded है।"
+  },
+  {
+   "call": "c18",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "प्रमोद जी के लिए एक जरूरी call है। वो कब तक लाएंगे?"
+  },
+  {
+   "call": "c18",
+   "turn": 5,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "आप बस इतना बता दीजिए कि अमित का phone आया है और वो इस number पर वापस call कर रहा है।"
+  },
+  {
+   "call": "c18",
+   "turn": 7,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "आप उनको सिर्फ call करने के लिए बोल दें।"
+  },
+  {
+   "call": "c18",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "मैं कल सुबह दोबारा कोशिश करवा दूंगा।"
+  }
+ ],
+ "completed_at": "2026-11-03T04:22:19+00:00"
+}
