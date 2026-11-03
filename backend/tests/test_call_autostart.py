@@ -52,18 +52,53 @@ def test_call_page_uses_the_signal_once_and_removes_it():
     assert "autoDone" in s  # one use per page load
 
 
-def test_call_page_starts_a_recorded_run_only_when_sound_is_allowed():
+def test_manager_example_link_and_summary_run_again_autostart_too():
+    manager = text("pages", "Manager.tsx")
+    link = re.search(r"<Link to=\{`/call/\$\{ex\.call_id\}`\}.*?className=", manager)
+    assert link and "state={AUTOSTART}" in link.group(0) and "onClick={() => audio.unlock()}" in link.group(0)
     s = text("pages", "LiveCall.tsx")
-    gate = re.search(r"if \(scenario\.has_replay && soundAllowed\(\)\) \{(.*?)\n    \}", s, re.DOTALL)
-    assert gate and "begin('replay')" in gate.group(1)
-    assert s.count("begin('replay')") >= 2  # the other calls are the existing fallback buttons, not the autostart
-    assert not re.search(r"soundAllowed\(\)[^\n]*\n[^\n]*begin\('live'", s)
+    again = re.search(r"onRunAgain=\{\(\) => \{(.*?)\n          \}\}", s, re.DOTALL)
+    assert again and "void audio.unlock()" in again.group(1) and "setAgain(true)" in again.group(1)  # inside the click
+    assert "(autostart || again)" in s
+    assert "Try another call" in text("pages", "CallReport.tsx")
+    assert re.search(r"Try another call</Link>", text("pages", "CallReport.tsx"))
+    assert not re.search(r"<Link[^\n]*next[^\n]*AUTOSTART", text("pages", "CallReport.tsx"))  # it goes to the Cases list
+
+
+def test_call_page_waits_for_the_real_sound_probe_before_starting():
+    s = text("pages", "LiveCall.tsx")
+    assert "if (!soundAllowed())" in s and "setSoundBlocked(true)" in s
+    flow = re.search(r"audio\.soundReady\(\)\.then\(\(ok\) => \{(.*?)\n    \}\)", s, re.DOTALL)
+    assert flow, "the start must wait for the probe"
+    body = flow.group(1)
+    assert "if (ok) void begin('replay')" in body and "else blockSound()" in body  # a refused probe never starts the run
+    assert "begin('live')" not in body
+
+
+def test_a_refused_sound_ends_the_run_and_asks_for_one_tap():
+    s = text("pages", "LiveCall.tsx")
+    assert "audio.onBlocked(blockSound)" in s and "audio.onBlocked(null)" in s
+    block = re.search(r"const blockSound = useCallback\(\(\) => \{(.*?)\n  \}, \[teardown\]\)", s, re.DOTALL)
+    assert block
+    for part in ("teardown()", "audio.stopAll()", "setSoundBlocked(true)", "setPhase('ready')"):
+        assert part in block.group(1), part
+    assert "'Tap to enable sound'" in s and "setSoundBlocked(false)" in s  # the tap starts a normal run
+
+
+def test_audio_engine_probes_with_real_sound_and_reports_only_a_browser_refusal():
+    e = text("lib", "audioEngine.ts")
+    unlock = re.search(r"unlock\(\): Promise<boolean> \{(.*?)\n  \}", e, re.DOTALL)
+    assert unlock and "muted" not in unlock.group(1) and "new Audio(SILENT_WAV)" in unlock.group(1)  # muted proves nothing
+    assert "soundReady(): Promise<boolean>" in e and "?? Promise.resolve(false)" in e  # no click, no sound
+    play = re.search(r"a\.play\(\)\.catch\(\(e: unknown\) => \{(.*?)\n    \}\)", e, re.DOTALL)
+    assert play and "NotAllowedError" in play.group(1) and "this.turn === a" in play.group(1) and "onBlockedCb" in play.group(1)
+    assert "play().catch(() => undefined)" not in e.split("playTurn(")[1].split("stopTurn()")[0]  # the rejection is not swallowed
 
 
 def test_ready_card_stays_for_a_direct_load_and_is_hidden_only_while_autostarting():
     s = text("pages", "LiveCall.tsx")
     assert "Press start to allow sound" in s and "<StartCard" in s  # the fallback
-    assert "const starting = (autostart && phase === 'ready') || (auto && (phase === 'ready' || phase === 'starting'))" in s
+    assert "const starting = ((autostart || again) && phase === 'ready') || (auto && (phase === 'ready' || phase === 'starting'))" in s
     assert "if (phase === 'loading' || !scenario || starting)" in s
 
 
