@@ -1,6 +1,6 @@
 import { KeyRound, Play, Square, Volume2, VolumeX } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { CoachCard } from '@/components/CoachCard'
 import { ColdStartScreen } from '@/components/ColdStartScreen'
 import { DetailDrawer } from '@/components/DetailDrawer'
@@ -22,6 +22,7 @@ import {
   type ScenarioDetail,
 } from '@/lib/api'
 import { audio } from '@/lib/audioEngine'
+import { isAutostart, soundAllowed } from '@/lib/autostart'
 import { LIVE_CALLS_ENABLED } from '@/lib/features'
 import { CallClient } from '@/lib/callClient'
 import { usePageTitle } from '@/lib/usePageTitle'
@@ -49,8 +50,15 @@ export function LiveCall() {
   const [timeMs, setTimeMs] = useState(0)
   const [voiceOn, setVoiceOn] = useState(audio.coachVoice)
   const [muted, setMuted] = useState(audio.muted)
+  const [auto, setAuto] = useState(false) // a recorded run is starting by itself: the Ready card stays hidden
+  const [again, setAgain] = useState(false) // "Run again" in the summary asked for the same one-time start
+  const [soundBlocked, setSoundBlocked] = useState(false) // the browser refused sound: the Ready card asks for one tap
   const client = useRef<CallClient | null>(null)
+  const alive = useRef(true)
+  const autoDone = useRef(false) // the autostart signal of this page has been used
   const navigate = useNavigate()
+  const location = useLocation()
+  const autostart = isAutostart(location.state)
 
   const st = useSessionStore()
   usePageTitle(scenario ? `${scenario.id.toUpperCase()} ${scenario.title} · Maryada` : `${id.toUpperCase() || 'Call'} · Maryada`)
@@ -63,6 +71,8 @@ export function LiveCall() {
   const load = useCallback(() => {
     setPhase('loading')
     setError(null)
+    setAuto(false)
+    autoDone.current = false
     teardown()
     useSessionStore.getState().reset('live')
     setTimeMs(0)
@@ -92,13 +102,37 @@ export function LiveCall() {
     }
   }, [load, teardown])
 
+  useEffect(() => {
+    alive.current = true
+    return () => {
+      alive.current = false
+    }
+  }, [])
+
+  /** The browser refused the call's sound: end this run and show the Ready card with a tap that starts it with sound. */
+  const blockSound = useCallback(() => {
+    teardown()
+    audio.stopAll()
+    useSessionStore.getState().reset('live')
+    setTimeMs(0)
+    setAuto(false)
+    setSoundBlocked(true)
+    setPhase('ready')
+  }, [teardown])
+
+  useEffect(() => {
+    audio.onBlocked(blockSound)
+    return () => audio.onBlocked(null)
+  }, [blockSound])
+
   /** Create the session and open the socket. Called from the Start click, which also unlocks audio. */
   const begin = useCallback(
     async (requested: Mode) => {
       if (!scenario) return
       const mode: Mode = LIVE_CALLS_ENABLED ? requested : 'replay' // a keyed live run cannot start while it is switched off
       setWanted(mode)
-      audio.unlock()
+      setSoundBlocked(false)
+      void audio.unlock()
       setError(null)
       setPhase('starting')
       useSessionStore.getState().reset(mode)
@@ -135,6 +169,28 @@ export function LiveCall() {
     },
     [scenario],
   )
+
+  // An in-app click asked for the recorded run to start at once. The signal is used once and removed from the history
+  // entry, so a refresh or Back shows the Ready card. Without a past user gesture (or the browser API) the card stays.
+  // Before it starts, real sound must be playable: the browser allowed the silent probe played in the click. A refused
+  // probe, a missing API or a missing click all end on the Ready card with "Tap to enable sound", never a silent run.
+  useEffect(() => {
+    if (!(autostart || again) || phase !== 'ready' || !scenario || autoDone.current) return
+    autoDone.current = true
+    setAgain(false)
+    if (autostart) navigate(`${location.pathname}${location.search}`, { replace: true, state: null })
+    if (!scenario.has_replay) return
+    if (!soundAllowed()) {
+      setSoundBlocked(true)
+      return
+    }
+    setAuto(true)
+    void audio.soundReady().then((ok) => {
+      if (!alive.current) return
+      if (ok) void begin('replay')
+      else blockSound()
+    })
+  }, [autostart, again, phase, scenario, begin, blockSound, navigate, location.pathname, location.search])
 
   // A recorded run that played to its end opens its call report. A stopped call, a live call and a live call that
   // fell back to the recording keep the summary here: their events differ from the saved recording.
@@ -179,10 +235,14 @@ export function LiveCall() {
       </ErrorCard>
     )
 
-  if (phase === 'loading' || !scenario)
+  // While a recorded run is about to start by itself, the page shows the loading state, never the Ready card.
+  const starting = ((autostart || again) && phase === 'ready') || (auto && (phase === 'ready' || phase === 'starting'))
+  if (phase === 'loading' || !scenario || starting)
     return (
       <div aria-busy="true" aria-label="Loading call" className="space-y-5">
-        <p role="status" className="text-sm font-medium text-[var(--mc-muted)]">Loading call… the server may take a few seconds to wake up.</p>
+        <p role="status" className="text-sm font-medium text-[var(--mc-muted)]">
+          {starting ? 'Starting the recorded run… the server may take a few seconds to wake up.' : 'Loading call… the server may take a few seconds to wake up.'}
+        </p>
         <div className="skeleton h-40" />
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_380px]">
           <div className="skeleton h-96" />
@@ -274,7 +334,7 @@ export function LiveCall() {
       )}
 
       {idle && !failed ? (
-        <StartCard scenario={scenario} busy={phase === 'starting'} onStart={(m) => void begin(m)} />
+        <StartCard scenario={scenario} busy={phase === 'starting'} soundBlocked={soundBlocked} onStart={(m) => void begin(m)} />
       ) : (
         <div className="call-grid grid grid-cols-[minmax(0,1fr)] gap-3 sm:gap-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:grid-rows-[auto_auto_minmax(0,1fr)] lg:items-start">
           <div className="call-tx min-w-0 order-3 lg:order-none lg:col-start-1 lg:row-span-3 lg:row-start-1">
@@ -302,7 +362,11 @@ export function LiveCall() {
           findings={st.findings}
           rules={rules}
           mode={st.mode}
-          onRunAgain={() => load()}
+          onRunAgain={() => {
+            void audio.unlock() // inside the click, like the links
+            setAgain(true)
+            load()
+          }}
           onClose={() => setSummaryOpen(false)}
         />
       )}
@@ -310,7 +374,7 @@ export function LiveCall() {
   )
 }
 
-function StartCard({ scenario, busy, onStart }: { scenario: ScenarioDetail; busy: boolean; onStart: (m: Mode) => void }) {
+function StartCard({ scenario, busy, soundBlocked, onStart }: { scenario: ScenarioDetail; busy: boolean; soundBlocked: boolean; onStart: (m: Mode) => void }) {
   const hasKeys = useHasKeys()
   const [needKeys, setNeedKeys] = useState(false)
   if (LIVE_CALLS_ENABLED && needKeys && !hasKeys)
@@ -344,7 +408,7 @@ function StartCard({ scenario, busy, onStart }: { scenario: ScenarioDetail; busy
       <div className="flex flex-wrap items-center gap-3">
         {scenario.has_replay && (
           <button disabled={busy} onClick={() => onStart('replay')} className="btn btn-lg btn-primary">
-            <Play className="h-3.5 w-3.5 fill-current" aria-hidden /> {busy ? 'Starting…' : 'Play recorded run'}
+            <Play className="h-3.5 w-3.5 fill-current" aria-hidden /> {busy ? 'Starting…' : soundBlocked ? 'Tap to enable sound' : 'Play recorded run'}
           </button>
         )}
         {LIVE_CALLS_ENABLED && (
@@ -363,8 +427,9 @@ function StartCard({ scenario, busy, onStart }: { scenario: ScenarioDetail; busy
           </p>
         )}
       </div>
-      <p className="text-xs text-[var(--mc-muted)]">
-        Press start to allow sound. The coach card shows on screen; its voice is optional.
+      <p role={soundBlocked ? 'status' : undefined} className="text-xs text-[var(--mc-muted)]">
+        {soundBlocked ? 'Your browser blocked the sound. One tap starts the run with sound. ' : 'Press start to allow sound. '}
+        The coach card shows on screen; its voice is optional.
       </p>
     </section>
   )

@@ -5,6 +5,8 @@ import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, Too
 import { ErrorCard } from '@/components/ErrorCard'
 import { Initials, Spark, StatusChip } from '@/components/manager/Shared'
 import { ApiError, getManager, type ManagerAgent, type ManagerPayload } from '@/lib/api'
+import { audio } from '@/lib/audioEngine'
+import { AUTOSTART } from '@/lib/autostart'
 import {
   agentsCsv, downloadCsv, exampleCall, isReviewOnly, num, pct, plural, reviewNote, ruleCount, ruleIds, ruleTitle, shortDate,
   SORT_LABEL, sortAgents, type SortKey,
@@ -462,7 +464,7 @@ function Attention({ data, agents, search }: { data: ManagerPayload; agents: Man
               )}
               {ex &&
                 (ex.has_replay ? (
-                  <Link to={`/call/${ex.call_id}`} className="text-[13px] font-semibold">
+                  <Link to={`/call/${ex.call_id}`} state={AUTOSTART} onClick={() => audio.unlock()} className="text-[13px] font-semibold">
                     Review example call (recorded run): {ex.title} →
                   </Link>
                 ) : (

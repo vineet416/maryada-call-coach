@@ -3,6 +3,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ErrorCard } from '@/components/ErrorCard'
 import { getEval, getRules, getScenarios, type LatencyRow, type Rule, type ScenarioSummary } from '@/lib/api'
+import { audio } from '@/lib/audioEngine'
+import { AUTOSTART } from '@/lib/autostart'
 import { SPEAK_LIVE_ENABLED } from '@/lib/features'
 import { usePageTitle } from '@/lib/usePageTitle'
 
@@ -252,7 +254,7 @@ function Hero({ c, name }: { c: ScenarioSummary; name: (id: string) => string | 
           ))}
         </div>
         <div className="mt-1.5 flex flex-wrap gap-3">
-          <Link to={`/call/${c.id}`} className="btn btn-lg btn-primary">
+          <Link to={`/call/${c.id}`} state={AUTOSTART} onClick={() => audio.unlock()} className="btn btn-lg btn-primary">
             <Play className="h-3.5 w-3.5 fill-current" aria-hidden /> Play recorded run
           </Link>
         </div>
@@ -283,7 +285,7 @@ function Peek({ icon, title, text }: { icon: React.ReactNode; title: string; tex
 
 function CaseCard({ c }: { c: ScenarioSummary }) {
   return (
-    <Link to={`/call/${c.id}`} className="card flex flex-col gap-3 p-5 transition hover:border-[var(--mc-accent-ring)] hover:shadow-md">
+    <Link to={`/call/${c.id}`} state={AUTOSTART} onClick={() => audio.unlock()} className="card flex flex-col gap-3 p-5 transition hover:border-[var(--mc-accent-ring)] hover:shadow-md">
       <span className="text-xs font-semibold tracking-wide text-[var(--mc-muted)]">{c.id.toUpperCase()}</span>
       <h3 className="text-base font-semibold leading-snug tracking-tight">{c.title}</h3>
       <p className="line-clamp-3 text-[13px] leading-normal text-[var(--mc-muted)]">{plain(c.summary)}</p>

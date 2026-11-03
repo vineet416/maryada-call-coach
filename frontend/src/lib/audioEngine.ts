@@ -5,6 +5,19 @@ const COACH_KEY = 'maryada.coachVoice'
 const MUTE_KEY = 'maryada.muted'
 const PAUSE_KEY = 'maryada.pauseForCoach'
 const VOLUME_KEY = 'maryada.coachVolume'
+// 20 ms of silence (8 kHz, 16-bit mono): a real sound for the unlock probe that cannot be heard
+function silentWav(): string {
+  const n = 160 * 2
+  const b = new Uint8Array(44 + n)
+  const v = new DataView(b.buffer)
+  const tag = (o: number, s: string) => [...s].forEach((c, i) => (b[o + i] = c.charCodeAt(0)))
+  tag(0, 'RIFF'); v.setUint32(4, 36 + n, true); tag(8, 'WAVE'); tag(12, 'fmt ')
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true)
+  v.setUint32(24, 8000, true); v.setUint32(28, 16000, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true)
+  tag(36, 'data'); v.setUint32(40, n, true)
+  return `data:audio/wav;base64,${btoa(String.fromCharCode(...b))}`
+}
+const SILENT_WAV = silentWav()
 
 /**
  * Browser gains. The library already mixes the voices at agent -22, borrower -24, third party -25 and coach -27 LUFS.
@@ -91,11 +104,31 @@ class AudioEngine {
     urls.forEach((u) => this.get(u))
   }
 
-  /** Called inside the Start click so later programmatic play() calls are allowed. */
-  unlock() {
-    const a = new Audio()
-    a.muted = true
-    void a.play().catch(() => undefined)
+  private probe: Promise<boolean> | null = null
+  private onBlockedCb: (() => void) | null = null
+
+  /**
+   * Called inside a click so later programmatic play() calls are allowed. It plays a real, silent, very short sound
+   * (not a muted one: browsers always allow muted sound, so that would prove nothing). The result says whether the
+   * browser allowed it; `soundReady()` hands the same answer to the page the click leads to.
+   */
+  unlock(): Promise<boolean> {
+    const a = new Audio(SILENT_WAV)
+    this.probe = a.play().then(
+      () => true,
+      () => false,
+    )
+    return this.probe
+  }
+
+  /** The answer of the latest unlock(); false when there was no click (direct load, refresh, pasted link). */
+  soundReady(): Promise<boolean> {
+    return this.probe ?? Promise.resolve(false)
+  }
+
+  /** The page's reaction when the browser refuses a call turn's sound (it must not run on silently). Null removes it. */
+  onBlocked(fn: (() => void) | null) {
+    this.onBlockedCb = fn
   }
 
   playTurn(url: string, idx: number, speaker: keyof typeof CALL_GAIN = 'agent', startT = 0) {
@@ -111,7 +144,10 @@ class AudioEngine {
     this.turnPlayedAt = performance.now()
     this.frozenInto = 0
     this.held = false
-    void a.play().catch(() => undefined)
+    a.play().catch((e: unknown) => {
+      // Only a refusal by the browser counts. A play() cut short because the turn was stopped or replaced is normal.
+      if ((e as { name?: string })?.name === 'NotAllowedError' && this.turn === a) this.onBlockedCb?.()
+    })
   }
 
   stopTurn() {

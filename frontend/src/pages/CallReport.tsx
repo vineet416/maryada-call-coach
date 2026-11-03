@@ -4,6 +4,8 @@ import { Bubble } from '@/components/Bubble'
 import { DetailDrawer } from '@/components/DetailDrawer'
 import { ErrorCard } from '@/components/ErrorCard'
 import { RiskChart } from '@/components/report/RiskChart'
+import { audio } from '@/lib/audioEngine'
+import { AUTOSTART } from '@/lib/autostart'
 import { ApiError, getReport, getRules, getSessionReport, type CallReport as Report, type Rule } from '@/lib/api'
 import type { Finding } from '@/lib/events'
 import { KIND_LABEL } from '@/lib/events'
@@ -152,7 +154,7 @@ export function CallReport({ live = false }: { live?: boolean }) {
             ) : (
               <>
                 <Link to={next ? `/call/${next}` : '/'} className="btn">Try another call</Link>
-                <Link to={`/call/${scenario.id}`} className="btn btn-primary">Run again</Link>
+                <Link to={`/call/${scenario.id}`} state={AUTOSTART} onClick={() => audio.unlock()} className="btn btn-primary">Run again</Link>
               </>
             )}
           </div>
