@@ -1,0 +1,187 @@
+{
+ "schema": 1,
+ "call_id": "c16",
+ "condition": "snr20",
+ "mode": "full",
+ "labels_hash": "21caa31f45898ae6",
+ "engine": {
+  "violation_min": 0.75,
+  "review_min": 0.45,
+  "skip_words": 8,
+  "llm_model": "gpt-5.4-mini",
+  "llm_fallback_model": "gpt-4.1-mini",
+  "rules_prompt_hash": "b9705440649ab500"
+ },
+ "stt": {
+  "requests": 9,
+  "cached": 0,
+  "latency_ms": 4423,
+  "model": "prisma-v3.0",
+  "path": "rest"
+ },
+ "llm": {
+  "requests": 2,
+  "cache_hits": 3,
+  "skipped": 0,
+  "degraded": 0,
+  "tokens": 1807
+ },
+ "turns": [
+  {
+   "idx": 1,
+   "speaker": "A",
+   "text": "Hello, ये आनंद दलवी जी का number है?",
+   "stt_ms": 373,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 2,
+   "speaker": "T",
+   "text": "हाँ, पर आनंद बाहर गए हैं। मैं पड़ोसी हूँ, क्या हुआ?",
+   "stt_ms": 487,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 3,
+   "speaker": "A",
+   "text": "मैं कविता सारंग Finserv से call recorded है। Quality purpose के लिए। ध्यान रहे आनंद जी से बात करनी थी।",
+   "stt_ms": 434,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 4,
+   "speaker": "T",
+   "text": "हाँ, उनका ही number है, पर वो अभी नहीं है। आप क्या काम बोल रही थीं?",
+   "stt_ms": 432,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 5,
+   "speaker": "A",
+   "text": "देखिए, वो phone ही नहीं उठाते, आप उनको बता देना कि आनंद ने loan लिया है और धोखा दे रहा है, पैसा वापस नहीं करता, सब पड़ोसी जान लें तो अच्छा है।",
+   "stt_ms": 657,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 6,
+   "speaker": "T",
+   "text": "अरे बाप रे, मेरे को क्या पता, मैं कुछ नहीं बोल सकता, मेरा इस सब से क्या लेना देना?",
+   "stt_ms": 543,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 7,
+   "speaker": "A",
+   "text": "इतना तो कर ही सकते हैं आप, आप बोल देना उनकी society में सबको पता चलना चाहिए।",
+   "stt_ms": 520,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 8,
+   "speaker": "T",
+   "text": "मैं नहीं बोलूंगा जी, ये आपका और उनका matter है, आप उनका number लो और उनसे ही बात करो।",
+   "stt_ms": 496,
+   "lang": "hi-IN"
+  },
+  {
+   "idx": 9,
+   "speaker": "A",
+   "text": "Okay, मैं उनको कल दोबारा call करती हूँ।",
+   "stt_ms": 481,
+   "lang": "hi-IN"
+  }
+ ],
+ "detections": [
+  {
+   "call": "c16",
+   "turn": 1,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Hello, ये आनंद दलवी जी का number है?"
+  },
+  {
+   "call": "c16",
+   "turn": 3,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "ध्यान रहे आनंद जी से बात करनी थी।"
+  },
+  {
+   "call": "c16",
+   "turn": 5,
+   "rule": "R4",
+   "kind": "violation",
+   "confidence": 0.99,
+   "source": "llm",
+   "quote": "आप उनको बता देना कि आनंद ने loan लिया है"
+  },
+  {
+   "call": "c16",
+   "turn": 5,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.98,
+   "source": "llm",
+   "quote": "धोखा दे रहा है, पैसा वापस नहीं करता, सब पड़ोसी जान लें तो अच्छा है"
+  },
+  {
+   "call": "c16",
+   "turn": 5,
+   "rule": "R4",
+   "kind": "violation",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "धोखा दे रहा"
+  },
+  {
+   "call": "c16",
+   "turn": 5,
+   "rule": "R4",
+   "kind": "violation",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "पैसा वापस नहीं"
+  },
+  {
+   "call": "c16",
+   "turn": 5,
+   "rule": "R4",
+   "kind": "violation",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "सब पड़ोसी जान लें"
+  },
+  {
+   "call": "c16",
+   "turn": 7,
+   "rule": "R3",
+   "kind": "violation",
+   "confidence": 0.96,
+   "source": "llm",
+   "quote": "आप बोल देना उनकी society में सबको पता चलना चाहिए।"
+  },
+  {
+   "call": "c16",
+   "turn": 7,
+   "rule": "R4",
+   "kind": "violation",
+   "confidence": 0.9,
+   "source": "prefilter",
+   "quote": "सबको पता चलना चाहिए।"
+  },
+  {
+   "call": "c16",
+   "turn": 9,
+   "rule": "G1",
+   "kind": "good_practice",
+   "confidence": 1.0,
+   "source": "llm",
+   "quote": "Okay, मैं उनको कल दोबारा call करती हूँ।"
+  }
+ ],
+ "completed_at": "2026-11-03T04:10:42+00:00"
+}

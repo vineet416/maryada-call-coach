@@ -10,7 +10,7 @@
   "skip_words": 8,
   "llm_model": "gpt-5.4-mini",
   "llm_fallback_model": "gpt-4.1-mini",
-  "rules_prompt_hash": "1d00a71c99b73ca1"
+  "rules_prompt_hash": "b9705440649ab500"
  },
  "stt": {
   "requests": 0,
@@ -188,5 +188,5 @@
    "quote": "मैं SMS भेज रही हूँ।"
   }
  ],
- "completed_at": "2026-11-02T05:55:25+00:00"
+ "completed_at": "2026-11-03T04:14:15+00:00"
 }

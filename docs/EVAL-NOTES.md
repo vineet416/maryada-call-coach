@@ -48,6 +48,10 @@ The 13 extra flags the labels do not have (the engine flagged them, the script d
 ### The label change after the first run
 On 2026-11-01, after the first clean rules-only baseline had been scored, the label R4 was added on C17 turn 7. The agent again asks the spouse to relay the payment, the same disclosure as in turn 5. The clean rules-only baseline was first scored with the old labels (34 labelled units) and re-scored with the new ones (35). Labels hash before `be1f14d003059999`, after `21caa31f45898ae6`.
 
+### Phone-line noise
+
+The same 30 calls were run at 10 dB and 20 dB signal-to-noise (full engine, strict counts). R2 is the rule that reacts to noise: it has 0 extra flags on clean audio, 8 at 10 dB (8 calls) and 1 at 20 dB. The saved examples show the lender name mis-heard or missing, and R2 has no model step to recover. The model-based rules keep their recall at 10 dB. At 20 dB one R4 unit (c17, turn 7) is missed, with no needs-review flag to catch it; it is the label added after the first baseline, and no engine or threshold was changed for it.
+
 ### Model, speech service, thresholds and labels
 Model: gpt-5.4-mini · speech: Gnani Prisma V3.0 (REST, one request per turn) · thresholds 0.75 (violation) and 0.45 (needs review) · labels `21caa31f45898ae6`.
 

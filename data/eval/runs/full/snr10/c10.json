@@ -10,21 +10,21 @@
   "skip_words": 8,
   "llm_model": "gpt-5.4-mini",
   "llm_fallback_model": "gpt-4.1-mini",
-  "rules_prompt_hash": "1d00a71c99b73ca1"
+  "rules_prompt_hash": "b9705440649ab500"
  },
  "stt": {
-  "requests": 4,
-  "cached": 7,
-  "latency_ms": 3176,
+  "requests": 0,
+  "cached": 11,
+  "latency_ms": 0,
   "model": "prisma-v3.0",
   "path": "rest"
  },
  "llm": {
-  "requests": 3,
-  "cache_hits": 3,
+  "requests": 0,
+  "cache_hits": 6,
   "skipped": 0,
   "degraded": 0,
-  "tokens": 2575
+  "tokens": 0
  },
  "turns": [
   {
@@ -161,5 +161,5 @@
    "quote": "मैं reminder भेज दूँगी।"
   }
  ],
- "completed_at": "2026-11-02T08:18:51+00:00"
+ "completed_at": "2026-11-03T04:14:15+00:00"
 }
