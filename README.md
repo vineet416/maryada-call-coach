@@ -6,7 +6,29 @@ Live compliance coach for **human** loan-recovery agents. It listens to a call, 
 
 Built for Gnani.ai's Great Indian AI Internship Challenge with **Gnani Prisma V3.0** (speech-to-text) and **Gnani Timbre V3.0** (text-to-speech).
 
-_Demo link, GIF and evaluation numbers: added at launch._
+**Live site:** https://maryada.aiwithvineet.in · also at https://maryada-call-coach.vercel.app
+
+## What you can do
+- **Play a recorded run.** Replays a saved synthetic call with its flags, risk score and coach lines. No keys needed; the page is marked "Recorded".
+- **Speak live.** You speak as the agent into the microphone (agent side only) for up to 3 minutes. It needs your own Gnani key and your own OpenAI-compatible language model key, entered on the Settings page.
+- **Upload a recording.** Coming soon, not built.
+
+## Evaluation results
+Full engine (phrase rules plus language model check) on 30 synthetic calls with 35 labelled units, per unit, from `data/eval/eval_results.json`:
+
+| | Clean audio |
+|---|---|
+| Strict precision | 75.0% (30 correct, 10 extra flags) |
+| Strict recall | 85.7% (30 of 35) |
+| Held-out calls (10), strict | 69.2% precision, 81.8% recall |
+| Counting "needs review" as a detection | 77.8% precision, 100% recall (35 of 35) |
+
+With phone-line noise (20, 10 and 5 dB) strict recall stays between 86% and 89%, while strict precision falls from 75% to 56%. The drop comes from rule R2 (the agent's introduction), which has no language model step: its extra advisory flags are 0 on clean audio, 1 at 20 dB, 8 at 10 dB and 15 at 5 dB.
+
+These are synthetic calls made from text-to-speech and authored scripts, so the numbers show the method works, not how it would perform on real calls. Details and failure examples: [evaluation notes](docs/EVAL-NOTES.md).
+
+## How this would connect to a real call centre
+A real deployment would take two audio tracks from the dialer, one for the agent and one for the borrower. The engine already works on two-sided input and judges only the agent. What is not built is the dialer connection, storage, access control and a legal review of the rules. Maryada has not been run on real phone calls.
 
 ## Run locally
 Requirements: Python 3.12+, Node 20+, ffmpeg (audio tools only).
@@ -40,4 +62,4 @@ cd backend && pip install -r requirements-dev.txt && pytest -q
 A React app on Vercel talks to a FastAPI backend on Render. The backend streams each agent turn to Gnani speech-to-text, checks the text with phrase rules plus a language model the visitor brings, and returns flags, a risk score and a coach line. Read [how it works, with diagrams](docs/architecture.md) (about five minutes).
 
 ## Docs
-[Architecture](docs/architecture.md) · [Conventions](docs/conventions.md)
+[Architecture](docs/architecture.md) · [Evaluation notes](docs/EVAL-NOTES.md) · [Conventions](docs/conventions.md)
