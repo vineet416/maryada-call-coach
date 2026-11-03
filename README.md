@@ -65,3 +65,6 @@ React, Vite and TypeScript; FastAPI and Python; Gnani Prisma V3.0 speech-to-text
 - Lender-name matching for rule R2.
 
 Built for Gnani.ai's Great Indian AI Internship Challenge.
+
+## License
+MIT. See [LICENSE](LICENSE).
