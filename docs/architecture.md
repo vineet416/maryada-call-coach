@@ -126,7 +126,7 @@ Results for the full engine on the 30 calls, counted per labelled unit:
 
 Under noise the precision drop comes from rule R2. It goes from 0 extra advisory flags on clean audio to 1 at 20 dB (in 1 call), 8 at 10 dB (in 8 calls) and 15 at 5 dB (in 15 calls). The two examples saved in the results file show the transcript with the lender name garbled or missing, so the introduction check fails. R2 has no model step. The model-based rules R3, R4 and R5 keep their recall at 10 dB and 5 dB. At 20 dB one R4 unit (c17, turn 7) is missed and R4 has one more extra flag than on clean audio. At 5 dB one R6 unit (c25, turn 7) is also missed by the review rule, so recall counting needs review is 34 of 35.
 
-On the 10 held-out calls, clean audio gives 69.2% precision and 81.8% recall. With the model check switched off (phrase checks only), clean audio gives 100% precision and 57.1% recall, so the model check is what finds the missed cases. A flag with no matching label counts against precision.
+On the 10 held-out calls, clean audio gives 69.2% precision and 81.8% recall. With the model check switched off (phrase checks only), clean audio gives 100% precision and 63.6% recall (7 of 11), so the model check is what finds the missed cases. A flag with no matching label counts against precision.
 
 ## 7. Privacy and keys
 
