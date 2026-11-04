@@ -6,7 +6,7 @@ Demo with synthetic calls, not legal advice. Based on RBI/2026-27/223 (effective
 
 **[Solution pitch](docs/PITCH.md)** · [Walkthrough video](https://youtu.be/-czfMx2bKXo) · [Live demo](https://maryada.aiwithvineet.in) · [Architecture](docs/architecture.md) · [Evaluation notes](docs/EVAL-NOTES.md) · [Deployment](docs/deployment.md)
 
-<!-- WALKTHROUGH-VIDEO -->
+https://github.com/user-attachments/assets/3bf0bec8-4be9-4293-89bf-3459176021b5
 
 [LinkedIn post](https://lnkd.in/p/dN7GwkfM)
 
