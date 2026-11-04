@@ -6,6 +6,8 @@ Demo with synthetic calls, not legal advice. Based on RBI/2026-27/223 (effective
 
 [Live demo](https://maryada.aiwithvineet.in) · [Architecture](docs/architecture.md) · [Evaluation notes](docs/EVAL-NOTES.md) · [Deployment](docs/deployment.md)
 
+Solution pitch (1 page): [PITCH.md](PITCH.md)
+
 ## What it does
 - Shows a live transcript and underlines the words that break an RBI recovery-conduct rule, with the reason and a polite alternative.
 - Keeps a running risk score from 0 to 100.
