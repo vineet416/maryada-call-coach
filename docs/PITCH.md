@@ -34,4 +34,4 @@ Built solo by Vineet Patel: the rule engine, the live coaching, the call report 
 ## Links
 - Live demo: https://maryada.aiwithvineet.in
 - Repository: https://github.com/vineet416/maryada-call-coach
-- Full walkthrough video: coming soon
+- [Full walkthrough video (3 min)](https://youtu.be/-czfMx2bKXo)

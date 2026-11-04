@@ -4,7 +4,11 @@ A live RBI-conduct coach for loan-recovery agents.
 
 Demo with synthetic calls, not legal advice. Based on RBI/2026-27/223 (effective 1 Jan 2027).
 
-**[Solution pitch](docs/PITCH.md)** · [Live demo](https://maryada.aiwithvineet.in) · [Architecture](docs/architecture.md) · [Evaluation notes](docs/EVAL-NOTES.md) · [Deployment](docs/deployment.md)
+**[Solution pitch](docs/PITCH.md)** · [Walkthrough video](https://youtu.be/-czfMx2bKXo) · [Live demo](https://maryada.aiwithvineet.in) · [Architecture](docs/architecture.md) · [Evaluation notes](docs/EVAL-NOTES.md) · [Deployment](docs/deployment.md)
+
+<!-- WALKTHROUGH-VIDEO -->
+
+[LinkedIn post](https://lnkd.in/p/dN7GwkfM)
 
 ## What it does
 - Shows a live transcript and underlines the words that break an RBI recovery-conduct rule, with the reason and a polite alternative.
