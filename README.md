@@ -4,7 +4,7 @@ A live RBI-conduct coach for loan-recovery agents. It transcribes what the agent
 
 Demo with synthetic calls, not legal advice. Based on RBI/2026-27/223 (effective 1 Jan 2027).
 
-[Solution pitch](docs/PITCH.md) · [Architecture](docs/architecture.md) · [Live demo](https://maryada.aiwithvineet.in) · [Evaluation notes](docs/EVAL-NOTES.md) · [Deployment](docs/deployment.md)
+[Solution pitch](Solution_Pitch.pdf) · [Architecture](docs/architecture.md) · [Live demo](https://maryada.aiwithvineet.in) · [Evaluation notes](docs/EVAL-NOTES.md) · [Deployment](docs/deployment.md)
 
 https://github.com/user-attachments/assets/22518ba5-a056-4b9b-b9ea-f8d5b1e86480
 
